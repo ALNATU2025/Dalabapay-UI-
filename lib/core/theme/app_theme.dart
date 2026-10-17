@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../ui/dp_tokens.dart';
+import '../../ui/dp_motion.dart';
 
 class AppTheme {
   static const Color primaryColor = DP.green;
@@ -47,6 +48,7 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
+    pageTransitionsTheme: DPMotion.pageTransitions,
     primaryColor: primaryColor,
     scaffoldBackgroundColor: DP.bg,
     canvasColor: DP.bg,
