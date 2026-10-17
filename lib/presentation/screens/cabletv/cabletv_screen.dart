@@ -2337,7 +2337,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                                 children: [
                                   Center(
                                     child: Image.asset(
-                                      'assets/dalabapay2.png',
+                                      'assets/images/dalabapay2.png',
                                       height: 40,
                                       fit: BoxFit.contain,
                                     ),

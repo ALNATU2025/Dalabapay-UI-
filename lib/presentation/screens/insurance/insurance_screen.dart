@@ -1650,7 +1650,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                                 children: [
                                   Center(
                                     child: Image.asset(
-                                      'assets/dalabapay2.png',
+                                      'assets/images/dalabapay2.png',
                                       height: 38,
                                       fit: BoxFit.contain,
                                     ),

@@ -98,28 +98,24 @@ class _InternetScreenState extends State<InternetScreen>
     {
       'name': 'MTN',
       'apiName': 'mtn',
-      'image': 'assets/mtn.jpg',
       'color': const Color(0xFFFFCB05),
       'serviceId': 'mtn-data',
     },
     {
       'name': 'Airtel',
       'apiName': 'airtel',
-      'image': 'assets/airtel.jpg',
       'color': const Color(0xFFEF1C25),
       'serviceId': 'airtel-data',
     },
     {
       'name': 'Glo',
       'apiName': 'glo',
-      'image': 'assets/glo.png',
       'color': const Color(0xFF00843D),
       'serviceId': 'glo-data',
     },
     {
       'name': '9mobile',
       'apiName': 'etisalat',
-      'image': 'assets/t2.png',
       'color': const Color(0xFFA76B1D),
       'serviceId': 'etisalat-data',
     },

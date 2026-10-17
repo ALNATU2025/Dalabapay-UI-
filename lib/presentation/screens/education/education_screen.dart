@@ -1498,7 +1498,7 @@ class _EducationScreenState extends State<EducationScreen>
                                 children: [
                                   Center(
                                     child: Image.asset(
-                                      'assets/dalabapay2.png',
+                                      'assets/images/dalabapay2.png',
                                       height: 40,
                                       fit: BoxFit.contain,
                                     ),

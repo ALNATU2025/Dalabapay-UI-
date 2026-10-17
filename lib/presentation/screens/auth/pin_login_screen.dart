@@ -743,7 +743,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20, top: 10),
       child: Image.asset(
-        'assets/dalabapay2.png',
+        'assets/images/dalabapay2.png',
         height: 50,
         fit: BoxFit.contain,
         errorBuilder:

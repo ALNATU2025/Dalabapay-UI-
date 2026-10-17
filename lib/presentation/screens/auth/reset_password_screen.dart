@@ -474,7 +474,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Image.asset(
-                      'assets/dalabapay2.png',
+                      'assets/images/dalabapay2.png',
                       width: 160,
                       fit: BoxFit.contain,
                     ),

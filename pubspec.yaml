@@ -108,36 +108,13 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/
-    - assets/dabalogo.png
-    - assets/dalabapay2.png
-    - assets/iconid2.png
-    - assets/onboardImage1.png
-    - assets/onboardImage2.png
-    - assets/onboardImage1.png
-    - assets/airtime_banner.png
-    - assets/electricity_banner.png
-    - assets/data_banner.png
-    - assets/education_banner.png
-    - assets/cabletv_banner.png
-    - assets/ticket_banner.png
-    - assets/donnation_banner.png
-    - assets/betting_banner.png
-    - assets/int_airtime_banner.png
-    - assets/insurance_banner.png
-    - assets/mtn.jpg
-    - assets/airtel.jpg
-    - assets/glo.png
-    - assets/9mobile.jpg
-    - assets/t2.png
+    # Brand logos (supply these two files): dabalogo.png = mark,
+    # dalabapay2.png = mark + wordmark. Onboarding art is included.
     - assets/images/
-    - assets/icons/
-    - assets/animations/
-    - assets/fonts/
-  
+
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/iconid3.png"
+  image_path: "assets/images/dabalogo.png"
   remove_alpha_ios: true
   adaptive_icon_background: "#ffffff"

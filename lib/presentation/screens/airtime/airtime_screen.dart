@@ -89,25 +89,21 @@ class _AirtimeScreenState extends State<AirtimeScreen>
     {
       'name': 'MTN',
       'apiName': 'mtn',
-      'image': 'assets/mtn.jpg',
       'color': const Color(0xFFFFCB05),
     },
     {
       'name': 'Airtel',
       'apiName': 'airtel',
-      'image': 'assets/airtel.jpg',
       'color': const Color(0xFFEF1C25),
     },
     {
       'name': 'Glo',
       'apiName': 'glo',
-      'image': 'assets/glo.png',
       'color': const Color(0xFF00843D),
     },
     {
       'name': '9mobile',
       'apiName': 'etisalat',
-      'image': 'assets/t2.png',
       'color': const Color(0xFFA76B1D),
     },
   ];
