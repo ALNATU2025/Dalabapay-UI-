@@ -14,6 +14,9 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
+import '../../../ui/ui.dart';
+import '../../../core/widgets/commission_estimate.dart';
+import '../../../core/services/commission_rates_service.dart';
 
 class CableTVScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -2288,876 +2291,90 @@ class _CableTVScreenState extends State<CableTVScreen>
   // ==================== PAYMENT SHEET OVERLAY ====================
 
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
+    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
+    final total = amount * _quantity;
+    String providerName = '';
+    for (final p in _providers) {
+      if (p['id'] == _selectedProvider) {
+        providerName = (p['fullName'] ?? p['name'] ?? '').toString();
+      }
+    }
+    final isChange = _selectedAction == 'change';
+    final biometricOk = !kIsWeb &&
+        (Platform.isAndroid || Platform.isIOS) &&
+        _biometricEnabled &&
+        _biometricAllowed;
+    return Positioned.fill(
       child: AnimatedBuilder(
         animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Header
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/images/dalabapay2.png',
-                                      height: 40,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: HugeIcon(
-                                          icon:
-                                              HugeIcons
-                                                  .strokeRoundedMultiplicationSign,
-                                          size: 18,
-                                          color: const Color(0xFF728078),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-
-                              Text(
-                                'Confirm Payment',
-                                style: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF14263D),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Transaction Details
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-
-                              // Balance
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-
-                              Divider(
-                                color: Colors.grey.shade200,
-                                thickness: 1,
-                              ),
-                              const SizedBox(height: 20),
-
-                              // Pay with PIN Option
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              // Pay with Biometric Option
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      HugeIcon(
-                                        icon: HugeIcons.strokeRoundedAlert02,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN in Settings to make payments.',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  // ==================== PAYMENT SHEET DETAILS ====================
-
-  // ==================== PAYMENT SHEET DETAILS ====================
-
-  Widget _buildPaymentSheetDetails() {
-    final provider = _providers.firstWhere(
-      (p) => p['id'] == _selectedProvider,
-      orElse: () => _providers.first,
-    );
-    final smartCard = _smartCardController.text.trim();
-    final phone = _phoneController.text.trim();
-    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
-    final isPackageChange = _selectedAction == 'change';
-    final actionName = _selectedAction == 'renew' ? 'Renew' : 'Change';
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          // Action Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color:
-                          isPackageChange
-                              ? Colors.orange.shade50
-                              : _primary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon:
-                          isPackageChange
-                              ? HugeIcons.strokeRoundedRefresh01
-                              : HugeIcons.strokeRoundedCheckmarkCircle01,
-                      color:
-                          isPackageChange ? Colors.orange.shade700 : _primary,
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Action',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 3,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      isPackageChange
-                          ? Colors.orange.shade100
-                          : Colors.green.shade100,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  actionName,
-                  style: GoogleFonts.inter(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color:
-                        isPackageChange
-                            ? Colors.orange.shade800
-                            : Colors.green.shade800,
-                  ),
-                ),
-              ),
-            ],
+        builder: (context, child) => FractionalTranslation(
+          translation: Offset(0, 1 - _sheetAnimation.value),
+          child: child,
+        ),
+        child: AnimatedBuilder(
+          animation: _shakeAnimation,
+          builder: (context, child) => Transform.translate(
+            offset: Offset(_shakeAnimation.value, 0),
+            child: child,
           ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Provider Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: provider['color'].withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: _buildProviderLogo(
-                      provider['logo'],
-                      provider['color'],
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Provider',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
+          child: DPReviewPanel(
+            icon: DPIcons.tv,
+            title: providerName,
+            amount: total,
+            rows: [
+              DPReviewRow('Customer', _customerName ?? '—'),
+              DPReviewRow('Smartcard', _smartCardController.text.trim()),
+              DPReviewRow(
+                isChange ? 'New package' : 'Package',
+                (isChange ? _selectedPlan : _currentBouquet) ?? '—',
               ),
-              Flexible(
-                child: Text(
-                  provider['fullName'] ?? 'N/A',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Customer Name Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF173D88).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedUser02,
-                      color: const Color(0xFF173D88),
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Customer',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  _customerName ?? 'N/A',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Package Info - Current Package (only for change)
-          if (isPackageChange) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedTv01,
-                        color: Colors.grey.shade600,
-                        size: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'From',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF728078),
-                      ),
-                    ),
-                  ],
-                ),
-                Flexible(
-                  child: Text(
-                    _currentBouquet ?? 'N/A',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.grey.shade600,
-                    ),
-                    textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                  ),
-                ),
+              DPReviewRow('Action', isChange ? 'Change package' : 'Renew'),
+              if (_quantity > 1) ...[
+                DPReviewRow('Price per month', DP.naira(amount)),
+                DPReviewRow('Months', '$_quantity'),
               ],
-            ),
-            Divider(height: 14, color: Colors.grey.shade200),
-          ],
-
-          // Plan/New Package Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFA76B1D).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedTv01,
-                      color: const Color(0xFFA76B1D),
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    isPackageChange ? 'New' : 'Package',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  isPackageChange
-                      ? (_selectedPlan ?? 'N/A')
-                      : (_currentBouquet ?? 'N/A'),
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-              ),
+              DPReviewRow('Total to pay', DP.naira(total), strong: true),
             ],
+            walletBalance: _walletBalance,
+            totalDebit: total,
+            commission: CommissionRatesService.estimate('cable', total),
+            pinController: _pinController,
+            pinFocusNode: _pinFocusNode,
+            pinRequired: _transactionPinSet && !_useBiometric,
+            pinError: _pinValidationError,
+            processing: _isProcessingPayment,
+            onPay: () {
+              setState(() => _useBiometric = false);
+              _processPayment();
+            },
+            onClose: _closePaymentSheet,
+            biometricAvailable: biometricOk,
+            biometricLabel: 'biometrics',
+            onBiometric: () {
+              setState(() {
+                _useBiometric = true;
+                _pinValidationError = null;
+              });
+              _processPayment();
+            },
+            footnote: 'TV subscriptions can\'t be reversed once activated.',
           ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Quantity Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF173D88).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedCalendar03,
-                      color: const Color(0xFF173D88),
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Months',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                '$_quantity',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF14263D),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Amount Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: _secondary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedMoney01,
-                      color: _secondary,
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Amount',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '₦${amount.toStringAsFixed(2)}',
-                    style: GoogleFonts.inter(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: _secondary,
-                    ),
-                  ),
-                  if (_quantity > 1)
-                    Text(
-                      '₦${(amount / _quantity).toStringAsFixed(2)} × $_quantity',
-                      style: GoogleFonts.inter(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: _secondary.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondary.withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _secondary,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Available Balance',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF728078),
-                ),
-              ),
-            ],
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: _secondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // ==================== PAYMENT SHEET DETAILS ====================
+
+  // ==================== PAYMENT SHEET DETAILS ====================
+
+
 
   // ==================== PIN OPTION ====================
 
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_shakeAnimation.value, 0),
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFDECEA)
-                    : (_useBiometric
-                        ? Colors.grey.shade50
-                        : _primary.withOpacity(0.04)),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  hasError
-                      ? const Color(0xFFC0392B)
-                      : (_useBiometric ? Colors.grey.shade300 : _primary),
-              width: hasError ? 2 : (_useBiometric ? 1 : 2),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  enabled: !_useBiometric,
-                  decoration: InputDecoration(
-                    hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.inter(
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B).withOpacity(0.7)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedBiometricAccess,
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : _primary),
-                      size: 18,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 0,
-                      vertical: 12,
-                    ),
-                    errorText: _pinValidationError,
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric
-                                ? Colors.grey.shade400
-                                : Colors.black),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFDECEA),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedAlert02,
-                        color: const Color(0xFFC0392B),
-                        size: 14,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFC0392B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment || _useBiometric
-                          ? null
-                          : _processPayment,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric ? Colors.transparent : _secondary),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          hasError
-                              ? const BorderRadius.vertical(
-                                bottom: Radius.circular(12),
-                              )
-                              : BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedBiometricAccess,
-                                color:
-                                    hasError
-                                        ? Colors.white
-                                        : (_useBiometric
-                                            ? Colors.grey.shade400
-                                            : Colors.white),
-                                size: 16,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                hasError
-                                    ? 'Retry'
-                                    : (_useBiometric
-                                        ? 'Switch to PIN'
-                                        : 'Pay with PIN'),
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color:
-                                      hasError
-                                          ? Colors.white
-                                          : (_useBiometric
-                                              ? Colors.grey.shade400
-                                              : Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
 
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
-
-    if (!isBiometricSupported) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap:
-            _isProcessingPayment
-                ? null
-                : () {
-                  setState(() {
-                    _useBiometric = true;
-                    _pinValidationError = null;
-                    _pinController.clear();
-                  });
-                  _processPayment();
-                },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-          decoration: BoxDecoration(
-            color: _useBiometric ? _primary.withOpacity(0.08) : Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: _useBiometric ? _primary : Colors.grey.shade300,
-              width: _useBiometric ? 2 : 1,
-            ),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: _primary,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.fingerprint,
-                        color: _useBiometric ? _primary : Colors.grey.shade600,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          _useBiometric
-                              ? '🔐 Tap to authenticate'
-                              : 'Pay with Biometric',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                _useBiometric ? _primary : Colors.grey.shade700,
-                          ),
-                        ),
-                      ),
-                      if (_useBiometric)
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: _secondary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-                            color: Colors.white,
-                            size: 12,
-                          ),
-                        ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== SUCCESS & ERROR DIALOGS ====================
 
@@ -3221,108 +2438,12 @@ class _CableTVScreenState extends State<CableTVScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    shape: BoxShape.circle,
-                  ),
-                  child: HugeIcon(
-                    icon: HugeIcons.strokeRoundedAlert02,
-                    color: Colors.red.shade700,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      color: Colors.red.shade700,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: Colors.grey.shade600,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'If this issue persists, please contact support.',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  backgroundColor: _primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: title,
+      message: message,
+      confirmLabel: 'OK',
+      tone: DPTone.error,
     );
   }
 
@@ -3390,99 +2511,41 @@ class _CableTVScreenState extends State<CableTVScreen>
   // ==================== PROVIDER DROPDOWN ====================
 
   Widget _buildProviderDropdown() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedProvider,
-          isExpanded: true,
-          hint: Row(
-            children: [
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  shape: BoxShape.circle,
-                ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedTv01,
-                  color: Colors.grey.shade400,
-                  size: 16,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                'Select Provider',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: _hintColor,
-                ),
-              ),
-            ],
-          ),
-          icon: HugeIcon(
-            icon: HugeIcons.strokeRoundedArrowDown01,
-            color: Colors.grey,
-            size: 18,
-          ),
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey.shade800,
-          ),
-          items:
-              _providers.map((provider) {
-                return DropdownMenuItem<String>(
-                  value: provider['id'],
-                  child: Row(
-                    children: [
-                      _buildProviderLogo(
-                        provider['logo'],
-                        provider['color'],
-                        size: 28,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          provider['fullName'],
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _selectedProvider = value;
-              _selectedPlan = null;
-              _selectedPlanAmount = null;
-              _selectedPlanVariationCode = null;
-              _isValidated = false;
-              _customerName = null;
-              _currentBouquet = null;
-              _currentBouquetCode = null;
-              _renewalAmount = null;
-              _dueDate = null;
-              _selectedAction = null;
-              _quantity = 1;
-              _amountController.clear();
-            });
-            _fetchCablePlans(value!);
-          },
-        ),
-      ),
+    Map<String, dynamic>? current;
+    for (final p in _providers) {
+      if (p['id'] == _selectedProvider) current = p;
+    }
+    return DPSelectField(
+      value: current?['fullName']?.toString(),
+      hint: 'Choose your provider',
+      leading: const Icon(DPIcons.tv, color: DP.green, size: 20),
+      onTap: () async {
+        final picked = await dpPickFromList<Map<String, dynamic>>(
+          context,
+          title: 'TV provider',
+          items: _providers,
+          selected: current,
+          labelOf: (x) => (x['fullName'] ?? x['name'] ?? '').toString(),
+        );
+        if (picked == null || !mounted) return;
+        final value = picked['id'] as String;
+        setState(() {
+          _selectedProvider = value;
+          _selectedPlan = null;
+          _selectedPlanAmount = null;
+          _selectedPlanVariationCode = null;
+          _isValidated = false;
+          _customerName = null;
+          _currentBouquet = null;
+          _currentBouquetCode = null;
+          _renewalAmount = null;
+          _dueDate = null;
+          _selectedAction = null;
+          _quantity = 1;
+          _amountController.clear();
+        });
+        _fetchCablePlans(value);
+      },
     );
   }
 
@@ -3490,561 +2553,220 @@ class _CableTVScreenState extends State<CableTVScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
+    return PopScope(
+      canPop: !_showPaymentSheet,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showPaymentSheet && !_isProcessingPayment) {
+          _closePaymentSheet();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  DPTopBar(
+                    title: 'Cable TV',
+                    actionLabel: 'History',
+                    onAction: () => Navigator.pushNamed(
+                      context,
+                      '/transactions',
+                      arguments: {'userId': widget.userId},
+                    ),
+                  ),
+                  Expanded(child: _buildBody()),
+                ],
+              ),
+            ),
+            if (_showPaymentSheet) _buildPaymentSheetOverlay(),
+          ],
+        ),
+        bottomNavigationBar: _showPaymentSheet
+            ? null
+            : DPBottomAction(
+                child: DPButton(
+                  label: 'Review TV payment',
+                  icon: DPIcons.forward,
+                  loading: _isLoading || _isAuthenticating,
+                  onPressed: _openPaymentSheet,
+                ),
+              ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedArrowLeft01,
-          color: _primary,
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Cable TV',
-        style: GoogleFonts.inter(
-          color: _primary,
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: _primary.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _primary,
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap:
-                    () =>
-                        setState(() => _isBalanceVisible = !_isBalanceVisible),
-                child: Text(
-                  _isBalanceVisible
-                      ? '₦${_walletBalance.toStringAsFixed(2)}'
-                      : '••••',
-                  style: GoogleFonts.inter(
-                    color: _primary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildBody() {
     if (_isLoadingUserData) {
-      return Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(_primary),
-        ),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (!_isUserActive || !_cableServiceEnabled) {
       return _buildServiceUnavailable();
     }
 
-    // Check if validate button should be active
     final smartCardText = _smartCardController.text.trim();
     final bool isSmartCardValidLength =
         smartCardText.length >= 10 && smartCardText.length <= 11;
     final bool canValidate =
         _selectedProvider != null && isSmartCardValidLength && !_isValidating;
+    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
 
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildBanner(),
-              const SizedBox(height: 24),
-
-              // Select Provider
-              Text(
-                'Select Provider',
-                style: GoogleFonts.inter(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _buildProviderDropdown(),
-              const SizedBox(height: 20),
-
-              // Smart Card Number
-              Text(
-                'Smart Card Number',
-                style: GoogleFonts.inter(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.grey.shade200),
-                      ),
-                      child: TextField(
-                        controller: _smartCardController,
-                        focusNode: _smartCardFocusNode,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(11),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: 'Enter 10-11 digit smart card number',
-                          hintStyle: GoogleFonts.inter(
-                            color: _hintColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          prefixIcon: Container(
-                            padding: const EdgeInsets.all(12),
-                            child: HugeIcon(
-                              icon: HugeIcons.strokeRoundedCreditCard,
-                              color: _primary,
-                              size: 22,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 14,
-                          ),
-                        ),
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        onChanged:
-                            (_) => setState(
-                              () {},
-                            ), // Trigger rebuild for button state
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  SizedBox(
-                    width: 90,
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: canValidate ? _validateSmartCard : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _primary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.zero,
-                      ),
-                      child:
-                          _isValidating
-                              ? SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : Text(
-                                'Validate',
-                                style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13,
-                                ),
-                              ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Validation Status
-              if (_isValidated && _customerName != null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: _secondary.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _secondary.withOpacity(0.2)),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: _secondary.withOpacity(0.15),
-                          shape: BoxShape.circle,
-                        ),
-                        child: HugeIcon(
-                          icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-                          color: _secondary,
-                          size: 18,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Smart Card Validated',
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: _secondary,
-                              ),
-                            ),
-                            Text(
-                              _customerName!,
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: _secondary,
-                              ),
-                            ),
-                            if (_currentBouquet != null &&
-                                _currentBouquet != 'N/A')
-                              Text(
-                                'Current: $_currentBouquet',
-                                style: GoogleFonts.inter(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                  color: _secondary.withOpacity(0.7),
-                                ),
-                              ),
-                            if (_dueDate != null && _dueDate != 'N/A')
-                              Text(
-                                'Due: ${_formatDate(_dueDate!)}',
-                                style: GoogleFonts.inter(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                  color: _secondary.withOpacity(0.7),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 20),
-
-              // Action Selection
-              if (_isValidated) _buildActionSelector(),
-              const SizedBox(height: 20),
-
-              // Plan Selection (only for Change)
-              if (_selectedAction == 'change') _buildPlanSection(),
-              const SizedBox(height: 16),
-
-              // Amount Input
-              if (_isValidated && _selectedAction != null) _buildAmountInput(),
-              const SizedBox(height: 16),
-
-              // Quantity Selector
-              if (_isValidated && _selectedAction != null)
-                _buildQuantitySelector(),
-              const SizedBox(height: 20),
-
-              // Phone Number
-              Text(
-                'Phone Number',
-                style: GoogleFonts.inter(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: TextField(
-                  controller: _phoneController,
-                  focusNode: _phoneFocusNode,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
-                  ],
-                  decoration: InputDecoration(
-                    hintText: 'Enter 11-digit phone number',
-                    hintStyle: GoogleFonts.inter(
-                      color: _hintColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(12),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedSmartPhone01,
-                        color: _primary,
-                        size: 22,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 14,
-                    ),
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Info Card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: _primary.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 23,
-                      height: 23,
-                      decoration: BoxDecoration(
-                        color: _primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: _primary,
-                        size: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: Text(
-                        'Please confirm the details above before proceeding.',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: _primary,
-                          height: 1.3,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Continue Button
-              SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: ElevatedButton(
-                  onPressed:
-                      (_isLoading || _isAuthenticating)
-                          ? null
-                          : _openPaymentSheet,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _secondary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 0,
-                  ),
-                  child:
-                      _isLoading || _isAuthenticating
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedArrowUp01,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Continue',
-                                style: GoogleFonts.inter(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBanner() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bannerHeight = screenWidth < 400 ? 100.0 : 128.0;
-
-    return Container(
-      width: double.infinity,
-      height: bannerHeight,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: const DecorationImage(
-          image: AssetImage('assets/cabletv_banner.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              _primary.withOpacity(0.3),
-              _secondary.withOpacity(0.15),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.4, 0.7],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            HugeIcon(
-              icon:
-                  !_isUserActive
-                      ? HugeIcons.strokeRoundedUser02
-                      : HugeIcons.strokeRoundedTv01,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
-            ),
-            const SizedBox(height: 16),
             Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
-              ),
+              'Your shows, right on time. Renew or change your package.',
+              style: DP.body.copyWith(color: DP.muted),
             ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'Cable TV service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
+            const SizedBox(height: 20),
+            const DPLabel('TV provider'),
+            _buildProviderDropdown(),
+            const SizedBox(height: 20),
+            DPLabel(
+              'Smartcard / IUC number',
+              trailing: _isValidated
+                  ? null
+                  : DPTextLink(
+                      label: _isValidating ? 'Checking…' : 'Verify',
+                      color: canValidate ? DP.green : DP.faint,
+                      onTap: canValidate ? _validateSmartCard : null,
+                    ),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
+            DPField(
+              controller: _smartCardController,
+              focusNode: _smartCardFocusNode,
+              hint: '10–11 digit number',
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
+              onChanged: (_) => setState(() {}),
+              onSubmitted: (_) {
+                if (canValidate) _validateSmartCard();
+              },
+              style: const TextStyle(fontSize: 17, color: DP.ink, letterSpacing: 0.6),
+              suffix: _isValidating
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(
+                      _isValidated ? DPIcons.checkCircle : DPIcons.scan,
+                      color: _isValidated ? DP.green : DP.muted,
+                    ),
+            ),
+            if (_isValidated && _customerName != null) ...[
+              const SizedBox(height: 12),
+              DPCard(
+                color: DP.mint,
+                borderColor: null,
+                radius: DP.rLg,
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(DPIcons.checkCircle, color: DP.green, size: 22),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _customerName!.toUpperCase(),
+                            style: const TextStyle(
+                              color: DP.green,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
+                          if (_currentBouquet != null &&
+                              _currentBouquet != 'N/A')
+                            Text(
+                              'Current: $_currentBouquet',
+                              style: const TextStyle(
+                                color: DP.green,
+                                fontSize: 12.5,
+                              ),
+                            ),
+                          if (_dueDate != null && _dueDate != 'N/A')
+                            Text(
+                              'Due: ${_formatDate(_dueDate!)}',
+                              style: const TextStyle(
+                                color: DP.green,
+                                fontSize: 12.5,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
+            ],
+            if (_isValidated) ...[
+              const SizedBox(height: 20),
+              _buildActionSelector(),
+            ],
+            if (_selectedAction == 'change') ...[
+              const SizedBox(height: 16),
+              _buildPlanSection(),
+            ],
+            if (_isValidated && _selectedAction != null) ...[
+              const SizedBox(height: 16),
+              _buildAmountInput(),
+              const SizedBox(height: 16),
+              _buildQuantitySelector(),
+            ],
+            const SizedBox(height: 20),
+            const DPLabel('Phone number'),
+            DPField(
+              controller: _phoneController,
+              focusNode: _phoneFocusNode,
+              hint: '0803 456 7890',
+              keyboardType: TextInputType.phone,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
+              suffix: const Icon(DPIcons.phone, color: DP.muted),
+            ),
+            const SizedBox(height: 20),
+            WalletCommissionCard(
+              walletBalance: _walletBalance,
+              amount: amount * _quantity,
+              service: 'cable',
+              balanceVisible: _isBalanceVisible,
+            ),
+            const SizedBox(height: 14),
+            const DPBanner(
+              'Check the smartcard number before paying. Subscriptions can\'t be reversed once activated.',
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildServiceUnavailable() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: DPEmptyState(
+          icon: DPIcons.tv,
+          title: 'Cable TV is unavailable right now',
+          message: 'Please try again in a little while.',
+          actionLabel: 'Go back',
+          onAction: () => Navigator.pop(context),
         ),
       ),
     );
