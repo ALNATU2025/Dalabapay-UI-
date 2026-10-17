@@ -16,6 +16,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'core/theme/app_theme.dart';
+import 'ui/ui.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/providers/wallet_provider.dart';
 import 'core/providers/service_provider.dart';
@@ -400,8 +401,8 @@ class _DalabaPayAppState extends State<DalabaPayApp>
         navigatorKey: navigatorKey,
         title: 'DalabaPay',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
+        theme: DPTheme.light(),
+        darkTheme: DPTheme.light(),
         themeMode: ThemeMode.light,
         initialRoute: '/',
 
