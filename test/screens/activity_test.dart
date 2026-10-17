@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dalabapay/presentation/screens/transactions/transactions_screen.dart';
+import 'package:dalabapay/presentation/screens/commission/commission_screen.dart';
 import 'harness.dart';
 import 'home_test.dart' show demoPrefs;
 
@@ -25,4 +26,6 @@ void main() {
 
   testWidgets('activity', (t) async =>
       shoot(t, '19_activity', const TransactionsScreen(userId: 'u1'), height: 1300));
+  testWidgets('commission', (t) async => shoot(t, '20_commission',
+      CommissionScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 1500));
 }
