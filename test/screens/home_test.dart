@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:dalabapay/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:dalabapay/presentation/screens/auth/pin_login_screen.dart';
+import 'package:dalabapay/core/services/socket_service.dart';
 import 'harness.dart';
 
 final demoPrefs = <String, Object>{
@@ -26,6 +27,9 @@ void main() {
     await loadFonts();
   });
 
-  testWidgets('home', (t) async => shoot(t, '10_home', const DashboardScreen(), height: 900));
+  testWidgets('home', (t) async {
+    await shoot(t, '10_home', const DashboardScreen(), height: 900,
+        beforeTeardown: () => SocketService().disconnect());
+  });
   testWidgets('pin login', (t) async => shoot(t, '05_pin_login', const PinLoginScreen()));
 }

@@ -40,6 +40,7 @@ Future<void> shoot(
   double height = 844,
   Map<String, WidgetBuilder>? routes,
   Duration settle = const Duration(milliseconds: 600),
+  void Function()? beforeTeardown,
 }) async {
   tester.view.physicalSize = Size(390 * 2, height * 2);
   tester.view.devicePixelRatio = 2;
@@ -59,6 +60,7 @@ Future<void> shoot(
   }
   await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/$name.png'));
   // Tear down and flush delayed timers (splash delays, retry back-offs).
+  beforeTeardown?.call();
   await tester.pumpWidget(const SizedBox());
   for (var i = 0; i < 12; i++) {
     await tester.pump(const Duration(seconds: 10));
