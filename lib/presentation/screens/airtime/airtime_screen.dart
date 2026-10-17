@@ -11,6 +11,9 @@ import '../../../core/services/api_service.dart';
 import '../../../core/services/biometric_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
+import '../../../ui/ui.dart';
+import '../../../core/widgets/commission_estimate.dart';
+import '../../../core/services/commission_rates_service.dart';
 
 class AirtimeScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -109,7 +112,7 @@ class _AirtimeScreenState extends State<AirtimeScreen>
     },
   ];
 
-  final List<int> _quickAmounts = [100, 200, 500, 1000, 2000, 5000];
+  final List<int> _quickAmounts = [500, 1000, 2000, 3000, 5000, 10000];
 
   // Dynamic Recent Recharges (Strictly no dummy data)
   List<Map<String, String>> _recentRecharges = [];
@@ -1026,1162 +1029,304 @@ class _AirtimeScreenState extends State<AirtimeScreen>
   // ==================== BUILD METHOD ====================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bgCanvas,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
+    return PopScope(
+      canPop: !_showPaymentSheet,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showPaymentSheet && !_isProcessingPayment) {
+          _closePaymentSheet();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  _buildAppBarRow(),
+                  Expanded(child: _buildBody()),
+                ],
+              ),
+            ),
+            if (_showPaymentSheet) _buildPaymentSheetOverlay(),
+          ],
+        ),
+        bottomNavigationBar: _showPaymentSheet ? null : _buildStickyBottomCTA(),
       ),
-      // HIDE BOTTOM CTA BUTTON WHEN PAYMENT SHEET SLIDES UP
-      bottomNavigationBar: _showPaymentSheet ? null : _buildStickyBottomCTA(),
     );
   }
 
   // ==================== HEADER / APP BAR ====================
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      scrolledUnderElevation: 0.5,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: _primaryNavy,
-          size: 18,
-        ),
-        onPressed: () => Navigator.pop(context),
+  Widget _buildAppBarRow() {
+    return DPTopBar(
+      title: 'Buy airtime',
+      actionLabel: 'History',
+      onAction: () => Navigator.pushNamed(
+        context,
+        '/transactions',
+        arguments: {'userId': widget.userId},
       ),
-      title: Text(
-        'Airtime Top-Up',
-        style: GoogleFonts.inter(
-          color: _primaryNavy,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      centerTitle: true,
-      actions: [_buildWalletBalanceBadge(), const SizedBox(width: 16)],
     );
   }
 
-  Widget _buildWalletBalanceBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: _primaryNavy.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _primaryNavy.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.account_balance_wallet_rounded,
-            color: _primaryNavy,
-            size: 15,
-          ),
-          const SizedBox(width: 6),
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() => _isBalanceVisible = !_isBalanceVisible);
-            },
-            child: Text(
-              _isBalanceVisible
-                  ? '₦${_walletBalance.toStringAsFixed(2)}'
-                  : '••••••',
-              style: GoogleFonts.inter(
-                color: _primaryNavy,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== BODY CONTENT ====================
   Widget _buildBody() {
     if (_isLoadingUserData) {
-      return const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(_primaryNavy),
-        ),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (!_isUserActive || !_airtimeServiceEnabled) {
       return _buildServiceUnavailable();
     }
 
+    final amount = double.tryParse(_amountController.text) ?? 0;
+    final quick = _quickAmounts.map((a) => DP.naira(a, decimals: false)).toList();
+    final selectedQuick = _quickAmounts.contains(amount.toInt()) &&
+            amount == amount.roundToDouble()
+        ? DP.naira(amount.toInt(), decimals: false)
+        : null;
+
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 12,
-            bottom: 100,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCleanBanner(),
-              const SizedBox(height: 20),
-
-              // Dynamic Recent Recharges (Shows max 5 or empty state)
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const DPHeadline(
+              'Keep the conversation going.',
+              subtitle: 'Top up any Nigerian number in moments.',
+            ),
+            _buildSectionTitle('Choose network'),
+            _buildNetworkSelector(),
+            const SizedBox(height: 22),
+            _buildPhoneNumberInput(),
+            if (_recentRecharges.isNotEmpty) ...[
+              const SizedBox(height: 14),
               _buildRecentRechargesSection(),
-              const SizedBox(height: 24),
-
-              // Phone Input Field with Native Contact Picker
-              _buildPhoneNumberInput(),
-              const SizedBox(height: 24),
-
-              // Network Selection Bar
-              _buildSectionTitle('Network Operator'),
-              const SizedBox(height: 12),
-              _buildNetworkSelector(),
-              const SizedBox(height: 24),
-
-              // Amount Selection Grid
-              _buildSectionTitle('Select Amount'),
-              const SizedBox(height: 12),
-              _buildQuickAmountGrid(),
-              const SizedBox(height: 16),
-              _buildCustomAmountInput(),
             ],
-          ),
+            const SizedBox(height: 22),
+            _buildSectionTitle('Quick amounts'),
+            DPChipGrid(
+              options: quick,
+              selected: selectedQuick,
+              height: 46,
+              onSelect: (label) {
+                final i = quick.indexOf(label);
+                if (i >= 0) _selectQuickAmount(_quickAmounts[i]);
+              },
+            ),
+            const SizedBox(height: 20),
+            const DPLabel('Amount'),
+            _buildCustomAmountInput(),
+            const DPHelper('Minimum ₦50 · Maximum ₦50,000'),
+            const SizedBox(height: 20),
+            WalletCommissionCard(
+              walletBalance: _walletBalance,
+              amount: amount,
+              service: 'airtime',
+              balanceVisible: _isBalanceVisible,
+            ),
+            const SizedBox(height: 14),
+            const DPBanner(
+              'Commission goes to your earnings, not your wallet balance. Review the final amount before paying.',
+            ),
+          ],
         ),
       ),
     );
   }
 
   // ==================== CLEAN BANNER (WITHOUT TEXT OVERLAY) ====================
-  Widget _buildCleanBanner() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-          image: AssetImage('assets/airtime_banner.png'),
-          fit: BoxFit.cover,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+
+  // ==================== RECENT RECHARGES ====================
+  Widget _buildRecentRechargesSection() {
+    final items = _recentRecharges.take(5).toList();
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: items.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (_, i) => _buildRecentContactAvatar(items[i]),
       ),
     );
   }
 
-  // ==================== RECENT RECHARGES ====================
-  Widget _buildRecentRechargesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle('Recent Recharges'),
-        const SizedBox(height: 10),
-        if (_recentRecharges.isEmpty)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.history_rounded,
-                  size: 18,
-                  color: Colors.grey.shade400,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'No recent recharges yet',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    color: _textMuted,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          )
-        else
-          SizedBox(
-            height: 82,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemCount:
-                  _recentRecharges.length > 5 ? 5 : _recentRecharges.length,
-              itemBuilder: (context, index) {
-                final contact = _recentRecharges[index];
-                return _buildRecentContactAvatar(contact);
-              },
-            ),
-          ),
-      ],
-    );
-  }
-
   Widget _buildRecentContactAvatar(Map<String, String> contact) {
-    return GestureDetector(
-      onTap: () => _selectRecentRecharge(contact),
-      child: Container(
-        margin: const EdgeInsets.only(right: 14),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: _primaryNavy.withValues(alpha: 0.08),
-                  child: Text(
-                    (contact['name'] ?? 'U')[0].toUpperCase(),
-                    style: GoogleFonts.inter(
-                      color: _primaryNavy,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: CircleAvatar(
-                      radius: 8,
-                      backgroundColor: Colors.grey.shade200,
-                      child: Text(
-                        (contact['network'] ?? 'M')[0].toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                          color: _primaryNavy,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              contact['name'] ?? '',
-              style: GoogleFonts.inter(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: _textDark,
-              ),
-            ),
-          ],
-        ),
+    final phone = contact['phone'] ?? '';
+    final net = contact['network'] ?? '';
+    return Tooltip(
+      message: net,
+      child: DPChip(
+        label: phone,
+        selected: _phoneController.text == phone,
+        height: 40,
+        leading: const Icon(DPIcons.history, size: 16, color: DP.muted),
+        onTap: () => _selectRecentRecharge(contact),
       ),
     );
   }
 
   // ==================== PHONE NUMBER INPUT ====================
   Widget _buildPhoneNumberInput() {
-    final selectedNetworkData = _networks.firstWhere(
-      (n) => n['name'] == _selectedNetwork,
-      orElse: () => {},
-    );
-
+    final phone = _phoneController.text.trim();
+    String? helper;
+    if (_selectedNetwork != null && phone.length >= 4) {
+      helper = '$_selectedNetwork Nigeria';
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Phone Number'),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color:
-                  _phoneFocusNode.hasFocus
-                      ? _primaryNavy
-                      : Colors.grey.shade200,
-              width: _phoneFocusNode.hasFocus ? 1.5 : 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
-              ),
-            ],
+        const DPLabel('Phone number'),
+        DPField(
+          controller: _phoneController,
+          focusNode: _phoneFocusNode,
+          hint: '0803 456 7890',
+          keyboardType: TextInputType.phone,
+          onChanged: (val) {
+            _autoDetectNetwork(val);
+            setState(() {});
+          },
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(11),
+          ],
+          style: const TextStyle(
+            fontSize: 17,
+            color: DP.ink,
+            letterSpacing: 0.4,
           ),
-          child: TextField(
-            controller: _phoneController,
-            focusNode: _phoneFocusNode,
-            keyboardType: TextInputType.phone,
-            onChanged: (val) {
-              _autoDetectNetwork(val);
-              setState(() {});
-            },
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(11),
-            ],
-            decoration: InputDecoration(
-              hintText: 'Enter 11-digit phone number',
-              hintStyle: GoogleFonts.inter(
-                color: Colors.grey.shade400,
-                fontSize: 14,
-              ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.all(12),
-                child:
-                    selectedNetworkData.isNotEmpty &&
-                            selectedNetworkData['image'] != null
-                        ? AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: ClipRRect(
-                            key: ValueKey(selectedNetworkData['name']),
-                            borderRadius: BorderRadius.circular(6),
-                            child: Image.asset(
-                              selectedNetworkData['image'],
-                              width: 26,
-                              height: 26,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                        : const Icon(
-                          Icons.phone_android_rounded,
-                          color: _primaryNavy,
-                          size: 22,
-                        ),
-              ),
-              suffixIcon: IconButton(
-                icon: const Icon(
-                  Icons.contacts_rounded,
-                  color: _primaryNavy,
-                  size: 22,
-                ),
-                onPressed: _pickContactFromDevice,
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-            ),
-            style: GoogleFonts.inter(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: _textDark,
-              letterSpacing: 0.5,
-            ),
+          suffix: IconButton(
+            tooltip: 'Choose from contacts',
+            icon: const Icon(DPIcons.contact, color: DP.muted),
+            onPressed: _pickContactFromDevice,
           ),
         ),
+        if (helper != null) DPHelper(helper),
       ],
     );
   }
 
   // ==================== NETWORK SELECTOR ====================
   Widget _buildNetworkSelector() {
-    return SizedBox(
-      height: 72,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: _networks.length,
-        itemBuilder: (context, index) {
-          final network = _networks[index];
-          final isSelected = _selectedNetwork == network['name'];
-          return GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() => _selectedNetwork = network['name']);
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOutCubic,
-              width: 82,
-              margin: const EdgeInsets.only(right: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isSelected ? network['color'] : Colors.grey.shade200,
-                  width: isSelected ? 2.5 : 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        isSelected
-                            ? (network['color'] as Color).withValues(
-                              alpha: 0.25,
-                            )
-                            : Colors.black.withValues(alpha: 0.03),
-                    blurRadius: isSelected ? 8 : 4,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      network['image'],
-                      width: 32,
-                      height: 32,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    network['name'],
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      fontWeight:
-                          isSelected ? FontWeight.w800 : FontWeight.w600,
-                      color: _textDark,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  // ==================== QUICK AMOUNT GRID ====================
-  Widget _buildQuickAmountGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 2.2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: _quickAmounts.length,
-      itemBuilder: (context, index) {
-        final amount = _quickAmounts[index];
-        final isSelected = _amountController.text == amount.toString();
-
-        return GestureDetector(
-          onTap: () => _selectQuickAmount(amount),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            decoration: BoxDecoration(
-              color: isSelected ? _primaryNavy : Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: isSelected ? _primaryNavy : Colors.grey.shade200,
-                width: isSelected ? 2 : 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color:
-                      isSelected
-                          ? _primaryNavy.withValues(alpha: 0.2)
-                          : Colors.black.withValues(alpha: 0.02),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                '₦$amount',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                  color: isSelected ? Colors.white : _textDark,
-                ),
-              ),
-            ),
-          ),
-        );
+    return DPChipRow(
+      options: _networks.map((n) => n['name'] as String).toList(),
+      selected: _selectedNetwork,
+      height: 46,
+      onSelect: (name) {
+        HapticFeedback.selectionClick();
+        setState(() => _selectedNetwork = name);
       },
     );
   }
 
+  // ==================== QUICK AMOUNT GRID ====================
+
   Widget _buildCustomAmountInput() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color:
-              _amountFocusNode.hasFocus ? _primaryNavy : Colors.grey.shade200,
-          width: _amountFocusNode.hasFocus ? 1.5 : 1.0,
-        ),
-      ),
-      child: TextField(
-        controller: _amountController,
-        focusNode: _amountFocusNode,
-        keyboardType: TextInputType.number,
-        onChanged: (_) => setState(() {}),
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(
-          hintText: 'Or enter custom amount (e.g. ₦150)',
-          hintStyle: GoogleFonts.inter(
-            color: Colors.grey.shade400,
-            fontSize: 13,
-          ),
-          prefixIcon: const Icon(
-            Icons.payments_rounded,
-            color: _secondaryTeal,
-            size: 20,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
-        ),
-        style: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: _textDark,
-        ),
-      ),
+    return DPField(
+      controller: _amountController,
+      focusNode: _amountFocusNode,
+      hint: '0.00',
+      prefixText: '₦',
+      keyboardType: TextInputType.number,
+      onChanged: (_) => setState(() {}),
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      style: const TextStyle(fontSize: 17, color: DP.ink),
     );
   }
 
   // ==================== STICKY BOTTOM CTA ====================
   Widget _buildStickyBottomCTA() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: Container(
-            decoration: BoxDecoration(
-              color: _secondaryTeal,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: _secondaryTeal.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ElevatedButton(
-              onPressed:
-                  _isProcessingPayment || _isAuthenticating
-                      ? null
-                      : _openPaymentSheet,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child:
-                  _isProcessingPayment || _isAuthenticating
-                      ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2.5,
-                        ),
-                      )
-                      : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.bolt_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Proceed to Pay',
-                            style: GoogleFonts.inter(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
-          ),
-        ),
+    return DPBottomAction(
+      child: DPButton(
+        label: 'Continue to review',
+        icon: DPIcons.forward,
+        loading: _isProcessingPayment || _isAuthenticating,
+        onPressed: _openPaymentSheet,
       ),
     );
   }
 
   // ==================== PAYMENT SHEET OVERLAY ====================
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
-      child: AnimatedBuilder(
-        animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withValues(
-                alpha: 0.4 * _sheetAnimation.value,
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/dalabapay2.png',
-                                      height: 38,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close_rounded,
-                                          size: 18,
-                                          color: _textMuted,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Confirm Payment',
-                                style: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: _textDark,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-                              Divider(color: Colors.grey.shade200, height: 1),
-                              const SizedBox(height: 20),
-
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetDetails() {
-    final network = _networks.firstWhere(
-      (n) => n['name'] == _selectedNetwork,
-      orElse: () => _networks.first,
-    );
     final phone = _phoneController.text.trim();
     final amount = double.tryParse(_amountController.text) ?? 0;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Network',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: _textMuted,
-                ),
-              ),
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Image.asset(
-                      network['image'],
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    _selectedNetwork ?? 'N/A',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: _textDark,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Phone Number',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: _textMuted,
-                ),
-              ),
-              Text(
-                phone.isNotEmpty ? phone : 'N/A',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: _textDark,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Amount',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: _textMuted,
-                ),
-              ),
-              Text(
-                '₦${amount.toStringAsFixed(2)}',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: _secondaryTeal,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: _secondaryTeal.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondaryTeal.withValues(alpha: 0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Available Balance',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: _textMuted,
-            ),
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: _secondaryTeal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ==================== PIN INPUT WITH SHAKE & ERROR UI ====================
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+    final network = _selectedNetwork ?? '';
+    final biometricOk = !kIsWeb &&
+        (Platform.isAndroid || Platform.isIOS) &&
+        _biometricEnabled &&
+        _biometricAllowed;
+    return Positioned.fill(
       child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
+        animation: _sheetAnimation,
+        builder: (context, child) => FractionalTranslation(
+          translation: Offset(0, 1 - _sheetAnimation.value),
+          child: child,
+        ),
+        child: AnimatedBuilder(
+          animation: _shakeAnimation,
+          builder: (context, child) => Transform.translate(
             offset: Offset(_shakeAnimation.value, 0),
             child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFDECEA)
-                    : _primaryNavy.withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: hasError ? const Color(0xFFC0392B) : _primaryNavy,
-              width: hasError ? 2 : 1.5,
-            ),
           ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: 'Enter transaction PIN',
-                    hintStyle: GoogleFonts.inter(
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B).withValues(alpha: 0.7)
-                              : Colors.grey.shade600,
-                      fontSize: 13,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock_outline_rounded,
-                      color: hasError ? const Color(0xFFC0392B) : _primaryNavy,
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: hasError ? const Color(0xFFC0392B) : Colors.black,
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFDECEA),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        color: Color(0xFFC0392B),
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFC0392B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment ? null : _processPaymentWithPIN,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError ? const Color(0xFFC0392B) : _secondaryTeal,
-                    foregroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(12),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.lock_outline_rounded,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Pay with PIN',
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
+          child: DPReviewPanel(
+            icon: DPIcons.phone,
+            title: '$network airtime',
+            amount: amount,
+            rows: [
+              DPReviewRow('Phone number', phone),
+              DPReviewRow('Network', '$network Nigeria'),
+              DPReviewRow('Amount', DP.naira(amount)),
+              const DPReviewRow('Service fee', '₦0.00'),
+              DPReviewRow('Total to pay', DP.naira(amount), strong: true),
             ],
+            walletBalance: _walletBalance,
+            totalDebit: amount,
+            commission: CommissionRatesService.estimate('airtime', amount),
+            pinController: _pinController,
+            pinFocusNode: _pinFocusNode,
+            pinRequired: _transactionPinSet && _pinRequired,
+            pinError: _pinValidationError,
+            processing: _isProcessingPayment,
+            onPay: _processPaymentWithPIN,
+            onClose: _closePaymentSheet,
+            biometricAvailable: biometricOk,
+            biometricLabel: _biometricName,
+            onBiometric: _processPaymentWithBiometric,
+            footnote: 'Confirm the number. Delivered airtime can\'t be reversed.',
           ),
         ),
       ),
     );
   }
+
+
+
+  // ==================== PIN INPUT WITH SHAKE & ERROR UI ====================
 
   // ==================== BIOMETRIC OPTION ====================
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported =
-        !kIsWeb && (Platform.isAndroid || Platform.isIOS);
-
-    if (!isBiometricSupported || !_biometricEnabled) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: GestureDetector(
-        onTap: _isProcessingPayment ? null : _processPaymentWithBiometric,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          decoration: BoxDecoration(
-            color: _primaryNavy.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _primaryNavy, width: 1.5),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? const Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: _primaryNavy,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.fingerprint_rounded,
-                        color: _primaryNavy,
-                        size: 28,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Pay with $_biometricName',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: _primaryNavy,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: _secondaryTeal,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== SECTION TITLE ====================
   Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.inter(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: _primaryNavy,
-      ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(title, style: DP.section),
     );
   }
 
   Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.phone_disabled_rounded,
-              color: Colors.orange,
-              size: 60,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Service Unavailable',
-              style: GoogleFonts.inter(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: _textDark,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Airtime service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(fontSize: 14, color: _textMuted),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _primaryNavy,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.inter(fontWeight: FontWeight.w700),
-              ),
-            ),
-          ],
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: DPEmptyState(
+          icon: DPIcons.phone,
+          title: 'Airtime is unavailable right now',
+          message: 'Please try again in a little while.',
+          actionLabel: 'Go back',
+          onAction: () => Navigator.pop(context),
         ),
       ),
     );
@@ -2226,52 +1371,12 @@ class _AirtimeScreenState extends State<AirtimeScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  color: Colors.red.shade700,
-                  size: 24,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    color: Colors.red.shade700,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              message,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    color: _secondaryTeal,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: title,
+      message: message,
+      confirmLabel: 'OK',
+      tone: DPTone.error,
     );
   }
 }
