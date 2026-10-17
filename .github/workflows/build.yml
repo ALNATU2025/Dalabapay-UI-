@@ -1,0 +1,79 @@
+name: Build & check
+
+on:
+  push:
+    branches: [redesign]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Pub get
+        run: flutter pub get 2>&1 | tee pubget.log
+
+      - name: Analyze
+        run: |
+          set +e
+          flutter analyze --no-fatal-infos --no-fatal-warnings > analyze.txt 2>&1
+          echo "exit=$?" >> analyze.txt
+          true
+
+      - name: Screenshot tests
+        run: |
+          set +e
+          if [ -d test/screens ]; then
+            flutter test test/screens --update-goldens > screens.log 2>&1
+            echo "exit=$?" >> screens.log
+          fi
+          true
+
+      - name: Throwaway signing key (CI only, never used for Play)
+        run: |
+          keytool -genkeypair -v -keystore android/app/ci.jks -storepass cipass123 -keypass cipass123 \
+            -alias ci -keyalg RSA -keysize 2048 -validity 1000 -dname "CN=CI"
+          printf "storePassword=cipass123\nkeyPassword=cipass123\nkeyAlias=ci\nstoreFile=ci.jks\n" > android/key.properties
+
+      - name: Build APK
+        run: |
+          set +e
+          flutter build apk --release --split-per-abi --target-platform android-arm64 > build.log 2>&1
+          echo "exit=$?" >> build.log
+          true
+
+      - name: Publish results to ci-results branch
+        run: |
+          mkdir -p /tmp/out
+          cp analyze.txt build.log pubget.log /tmp/out/ 2>/dev/null || true
+          cp screens.log /tmp/out/ 2>/dev/null || true
+          tail -c 200000 build.log > /tmp/out/build_tail.log || true
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk /tmp/out/dalabapay-arm64.apk 2>/dev/null || true
+          if [ -d test/screens/goldens ]; then cp -r test/screens/goldens /tmp/out/screens; fi
+          echo "${GITHUB_SHA}" > /tmp/out/SHA
+          cd /tmp/out
+          git init -q -b ci-results
+          git config user.name "ci"
+          git config user.email "ci@users.noreply.github.com"
+          git add -A
+          git commit -q -m "CI results for ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" ci-results
