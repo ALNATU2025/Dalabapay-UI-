@@ -1,0 +1,994 @@
+// lib/presentation/screens/auth/register_screen.dart
+import 'dart:async';
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/services/api_service.dart';
+import '../../../ui/ui.dart';
+
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen>
+    with TickerProviderStateMixin {
+  final _formKey = GlobalKey<FormState>();
+  final _fullNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _referralCodeController = TextEditingController();
+
+  bool _isLoading = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  bool _agreedToTerms = false;
+
+  // ==================== EMAIL OTP VERIFICATION STATE ====================
+  final _otpController = TextEditingController();
+  bool _isOtpSent = false;
+  bool _isOtpVerified = false;
+  bool _isSendingOtp = false;
+  bool _isVerifyingOtp = false;
+  String _otpError = '';
+  String _otpInfoMessage = '';
+
+  // Live validation states
+  String _fullNameError = '';
+  String _emailError = '';
+  String _phoneError = '';
+  String _passwordError = '';
+  String _confirmPasswordError = '';
+  String _generalError = '';
+  String _referralError = '';
+
+  bool _isFullNameValid = false;
+  bool _isEmailValid = false;
+  bool _isPhoneValid = false;
+  bool _isPasswordValid = false;
+  bool _isConfirmPasswordValid = false;
+
+  // Password requirements
+  bool _hasMinLength = false;
+  bool _hasUppercase = false;
+  bool _hasLowercase = false;
+  bool _hasNumber = false;
+
+  // Referral validation
+  final bool _isValidatingReferral = false;
+
+  // Two-step UI state (details → email code)
+  bool _showVerifyStep = false;
+  int _resendSeconds = 0;
+  Timer? _resendTimer;
+  String? _referrerName;
+
+  // ==================== ANIMATION ====================
+  AnimationController? _fadeController;
+  Animation<double>? _fadeAnimation;
+  AnimationController? _pulseController;
+
+  // ==================== BRAND COLORS ====================
+
+  @override
+  void initState() {
+    super.initState();
+    _fullNameController.addListener(_validateFullNameLive);
+    _emailController.addListener(_validateEmailLive);
+    _phoneController.addListener(_validatePhoneLive);
+    _passwordController.addListener(_validatePasswordLive);
+    _confirmPasswordController.addListener(_validateConfirmPasswordLive);
+    _referralCodeController.addListener(_validateReferralLive);
+
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController!,
+      curve: Curves.easeOut,
+    );
+    _fadeController!.forward();
+
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _referralCodeController.dispose();
+    _otpController.dispose();
+    _resendTimer?.cancel();
+    _fadeController?.dispose();
+    _pulseController?.dispose();
+    super.dispose();
+  }
+
+  // ==================== VALIDATION ====================
+  void _validateFullNameLive() {
+    final value = _fullNameController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _fullNameError = '';
+        _isFullNameValid = false;
+      } else if (value.length < 3) {
+        _fullNameError = 'Full name must be at least 3 characters';
+        _isFullNameValid = false;
+      } else if (!RegExp(r"^[a-zA-ZÀ-ÿ\s'-]+$").hasMatch(value)) {
+        _fullNameError =
+            'Only letters, spaces, hyphens, and apostrophes allowed';
+        _isFullNameValid = false;
+      } else {
+        _fullNameError = '';
+        _isFullNameValid = true;
+      }
+    });
+  }
+
+  void _validateEmailLive() {
+    final value = _emailController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _emailError = '';
+        _isEmailValid = false;
+      } else if (!value.contains('@') || !value.contains('.')) {
+        _emailError = 'Enter a valid email address';
+        _isEmailValid = false;
+      } else {
+        final emailRegex = RegExp(
+          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+        );
+        if (emailRegex.hasMatch(value)) {
+          _emailError = '';
+          _isEmailValid = true;
+        } else {
+          _emailError = 'Enter a valid email address';
+          _isEmailValid = false;
+        }
+      }
+    });
+  }
+
+  void _validatePhoneLive() {
+    final value = _phoneController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _phoneError = '';
+        _isPhoneValid = false;
+      } else if (value.length != 11) {
+        _phoneError = 'Phone number must be exactly 11 digits';
+        _isPhoneValid = false;
+      } else if (!RegExp(r'^0\d{10}$').hasMatch(value)) {
+        _phoneError = 'Must start with 0 and contain only digits';
+        _isPhoneValid = false;
+      } else {
+        final prefix = value.substring(0, 3);
+        const validPrefixes = ['070', '080', '081', '090', '091'];
+        if (!validPrefixes.contains(prefix)) {
+          _phoneError = 'Enter a valid Nigerian phone number';
+          _isPhoneValid = false;
+        } else {
+          _phoneError = '';
+          _isPhoneValid = true;
+        }
+      }
+    });
+  }
+
+  void _validatePasswordLive() {
+    final value = _passwordController.text;
+    setState(() {
+      _hasMinLength = value.length >= 8;
+      _hasUppercase = value.contains(RegExp(r'[A-Z]'));
+      _hasLowercase = value.contains(RegExp(r'[a-z]'));
+      _hasNumber = value.contains(RegExp(r'[0-9]'));
+
+      if (value.isEmpty) {
+        _passwordError = '';
+        _isPasswordValid = false;
+      } else if (!_hasMinLength) {
+        _passwordError = 'Password must be at least 8 characters';
+        _isPasswordValid = false;
+      } else if (!_hasUppercase || !_hasLowercase || !_hasNumber) {
+        _passwordError = 'Password missing required characters';
+        _isPasswordValid = false;
+      } else {
+        _passwordError = '';
+        _isPasswordValid = true;
+      }
+
+      if (_confirmPasswordController.text.isNotEmpty) {
+        _validateConfirmPasswordLive();
+      }
+    });
+  }
+
+  void _validateConfirmPasswordLive() {
+    final value = _confirmPasswordController.text;
+    final password = _passwordController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _confirmPasswordError = '';
+        _isConfirmPasswordValid = false;
+      } else if (value != password) {
+        _confirmPasswordError = 'Passwords do not match';
+        _isConfirmPasswordValid = false;
+      } else {
+        _confirmPasswordError = '';
+        _isConfirmPasswordValid = true;
+      }
+    });
+  }
+
+  void _validateReferralLive() {
+    final value = _referralCodeController.text;
+    setState(() {
+      if (value.isEmpty) {
+        _referralError = '';
+        _referrerName = null;
+      } else if (value.length < 8) {
+        _referralError = 'Referral code must be at least 8 characters';
+        _referrerName = null;
+      } else {
+        _referralError = '';
+      }
+    });
+  }
+
+  bool get _formValid =>
+      _isFullNameValid &&
+      _isEmailValid &&
+      _isPhoneValid &&
+      _isPasswordValid &&
+      _isConfirmPasswordValid &&
+      _agreedToTerms &&
+      _isOtpVerified;
+
+  // ==================== OTP SEND & VERIFY ====================
+  Future<void> _sendOtp() async {
+    if (!_isEmailValid) {
+      setState(() => _otpError = 'Enter a valid email address first');
+      return;
+    }
+
+    setState(() {
+      _isSendingOtp = true;
+      _otpError = '';
+      _otpInfoMessage = '';
+    });
+
+    try {
+      final response = await ApiService.sendEmailVerificationOtp(
+        email: _emailController.text.trim().toLowerCase(),
+      );
+
+      if (!mounted) return;
+
+      if (response['success'] == true) {
+        setState(() {
+          _isOtpSent = true;
+          _otpInfoMessage =
+              'A 6-digit code has been sent to ${_emailController.text.trim()}. '
+              'Check your inbox (and spam folder).';
+        });
+      } else {
+        setState(() {
+          _otpError = response['message']?.toString() ?? 'Failed to send code';
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _otpError = e.toString().replaceAll('Exception: ', '');
+      });
+    } finally {
+      if (mounted) setState(() => _isSendingOtp = false);
+    }
+  }
+
+  Future<void> _verifyOtp() async {
+    final otp = _otpController.text.trim();
+    if (otp.length != 6) {
+      setState(() => _otpError = 'Enter the 6-digit code from your email');
+      return;
+    }
+
+    setState(() {
+      _isVerifyingOtp = true;
+      _otpError = '';
+    });
+
+    try {
+      final response = await ApiService.verifyEmailWithOTP(
+        email: _emailController.text.trim().toLowerCase(),
+        otp: otp,
+      );
+
+      if (!mounted) return;
+
+      if (response['success'] == true) {
+        setState(() {
+          _isOtpVerified = true;
+          _otpInfoMessage = 'Email verified successfully';
+          _otpError = '';
+        });
+      } else {
+        setState(() {
+          _isOtpVerified = false;
+          _otpError =
+              response['message']?.toString() ?? 'Invalid or expired code';
+        });
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isOtpVerified = false;
+        _otpError = e.toString().replaceAll('Exception: ', '');
+      });
+    } finally {
+      if (mounted) setState(() => _isVerifyingOtp = false);
+    }
+  }
+
+  // ==================== REGISTRATION HANDLER ====================
+  Future<void> _handleRegister() async {
+    if (!_formValid) return;
+
+    if (!_isOtpVerified) {
+      _showUserFriendlyError(
+        'Please verify your email address before creating an account.',
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _generalError = '';
+    });
+
+    try {
+      final response = await ApiService.registerUser(
+        fullName: _fullNameController.text.trim(),
+        email: _emailController.text.trim(),
+        phone: _phoneController.text.trim(),
+        password: _passwordController.text,
+        otp: _otpController.text.trim(), // ✅ REAL OTP
+        referralCode: _referralCodeController.text.trim().isEmpty
+            ? null
+            : _referralCodeController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      if (response['success'] == true) {
+        await _handleRegistrationSuccess(response);
+      } else {
+        _showUserFriendlyError(response['message']);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      _showUserFriendlyError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleRegistrationSuccess(Map<String, dynamic> response) async {
+    try {
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+
+      String userId = prefs.getString('userId') ?? '';
+
+      if (userId.isEmpty) {
+        final userData = response['user'] ?? response['data'] ?? {};
+        userId = userData['_id']?.toString() ??
+            userData['id']?.toString() ??
+            userData['userId']?.toString() ??
+            response['userId']?.toString() ??
+            '';
+      }
+
+      final fullName = _fullNameController.text.trim();
+      final email = _emailController.text.trim();
+
+      if (userId.isEmpty) {
+        _showUserFriendlyError(
+          'Registration completed but we couldn\'t retrieve your account ID. '
+          'Please try logging in manually.',
+        );
+        await Future.delayed(const Duration(seconds: 2));
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+        return;
+      }
+
+      await prefs.setString('userId', userId);
+      await prefs.setString('fullName', fullName);
+      await prefs.setString('email', email);
+
+      final userObject = {
+        '_id': userId,
+        'fullName': fullName,
+        'email': email,
+        'transactionPinSet': false,
+      };
+      await prefs.setString('user', jsonEncode(userObject));
+      await prefs.reload();
+
+      _showSuccessSnackBar('Account created successfully! Set up your PIN.');
+
+      Navigator.pushReplacementNamed(
+        context,
+        '/pin-setup',
+        arguments: {
+          'userId': userId,
+          'fullName': fullName,
+          'email': email,
+          'isFirstTime': true,
+        },
+      );
+    } catch (e) {
+      debugPrint('❌ Registration success handling error: $e');
+      _showUserFriendlyError(
+        'Account created but setup failed. Please try logging in.',
+      );
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    }
+  }
+
+  // ==================== USER-FRIENDLY ERROR HANDLING ====================
+  void _showUserFriendlyError(String error) {
+    String userMessage;
+    final cleanError = _cleanErrorMessage(error);
+
+    if (cleanError.contains('Network') ||
+        cleanError.contains('connection') ||
+        cleanError.contains('internet') ||
+        cleanError.contains('Failed to fetch') ||
+        cleanError.contains('SocketException') ||
+        cleanError.contains('ClientException')) {
+      userMessage =
+          'No internet connection. Please check your network and try again.';
+    } else if (cleanError.contains('timeout') ||
+        cleanError.contains('timed out')) {
+      userMessage = 'Request timed out. Please try again.';
+    } else if (cleanError.contains('already registered') ||
+        cleanError.contains('already exists') ||
+        cleanError.contains('duplicate') ||
+        cleanError.contains('Email already')) {
+      userMessage =
+          'This email or phone number is already registered. Please use a different one or login.';
+    } else if (cleanError.contains('OTP') ||
+        cleanError.contains('verification')) {
+      userMessage = 'Verification failed. Please try again.';
+    } else if (cleanError.contains('server') ||
+        cleanError.contains('500') ||
+        cleanError.contains('502') ||
+        cleanError.contains('503')) {
+      userMessage =
+          'Registration service is temporarily unavailable. Please try again later.';
+    } else if (cleanError.contains('rate limit') ||
+        cleanError.contains('too many')) {
+      userMessage = 'Too many attempts. Please wait a moment and try again.';
+    } else if (cleanError.contains('referral') ||
+        cleanError.contains('invalid code')) {
+      userMessage = 'Invalid referral code. Please check and try again.';
+    } else {
+      userMessage = cleanError.isNotEmpty
+          ? cleanError
+          : 'Unable to create account. Please try again.';
+    }
+
+    _showErrorDialog(userMessage);
+  }
+
+  String _cleanErrorMessage(String error) {
+    String cleaned = error.replaceAll(RegExp(r'https?://[^\s]+'), '');
+    cleaned = cleaned.replaceAll(RegExp(r'http://[^\s]+'), '');
+    cleaned = cleaned.replaceAll(
+      RegExp(r'[A-Za-z0-9.-]+\.[A-Za-z]{2,}(/\S*)?'),
+      '',
+    );
+    cleaned = cleaned.replaceAll('Exception:', '');
+    cleaned = cleaned.replaceAll('ClientException:', '');
+    cleaned = cleaned.replaceAll('SocketException:', '');
+    cleaned = cleaned.replaceAll('DioError:', '');
+    cleaned = cleaned.trim();
+
+    return cleaned.isEmpty
+        ? 'Unable to create account. Please try again.'
+        : cleaned;
+  }
+
+  // ==================== TWO-STEP FLOW (details → email code) ====================
+  bool get _detailsValid =>
+      _isFullNameValid &&
+      _isEmailValid &&
+      _isPhoneValid &&
+      _isPasswordValid &&
+      _isConfirmPasswordValid &&
+      _agreedToTerms;
+
+  Future<void> _continueToVerification() async {
+    if (!_detailsValid) return;
+    if (_isOtpVerified) {
+      await _handleRegister();
+      return;
+    }
+    await _sendOtp();
+    if (!mounted) return;
+    if (_isOtpSent && _otpError.isEmpty) {
+      _otpController.clear();
+      setState(() => _showVerifyStep = true);
+      _startResendCountdown();
+    } else if (_otpError.isNotEmpty) {
+      _showErrorDialog(_otpError);
+    }
+  }
+
+  Future<void> _resendCode() async {
+    if (_resendSeconds > 0 || _isSendingOtp) return;
+    await _sendOtp();
+    if (!mounted) return;
+    if (_otpError.isEmpty) {
+      _startResendCountdown();
+      dpSnack(
+        context,
+        'We sent a new code to ${_emailController.text.trim()}',
+        success: true,
+      );
+    }
+  }
+
+  Future<void> _verifyAndCreate() async {
+    if (_otpController.text.trim().length != 6) {
+      setState(() => _otpError = 'Enter the 6-digit code from your email');
+      return;
+    }
+    await _verifyOtp();
+    if (!mounted) return;
+    if (_isOtpVerified) await _handleRegister();
+  }
+
+  void _backToDetails() {
+    _resendTimer?.cancel();
+    setState(() {
+      _showVerifyStep = false;
+      _isOtpSent = false;
+      _isOtpVerified = false;
+      _otpError = '';
+      _otpInfoMessage = '';
+      _resendSeconds = 0;
+    });
+  }
+
+  void _startResendCountdown() {
+    _resendTimer?.cancel();
+    setState(() => _resendSeconds = 30);
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      setState(() {
+        _resendSeconds--;
+        if (_resendSeconds <= 0) {
+          _resendSeconds = 0;
+          t.cancel();
+        }
+      });
+    });
+  }
+
+  // ==================== DIALOGS & SNACKBARS ====================
+  void _showErrorDialog(String message) {
+    dpDialog(
+      context,
+      title: 'We couldn\'t create your account',
+      message: message,
+      confirmLabel: 'Try again',
+      tone: DPTone.error,
+    );
+  }
+
+  void _showSuccessSnackBar(String message) {
+    dpSnack(context, message, success: true);
+  }
+
+  // ==================== BUILD ====================
+  @override
+  Widget build(BuildContext context) {
+    final fadeAnimation = _fadeAnimation ?? const AlwaysStoppedAnimation(1.0);
+
+    return PopScope(
+      canPop: !_showVerifyStep,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showVerifyStep) _backToDetails();
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: SafeArea(
+          child: FadeTransition(
+            opacity: fadeAnimation,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: _showVerifyStep
+                  ? KeyedSubtree(
+                      key: const ValueKey('verify'),
+                      child: _buildEmailVerificationBlock(),
+                    )
+                  : KeyedSubtree(
+                      key: const ValueKey('details'),
+                      child: _buildGlassCard(),
+                    ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Step 1 — account details.
+  Widget _buildGlassCard() {
+    return Column(
+      children: [
+        DPTopBar(
+          title: 'Create your account',
+          onBack: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.pushReplacementNamed(context, '/login');
+            }
+          },
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+            child: Form(
+              key: _formKey,
+              child: AutofillGroup(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const DPHeadline(
+                      'Make room for simpler.',
+                      subtitle: 'Your bills, wallet and rewards. Together.',
+                    ),
+                    const DPLabel('Full name'),
+                    _buildFullNameField(),
+                    const SizedBox(height: 16),
+                    const DPLabel('Email address'),
+                    _buildEmailField(),
+                    const SizedBox(height: 16),
+                    const DPLabel('Phone number'),
+                    _buildPhoneField(),
+                    const SizedBox(height: 16),
+                    const DPLabel('Create password'),
+                    _buildPasswordField(),
+                    _buildPasswordRequirements(),
+                    const SizedBox(height: 16),
+                    const DPLabel('Confirm password'),
+                    _buildConfirmPasswordField(),
+                    const SizedBox(height: 16),
+                    const DPLabel('Referral code (optional)'),
+                    _buildReferralField(),
+                    const SizedBox(height: 18),
+                    _buildTermsCheckbox(),
+                    if (_generalError.isNotEmpty) ...[
+                      const SizedBox(height: 12),
+                      DPBanner(_generalError, tone: DPTone.error),
+                    ],
+                    const SizedBox(height: 22),
+                    _buildRegisterButton(),
+                    const SizedBox(height: 18),
+                    Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Already have an account? ',
+                            style: DP.caption,
+                          ),
+                          GestureDetector(
+                            onTap: () => Navigator.pushReplacementNamed(
+                              context,
+                              '/login',
+                            ),
+                            child: Text(
+                              'Log in',
+                              style: DP.caption.copyWith(
+                                color: DP.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Step 2 — "One quick check." email code.
+  Widget _buildEmailVerificationBlock() {
+    final email = _emailController.text.trim();
+    final busy = _isVerifyingOtp || _isLoading;
+    return Column(
+      children: [
+        DPTopBar(title: 'Verify your email', onBack: _backToDetails),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const DPIconBadge(DPIcons.mail, size: 64, iconSize: 30),
+                const SizedBox(height: 28),
+                const Text('One quick check.', style: DP.display),
+                const SizedBox(height: 10),
+                Text(
+                  'Enter the 6-digit code we sent to $email.',
+                  style: DP.body.copyWith(color: DP.muted),
+                ),
+                const SizedBox(height: 26),
+                DPCodeInput(
+                  controller: _otpController,
+                  length: 6,
+                  obscure: false,
+                  autofocus: true,
+                  error: _otpError.isNotEmpty,
+                  onChanged: (_) {
+                    if (_otpError.isNotEmpty) setState(() => _otpError = '');
+                  },
+                  onCompleted: (_) {
+                    if (!busy) _verifyAndCreate();
+                  },
+                ),
+                if (_otpError.isNotEmpty)
+                  DPHelper(_otpError, color: DP.red, icon: DPIcons.alert),
+                const SizedBox(height: 16),
+                Center(
+                  child: _resendSeconds > 0
+                      ? Text(
+                          'Resend code in 00:${_resendSeconds.toString().padLeft(2, '0')}',
+                          style: DP.caption,
+                        )
+                      : DPTextLink(
+                          label: _isSendingOtp ? 'Sending…' : 'Resend code',
+                          onTap: _isSendingOtp ? null : _resendCode,
+                        ),
+                ),
+                const SizedBox(height: 22),
+                DPButton(
+                  label: _isLoading ? 'Creating your account…' : 'Verify email',
+                  loading: busy,
+                  onPressed: _otpController.text.trim().length == 6
+                      ? _verifyAndCreate
+                      : null,
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: DPTextLink(
+                    label: 'Change email address',
+                    onTap: busy ? null : _backToDetails,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const DPBanner(
+                  'Can\'t find your code? Check your inbox and spam folder. Codes expire after 10 minutes.',
+                ),
+                const SizedBox(height: 36),
+                Center(
+                  child: Column(
+                    children: [
+                      const Text('Still having trouble?', style: DP.caption),
+                      const SizedBox(height: 4),
+                      DPTextLink(
+                        label: 'Get help from our team',
+                        onTap: () => Navigator.pushNamed(context, '/help'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFullNameField() {
+    return DPField(
+      controller: _fullNameController,
+      hint: 'Adaeze Okafor',
+      textCapitalization: TextCapitalization.words,
+      textInputAction: TextInputAction.next,
+      autofillHints: const [AutofillHints.name],
+      errorText: _fullNameError.isEmpty ? null : _fullNameError,
+      suffix: const Icon(DPIcons.user, size: 21),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return DPField(
+      controller: _emailController,
+      hint: 'you@example.com',
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      autofillHints: const [AutofillHints.email],
+      errorText: _emailError.isEmpty ? null : _emailError,
+      suffix: const Icon(DPIcons.mail, size: 21),
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return DPField(
+      controller: _phoneController,
+      hint: '0803 456 7890',
+      keyboardType: TextInputType.phone,
+      maxLength: 11,
+      textInputAction: TextInputAction.next,
+      autofillHints: const [AutofillHints.telephoneNumber],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      errorText: _phoneError.isEmpty ? null : _phoneError,
+      suffix: const Icon(DPIcons.phone, size: 21),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return DPField(
+      controller: _passwordController,
+      hint: '••••••••••',
+      obscureText: _obscurePassword,
+      textInputAction: TextInputAction.next,
+      autofillHints: const [AutofillHints.newPassword],
+      errorText: _passwordError.isEmpty ? null : _passwordError,
+      suffix: IconButton(
+        tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+        icon: Icon(_obscurePassword ? DPIcons.eyeOff : DPIcons.eye, size: 21),
+        onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+      ),
+    );
+  }
+
+  Widget _buildConfirmPasswordField() {
+    return DPField(
+      controller: _confirmPasswordController,
+      hint: '••••••••••',
+      obscureText: _obscureConfirmPassword,
+      textInputAction: TextInputAction.next,
+      errorText: _confirmPasswordError.isEmpty ? null : _confirmPasswordError,
+      suffix: IconButton(
+        tooltip: _obscureConfirmPassword ? 'Show password' : 'Hide password',
+        icon: Icon(
+          _obscureConfirmPassword ? DPIcons.eyeOff : DPIcons.eye,
+          size: 21,
+        ),
+        onPressed: () => setState(
+          () => _obscureConfirmPassword = !_obscureConfirmPassword,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReferralField() {
+    return DPField(
+      controller: _referralCodeController,
+      hint: 'Enter a referral code',
+      textCapitalization: TextCapitalization.characters,
+      textInputAction: TextInputAction.done,
+      errorText: _referralError.isEmpty ? null : _referralError,
+      suffix: _referrerName != null
+          ? const Icon(DPIcons.checkCircle, color: DP.green, size: 21)
+          : null,
+    );
+  }
+
+  Widget _buildPasswordRequirements() {
+    final ok = _hasMinLength && _hasUppercase && _hasLowercase && _hasNumber;
+    final c = ok ? DP.green : DP.muted;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Wrap(
+        spacing: 14,
+        runSpacing: 6,
+        children: [
+          _buildRequirementItem('8+ characters', _hasMinLength),
+          _buildRequirementItem('Upper & lower case', _hasUppercase && _hasLowercase),
+          _buildRequirementItem('A number', _hasNumber),
+          if (ok)
+            Text(
+              'Strong password',
+              style: TextStyle(fontSize: 12.5, color: c, fontWeight: FontWeight.w600),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRequirementItem(String text, bool isValid) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          isValid ? DPIcons.checkCircle : Icons.radio_button_unchecked_rounded,
+          size: 15,
+          color: isValid ? DP.green : DP.faint,
+        ),
+        const SizedBox(width: 5),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 12.5,
+            color: isValid ? DP.green : DP.muted,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTermsCheckbox() {
+    return InkWell(
+      onTap: () => setState(() => _agreedToTerms = !_agreedToTerms),
+      borderRadius: BorderRadius.circular(8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: Checkbox(
+              value: _agreedToTerms,
+              onChanged: (v) => setState(() => _agreedToTerms = v ?? false),
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              visualDensity: VisualDensity.compact,
+            ),
+          ),
+          const SizedBox(width: 10),
+          const Expanded(
+            child: Text(
+              'By creating an account, you agree to our Terms of use and Privacy policy.',
+              style: DP.caption,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRegisterButton() {
+    return DPButton(
+      label: 'Create account',
+      icon: DPIcons.forward,
+      loading: _isSendingOtp || _isLoading,
+      onPressed: _detailsValid ? _continueToVerification : null,
+    );
+  }
+}
