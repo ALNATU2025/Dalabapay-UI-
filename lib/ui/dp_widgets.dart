@@ -956,7 +956,8 @@ class DPSummaryCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Flexible(
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 210),
                     child: Text(
                       r.value,
                       textAlign: TextAlign.right,
@@ -2098,4 +2099,264 @@ Future<T?> showDPDialog<T>(
       ),
     ),
   );
+}
+
+// ---------------------------------------------------------------------------
+// Payment review (shared by every service screen)
+// ---------------------------------------------------------------------------
+
+/// Dimmed backdrop + bottom panel driven by an existing animation.
+class DPSheetOverlay extends StatelessWidget {
+  final Animation<double> animation;
+  final VoidCallback? onDismiss;
+  final Widget child;
+
+  const DPSheetOverlay({
+    super.key,
+    required this.animation,
+    required this.child,
+    this.onDismiss,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, _) {
+        final v = animation.value.clamp(0.0, 1.0);
+        final h = MediaQuery.of(context).size.height;
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: onDismiss,
+                child: Container(color: Colors.black.withValues(alpha: 0.42 * v)),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Transform.translate(
+                offset: Offset(0, (1 - v) * h * 0.7),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: h * 0.92),
+                  child: Material(
+                    color: DP.bg,
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(DP.rXl)),
+                    clipBehavior: Clip.antiAlias,
+                    child: SafeArea(top: false, child: child),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// The "Review payment" panel: summary, wallet source, PIN entry and pay buttons.
+class DPPaymentReview extends StatelessWidget {
+  final DPIconData icon;
+  final String serviceLabel;
+  final double amount;
+  final List<DPSummaryRow> rows;
+  final double walletBalance;
+  final double? totalToPay;
+  final String? commissionNote;
+  final bool showPin;
+  final TextEditingController? pinController;
+  final FocusNode? pinFocusNode;
+  final String? pinError;
+  final Animation<double>? shake;
+  final bool processing;
+  final bool processingBiometric;
+  final VoidCallback? onPayWithPin;
+  final VoidCallback? onPayWithBiometric;
+  final String biometricName;
+  final VoidCallback? onClose;
+  final String? footnote;
+  final ValueChanged<String>? onPinChanged;
+  final String? payLabel;
+
+  const DPPaymentReview({
+    super.key,
+    required this.icon,
+    required this.serviceLabel,
+    required this.amount,
+    required this.rows,
+    required this.walletBalance,
+    this.totalToPay,
+    this.commissionNote,
+    this.showPin = true,
+    this.pinController,
+    this.pinFocusNode,
+    this.pinError,
+    this.shake,
+    this.processing = false,
+    this.processingBiometric = false,
+    this.onPayWithPin,
+    this.onPayWithBiometric,
+    this.biometricName = 'biometrics',
+    this.onClose,
+    this.footnote,
+    this.onPinChanged,
+    this.payLabel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final total = totalToPay ?? amount;
+    final after = walletBalance - total;
+    Widget pinBlock = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Enter your payment PIN', style: DPText.section),
+        const SizedBox(height: 12),
+        if (pinController != null)
+          DPCodeInput(
+            controller: pinController!,
+            length: 6,
+            obscure: true,
+            autofocus: false,
+            focusNode: pinFocusNode,
+            error: pinError != null,
+            onChanged: onPinChanged,
+          ),
+        if (pinError != null) ...[
+          const SizedBox(height: 10),
+          Text(pinError!, style: DPText.small.copyWith(color: DP.danger)),
+        ],
+      ],
+    );
+    if (shake != null) {
+      pinBlock = AnimatedBuilder(
+        animation: shake!,
+        builder: (_, child) => Transform.translate(offset: Offset(shake!.value, 0), child: child),
+        child: pinBlock,
+      );
+    }
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.fromLTRB(
+          DP.gutter, 10, DP.gutter, 18 + MediaQuery.of(context).viewInsets.bottom),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Text('Review payment', style: DPText.title),
+              const Spacer(),
+              if (onClose != null)
+                IconButton(
+                  onPressed: processing ? null : onClose,
+                  icon: const DPIcon(DPIcons.x, size: 20, color: DP.muted),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Center(child: DPIconBadge(icon: icon, bg: DP.greenSoft, fg: DP.green, size: 56, radius: 18)),
+          const SizedBox(height: 10),
+          Center(child: Text(serviceLabel, style: DPText.body.copyWith(color: DP.ink2))),
+          const SizedBox(height: 4),
+          Center(child: Text(dpNaira(total), style: DPText.amount)),
+          const SizedBox(height: 18),
+          DPSummaryCard(rows: rows),
+          DPCard(
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+            child: Row(
+              children: [
+                const DPIcon(DPIcons.wallet, size: 22, color: DP.ink2),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Dalabapay wallet', style: DPText.body.copyWith(fontWeight: FontWeight.w500)),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${dpNaira(walletBalance)} → ${dpNaira(after)} after payment',
+                        style: DPText.small.copyWith(color: after < 0 ? DP.danger : DP.muted),
+                      ),
+                    ],
+                  ),
+                ),
+                DPIcon(after < 0 ? DPIcons.circleAlert : DPIcons.circleCheck,
+                    size: 20, color: after < 0 ? DP.danger : DP.green),
+              ],
+            ),
+          ),
+          if (after < 0)
+            const DPNotice('Your wallet balance is too low for this payment. Add money to continue.',
+                kind: DPNoticeKind.danger),
+          if (commissionNote != null) DPNotice(commissionNote!, icon: DPIcons.sparkles),
+          if (showPin) ...[
+            const SizedBox(height: 4),
+            pinBlock,
+            const SizedBox(height: 18),
+            DPButton(
+              label: payLabel ?? 'Pay ${dpNaira(total)}',
+              icon: DPIcons.lock,
+              loading: processing && !processingBiometric,
+              onPressed: processing ? null : onPayWithPin,
+            ),
+          ],
+          if (onPayWithBiometric != null) ...[
+            const SizedBox(height: 10),
+            DPButton(
+              kind: showPin ? DPButtonKind.secondary : DPButtonKind.primary,
+              label: 'Pay with $biometricName',
+              leadingIcon: DPIcons.fingerprint,
+              loading: processing && processingBiometric,
+              onPressed: processing ? null : onPayWithBiometric,
+            ),
+          ],
+          const SizedBox(height: 12),
+          Center(
+            child: Text(
+              footnote ?? 'Check the details above. Completed payments can’t be reversed.',
+              textAlign: TextAlign.center,
+              style: DPText.small,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Helper used by service screens for their "Service unavailable" state.
+class DPServiceUnavailable extends StatelessWidget {
+  final String message;
+  const DPServiceUnavailable({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: DPEmptyState(
+        icon: DPIcons.circleAlert,
+        title: 'Service unavailable',
+        message: message,
+        actionLabel: 'Go back',
+        onAction: () => Navigator.of(context).maybePop(),
+      ),
+    );
+  }
+}
+
+/// Bottom action area used under forms.
+class DPBottomBar extends StatelessWidget {
+  final Widget child;
+  const DPBottomBar({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: DP.bg,
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 10, DP.gutter, 12),
+      child: SafeArea(top: false, child: child),
+    );
+  }
 }
