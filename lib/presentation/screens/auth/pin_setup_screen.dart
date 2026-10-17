@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/api_service.dart';
 import '../../../core/services/biometric_service.dart';
+import '../../../ui/ui.dart';
 
 class PinSetupScreen extends StatefulWidget {
   final String userId;
@@ -1090,381 +1091,145 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
   // ==================== UI BUILD ====================
 
   Widget _buildLogo() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20, top: 10),
-      child: Image.asset(
-        'assets/images/dalabapay2.png',
-        height: 50,
-        fit: BoxFit.contain,
-        errorBuilder:
-            (context, error, stackTrace) => Container(
-              width: 100,
-              height: 50,
-              decoration: BoxDecoration(
-                color: _primaryColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(Icons.security, size: 30, color: _primaryColor),
-            ),
-      ),
+    return const Align(
+      alignment: Alignment.centerLeft,
+      child: DPWordmark(height: 32),
     );
   }
 
   Widget _buildPinDots() {
-    final activePin = _isConfirming ? _confirmPin : _pin;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(6, (index) {
-          final isFilled = index < activePin.length;
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            margin: const EdgeInsets.symmetric(horizontal: 6),
-            width: 16,
-            height: 16,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isFilled ? _pinDotColor : Colors.grey.shade200,
-              border: Border.all(
-                color: isFilled ? _primaryColor : Colors.grey.shade300,
-                width: 1.5,
-              ),
-              boxShadow:
-                  isFilled
-                      ? [
-                        BoxShadow(
-                          color: _primaryColor.withValues(alpha: 0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                      : null,
-            ),
-          );
-        }),
+    final current = _isConfirming ? _confirmPin : _pin;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: DPPinDots(
+        length: 6,
+        filled: current.length,
+        error: _errorMessage.isNotEmpty,
       ),
     );
   }
 
-  Widget _buildDigitButton(String digit) {
-    return GestureDetector(
-      onTap: () => _onPinDigitPressed(digit),
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: _backgroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-          border: Border.all(color: Colors.grey.shade200, width: 1),
-        ),
-        child: Center(
-          child: Text(
-            digit,
-            style: GoogleFonts.inter(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: _digitColor,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildBackspaceButton() {
-    return GestureDetector(
-      onTap: _onBackspacePressed,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.shade100,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-        ),
-        child: const Icon(Icons.backspace, size: 24, color: Color(0xFF14263D)),
-      ),
-    );
-  }
 
   Widget _buildBiometricButton() {
-    if (!_biometricAvailable) {
-      return Opacity(
-        opacity: 0.3,
-        child: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade100,
-          ),
-          child: const Icon(Icons.fingerprint, size: 28, color: Colors.grey),
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: _isBiometricLoading ? null : _setupBiometric,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFF102C68).withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child:
-            _isBiometricLoading
-                ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-                : const Icon(Icons.fingerprint, size: 28, color: Colors.white),
-      ),
+    if (!_biometricAvailable) return const SizedBox.shrink();
+    return IconButton(
+      tooltip: 'Set up biometrics',
+      onPressed: _isBiometricLoading ? null : _setupBiometric,
+      icon: _isBiometricLoading
+          ? const SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(DPIcons.fingerprint, color: DP.green, size: 30),
     );
   }
 
   Widget _buildNumberPad() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['1', '2', '3'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['4', '5', '6'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['7', '8', '9'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildBiometricButton(),
-            _buildDigitButton('0'),
-            _buildBackspaceButton(),
-          ],
-        ),
-      ],
+    return DPKeypad(
+      onDigit: _onPinDigitPressed,
+      onBackspace: _onBackspacePressed,
+      leftAction: _buildBiometricButton(),
     );
   }
 
   Widget _buildPinForm() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Title
-          Text(
-            _hasExistingPin
-                ? 'Change PIN'
-                : (widget.isFirstTime ? 'Set Transaction PIN' : 'Change PIN'),
-            style: GoogleFonts.inter(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: _primaryColor,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-
-          // Subtitle
-          Text(
-            _isConfirming
-                ? 'Confirm your 6-digit PIN'
-                : (_hasExistingPin
-                    ? 'Enter your current PIN and create a new one'
-                    : 'Create a secure 6-digit PIN'),
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: const Color(0xFF728078),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-
-          // User info
-          if (widget.fullName.isNotEmpty)
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: _primaryColor.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _primaryColor.withValues(alpha: 0.1)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: _primaryColor,
-                    child: Text(
-                      widget.fullName[0].toUpperCase(),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    widget.fullName,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: _primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          const SizedBox(height: 8),
-
-          // PIN Dots
-          _buildPinDots(),
-
-          // Number Pad
-          _buildNumberPad(),
-
-          // Error Message
-          if (_errorMessage.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
+    final changing = _hasExistingPin || !widget.isFirstTime;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Step indicator
+        Row(
+          children: [
+            Expanded(
               child: Container(
-                padding: const EdgeInsets.all(12),
+                height: 4,
                 decoration: BoxDecoration(
-                  color: _errorColor.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: _errorColor.withValues(alpha: 0.2)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.error_outline, color: _errorColor, size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _errorMessage,
-                        style: GoogleFonts.inter(
-                          color: _errorColor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
+                  color: DP.green,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
             ),
-
-          // Loading
-          if (_isLoading)
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                  strokeWidth: 3,
+            const SizedBox(width: 6),
+            Expanded(
+              child: Container(
+                height: 4,
+                decoration: BoxDecoration(
+                  color: _isConfirming ? DP.green : DP.border,
+                  borderRadius: BorderRadius.circular(4),
                 ),
               ),
             ),
-
-          // Bottom actions - Show "Use Existing PIN Login" if PIN is already set
-          if (_hasExistingPin)
-            Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: TextButton(
-                onPressed: _navigateToPinLogin,
-                child: Text(
-                  'Use Existing PIN Login',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                    color: _primaryColor,
-                  ),
-                ),
-              ),
-            ),
-
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: TextButton(
-              onPressed: _navigateToLogin,
-              child: Text(
-                'Back to Login',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  color: const Color(0xFF728078),
-                ),
-              ),
+          ],
+        ),
+        const SizedBox(height: 22),
+        Text(
+          _isConfirming
+              ? 'Confirm your PIN.'
+              : (changing ? 'Choose a new PIN.' : 'Create your payment PIN.'),
+          style: DP.display,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          _isConfirming
+              ? 'Enter the same 6 digits again.'
+              : 'You\'ll use these 6 digits to approve payments. Avoid birthdays and repeated numbers.',
+          style: DP.body.copyWith(color: DP.muted),
+        ),
+        const SizedBox(height: 8),
+        _buildPinDots(),
+        if (_errorMessage.isNotEmpty)
+          DPHelper(_errorMessage, color: DP.red, icon: DPIcons.alert),
+        if (_isLoading)
+          const Padding(
+            padding: EdgeInsets.only(top: 12),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        const SizedBox(height: 16),
+        _buildNumberPad(),
+        const SizedBox(height: 8),
+        const DPBanner(
+          'Never share your PIN. Dalabapay staff will never ask for it.',
+        ),
+        if (_hasExistingPin)
+          Center(
+            child: DPTextLink(
+              label: 'Use my existing PIN instead',
+              onTap: _navigateToPinLogin,
             ),
           ),
-        ],
-      ),
+        Center(
+          child: DPTextLink(
+            label: 'Back to log in',
+            color: DP.muted,
+            onTap: _navigateToLogin,
+          ),
+        ),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     if (_isLoadingData) {
-      return Scaffold(
-        backgroundColor: _backgroundColor,
-        body: const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
-          ),
-        ),
+      return const Scaffold(
+        backgroundColor: DP.bg,
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: DP.bg,
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLogo(),
-                _buildPinForm(),
-                const SizedBox(height: 20),
-              ],
-            ),
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+          child: Column(
+            children: [
+              _buildLogo(),
+              const SizedBox(height: 26),
+              _buildPinForm(),
+            ],
           ),
         ),
       ),

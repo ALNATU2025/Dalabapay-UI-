@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/biometric_service.dart';
+import '../../../ui/ui.dart';
 
 class PinLoginScreen extends StatefulWidget {
   const PinLoginScreen({super.key});
@@ -705,33 +706,29 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoadingData) {
-      return Scaffold(
-        backgroundColor: _backgroundColor,
-        body: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-          ),
-        ),
+      return const Scaffold(
+        backgroundColor: DP.bg,
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: DP.bg,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLogo(),
-                _buildPinForm(),
-                const SizedBox(height: 20),
-              ],
+        child: LayoutBuilder(
+          builder: (context, c) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: c.maxHeight),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+                child: Column(
+                  children: [
+                    _buildLogo(),
+                    const SizedBox(height: 28),
+                    _buildPinForm(),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -740,419 +737,124 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   }
 
   Widget _buildLogo() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20, top: 10),
-      child: Image.asset(
-        'assets/images/dalabapay2.png',
-        height: 50,
-        fit: BoxFit.contain,
-        errorBuilder:
-            (_, __, ___) => Container(
-              width: 100,
-              height: 50,
-              decoration: BoxDecoration(
-                color: _primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(Icons.security, size: 30, color: _primaryColor),
-            ),
-      ),
+    return const Align(
+      alignment: Alignment.centerLeft,
+      child: DPWordmark(height: 32),
     );
   }
 
   Widget _buildUserInfo() {
     if (_fullName.isEmpty) return const SizedBox.shrink();
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: _primaryColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _primaryColor.withOpacity(0.1)),
-      ),
-      child: Column(
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: _primaryColor,
-                child: Text(
-                  _fullName[0].toUpperCase(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                _fullName,
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: _primaryColor,
-                ),
-              ),
-            ],
-          ),
-          if (_isAutoLogout) ...[
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.timer_outlined,
-                    size: 14,
-                    color: Colors.orange.shade700,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Session Expired - Enter PIN to continue',
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      color: Colors.orange.shade700,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+          DPAvatar(name: _fullName, size: 44),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(_fullName, style: DP.bodyStrong),
+                if (_email.isNotEmpty) Text(_email, style: DP.caption),
+              ],
             ),
-          ],
+          ),
         ],
       ),
     );
   }
 
   Widget _buildPinDots() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(6, (index) {
-          final isFilled = index < _pin.length;
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            margin: const EdgeInsets.symmetric(horizontal: 6),
-            width: 16,
-            height: 16,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isFilled ? _pinDotColor : Colors.grey.shade200,
-              border: Border.all(
-                color: isFilled ? _primaryColor : Colors.grey.shade300,
-                width: 1.5,
-              ),
-              boxShadow:
-                  isFilled
-                      ? [
-                        BoxShadow(
-                          color: _primaryColor.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                      : null,
-            ),
-          );
-        }),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: DPPinDots(
+        length: 6,
+        filled: _pin.length,
+        error: _errorMessage.isNotEmpty,
       ),
     );
   }
 
-  Widget _buildDigitButton(String digit) {
-    return GestureDetector(
-      onTap: () => _onPinDigitPressed(digit),
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: _backgroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-          border: Border.all(color: Colors.grey.shade200, width: 1),
-        ),
-        child: Center(
-          child: Text(
-            digit,
-            style: GoogleFonts.inter(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: _digitColor,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildBackspaceButton() {
-    return GestureDetector(
-      onTap: _onBackspacePressed,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.shade100,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-        ),
-        child: const Icon(
-          Icons.backspace,
-          size: 24,
-          color: Color(0xFF14263D),
-        ),
-      ),
-    );
-  }
 
   Widget _buildBiometricButton() {
-    if (!_biometricAvailable) {
-      return Opacity(
-        opacity: 0.3,
-        child: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade100,
-          ),
-          child: const Icon(Icons.fingerprint, size: 28, color: Colors.grey),
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: _isBiometricProcessing ? null : _tryBiometricLogin,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF102C68).withOpacity(0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child:
-            _isBiometricLoading
-                ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-                : const Icon(Icons.fingerprint, size: 28, color: Colors.white),
-      ),
+    if (!_biometricAvailable) return const SizedBox.shrink();
+    return IconButton(
+      tooltip: 'Use biometrics',
+      onPressed: _isBiometricProcessing ? null : _tryBiometricLogin,
+      icon: _isBiometricLoading
+          ? const SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(DPIcons.fingerprint, color: DP.green, size: 30),
     );
   }
 
   Widget _buildNumberPad() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['1', '2', '3'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['4', '5', '6'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['7', '8', '9'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildBiometricButton(),
-            _buildDigitButton('0'),
-            _buildBackspaceButton(),
-          ],
-        ),
-      ],
+    return DPKeypad(
+      onDigit: _onPinDigitPressed,
+      onBackspace: _onBackspacePressed,
+      leftAction: _buildBiometricButton(),
     );
   }
 
   Widget _buildPinForm() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            _transactionPinSet ? 'Enter Your PIN' : 'PIN Not Set',
-            style: GoogleFonts.inter(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color:
-                  _transactionPinSet ? _primaryColor : Colors.orange.shade700,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _transactionPinSet
+              ? (_isAutoLogout ? 'Welcome back.' : 'Enter your PIN.')
+              : 'Set up your PIN first.',
+          style: DP.display,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          _transactionPinSet
+              ? (_isAutoLogout
+                  ? 'Your session timed out. Enter your 6-digit PIN to continue.'
+                  : 'Use your 6-digit PIN to unlock Dalabapay.')
+              : 'You need a payment PIN before you can unlock with a PIN.',
+          style: DP.body.copyWith(color: DP.muted),
+        ),
+        const SizedBox(height: 22),
+        _buildUserInfo(),
+        if (_transactionPinSet) ...[
+          _buildPinDots(),
+          if (_errorMessage.isNotEmpty)
+            DPHelper(_errorMessage, color: DP.red, icon: DPIcons.alert),
+          if (_isLoading)
+            const Padding(
+              padding: EdgeInsets.only(top: 12),
+              child: Center(child: CircularProgressIndicator()),
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _transactionPinSet
-                ? (_isAutoLogout
-                    ? '🔐 Session expired. Enter PIN to continue.'
-                    : 'Enter your 6-digit PIN to continue')
-                : 'Please set up your transaction PIN first',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color:
-                  _transactionPinSet
-                      ? const Color(0xFF728078)
-                      : Colors.orange.shade700,
-            ),
-            textAlign: TextAlign.center,
-          ),
           const SizedBox(height: 16),
-          _buildUserInfo(),
-          if (_transactionPinSet) ...[
-            _buildPinDots(),
-            _buildNumberPad(),
-          ] else ...[
-            const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.orange.withOpacity(0.2)),
-              ),
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.lock_open_outlined,
-                    size: 48,
-                    color: Colors.orange,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'No PIN Set',
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.orange.shade700,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'You need to set up a transaction PIN before you can login with PIN.',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF728078),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _navigateToPinSetup,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 12,
-                      ),
-                    ),
-                    child: Text(
-                      'Set Up PIN',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          _buildNumberPad(),
+          const SizedBox(height: 8),
+          Center(
+            child: DPTextLink(
+              label: 'Log in with email or phone instead',
+              color: DP.muted,
+              onTap: _navigateToLogin,
             ),
-          ],
-          if (_errorMessage.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: _errorColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _errorColor.withOpacity(0.2)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.error_outline, color: _errorColor, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _errorMessage,
-                      style: GoogleFonts.inter(
-                        color: _errorColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+          ),
+        ] else ...[
+          const SizedBox(height: 12),
+          DPButton(label: 'Set up PIN', onPressed: _navigateToPinSetup),
+          const SizedBox(height: 8),
+          Center(
+            child: DPTextLink(
+              label: 'Log in with email instead',
+              onTap: _navigateToLogin,
             ),
-          ],
-          if (_isLoading) ...[
-            const SizedBox(height: 16),
-            Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                strokeWidth: 3,
-              ),
-            ),
-          ],
-          if (_transactionPinSet) ...[
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: _navigateToLogin,
-              child: Text(
-                'Login with Email',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  color: const Color(0xFF728078),
-                ),
-              ),
-            ),
-          ],
+          ),
+          if (_errorMessage.isNotEmpty)
+            DPHelper(_errorMessage, color: DP.red, icon: DPIcons.alert),
         ],
-      ),
+      ],
     );
   }
 }

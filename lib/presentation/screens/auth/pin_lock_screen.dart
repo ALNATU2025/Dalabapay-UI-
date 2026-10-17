@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/biometric_service.dart';
+import '../../../ui/ui.dart';
 
 class PinLockScreen extends StatefulWidget {
   const PinLockScreen({super.key});
@@ -134,130 +135,56 @@ class _PinLockScreenState extends State<PinLockScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: DP.bg,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: const Color(0xFF102C68),
-                child: Text(
-                  _fullName.isNotEmpty ? _fullName[0].toUpperCase() : 'U',
-                  style: const TextStyle(fontSize: 30, color: Colors.white),
-                ),
-              ),
-              const SizedBox(height: 12),
+              DPAvatar(name: _fullName.isNotEmpty ? _fullName : 'D', size: 56),
+              const SizedBox(height: 18),
               Text(
                 _fullName.isNotEmpty
-                    ? 'Welcome back, $_fullName'
-                    : 'Welcome back',
-                style: GoogleFonts.inter(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF14263D),
-                ),
+                    ? 'Welcome back, ${_fullName.split(' ').first}.'
+                    : 'Welcome back.',
+                style: DP.display,
               ),
-              const SizedBox(height: 4),
-              Text(
-                'Enter your PIN to unlock',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: const Color(0xFF728078),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // PIN Dots
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(6, (index) {
-                  final isFilled = index < _pin.length;
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          isFilled
-                              ? const Color(0xFF102C68)
-                              : Colors.grey.shade200,
-                      border: Border.all(
-                        color:
-                            isFilled
-                                ? const Color(0xFF102C68)
-                                : Colors.grey.shade300,
-                        width: 1.5,
-                      ),
-                    ),
-                  );
-                }),
-              ),
-
               const SizedBox(height: 8),
-
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    _errorMessage,
-                    style: GoogleFonts.inter(
-                      color: Colors.red.shade600,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-
-              const SizedBox(height: 24),
-
-              // Number Pad
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: ['1', '2', '3'].map(_buildDigitButton).toList(),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: ['4', '5', '6'].map(_buildDigitButton).toList(),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: ['7', '8', '9'].map(_buildDigitButton).toList(),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildBiometricButton(),
-                      _buildDigitButton('0'),
-                      _buildBackspaceButton(),
-                    ],
-                  ),
-                ],
+              Text(
+                'Enter your 6-digit PIN to unlock.',
+                style: DP.body.copyWith(color: DP.muted),
               ),
-
-              const SizedBox(height: 24),
-
-              TextButton(
-                onPressed: () {
-                  SharedPreferences.getInstance().then(
-                    (prefs) => prefs.clear(),
-                  );
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
-                child: Text(
-                  'Logout',
-                  style: GoogleFonts.inter(
-                    color: Colors.grey.shade400,
-                    fontSize: 13,
-                  ),
+              const SizedBox(height: 20),
+              DPPinDots(
+                length: 6,
+                filled: _pin.length,
+                error: _errorMessage.isNotEmpty,
+              ),
+              if (_errorMessage.isNotEmpty)
+                DPHelper(_errorMessage, color: DP.red, icon: DPIcons.alert),
+              if (_isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              const SizedBox(height: 20),
+              DPKeypad(
+                onDigit: _onDigitPressed,
+                onBackspace: _onBackspacePressed,
+                leftAction: _buildBiometricButton(),
+              ),
+              const SizedBox(height: 12),
+              Center(
+                child: DPTextLink(
+                  label: 'Log out',
+                  color: DP.muted,
+                  onTap: () {
+                    SharedPreferences.getInstance().then(
+                      (prefs) => prefs.clear(),
+                    );
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
                 ),
               ),
             ],
@@ -267,95 +194,20 @@ class _PinLockScreenState extends State<PinLockScreen> {
     );
   }
 
-  Widget _buildDigitButton(String digit) {
-    return GestureDetector(
-      onTap: () => _onDigitPressed(digit),
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-          border: Border.all(color: Colors.grey.shade200, width: 1),
-        ),
-        child: Center(
-          child: Text(
-            digit,
-            style: GoogleFonts.inter(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF14263D),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildBackspaceButton() {
-    return GestureDetector(
-      onTap: _onBackspacePressed,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.shade100,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-        ),
-        child: const Icon(Icons.backspace, size: 24, color: Color(0xFF14263D)),
-      ),
-    );
-  }
 
   Widget _buildBiometricButton() {
-    if (!_biometricAvailable) {
-      return Opacity(
-        opacity: 0.3,
-        child: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade100,
-          ),
-          child: const Icon(Icons.fingerprint, size: 28, color: Colors.grey),
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: _tryBiometric,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          ),
-        ),
-        child:
-            _isBiometricLoading
-                ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-                : const Icon(Icons.fingerprint, size: 28, color: Colors.white),
-      ),
+    if (!_biometricAvailable) return const SizedBox.shrink();
+    return IconButton(
+      tooltip: 'Use biometrics',
+      onPressed: _isBiometricLoading ? null : _tryBiometric,
+      icon: _isBiometricLoading
+          ? const SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(DPIcons.fingerprint, color: DP.green, size: 30),
     );
   }
 }
