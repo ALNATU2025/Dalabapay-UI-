@@ -277,7 +277,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   'Delete Notification',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF14263D),
+                    color: const Color(0xFF10255A),
                     fontSize: 18,
                   ),
                 ),
@@ -291,7 +291,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   'Are you sure you want to delete this notification?',
                   style: GoogleFonts.inter(
                     fontSize: 15,
-                    color: const Color(0xFF14263D),
+                    color: const Color(0xFF10255A),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -338,7 +338,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   'Cancel',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF728078),
+                    color: const Color(0xFF7B87A1),
                   ),
                 ),
               ),
@@ -883,9 +883,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   // ==================== BUILD ====================
 
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color textPrimary = Color(0xFF14263D);
-  static const Color textSecondary = Color(0xFF728078);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color textPrimary = Color(0xFF10255A);
+  static const Color textSecondary = Color(0xFF7B87A1);
 
   @override
   Widget build(BuildContext context) {

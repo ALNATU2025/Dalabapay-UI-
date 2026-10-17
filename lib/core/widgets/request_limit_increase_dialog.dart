@@ -19,9 +19,9 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
     required this.requestedAmount,
   });
 
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color secondaryColor = Color(0xFF168566);
-  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color secondaryColor = Color(0xFF079A68);
+  static const Color warningColor = Color(0xFFB7791F);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: isMobile ? 16 : 18,
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFF14263D),
+                          color: const Color(0xFF10255A),
                         ),
                       ),
                       Text(

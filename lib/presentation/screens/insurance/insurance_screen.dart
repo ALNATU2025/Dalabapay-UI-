@@ -113,14 +113,14 @@ class _InsuranceScreenState extends State<InsuranceScreen>
       'code': 'tricycle',
       'icon': HugeIcons.strokeRoundedMotorbike02,
       'amount': 1500,
-      'color': const Color(0xFFA76B1D),
+      'color': const Color(0xFFB7791F),
     },
     {
       'name': 'Motorcycle',
       'code': 'motorcycle',
       'icon': HugeIcons.strokeRoundedCar05,
       'amount': 3000,
-      'color': const Color(0xFF173D88),
+      'color': const Color(0xFF2563EB),
     },
   ];
 
@@ -351,7 +351,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFC0392B),
+        backgroundColor: const Color(0xFFE5484D),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -1253,7 +1253,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               phoneNumber: _phoneController.text.trim(),
               description: '$plan Insurance - ${_plateController.text.trim()}',
               customMessage: '✓ Insurance policy activated successfully!',
-              primaryColor: const Color(0xFF102C68),
+              primaryColor: const Color(0xFF15368A),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -1414,7 +1414,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
           style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
+            color: const Color(0xFF15368A),
           ),
         ),
         const SizedBox(height: 8),
@@ -1430,7 +1430,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             decoration: InputDecoration(
               prefixIcon: HugeIcon(
                 icon: icon,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
                 size: 22,
               ),
               border: InputBorder.none,
@@ -1448,7 +1448,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF102C68),
+              color: const Color(0xFF15368A),
             ),
             items: [
               DropdownMenuItem<String>(
@@ -1473,7 +1473,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                     style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF102C68),
+                      color: const Color(0xFF15368A),
                     ),
                   ),
                 );
@@ -1483,7 +1483,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             dropdownColor: Colors.white,
             icon: HugeIcon(
               icon: HugeIcons.strokeRoundedArrowDown01,
-              color: const Color(0xFF102C68),
+              color: const Color(0xFF15368A),
               size: 20,
             ),
           ),
@@ -1509,7 +1509,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
           style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
+            color: const Color(0xFF15368A),
           ),
         ),
         const SizedBox(height: 8),
@@ -1533,7 +1533,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               ),
               prefixIcon: HugeIcon(
                 icon: icon,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1676,16 +1676,16 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFF102C68).withOpacity(0.06),
+        color: const Color(0xFF15368A).withOpacity(0.06),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF102C68).withOpacity(0.1)),
+        border: Border.all(color: const Color(0xFF15368A).withOpacity(0.1)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(
             Icons.account_balance_wallet_rounded,
-            color: Color(0xFF102C68),
+            color: Color(0xFF15368A),
             size: 15,
           ),
           const SizedBox(width: 6),
@@ -1699,7 +1699,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   ? '₦${_walletBalance.toStringAsFixed(2)}'
                   : '••••••',
               style: GoogleFonts.inter(
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
@@ -1714,7 +1714,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     if (_isLoadingData) {
       return const Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF15368A)),
         ),
       );
     }
@@ -1778,7 +1778,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
           style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
+            color: const Color(0xFF15368A),
           ),
         ),
         const SizedBox(height: 12),
@@ -1811,15 +1811,15 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF168566).withOpacity(0.1),
+        color: const Color(0xFF079A68).withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF168566).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF079A68).withOpacity(0.2)),
       ),
       child: Row(
         children: [
           HugeIcon(
             icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-            color: const Color(0xFF168566),
+            color: const Color(0xFF079A68),
             size: 20,
           ),
           const SizedBox(width: 8),
@@ -1829,7 +1829,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
               ),
             ),
           ),
@@ -1838,7 +1838,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF168566),
+              color: const Color(0xFF079A68),
             ),
           ),
         ],
@@ -1861,7 +1861,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             style: GoogleFonts.inter(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
+              color: const Color(0xFF15368A),
             ),
           ),
           const SizedBox(height: 16),
@@ -1967,7 +1967,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             style: GoogleFonts.inter(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
+              color: const Color(0xFF15368A),
             ),
           ),
           const SizedBox(height: 16),
@@ -2021,7 +2021,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             style: GoogleFonts.inter(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
+              color: const Color(0xFF15368A),
             ),
           ),
           const SizedBox(height: 16),
@@ -2061,15 +2061,15 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF102C68).withOpacity(0.04),
+        color: const Color(0xFF15368A).withOpacity(0.04),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF102C68).withOpacity(0.08)),
+        border: Border.all(color: const Color(0xFF15368A).withOpacity(0.08)),
       ),
       child: Row(
         children: [
           const Icon(
             Icons.info_outline_rounded,
-            color: Color(0xFF102C68),
+            color: Color(0xFF15368A),
             size: 20,
           ),
           const SizedBox(width: 12),
@@ -2079,7 +2079,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
               ),
             ),
           ),
@@ -2098,7 +2098,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                 ? null
                 : _openPaymentSheet,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF168566),
+          backgroundColor: const Color(0xFF079A68),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),

@@ -18,10 +18,10 @@ class AdminNotificationsPage extends StatefulWidget {
 }
 
 class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color secondaryColor = Color(0xFF168566);
-  static const Color textPrimary = Color(0xFF14263D);
-  static const Color textSecondary = Color(0xFF728078);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color secondaryColor = Color(0xFF079A68);
+  static const Color textPrimary = Color(0xFF10255A);
+  static const Color textSecondary = Color(0xFF7B87A1);
 
   List<AdminNotificationModel> _notifications = [];
   bool _isLoading = true;

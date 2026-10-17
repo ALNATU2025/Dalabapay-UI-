@@ -48,16 +48,24 @@
 - "Estimated commission" (`GET /api/commission/rates`) — hidden if missing
 - Send money name check (`POST /api/transfer/lookup`)
 
-## Premium update (home, receipts, motion)
-- **Home**: greeting header with avatar, notification count; gradient balance
-  card with counting balance and four quick actions (Add money, Send, Pay
-  bills, Activity); funding account number with copy; colourful Pay bills
-  grid; "Earn while you pay" (earnings + invite code); recent activity card
-  with status dots.
-- **Receipts**: Dalabapay logo centred in the top bar; animated status mark
-  (tick draws itself, ripples, sparks), counting amount, rows that cascade in,
-  ticket-style dashed dividers.
-- **Motion everywhere** (`lib/ui/dp_motion.dart`): page transitions for every
-  screen, cards/banners/lists fade in, buttons and tiles press down, animated
-  bottom-nav pill. All motion turns off when the phone's "Remove animations"
+## New design (v2)
+Follows the 15-screen design: splash with waves, onboarding, login, home,
+My Wallet, All Services, Add Money, Send Money, Pay Bills, Profile, Security
+and Payment Successful. Bill screens (airtime, data, TV…) use the same
+colours, fields, buttons and tiles.
+
+- Bottom menu: **Home · Transactions · Services · Profile**. Earnings is on
+  the balance card, in All Services and in Profile.
+- **Send Money** by phone number or email (needs backend PR #1, which adds
+  phone lookup).
+- **Add Money** tabs are the methods that exist: Bank Transfer (your account
+  number), One-time account, Assisted. Card and USSD aren't offered by the
+  backend.
+- Not built (no backend yet): Betting, Flight/Bus/Train tickets, POS,
+  TrustPay Mastercard / My Cards, two-factor switch, session management.
+  Onboarding slides 2 and 3 describe real features instead of POS/cards.
+- **Images**: see `IMAGES_NEEDED.md` — 25 files to add to `assets/images/`.
+  Until then each shows a matching icon.
+- Motion: page transitions, cards and lists fade in, buttons press down,
+  animated payment-success tick. Off when the phone's "Remove animations"
   setting is on.

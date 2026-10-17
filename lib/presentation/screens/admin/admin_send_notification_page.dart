@@ -25,13 +25,13 @@ class AdminSendNotificationPage extends StatefulWidget {
 class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color secondaryColor = Color(0xFF168566);
-  static const Color successColor = Color(0xFF168566);
-  static const Color errorColor = Color(0xFFC0392B);
-  static const Color textPrimary = Color(0xFF14263D);
-  static const Color textSecondary = Color(0xFF728078);
-  static const Color backgroundLight = Color(0xFFF8F9F5);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color secondaryColor = Color(0xFF079A68);
+  static const Color successColor = Color(0xFF079A68);
+  static const Color errorColor = Color(0xFFE5484D);
+  static const Color textPrimary = Color(0xFF10255A);
+  static const Color textSecondary = Color(0xFF7B87A1);
+  static const Color backgroundLight = Color(0xFFF7F9FC);
 
   // ==================== CONTROLLERS ====================
   final TextEditingController _titleController = TextEditingController();
@@ -344,19 +344,19 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
   Color _getTemplateColor(String type) {
     switch (type) {
       case 'onboarding':
-        return const Color(0xFF173D88);
+        return const Color(0xFF2563EB);
       case 'promotion':
-        return const Color(0xFFA76B1D);
+        return const Color(0xFFB7791F);
       case 'alert':
-        return const Color(0xFFC0392B);
+        return const Color(0xFFE5484D);
       case 'transaction':
-        return const Color(0xFF168566);
+        return const Color(0xFF079A68);
       case 'commission':
-        return const Color(0xFF173D88);
+        return const Color(0xFF2563EB);
       case 'referral':
-        return const Color(0xFF173D88);
+        return const Color(0xFF2563EB);
       case 'kyc':
-        return const Color(0xFF173D88);
+        return const Color(0xFF2563EB);
       case 'announcement':
         return const Color(0xFFF97316);
       default:
@@ -1104,7 +1104,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
+          colors: [Color(0xFF35C08E), Color(0xFF15368A)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1273,14 +1273,14 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
             title: 'Sent',
             value: _sentNotifications.toString(),
             icon: HugeIcons.strokeRoundedSent02,
-            color: const Color(0xFF173D88),
+            color: const Color(0xFF2563EB),
             isMobile: isMobile,
           ),
           _buildStatCard(
             title: 'Success Rate',
             value: '${_successRate.toStringAsFixed(1)}%',
             icon: HugeIcons.strokeRoundedAutoConversations,
-            color: const Color(0xFFA76B1D),
+            color: const Color(0xFFB7791F),
             isMobile: isMobile,
           ),
         ],
@@ -1447,7 +1447,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                             width: 16,
                             height: 16,
                             decoration: const BoxDecoration(
-                              color: Color(0xFF168566),
+                              color: Color(0xFF079A68),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -1867,7 +1867,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                                   ? Container(
                                     padding: const EdgeInsets.all(4),
                                     decoration: const BoxDecoration(
-                                      color: Color(0xFF168566),
+                                      color: Color(0xFF079A68),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(

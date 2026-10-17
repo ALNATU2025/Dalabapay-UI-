@@ -88,7 +88,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        color: Color(0xFF102C68),
+        color: Color(0xFF15368A),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Row(
@@ -201,7 +201,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF15368A)),
           ),
           const SizedBox(height: 16),
           Text(
@@ -258,7 +258,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(0xFF102C68),
+                      Color(0xFF15368A),
                     ),
                   ),
                 )
@@ -306,12 +306,12 @@ class _NotificationDialogState extends State<NotificationDialog> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color:
-              isUnread ? const Color(0xFF102C68).withAlpha(13) : Colors.white,
+              isUnread ? const Color(0xFF15368A).withAlpha(13) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color:
                 isUnread
-                    ? const Color(0xFF102C68).withAlpha(25)
+                    ? const Color(0xFF15368A).withAlpha(25)
                     : Colors.grey.shade100,
             width: 1,
           ),
@@ -343,7 +343,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                                 isUnread ? FontWeight.w700 : FontWeight.w600,
                             color:
                                 isUnread
-                                    ? const Color(0xFF14263D)
+                                    ? const Color(0xFF10255A)
                                     : Colors.grey.shade700,
                           ),
                         ),
@@ -353,7 +353,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                           width: 8,
                           height: 8,
                           decoration: const BoxDecoration(
-                            color: Color(0xFF168566),
+                            color: Color(0xFF079A68),
                             shape: BoxShape.circle,
                           ),
                         ),

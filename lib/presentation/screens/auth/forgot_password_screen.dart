@@ -22,8 +22,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
-  static const Color _brand = Color(0xFF168566);
-  static const Color _brandDark = Color(0xFF14263D);
+  static const Color _brand = Color(0xFF079A68);
+  static const Color _brandDark = Color(0xFF10255A);
   static const Color _white = Colors.white;
 
   @override
@@ -271,7 +271,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
             _isEmailValid
                 ? const Icon(
                   Icons.check_circle_rounded,
-                  color: Color(0xFF168566),
+                  color: Color(0xFF079A68),
                   size: 20,
                 )
                 : null,
@@ -289,7 +289,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
         gradient:
             _isEmailValid
                 ? const LinearGradient(
-                  colors: [Color(0xFF168566), Color(0xFF0F6B51)],
+                  colors: [Color(0xFF079A68), Color(0xFF026C45)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
@@ -344,7 +344,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
       decoration: BoxDecoration(
         color: const Color(0xFFEEF8F2),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF079A68).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -353,13 +353,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
           Container(
             width: 1,
             height: 20,
-            color: const Color(0xFF168566).withOpacity(0.18),
+            color: const Color(0xFF079A68).withOpacity(0.18),
           ),
           const _TrustBadge(icon: Icons.bolt_rounded, label: 'Fast'),
           Container(
             width: 1,
             height: 20,
-            color: const Color(0xFF168566).withOpacity(0.18),
+            color: const Color(0xFF079A68).withOpacity(0.18),
           ),
           const _TrustBadge(icon: Icons.verified_rounded, label: 'Reliable'),
         ],
@@ -414,7 +414,7 @@ class _FieldLabel extends StatelessWidget {
       style: GoogleFonts.inter(
         fontSize: 12.5,
         fontWeight: FontWeight.w600,
-        color: const Color(0xFF14263D),
+        color: const Color(0xFF10255A),
         letterSpacing: 0.3,
       ),
     );
@@ -431,14 +431,14 @@ class _TrustBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF168566)),
+        Icon(icon, size: 16, color: const Color(0xFF079A68)),
         const SizedBox(width: 6),
         Text(
           label,
           style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF14263D),
+            color: const Color(0xFF10255A),
           ),
         ),
       ],

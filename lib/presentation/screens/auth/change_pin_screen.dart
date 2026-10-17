@@ -53,11 +53,11 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
   bool _obscureResetConfirmPin = true;
 
   // Brand Colors
-  static const Color _brand = Color(0xFF168566);
-  static const Color _brandDark = Color(0xFF14263D);
-  static const Color _primaryColor = Color(0xFF102C68);
-  static const Color _errorColor = Color(0xFFC0392B);
-  static const Color _greyText = Color(0xFF728078);
+  static const Color _brand = Color(0xFF079A68);
+  static const Color _brandDark = Color(0xFF10255A);
+  static const Color _primaryColor = Color(0xFF15368A);
+  static const Color _errorColor = Color(0xFFE5484D);
+  static const Color _greyText = Color(0xFF7B87A1);
 
   @override
   void initState() {
@@ -557,7 +557,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
             gradient: const LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Color(0xFF5BB592), _primaryColor],
+              colors: [Color(0xFF35C08E), _primaryColor],
             ),
             borderRadius: BorderRadius.circular(16),
           ),
@@ -1137,7 +1137,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
         gradient: const LinearGradient(
-          colors: [Color(0xFF168566), Color(0xFF0F6B51)],
+          colors: [Color(0xFF079A68), Color(0xFF026C45)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

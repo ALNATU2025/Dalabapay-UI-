@@ -6,43 +6,45 @@ class DP {
   DP._();
 
   // ── Surfaces ──────────────────────────────────────────────
-  static const Color bg = Color(0xFFF8F9F5);
+  static const Color bg = Color(0xFFF7F9FC);
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color border = Color(0xFFE5EAE3);
-  static const Color borderSoft = Color(0xFFF0F2EE);
+  static const Color border = Color(0xFFE6ECF3);
+  static const Color borderSoft = Color(0xFFF0F3F8);
 
   // ── Text ──────────────────────────────────────────────────
-  static const Color ink = Color(0xFF14263D);
-  static const Color inkSoft = Color(0xFF4D5B6B);
-  static const Color muted = Color(0xFF728078);
-  static const Color faint = Color(0xFFA9B2AC);
+  static const Color ink = Color(0xFF10255A);
+  static const Color inkSoft = Color(0xFF3E4E74);
+  static const Color muted = Color(0xFF7B87A1);
+  static const Color faint = Color(0xFFB2BBCB);
 
   // ── Brand ─────────────────────────────────────────────────
-  static const Color navy = Color(0xFF102C68);
-  static const Color navyDeep = Color(0xFF0C2152);
-  static const Color navyRaised = Color(0xFF294A80);
-  static const Color navyIcon = Color(0xFF173D88);
-  static const Color blueTint = Color(0xFFECF1FC);
+  static const Color navy = Color(0xFF15368A);
+  static const Color navyDeep = Color(0xFF0E2766);
+  static const Color navyRaised = Color(0xFF2450B4);
+  static const Color navyIcon = Color(0xFF2563EB);
+  static const Color blue = Color(0xFF2779FD);
+  static const Color greenBright = Color(0xFF04AB79);
+  static const Color blueTint = Color(0xFFEAF1FF);
 
-  static const Color green = Color(0xFF168566);
-  static const Color greenDeep = Color(0xFF0F6B51);
-  static const Color greenSoft = Color(0xFF5BB592);
-  static const Color mint = Color(0xFFDDF4E8);
-  static const Color mintLine = Color(0xFFC4E6D8);
+  static const Color green = Color(0xFF079A68);
+  static const Color greenDeep = Color(0xFF026C45);
+  static const Color greenSoft = Color(0xFF35C08E);
+  static const Color mint = Color(0xFFE4F6EE);
+  static const Color mintLine = Color(0xFFC3EAD8);
 
   // ── Status ────────────────────────────────────────────────
-  static const Color amber = Color(0xFFA76B1D);
-  static const Color amberBg = Color(0xFFFFF3DE);
-  static const Color amberLine = Color(0xFFF4E2C6);
-  static const Color red = Color(0xFFC0392B);
-  static const Color redBg = Color(0xFFFDECEA);
-  static const Color redLine = Color(0xFFF6CFCB);
+  static const Color amber = Color(0xFFB7791F);
+  static const Color amberBg = Color(0xFFFFF4E0);
+  static const Color amberLine = Color(0xFFF5E1BC);
+  static const Color red = Color(0xFFE5484D);
+  static const Color redBg = Color(0xFFFDECEC);
+  static const Color redLine = Color(0xFFF8CFD0);
 
   // ── Radii ─────────────────────────────────────────────────
-  static const double rSm = 12;
-  static const double rMd = 14;
-  static const double rLg = 18;
-  static const double rXl = 24;
+  static const double rSm = 10;
+  static const double rMd = 12;
+  static const double rLg = 14;
+  static const double rXl = 18;
 
   // ── Spacing ───────────────────────────────────────────────
   static const double gutter = 24;
@@ -52,27 +54,27 @@ class DP {
   // The Inter family comes from the app theme, so these styles only set
   // size, weight and colour.
   static const TextStyle display = TextStyle(
-    fontSize: 28,
-    height: 1.18,
-    fontWeight: FontWeight.w400,
+    fontSize: 26,
+    height: 1.2,
+    fontWeight: FontWeight.w700,
     letterSpacing: -0.4,
     color: ink,
   );
   static const TextStyle title = TextStyle(
-    fontSize: 20,
+    fontSize: 19,
     height: 1.25,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w700,
     letterSpacing: -0.2,
     color: ink,
   );
   static const TextStyle section = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     height: 1.3,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w700,
     color: ink,
   );
   static const TextStyle body = TextStyle(
-    fontSize: 15,
+    fontSize: 14.5,
     height: 1.4,
     fontWeight: FontWeight.w400,
     color: ink,
@@ -115,8 +117,22 @@ class DP {
   );
 
   static const List<BoxShadow> softShadow = [
-    BoxShadow(color: Color(0x0A14263D), blurRadius: 18, offset: Offset(0, 6)),
+    BoxShadow(color: Color(0x0D10255A), blurRadius: 16, offset: Offset(0, 6)),
   ];
+
+  /// Navy balance card (Home).
+  static const LinearGradient navyGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF1B3F99), Color(0xFF15368A), Color(0xFF0E2766)],
+  );
+
+  /// Green balance card (My Wallet).
+  static const LinearGradient greenGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF079A68), Color(0xFF02804F), Color(0xFF026C45)],
+  );
 
   /// ₦ formatting with thousands separators: 124850 → ₦124,850.00
   static String naira(num? value, {bool decimals = true}) {

@@ -16,20 +16,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
+  // Slide 1 follows the design. Slides 2 and 3 keep the design's layout but
+  // describe features the app really has (the design's POS and Mastercard
+  // slides advertise services with no backend yet).
   final List<OnboardingData> _onboardingData = [
     OnboardingData(
-      image: 'assets/images/onboarding_bills.jpg',
-      eyebrow: 'LESS EFFORT. MORE LIVING.',
-      title: 'Your everyday bills, beautifully simple.',
+      image: DPAssets.onboarding1,
+      icon: DPIcons.wallet,
+      eyebrow: '',
+      title: 'Manage Your\nWallet & Pay Bills',
       description:
-          'Airtime, data, electricity and more. All the payments you need, in one calm place.',
+          'Top up your wallet, pay bills, buy airtime, data and more — all in one place.',
     ),
     OnboardingData(
-      image: 'assets/images/onboarding_earn.jpg',
-      eyebrow: 'SMALL PAYMENTS. EXTRA VALUE.',
-      title: 'A little more back, every time.',
+      image: DPAssets.onboarding2,
+      icon: DPIcons.bolt,
+      eyebrow: '',
+      title: 'Instant Payments,\n24/7',
       description:
-          'Earn commission on eligible payments. Track your earnings and move them to your wallet.',
+          'No queue, no stress. Airtime, data, TV and electricity delivered in seconds — any time of day.',
+    ),
+    OnboardingData(
+      image: DPAssets.onboarding3,
+      icon: DPIcons.sparkle,
+      eyebrow: '',
+      title: 'Earn As\nYou Pay',
+      description:
+          'Get commission on eligible payments and rewards when friends join with your code.',
     ),
   ];
 
@@ -59,13 +72,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // Save state and go straight to sign-up
-  Future<void> _createAccount() async {
-    await _markSeen();
-    if (!mounted) return;
-    Navigator.pushReplacementNamed(context, '/register');
-  }
-
   void _goToNextPage() {
     if (_selectedIndex < _onboardingData.length - 1) {
       _pageController.nextPage(
@@ -73,7 +79,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      _createAccount();
+      _finishOnboarding();
     }
   }
 
@@ -81,23 +87,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final isLast = _selectedIndex == _onboardingData.length - 1;
     return Scaffold(
-      backgroundColor: DP.bg,
+      backgroundColor: DP.surface,
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 16, 4),
-              child: Row(
-                children: [
-                  const DPWordmark(height: 30),
-                  const Spacer(),
-                  DPTextLink(
-                    label: isLast ? 'Log in' : 'Skip',
-                    onTap: _finishOnboarding,
-                  ),
-                ],
-              ),
-            ),
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -112,50 +105,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                _onboardingData.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: AnimatedDot(isActive: _selectedIndex == index),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 4, 24, 20),
-              child: Row(
-                children: List.generate(
-                  _onboardingData.length,
-                  (index) => Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: AnimatedDot(isActive: _selectedIndex == index),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: DPButton(
+                label: isLast ? 'Get Started' : 'Next',
+                onPressed: _goToNextPage,
+              ),
+            ),
+            const SizedBox(height: 8),
+            AnimatedOpacity(
+              opacity: isLast ? 0 : 1,
+              duration: DPMotion.fast,
+              child: TextButton(
+                onPressed: isLast ? null : _finishOnboarding,
+                child: const Text(
+                  'Skip',
+                  style: TextStyle(
+                    color: DP.green,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
                   ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: DPButton(
-                label: isLast ? 'Create an account' : 'Continue',
-                icon: DPIcons.forward,
-                onPressed: _goToNextPage,
-              ),
-            ),
-            const SizedBox(height: 18),
-            if (isLast)
-              const Text(
-                'Clear fees. Easy payments. Your pace.',
-                style: DP.caption,
-              )
-            else
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text('Already have an account? ', style: DP.caption),
-                  GestureDetector(
-                    onTap: _finishOnboarding,
-                    child: Text(
-                      'Log in',
-                      style: DP.caption.copyWith(
-                        color: DP.green,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -166,12 +150,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 // Onboarding Data Model
 class OnboardingData {
   final String image;
+  final IconData icon;
   final String eyebrow;
   final String title;
   final String description;
 
   OnboardingData({
     required this.image,
+    required this.icon,
     required this.eyebrow,
     required this.title,
     required this.description,
@@ -186,39 +172,78 @@ class OnboardingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DP.rXl),
-            child: AspectRatio(
-              aspectRatio: 708 / 660,
-              child: Image.asset(
-                data.image,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: DP.mint,
-                  alignment: Alignment.center,
-                  child: const DPLogoMark(size: 96),
+    return LayoutBuilder(
+      builder: (context, c) => SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(28, 24, 28, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DPAppear(
+              scaleFrom: 0.92,
+              child: SizedBox(
+                width: double.infinity,
+                height: c.maxHeight * 0.58,
+                child: DPImage(
+                  data.image,
+                  fit: BoxFit.contain,
+                  fallback: _IllustrationPlaceholder(icon: data.icon),
                 ),
               ),
             ),
+            const SizedBox(height: 28),
+            DPAppear(
+              delay: const Duration(milliseconds: 120),
+              child: Text(
+                data.title,
+                style: const TextStyle(
+                  fontSize: 26,
+                  height: 1.2,
+                  fontWeight: FontWeight.w800,
+                  color: DP.ink,
+                  letterSpacing: -0.4,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            DPAppear(
+              delay: const Duration(milliseconds: 200),
+              child: Text(
+                data.description,
+                style: DP.body.copyWith(color: DP.muted, height: 1.55),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Shown until the illustration file is added: soft circles with an icon.
+class _IllustrationPlaceholder extends StatelessWidget {
+  final IconData icon;
+  const _IllustrationPlaceholder({required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 220,
+        height: 220,
+        decoration: const BoxDecoration(
+          color: DP.mint,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
+        child: Container(
+          width: 130,
+          height: 130,
+          decoration: const BoxDecoration(
+            color: DP.surface,
+            shape: BoxShape.circle,
           ),
-          const SizedBox(height: 28),
-          Text(
-            data.eyebrow,
-            style: DP.tiny.copyWith(color: DP.green, fontSize: 12),
-          ),
-          const SizedBox(height: 10),
-          Text(data.title, style: DP.display.copyWith(fontSize: 30)),
-          const SizedBox(height: 12),
-          Text(
-            data.description,
-            style: DP.body.copyWith(color: DP.muted, height: 1.5),
-          ),
-        ],
+          child: Icon(icon, size: 60, color: DP.green),
+        ),
       ),
     );
   }
@@ -234,11 +259,11 @@ class AnimatedDot extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      height: 4,
-      width: isActive ? 24 : 6,
+      height: 8,
+      width: 8,
       decoration: BoxDecoration(
         color: isActive ? DP.green : DP.border,
-        borderRadius: BorderRadius.circular(4),
+        shape: BoxShape.circle,
       ),
     );
   }

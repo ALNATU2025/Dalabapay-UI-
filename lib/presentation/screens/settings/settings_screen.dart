@@ -78,14 +78,14 @@ class _SettingsScreenState extends State<SettingsScreen>
   late Animation<double> _fadeAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryColor = Color(0xFF102C68);
-  static const Color _secondaryColor = Color(0xFF168566);
-  static const Color _successColor = Color(0xFF168566);
-  static const Color _warningColor = Color(0xFFA76B1D);
-  static const Color _errorColor = Color(0xFFC0392B);
-  static const Color _textPrimary = Color(0xFF14263D);
-  static const Color _textSecondary = Color(0xFF728078);
-  static const Color _backgroundLight = Color(0xFFF8F9F5);
+  static const Color _primaryColor = Color(0xFF15368A);
+  static const Color _secondaryColor = Color(0xFF079A68);
+  static const Color _successColor = Color(0xFF079A68);
+  static const Color _warningColor = Color(0xFFB7791F);
+  static const Color _errorColor = Color(0xFFE5484D);
+  static const Color _textPrimary = Color(0xFF10255A);
+  static const Color _textSecondary = Color(0xFF7B87A1);
+  static const Color _backgroundLight = Color(0xFFF7F9FC);
 
   @override
   void initState() {
@@ -1125,49 +1125,216 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
   }
 
   // ==================== BUILD METHODS ====================
+  /// Profile (design 13) or Security (design 14).
+  bool _securityView = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: DP.bg,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            const DPTopBar(title: 'Your profile'),
-            Expanded(child: _buildBody()),
+    return PopScope(
+      canPop: !_securityView,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _securityView) setState(() => _securityView = false);
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              DPTopBar(
+                title: _securityView ? 'Security' : 'Profile',
+                onBack: _securityView
+                    ? () => setState(() => _securityView = false)
+                    : null,
+                trailing: _securityView
+                    ? null
+                    : DPIconSquare(
+                        icon: DPIcons.settings,
+                        size: 40,
+                        color: DP.navy,
+                        background: Colors.transparent,
+                        semanticLabel: 'Security settings',
+                        onTap: () => setState(() => _securityView = true),
+                      ),
+              ),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 280),
+                  switchInCurve: Curves.easeOutCubic,
+                  transitionBuilder: (child, a) => FadeTransition(
+                    opacity: a,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.05, 0),
+                        end: Offset.zero,
+                      ).animate(a),
+                      child: child,
+                    ),
+                  ),
+                  child: _securityView
+                      ? KeyedSubtree(
+                          key: const ValueKey('security'),
+                          child: _buildSecurityBody(),
+                        )
+                      : KeyedSubtree(
+                          key: const ValueKey('profile'),
+                          child: _buildBody(),
+                        ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: DPBottomNav(
+          index: 3,
+          items: const [
+            DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
+            DPNavItem(Icons.receipt_long_outlined, 'Transactions',
+                activeIcon: Icons.receipt_long_rounded),
+            DPNavItem(Icons.grid_view_outlined, 'Services',
+                activeIcon: Icons.grid_view_rounded),
+            DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
           ],
+          // Home owns the tabs: tell it which one to show when we close.
+          onTap: (i) {
+            if (i == 3) {
+              if (_securityView) setState(() => _securityView = false);
+              return;
+            }
+            Navigator.of(context).maybePop(
+              const ['home', 'transactions', 'services', 'profile'][i],
+            );
+          },
         ),
       ),
-      bottomNavigationBar: DPBottomNav(
-        index: 3,
-        items: const [
-          DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
-          DPNavItem(DPIcons.activity, 'Activity'),
-          DPNavItem(DPIcons.earnings, 'Earnings'),
-          DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
-        ],
-        onTap: (i) {
-          final uid = (userData['_id'] ?? '').toString();
-          switch (i) {
-            case 0:
-              Navigator.of(context).maybePop();
-              break;
-            case 1:
-              Navigator.pushReplacementNamed(
-                context,
-                '/transactions',
-                arguments: {'userId': uid},
-              );
-              break;
-            case 2:
-              Navigator.pushReplacementNamed(
-                context,
-                '/commission',
-                arguments: {'userId': uid},
-              );
-              break;
-          }
-        },
+    );
+  }
+
+  /// Security (design 14).
+  Widget _buildSecurityBody() {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 6, 20, 28),
+      children: [
+        DPCard(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Column(
+            children: [
+              _buildSettingsTile(
+                icon: DPIcons.key,
+                title: 'Change Password',
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChangePasswordScreen()),
+                ),
+              ),
+              _divider(),
+              _buildSettingsTile(
+                icon: DPIcons.lock,
+                title: transactionPinSet ? 'Change Payment PIN' : 'Set Payment PIN',
+                status: transactionPinSet ? null : 'Not set',
+                statusColor: _warningColor,
+                onTap: _openPinScreen,
+              ),
+              _divider(),
+              _buildBiometricTile(),
+              _divider(),
+              _buildSwitchTile(
+                icon: DPIcons.bell,
+                title: 'Push Notifications',
+                subtitle: 'Payment alerts on this phone',
+                value: notificationsEnabled,
+                onChanged: _toggleNotifications,
+              ),
+              _divider(),
+              _buildSettingsTile(
+                icon: Icons.privacy_tip_outlined,
+                title: 'Privacy Policy',
+                onTap: _showPrivacyPolicyDialog,
+              ),
+              _divider(),
+              _buildSettingsTile(
+                icon: Icons.description_outlined,
+                title: 'Terms & Conditions',
+                onTap: _showTermsDialog,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        const DPBanner(
+          'Never share your password or payment PIN — Dalabapay staff will never ask for them.',
+          tone: DPTone.info,
+        ),
+      ],
+    );
+  }
+
+  Widget _divider() => const Divider(height: 1, color: DP.borderSoft);
+
+  Future<void> _openPinScreen() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChangePinScreen(
+          userId: userData['_id'] ?? '',
+          hasExistingPin: transactionPinSet,
+          userEmail: email,
+        ),
+      ),
+    );
+    if (result != null && mounted) {
+      await _loadUserData();
+      if (result['success'] == true) {
+        _showSnackBar(
+          transactionPinSet ? 'PIN changed' : 'PIN set',
+          color: _successColor,
+        );
+      }
+    }
+  }
+
+  void _showAbout() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: DP.bg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(DP.rXl)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const DPSheetHandle(),
+              const SizedBox(height: 12),
+              const DPLogoMark(size: 48),
+              const SizedBox(height: 8),
+              const Text('Dalabapay', style: DP.title),
+              const SizedBox(height: 4),
+              const Text('Smart Life Fast Pay', style: DP.caption),
+              const SizedBox(height: 16),
+              DPMenuRow(
+                icon: Icons.privacy_tip_outlined,
+                title: 'Privacy Policy',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showPrivacyPolicyDialog();
+                },
+              ),
+              DPMenuRow(
+                icon: Icons.description_outlined,
+                title: 'Terms & Conditions',
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showTermsDialog();
+                },
+              ),
+              const SizedBox(height: 8),
+              _buildAppVersion(),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1223,7 +1390,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
     if (isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
-
+    final kycVerified = _hasDedicatedAccount;
     return RefreshIndicator(
       onRefresh: _initializeSettings,
       color: DP.green,
@@ -1231,22 +1398,78 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
         opacity: _fadeAnimation,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
+          padding: const EdgeInsets.fromLTRB(20, 6, 20, 28),
           children: [
             _buildProfileSection(),
-            const SizedBox(height: 22),
-            _buildSectionHeader('Account'),
-            _buildSecuritySettingsCard(),
-            const SizedBox(height: 18),
-            _buildSectionHeader('Preferences & security'),
-            _buildPreferencesCard(),
-            const SizedBox(height: 18),
-            _buildSectionHeader('About'),
-            _buildSupportCard(),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+            DPCard(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: Column(
+                children: [
+                  _buildSettingsTile(
+                    icon: DPIcons.user,
+                    title: 'Personal Information',
+                    onTap: _showPersonalInfo,
+                  ),
+                  _divider(),
+                  _buildSettingsTile(
+                    icon: DPIcons.shieldCheck,
+                    title: 'KYC Verification',
+                    status: _isCheckingAccount
+                        ? 'Checking…'
+                        : (kycVerified ? 'Verified' : 'Pending'),
+                    statusColor: kycVerified ? _successColor : _warningColor,
+                    onTap: _navigateToKYC,
+                  ),
+                  _divider(),
+                  _buildSettingsTile(
+                    icon: DPIcons.lock,
+                    title: 'Security',
+                    onTap: () => setState(() => _securityView = true),
+                  ),
+                  _divider(),
+                  _buildSettingsTile(
+                    icon: DPIcons.sparkle,
+                    title: 'Earnings',
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      '/commission',
+                      arguments: {'userId': (userData['_id'] ?? '').toString()},
+                    ),
+                  ),
+                  _divider(),
+                  _buildSettingsTile(
+                    icon: DPIcons.referral,
+                    title: 'Refer a Friend',
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      '/referral',
+                      arguments: {'userId': (userData['_id'] ?? '').toString()},
+                    ),
+                  ),
+                  _divider(),
+                  _buildSettingsTile(
+                    icon: DPIcons.bell,
+                    title: 'Notifications',
+                    onTap: () => Navigator.pushNamed(context, '/notifications'),
+                  ),
+                  _divider(),
+                  _buildSettingsTile(
+                    icon: DPIcons.help,
+                    title: 'Help & Support',
+                    onTap: () => Navigator.pushNamed(context, '/help'),
+                  ),
+                  _divider(),
+                  _buildSettingsTile(
+                    icon: DPIcons.info,
+                    title: 'About Dalabapay',
+                    onTap: _showAbout,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
             _buildLogoutButton(),
-            const SizedBox(height: 14),
-            _buildAppVersion(),
           ],
         ),
       ),
@@ -1337,9 +1560,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
     final hasImage = (profileImageUrl != null && profileImageUrl!.isNotEmpty) ||
         (userData['profileImage'] != null &&
             userData['profileImage'].toString().isNotEmpty);
-    final isAdmin = userData['isAdmin'] == true;
-    return DPCard(
-      padding: const EdgeInsets.fromLTRB(16, 16, 12, 16),
+    return DPAppear(
       child: Row(
         children: [
           GestureDetector(
@@ -1347,24 +1568,30 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: SizedBox(
-                    width: 64,
-                    height: 64,
-                    child: hasImage
-                        ? _buildProfileImageContent()
-                        : _buildDefaultAvatar(),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  decoration: const BoxDecoration(
+                    color: DP.blueTint,
+                    shape: BoxShape.circle,
+                  ),
+                  child: ClipOval(
+                    child: SizedBox(
+                      width: 72,
+                      height: 72,
+                      child: hasImage
+                          ? _buildProfileImageContent()
+                          : _buildDefaultAvatar(),
+                    ),
                   ),
                 ),
                 Positioned(
-                  right: -4,
-                  bottom: -4,
+                  right: -2,
+                  bottom: 0,
                   child: GestureDetector(
                     onTap: isUpdating ? null : _pickProfileImage,
                     child: Container(
-                      width: 24,
-                      height: 24,
+                      width: 26,
+                      height: 26,
                       decoration: BoxDecoration(
                         color: DP.green,
                         shape: BoxShape.circle,
@@ -1372,15 +1599,15 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                       ),
                       child: isUpdating
                           ? const Padding(
-                              padding: EdgeInsets.all(4),
+                              padding: EdgeInsets.all(5),
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
                                 color: Colors.white,
                               ),
                             )
                           : const Icon(
-                              DPIcons.edit,
-                              size: 12,
+                              Icons.camera_alt_rounded,
+                              size: 13,
                               color: Colors.white,
                             ),
                     ),
@@ -1396,26 +1623,46 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
               children: [
                 Text(
                   fullName.isNotEmpty ? fullName : 'Dalabapay user',
-                  style: DP.title.copyWith(fontSize: 19),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  phone.isNotEmpty ? phone : email,
-                  style: DP.caption,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  isAdmin ? 'Admin account' : 'Personal account',
                   style: const TextStyle(
-                    color: DP.green,
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: DP.ink,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                if (phone.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Text(phone, style: DP.caption),
+                ],
+                if (email.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    email,
+                    style: DP.caption,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+                const SizedBox(height: 6),
+                if (_hasDedicatedAccount)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.verified_rounded, size: 16, color: DP.green),
+                      const SizedBox(width: 4),
+                      Text(
+                        userData['isAdmin'] == true ? 'Verified · Admin' : 'Verified',
+                        style: const TextStyle(
+                          color: DP.green,
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  _buildStatusChip('Not verified', _warningColor),
               ],
             ),
           ),
@@ -1439,54 +1686,6 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
           color: color,
         ),
       ),
-    );
-  }
-
-  // ==================== SECTION HEADER ====================
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Text(title, style: DP.section),
-    );
-  }
-
-  // ==================== SECURITY CARD ====================
-  /// "Account" group.
-  Widget _buildSecuritySettingsCard() {
-    final kycStatus = _isCheckingAccount
-        ? 'Checking…'
-        : (_hasDedicatedAccount ? 'Verified' : 'Pending');
-    return Column(
-      children: [
-        _buildSettingsTile(
-          icon: DPIcons.user,
-          title: 'Personal information',
-          subtitle: 'Name, email and phone number',
-          onTap: _showPersonalInfo,
-        ),
-        _buildSettingsTile(
-          icon: DPIcons.shieldCheck,
-          title: 'Identity & limits',
-          subtitle: _hasDedicatedAccount
-              ? 'Verified · ${_dedicatedAccountNumber ?? ''}'
-              : 'Verify to get your funding account',
-          status: kycStatus,
-          statusColor: _hasDedicatedAccount ? _successColor : _warningColor,
-          onTap: _navigateToKYC,
-          showRefresh: true,
-          refreshCallback: _checkDedicatedAccount,
-        ),
-        _buildSettingsTile(
-          icon: DPIcons.referral,
-          title: 'Referrals',
-          subtitle: 'Invite friends and earn bonuses',
-          onTap: () => Navigator.pushNamed(
-            context,
-            '/referral',
-            arguments: {'userId': (userData['_id'] ?? '').toString()},
-          ),
-        ),
-      ],
     );
   }
 
@@ -1516,99 +1715,12 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
     );
   }
 
-  // ==================== PREFERENCES CARD ====================
-  /// "Preferences & security" group.
-  Widget _buildPreferencesCard() {
-    return Column(
-      children: [
-        _buildSettingsTile(
-          icon: DPIcons.lock,
-          title: 'Payment PIN',
-          subtitle: transactionPinSet
-              ? 'Change your 6-digit payment PIN'
-              : 'Set up your payment PIN',
-          status: transactionPinSet ? null : 'Not set',
-          statusColor: _warningColor,
-          onTap: () async {
-            final result = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChangePinScreen(
-                  userId: userData['_id'] ?? '',
-                  hasExistingPin: transactionPinSet,
-                  userEmail: email,
-                ),
-              ),
-            );
-            if (result != null && mounted) {
-              await _loadUserData();
-              if (result['success'] == true) {
-                _showSnackBar(
-                  transactionPinSet ? 'PIN changed' : 'PIN set',
-                  color: _successColor,
-                );
-              }
-            }
-          },
-        ),
-        _buildSettingsTile(
-          icon: DPIcons.key,
-          title: 'Password',
-          subtitle: 'Keep your account protected',
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ChangePasswordScreen()),
-          ),
-        ),
-        _buildBiometricTile(),
-        _buildSettingsTile(
-          icon: DPIcons.bell,
-          title: 'Notifications',
-          subtitle: 'Payments, reminders and updates',
-          onTap: () => Navigator.pushNamed(context, '/notifications'),
-        ),
-        _buildSwitchTile(
-          icon: DPIcons.sms,
-          title: 'Push notifications',
-          subtitle: 'Alerts on this phone',
-          value: notificationsEnabled,
-          onChanged: _toggleNotifications,
-        ),
-        _buildSettingsTile(
-          icon: DPIcons.help,
-          title: 'Help & support',
-          subtitle: 'We\'re here when you need us',
-          onTap: () => Navigator.pushNamed(context, '/help'),
-        ),
-      ],
-    );
-  }
-
-  // ==================== SUPPORT CARD ====================
-  /// "About" group.
-  Widget _buildSupportCard() {
-    return Column(
-      children: [
-        _buildSettingsTile(
-          icon: Icons.privacy_tip_outlined,
-          title: 'Privacy policy',
-          subtitle: 'How we protect your data',
-          onTap: _showPrivacyPolicyDialog,
-        ),
-        _buildSettingsTile(
-          icon: Icons.description_outlined,
-          title: 'Terms of use',
-          subtitle: 'The rules for using Dalabapay',
-          onTap: _showTermsDialog,
-        ),
-      ],
-    );
-  }
-
   // ==================== LOGOUT BUTTON ====================
   Widget _buildLogoutButton() {
     return DPOutlineButton(
-      label: 'Log out',
+      label: 'Log Out',
+      color: DP.red,
+      icon: DPIcons.logout,
       onPressed: isUpdating ? null : _showLogoutConfirmation,
     );
   }
@@ -1946,7 +2058,4 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
     );
   }
 
-  Widget _buildDivider() {
-    return const SizedBox(height: 2);
-  }
 }

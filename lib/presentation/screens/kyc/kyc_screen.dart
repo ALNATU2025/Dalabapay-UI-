@@ -59,12 +59,12 @@ class _KYCScreenState extends State<KYCScreen>
   late Animation<Offset> _slideAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryColor = Color(0xFF102C68);
-  static const Color _secondaryColor = Color(0xFF168566);
-  static const Color _errorColor = Color(0xFFC0392B);
-  static const Color _textPrimary = Color(0xFF14263D);
-  static const Color _textSecondary = Color(0xFF728078);
-  static const Color _backgroundLight = Color(0xFFF8F9F5);
+  static const Color _primaryColor = Color(0xFF15368A);
+  static const Color _secondaryColor = Color(0xFF079A68);
+  static const Color _errorColor = Color(0xFFE5484D);
+  static const Color _textPrimary = Color(0xFF10255A);
+  static const Color _textSecondary = Color(0xFF7B87A1);
+  static const Color _backgroundLight = Color(0xFFF7F9FC);
 
   @override
   void initState() {
@@ -1417,7 +1417,7 @@ class _KYCScreenState extends State<KYCScreen>
         color: _backgroundLight,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF102C68).withValues(alpha: 0.08),
+          color: const Color(0xFF15368A).withValues(alpha: 0.08),
         ),
       ),
       child: Column(

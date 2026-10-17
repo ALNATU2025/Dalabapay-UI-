@@ -393,124 +393,194 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     final fadeAnimation = _fadeAnimation ?? const AlwaysStoppedAnimation(1.0);
     final canPop = Navigator.of(context).canPop();
+    final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: DP.bg,
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: fadeAnimation,
-          child: Column(
-            children: [
-              DPTopBar(title: 'Welcome back', showBack: canPop),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const ClampingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-                  child: AutofillGroup(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLogo(),
-                        const SizedBox(height: 22),
-                        const DPHeadline(
-                          'Good to see you again.',
-                          subtitle: 'Log in to keep your everyday moving.',
-                          bottom: 26,
-                        ),
-                        const DPLabel('Email address or phone number'),
-                        _buildEmailField(),
-                        const SizedBox(height: 18),
-                        const DPLabel('Password'),
-                        _buildPasswordField(),
-                        const SizedBox(height: 6),
+      backgroundColor: DP.surface,
+      body: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: DPWaves(height: h * 0.14),
+          ),
+          SafeArea(
+            child: FadeTransition(
+              opacity: fadeAnimation,
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                padding: EdgeInsets.fromLTRB(28, canPop ? 0 : 28, 28, h * 0.16),
+                child: AutofillGroup(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (canPop)
                         Align(
-                          alignment: Alignment.centerRight,
-                          child: DPTextLink(
+                          alignment: Alignment.centerLeft,
+                          child: DPIconSquare(
+                            icon: DPIcons.back,
+                            size: 40,
+                            background: Colors.transparent,
+                            semanticLabel: 'Back',
+                            onTap: () => Navigator.of(context).maybePop(),
+                          ),
+                        ),
+                      Center(child: _buildLogo()),
+                      const SizedBox(height: 30),
+                      const DPAppear(
+                        child: Text(
+                          'Welcome Back',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: DP.ink,
+                            letterSpacing: -0.3,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'Login to your Dalabapay account',
+                        style: DP.body.copyWith(color: DP.muted),
+                      ),
+                      const SizedBox(height: 24),
+                      _buildEmailField(),
+                      const SizedBox(height: 14),
+                      _buildPasswordField(),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Checkbox(
+                              value: _rememberMe,
+                              activeColor: DP.green,
+                              side: const BorderSide(color: DP.faint),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              onChanged: (v) =>
+                                  setState(() => _rememberMe = v ?? false),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () =>
+                                setState(() => _rememberMe = !_rememberMe),
+                            child: const Text(
+                              'Remember me',
+                              style: TextStyle(fontSize: 13.5, color: DP.inkSoft),
+                            ),
+                          ),
+                          const Spacer(),
+                          DPTextLink(
                             label: 'Forgot password?',
+                            fontSize: 13.5,
                             onTap: () => Navigator.pushNamed(
                               context,
                               '/forgot-password',
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 18),
-                        _buildLoginButton(),
-                        if (_canUseBiometricQuickLogin) ...[
-                          const SizedBox(height: 14),
-                          _buildQuickBiometricButton(),
                         ],
-                        if (_canUsePinQuickLogin) ...[
-                          const SizedBox(height: 4),
-                          Center(
-                            child: TextButton.icon(
-                              onPressed: () =>
-                                  Navigator.pushNamed(context, '/pin-login'),
-                              icon: const Icon(
-                                DPIcons.lock,
-                                size: 18,
+                      ),
+                      const SizedBox(height: 22),
+                      _buildLoginButton(),
+                      if (_canUseBiometricQuickLogin) ...[
+                        const SizedBox(height: 10),
+                        _buildQuickBiometricButton(),
+                      ],
+                      if (_canUsePinQuickLogin)
+                        Center(
+                          child: TextButton.icon(
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/pin-login'),
+                            icon: const Icon(
+                              DPIcons.lock,
+                              size: 18,
+                              color: DP.green,
+                            ),
+                            label: const Text(
+                              'Unlock with PIN',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                                 color: DP.green,
-                              ),
-                              label: const Text(
-                                'Unlock with PIN',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: DP.green,
-                                ),
                               ),
                             ),
                           ),
-                        ],
-                        const SizedBox(height: 18),
-                        _buildTrustStrip(),
-                        const SizedBox(height: 36),
-                        Center(
-                          child: Column(
-                            children: [
-                              const Text(
-                                'New to Dalabapay?',
-                                style: DP.caption,
-                              ),
-                              const SizedBox(height: 4),
-                              DPTextLink(
-                                label: 'Create an account',
-                                onTap: () => Navigator.pushReplacementNamed(
-                                  context,
-                                  '/register',
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
-                      ],
-                    ),
+                      const SizedBox(height: 14),
+                      const Row(
+                        children: [
+                          Expanded(child: Divider(color: DP.border)),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12),
+                            child: Text('or', style: DP.caption),
+                          ),
+                          Expanded(child: Divider(color: DP.border)),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+                      DPOutlineButton(
+                        label: 'Create an Account',
+                        onPressed: () => Navigator.pushReplacementNamed(
+                          context,
+                          '/register',
+                        ),
+                      ),
+                      const SizedBox(height: 26),
+                      _buildTrustStrip(),
+                    ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildLogo() {
-    return const DPWordmark(height: 36);
+    return const DPAppear(
+      scaleFrom: 0.9,
+      offsetY: 0,
+      child: Column(
+        children: [
+          DPLogoMark(size: 56),
+          SizedBox(height: 10),
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(text: 'Dalaba', style: TextStyle(color: DP.navy)),
+                TextSpan(text: 'pay', style: TextStyle(color: DP.green)),
+              ],
+            ),
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.6,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildEmailField() {
     return DPField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
-      hint: 'you@example.com',
+      hint: 'Email or Phone Number',
       textInputAction: TextInputAction.next,
       autofillHints: const [AutofillHints.email, AutofillHints.telephoneNumber],
       errorText: _emailError.isEmpty ? null : _emailError,
-      suffix: Icon(
-        _isEmailValid ? DPIcons.checkCircle : DPIcons.mail,
-        color: _isEmailValid ? DP.green : DP.muted,
-        size: 21,
-      ),
+      prefix: const Icon(DPIcons.user, size: 20),
+      suffix: _isEmailValid
+          ? const Icon(DPIcons.checkCircle, color: DP.green, size: 20)
+          : null,
     );
   }
 
@@ -518,19 +588,20 @@ class _LoginScreenState extends State<LoginScreen>
     return DPField(
       controller: _passwordController,
       obscureText: _obscurePassword,
-      hint: '••••••••••',
+      hint: 'Password',
       textInputAction: TextInputAction.done,
       autofillHints: const [AutofillHints.password],
       onSubmitted: (_) {
         if (_formValid && !_isLoading) _handleLogin();
       },
       errorText: _passwordError.isEmpty ? null : _passwordError,
+      prefix: const Icon(DPIcons.lock, size: 20),
       suffix: IconButton(
         tooltip: _obscurePassword ? 'Show password' : 'Hide password',
         icon: Icon(
           _obscurePassword ? DPIcons.eyeOff : DPIcons.eye,
           color: DP.muted,
-          size: 21,
+          size: 20,
         ),
         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
       ),
@@ -539,7 +610,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   Widget _buildLoginButton() {
     return DPButton(
-      label: 'Log in',
+      label: 'Login',
       loading: _isLoading,
       onPressed: _formValid ? _handleLogin : null,
     );
@@ -567,10 +638,10 @@ class _LoginScreenState extends State<LoginScreen>
                   : const Icon(DPIcons.fingerprint, color: DP.green, size: 26),
               const SizedBox(width: 10),
               const Text(
-                'Log in with biometrics',
+                'Login with biometrics',
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w600,
                   color: DP.green,
                 ),
               ),
@@ -582,8 +653,16 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Widget _buildTrustStrip() {
-    return const DPBanner(
-      'Your details stay private. Never share your password or payment PIN.',
+    return const Center(
+      child: Text(
+        'Safe  •  Secure  •  Fast',
+        style: TextStyle(
+          fontSize: 12.5,
+          color: DP.muted,
+          fontWeight: FontWeight.w500,
+          letterSpacing: 0.3,
+        ),
+      ),
     );
   }
 }

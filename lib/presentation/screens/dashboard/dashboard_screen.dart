@@ -100,8 +100,8 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   bool get _isApproved => !_isPending && !_isRejected;
 
-  static const Color _successColor = Color(0xFF168566);
-  static const Color _warningColor = Color(0xFFA76B1D);
+  static const Color _successColor = Color(0xFF079A68);
+  static const Color _warningColor = Color(0xFFB7791F);
 
   // Transaction state management
   bool _isTransactionInProgress = false;
@@ -120,22 +120,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     {'icon': DPIcons.wifi, 'name': 'Data', 'route': '/data'},
     {'icon': DPIcons.bolt, 'name': 'Electricity', 'route': '/electricity'},
     {'icon': DPIcons.tv, 'name': 'TV', 'route': '/cable'},
-    {'icon': DPIcons.school, 'name': 'Education', 'route': '/education'},
-    {'icon': DPIcons.shield, 'name': 'Insurance', 'route': '/insurance'},
-    {
-      'icon': DPIcons.globe,
-      'name': 'International',
-      'route': '/international-airtime',
-    },
-  ];
-
-  // Other Services
-  // Full catalogue used by the Pay bills hub
-  final List<Map<String, dynamic>> _otherServices = [
-    {'icon': DPIcons.phone, 'name': 'Airtime', 'route': '/airtime'},
-    {'icon': DPIcons.wifi, 'name': 'Data', 'route': '/data'},
-    {'icon': DPIcons.bolt, 'name': 'Electricity', 'route': '/electricity'},
-    {'icon': DPIcons.tv, 'name': 'Cable TV', 'route': '/cable'},
     {'icon': DPIcons.school, 'name': 'Education', 'route': '/education'},
     {'icon': DPIcons.shield, 'name': 'Insurance', 'route': '/insurance'},
     {
@@ -644,7 +628,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   gradient: const LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
-                    colors: [Color(0xFF5BB592), Color(0xFF102C68)],
+                    colors: [Color(0xFF35C08E), Color(0xFF15368A)],
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -660,7 +644,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF102C68),
+                  color: const Color(0xFF15368A),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -670,7 +654,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 'Complete your KYC to get your personal virtual account for seamless transactions.',
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: const Color(0xFF728078),
+                  color: const Color(0xFF7B87A1),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -678,17 +662,17 @@ class _DashboardScreenState extends State<DashboardScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF102C68).withValues(alpha: 0.05),
+                  color: const Color(0xFF15368A).withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF102C68).withValues(alpha: 0.1),
+                    color: const Color(0xFF15368A).withValues(alpha: 0.1),
                   ),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.security,
-                      color: const Color(0xFF168566),
+                      color: const Color(0xFF079A68),
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -697,7 +681,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         'Your account details are secure and private.',
                         style: GoogleFonts.inter(
                           fontSize: 12,
-                          color: const Color(0xFF168566),
+                          color: const Color(0xFF079A68),
                         ),
                       ),
                     ),
@@ -724,7 +708,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         _navigateToKYC();
                       },
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF102C68)),
+                        side: const BorderSide(color: Color(0xFF15368A)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -734,7 +718,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         'Complete KYC',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF102C68),
+                          color: const Color(0xFF15368A),
                         ),
                       ),
                     ),
@@ -757,7 +741,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         _navigateToKYC();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF102C68),
+                        backgroundColor: const Color(0xFF15368A),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -780,7 +764,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 child: Text(
                   'Remind Me Later',
                   style: GoogleFonts.inter(
-                    color: const Color(0xFF728078),
+                    color: const Color(0xFF7B87A1),
                     fontSize: 13,
                   ),
                 ),
@@ -1420,7 +1404,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF14263D),
+                    color: const Color(0xFF10255A),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -1431,7 +1415,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: const Color(0xFF728078),
+                    color: const Color(0xFF7B87A1),
                     height: 1.5,
                   ),
                 ),
@@ -1455,7 +1439,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           'Cancel',
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF728078),
+                            color: const Color(0xFF7B87A1),
                             fontSize: 15,
                           ),
                         ),
@@ -1681,19 +1665,38 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   void _navigateToTransactions() {
-    Navigator.pushNamed(context, '/transactions').then((_) {
-      // ✅ Reset to Home tab when returning
-      if (mounted) setState(() => _selectedIndex = 0);
+    Navigator.pushNamed(
+      context,
+      '/transactions',
+      arguments: {'userId': _userId ?? ''},
+    ).then((result) {
+      // The pushed tab can ask for another tab when it closes.
+      if (mounted) _handleTabResult(result);
       _silentBackgroundRefresh();
       _loadRecentTransactions();
     });
     _resetIdleTimer();
   }
 
+  void _handleTabResult(Object? result) {
+    switch (result) {
+      case 'services':
+        setState(() => _selectedIndex = 2);
+        break;
+      case 'transactions':
+        _onNavTap(1);
+        break;
+      case 'profile':
+        _onNavTap(3);
+        break;
+      default:
+        setState(() => _selectedIndex = 0);
+    }
+  }
+
   void _navigateToSettings() {
-    Navigator.pushNamed(context, '/settings').then((_) {
-      // ✅ Reset to Home tab when returning
-      if (mounted) setState(() => _selectedIndex = 0);
+    Navigator.pushNamed(context, '/settings').then((result) {
+      if (mounted) _handleTabResult(result);
       _silentBackgroundRefresh();
     });
     _resetIdleTimer();
@@ -1832,7 +1835,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF14263D),
+                  color: const Color(0xFF10255A),
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -1845,7 +1848,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 message,
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: const Color(0xFF728078),
+                  color: const Color(0xFF7B87A1),
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -1880,7 +1883,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         'Dismiss',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF728078),
+                          color: const Color(0xFF7B87A1),
                         ),
                       ),
                     ),
@@ -1899,7 +1902,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         _navigateFromNotification(screen, data);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF102C68),
+                        backgroundColor: const Color(0xFF15368A),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -1978,19 +1981,19 @@ class _DashboardScreenState extends State<DashboardScreen>
       case 'wallet_credit':
       case 'wallet_funded':
       case 'transfer_received':
-        return const Color(0xFF168566); // Green
+        return const Color(0xFF079A68); // Green
       case 'payment_failed':
       case 'alert':
         return Colors.red.shade600;
       case 'commission_earned':
       case 'referral_bonus':
-        return const Color(0xFFA76B1D); // Amber
+        return const Color(0xFFB7791F); // Amber
       case 'transfer_sent':
-        return const Color(0xFF173D88); // Blue
+        return const Color(0xFF2563EB); // Blue
       case 'announcement':
-        return const Color(0xFF173D88); // Purple
+        return const Color(0xFF2563EB); // Purple
       default:
-        return const Color(0xFF102C68); // Primary
+        return const Color(0xFF15368A); // Primary
     }
   }
 
@@ -2196,23 +2199,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     _resetIdleTimer();
   }
 
-  void _openPayBills() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PayBillsScreen(
-          services: _otherServices,
-          recentTransactions: _recentTransactions,
-          onSelect: (route) {
-            Navigator.pop(context);
-            _navigateToService(route);
-          },
-        ),
-      ),
-    );
-    _resetIdleTimer();
-  }
-
   String _firstName() {
     final n = _fullName.trim();
     if (n.isEmpty) return 'there';
@@ -2316,7 +2302,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             isCommission: isCommission,
             commissionSource:
                 isCommission ? _getCommissionSource(description) : null,
-            primaryColor: const Color(0xFF102C68),
+            primaryColor: const Color(0xFF15368A),
             showWatermark: true,
             customerName: customerName,
             customerAddress: customerEmail,
@@ -2391,15 +2377,14 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   String _greeting() {
     final h = DateTime.now().hour;
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
+    if (h < 12) return 'Good morning!';
+    if (h < 17) return 'Good afternoon!';
+    return 'Good evening!';
   }
 
   Widget _buildAppBar(bool isSmallScreen) {
-    final h = DateTime.now().hour;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 16, 6),
+      padding: const EdgeInsets.fromLTRB(20, 14, 12, 8),
       child: Row(
         children: [
           Semantics(
@@ -2409,11 +2394,11 @@ class _DashboardScreenState extends State<DashboardScreen>
               onTap: () => _scaffoldKey.currentState?.openDrawer(),
               child: Container(
                 padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: DP.mintLine, width: 1.5),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: DP.blueTint,
                 ),
-                child: DPAvatar(name: _fullName, size: 42),
+                child: ClipOval(child: DPAvatar(name: _fullName, size: 44)),
               ),
             ),
           ),
@@ -2422,90 +2407,41 @@ class _DashboardScreenState extends State<DashboardScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      _greeting(),
-                      style: DP.caption.copyWith(fontSize: 13),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      h >= 6 && h < 18
-                          ? DPIcons.sun
-                          : Icons.dark_mode_outlined,
-                      size: 14,
-                      color: h >= 6 && h < 18 ? DP.amber : DP.navyIcon,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
                 Text(
-                  _firstName(),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: DP.ink,
-                    letterSpacing: -0.3,
-                  ),
+                  'Hello, ${_firstName()}!',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: DP.ink,
+                  ),
                 ),
+                const SizedBox(height: 2),
+                Text(_greeting(), style: DP.caption.copyWith(fontSize: 13)),
               ],
             ),
           ),
           DPIconSquare(
-            icon: DPIcons.help,
-            size: 42,
-            semanticLabel: 'Help and support',
-            onTap: () => Navigator.pushNamed(context, '/help'),
-          ),
-          const SizedBox(width: 8),
-          DPIconSquare(
             icon: DPIcons.bell,
-            size: 42,
+            size: 44,
+            color: DP.navy,
+            background: Colors.transparent,
             semanticLabel: 'Notifications',
             onTap: _navigateToNotifications,
             badge: _unreadNotificationCount > 0
-                ? DPAppear(
-                    scaleFrom: 0.2,
-                    offsetY: 0,
-                    child: Container(
-                      constraints: const BoxConstraints(minWidth: 16),
-                      height: 16,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: DP.red,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: DP.surface, width: 1.5),
-                      ),
-                      child: Text(
-                        _unreadNotificationCount > 9
-                            ? '9+'
-                            : '$_unreadNotificationCount',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w700,
-                          height: 1,
-                        ),
-                      ),
+                ? Container(
+                    width: 9,
+                    height: 9,
+                    decoration: BoxDecoration(
+                      color: DP.red,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: DP.surface, width: 1.5),
                     ),
                   )
                 : null,
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(String title, bool isSmallScreen) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: DPSectionHeader(
-        title,
-        actionLabel: 'See all',
-        onAction: _openPayBills,
       ),
     );
   }
@@ -2521,7 +2457,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             ? _rejectionReason!
             : 'Your account was not approved. Please contact support for details.');
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 14),
       child: DPBanner(
         message,
         title: isPending ? 'Account under review' : 'Account not approved',
@@ -2559,208 +2495,131 @@ class _DashboardScreenState extends State<DashboardScreen>
 
 
   Widget _buildModernBalanceCard(bool isSmallScreen) {
-    return RepaintBoundary(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [DP.navyRaised, DP.navy, DP.navyDeep],
-            stops: [0, 0.45, 1],
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        gradient: DP.navyGradient,
+        borderRadius: BorderRadius.circular(DP.rXl),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x3315368A),
+            blurRadius: 20,
+            offset: Offset(0, 10),
           ),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x40102C68),
-              blurRadius: 28,
-              offset: Offset(0, 14),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          children: [
-            // Decorative rings + brand watermark
-            Positioned(
-              top: -60,
-              right: -50,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.06),
-                    width: 30,
-                  ),
+        ],
+      ),
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Wallet Balance',
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.85),
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-            ),
-            Positioned(
-              bottom: -70,
-              left: -40,
-              child: Container(
-                width: 170,
-                height: 170,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: DP.green.withValues(alpha: 0.12),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 18,
-              right: 18,
-              child: Opacity(
-                opacity: 0.9,
-                child: Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
+              const Spacer(),
+              InkResponse(
+                radius: 20,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  setState(() => _isBalanceVisible = !_isBalanceVisible);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Icon(
+                    _isBalanceVisible ? DPIcons.eye : DPIcons.eyeOff,
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
+                    size: 20,
                   ),
-                  child: const DPLogoMark(size: 20),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(22, 20, 22, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Wallet balance',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.75),
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w500,
-                        ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            height: 40,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              child: !_isBalanceReady
+                  ? _buildBalanceLoadingPlaceholder(isSmallScreen)
+                  : Align(
+                      key: ValueKey('bal_$_isBalanceVisible'),
+                      alignment: Alignment.centerLeft,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: _isBalanceVisible
+                            ? DPCountUp(
+                                value: _walletBalance,
+                                format: (v) => DP.naira(v),
+                                style: _balanceStyle,
+                              )
+                            : const Text('₦ ••••••', style: _balanceStyle),
                       ),
-                      const SizedBox(width: 4),
-                      InkResponse(
-                        radius: 20,
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          setState(() => _isBalanceVisible = !_isBalanceVisible);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: AnimatedSwitcher(
-                            duration: DPMotion.fast,
-                            child: Icon(
-                              _isBalanceVisible ? DPIcons.eye : DPIcons.eyeOff,
-                              key: ValueKey(_isBalanceVisible),
-                              color: Colors.white.withValues(alpha: 0.85),
-                              size: 17,
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkResponse(
-                        radius: 20,
-                        onTap: () {
-                          HapticFeedback.lightImpact();
-                          _silentBackgroundRefresh();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: Icon(
-                            DPIcons.refresh,
-                            color: Colors.white.withValues(alpha: 0.6),
-                            size: 17,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  SizedBox(
-                    height: 46,
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 280),
-                      transitionBuilder: (child, a) => FadeTransition(
-                        opacity: a,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0, 0.25),
-                            end: Offset.zero,
-                          ).animate(a),
-                          child: child,
-                        ),
-                      ),
-                      child: !_isBalanceReady
-                          ? _buildBalanceLoadingPlaceholder(isSmallScreen)
-                          : Align(
-                              key: ValueKey('bal_$_isBalanceVisible'),
-                              alignment: Alignment.centerLeft,
-                              child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                alignment: Alignment.centerLeft,
-                                child: _isBalanceVisible
-                                    ? DPCountUp(
-                                        value: _walletBalance,
-                                        format: (v) => DP.naira(v),
-                                        style: _balanceStyle,
-                                      )
-                                    : const Text(
-                                        '₦ ••••••',
-                                        style: _balanceStyle,
-                                      ),
-                              ),
-                            ),
                     ),
-                  ),
-                  const SizedBox(height: 18),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _BalanceAction(
-                          icon: DPIcons.plus,
-                          label: 'Add money',
-                          highlight: true,
-                          onTap: _navigateToAddMoney,
-                        ),
-                      ),
-                      Expanded(
-                        child: _BalanceAction(
-                          icon: DPIcons.upRight,
-                          label: 'Send',
-                          onTap: _navigateToSendMoney,
-                        ),
-                      ),
-                      Expanded(
-                        child: _BalanceAction(
-                          icon: DPIcons.receipt,
-                          label: 'Pay bills',
-                          onTap: _openPayBills,
-                        ),
-                      ),
-                      Expanded(
-                        child: _BalanceAction(
-                          icon: DPIcons.history,
-                          label: 'Activity',
-                          onTap: _navigateToTransactions,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 4),
+          GestureDetector(
+            onTap: _navigateToCommission,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(DPIcons.sparkle, size: 14, color: Color(0xFF7FE3BC)),
+                const SizedBox(width: 5),
+                Text(
+                  'Earnings ${_isBalanceVisible ? DP.naira(_commissionBalance) : '₦ ••••'}',
+                  style: const TextStyle(
+                    color: Color(0xFF7FE3BC),
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const Icon(
+                  DPIcons.chevronRight,
+                  size: 16,
+                  color: Color(0xFF7FE3BC),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: DPButton(
+                  label: 'Add Money',
+                  leadingIcon: DPIcons.plus,
+                  height: 46,
+                  background: DP.greenBright,
+                  onPressed: _navigateToAddMoney,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: DPButton(
+                  label: 'Send Money',
+                  height: 46,
+                  background: DP.blue,
+                  onPressed: _navigateToSendMoney,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   static const TextStyle _balanceStyle = TextStyle(
     color: Colors.white,
-    fontSize: 36,
-    fontWeight: FontWeight.w700,
-    letterSpacing: -0.8,
+    fontSize: 30,
+    fontWeight: FontWeight.w800,
+    letterSpacing: -0.5,
     fontFeatures: [FontFeature.tabularFigures()],
   );
 
@@ -2769,147 +2628,13 @@ class _DashboardScreenState extends State<DashboardScreen>
       key: const ValueKey('bal_loading'),
       alignment: Alignment.centerLeft,
       child: Container(
-        height: 36,
-        width: 190,
+        height: 30,
+        width: 170,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.white.withValues(alpha: 0.14),
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
-    );
-  }
-
-  /// Funding account (or the prompt to get one).
-  Widget _buildDedicatedAccountSection(bool isSmallScreen) {
-    if (_hasDedicatedAccount &&
-        _dedicatedAccountNumber != null &&
-        _dedicatedAccountNumber != 'N/A') {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-        child: DPCard(
-          radius: DP.rXl,
-          padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
-          child: Row(
-            children: [
-              const DPIconBadge.blue(DPIcons.bank, size: 42, iconSize: 20),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Add money by bank transfer · ${_dedicatedBankName ?? ''}',
-                      style: DP.caption.copyWith(fontSize: 12.5),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _dedicatedAccountNumber!,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: DP.ink,
-                        letterSpacing: 1.2,
-                        fontFeatures: [FontFeature.tabularFigures()],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              TextButton.icon(
-                onPressed: () {
-                  HapticFeedback.lightImpact();
-                  Clipboard.setData(
-                    ClipboardData(text: _dedicatedAccountNumber!),
-                  );
-                  _showSuccessMessage('Account number copied');
-                },
-                icon: const Icon(DPIcons.copy, size: 16, color: DP.green),
-                label: const Text(
-                  'Copy',
-                  style: TextStyle(
-                    color: DP.green,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    if (_isCheckingAccount || _hasDedicatedAccount) {
-      return const SizedBox.shrink();
-    }
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
-      child: DPCard(
-        radius: DP.rXl,
-        padding: const EdgeInsets.fromLTRB(14, 14, 12, 14),
-        onTap: () {
-          HapticFeedback.lightImpact();
-          _navigateToKYC();
-        },
-        child: const Row(
-          children: [
-            DPIconBadge.blue(DPIcons.bank, size: 42, iconSize: 20),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Get your funding account', style: DP.bodyStrong),
-                  SizedBox(height: 2),
-                  Text(
-                    'Verify your details to receive bank transfers.',
-                    style: DP.caption,
-                  ),
-                ],
-              ),
-            ),
-            Icon(DPIcons.chevronRight, color: DP.muted),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Earnings + invite friends, side by side.
-  Widget _buildRewardsRow(bool isSmallScreen) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: _RewardTile(
-                icon: DPIcons.sparkle,
-                color: DP.green,
-                background: DP.mint,
-                label: 'Earnings',
-                value: _isBalanceVisible
-                    ? DP.naira(_commissionBalance)
-                    : '₦ ••••',
-                action: 'View earnings',
-                onTap: _navigateToCommission,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _RewardTile(
-                icon: DPIcons.gift,
-                color: DP.navyIcon,
-                background: DP.blueTint,
-                label: 'Invite friends',
-                value: _referralCode,
-                action: 'Share code',
-                onTap: _shareReferralCode,
-                onLongPress: _copyReferralCode,
-              ),
-            ),
-          ],
-        ),
     );
   }
 
@@ -2917,99 +2642,117 @@ class _DashboardScreenState extends State<DashboardScreen>
     List<Map<String, dynamic>> services,
     bool isSmallScreen,
   ) {
-    final items = [
-      ...services,
-      {'icon': DPIcons.grid, 'name': 'More', 'route': null},
+    // Home shortcuts, as in the design (Betting / Flight / Bus / Train are
+    // left out until they have a working backend).
+    const home = <DPService>[
+      DPService('Airtime', DPIcons.smartphone, '/airtime', DPAssets.svcAirtime, DP.navyIcon),
+      DPService('Data', DPIcons.wifi, '/data', DPAssets.svcData, DP.navyIcon),
+      DPService('TV', DPIcons.tv, '/cable', DPAssets.svcTv, DP.navyIcon),
+      DPService('Electricity', DPIcons.bolt, '/electricity', DPAssets.svcElectricity, DP.green),
+      DPService('Bills', DPIcons.receipt, '/bills', DPAssets.svcBills, DP.navyIcon),
+      DPService('Insurance', DPIcons.shield, '/insurance', DPAssets.svcInsurance, DP.green),
+      DPService('Education', DPIcons.school, '/education', DPAssets.svcEducation, DP.navyIcon),
+      DPService('More', Icons.more_horiz_rounded, '/services', DPAssets.svcMore, DP.navyIcon),
     ];
-    const tones = <List<Color>>[
-      [DP.mint, DP.green],
-      [DP.blueTint, DP.navyIcon],
-      [DP.amberBg, DP.amber],
-    ];
-    final rows = <Widget>[];
-    for (var r = 0; r < items.length; r += 4) {
-      if (rows.isNotEmpty) rows.add(const SizedBox(height: 16));
-      rows.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (var c = 0; c < 4; c++)
-              Expanded(
-                child: r + c < items.length
-                    ? DPAppear(
-                        delay: DPMotion.stagger(r + c, stepMs: 40, startMs: 200),
-                        scaleFrom: 0.85,
-                        offsetY: 10,
-                        child: _HomeServiceTile(
-                          icon: items[r + c]['icon'] as IconData,
-                          label: items[r + c]['name'] as String,
-                          background: tones[(r + c) % tones.length][0],
-                          color: tones[(r + c) % tones.length][1],
-                          onTap: items[r + c]['route'] == null
-                              ? _openPayBills
-                              : () => _navigateToService(
-                                    items[r + c]['route'] as String,
-                                  ),
-                        ),
-                      )
-                    : const SizedBox(),
-              ),
-          ],
-        ),
-      );
-    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: DPCard(
-        radius: DP.rXl,
-        padding: const EdgeInsets.fromLTRB(8, 18, 8, 16),
-        child: Column(children: rows),
+      child: DPServiceGrid(
+        tiles: [
+          for (final s in home)
+            DPServiceTile(
+              icon: s.icon,
+              label: s.name,
+              image: s.image,
+              color: s.color,
+              onTap: () => _openServiceRoute(s.route),
+            ),
+        ],
       ),
     );
   }
 
+  Widget _buildReferBanner(bool isSmallScreen) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: DPPromoBanner(
+        title: 'Refer a Friend',
+        subtitle: 'Earn rewards when your friends join with your code.',
+        image: DPAssets.bannerRefer,
+        icon: DPIcons.gift,
+        onTap: () => Navigator.pushNamed(
+          context,
+          '/referral',
+          arguments: {'userId': _userId ?? ''},
+        ),
+      ),
+    );
+  }
+
+  /// Opens a service route, including the special routes used by the
+  /// services catalogue.
+  void _openServiceRoute(String route) {
+    HapticFeedback.lightImpact();
+    switch (route) {
+      case '/services':
+        _onNavTap(2);
+        return;
+      case '/bills':
+        _openBills();
+        return;
+      case '/wallet:add':
+        _navigateToAddMoney();
+        return;
+      case '/wallet:send':
+        _navigateToSendMoney();
+        return;
+      case '/commission':
+        _navigateToCommission();
+        return;
+      default:
+        _navigateToService(route);
+    }
+  }
+
+  void _openBills() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BillsScreen(
+          onSelect: (route) {
+            Navigator.pop(context);
+            _openServiceRoute(route);
+          },
+        ),
+      ),
+    );
+    _resetIdleTimer();
+  }
+
   Widget _buildRecentTransactions(bool isSmallScreen) {
-    final list = _recentTransactions.take(4).toList();
+    final list = _recentTransactions.take(3).toList();
+    if (_isLoadingTransactions || list.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: DPSectionHeader(
-              'Recent activity',
-              actionLabel: 'See all',
-              onAction: _navigateToTransactions,
-            ),
+          DPSectionHeader(
+            'Recent Transactions',
+            actionLabel: 'See All',
+            onAction: _navigateToTransactions,
           ),
           DPCard(
-            radius: DP.rXl,
-            padding: const EdgeInsets.fromLTRB(14, 6, 14, 6),
-            child: AnimatedSize(
-              duration: DPMotion.base,
-              curve: DPMotion.curve,
-              alignment: Alignment.topCenter,
-              child: _isLoadingTransactions
-                  ? _buildShimmerTransactions(isSmallScreen)
-                  : list.isEmpty
-                      ? _buildEmptyTransactions(isSmallScreen)
-                      : Column(
-                          children: [
-                            for (var i = 0; i < list.length; i++) ...[
-                              if (i > 0)
-                                const Divider(height: 1, color: DP.borderSoft),
-                              DPAppear(
-                                delay: DPMotion.stagger(i, stepMs: 60),
-                                offsetY: 10,
-                                child: _buildTransactionItem(
-                                  Map<String, dynamic>.from(list[i] as Map),
-                                  isSmallScreen,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Column(
+              children: [
+                for (var i = 0; i < list.length; i++) ...[
+                  if (i > 0) const Divider(height: 1, color: DP.borderSoft),
+                  _buildTransactionItem(
+                    Map<String, dynamic>.from(list[i] as Map),
+                    isSmallScreen,
+                  ),
+                ],
+              ],
             ),
           ),
         ],
@@ -3033,91 +2776,50 @@ class _DashboardScreenState extends State<DashboardScreen>
     final isCommission = transaction['isCommission'] == true;
     final icon = _getTransactionIcon(type);
     final statusLabel = isCommission ? 'Commission' : DPStatus.labelFor(status);
-    final statusColor = isCommission ? DP.green : DPStatus.colorFor(status);
 
     return DPListRow(
       onTap: () => _showTransactionReceipt(transaction),
       padding: const EdgeInsets.symmetric(vertical: 12),
       leading: isCredit
-          ? DPIconBadge(icon, size: 42, iconSize: 20)
-          : DPIconBadge.blue(icon, size: 42, iconSize: 20),
-      title: description,
-      subtitle: _activityTime(date),
-      trailing: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '${isCredit ? '+' : '−'}${DP.naira(amount, decimals: amount % 1 != 0)}',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: isCredit ? DP.green : DP.ink,
-              fontFeatures: const [FontFeature.tabularFigures()],
+          ? DPIconBadge(icon, size: 44, iconSize: 21)
+          : DPIconBadge(
+              icon,
+              size: 44,
+              iconSize: 21,
+              color: DP.red,
+              background: DP.redBg,
             ),
-          ),
-          const SizedBox(height: 3),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: statusColor,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 5),
-              Text(
-                statusLabel,
-                style: TextStyle(
-                  fontSize: 11.5,
-                  color: statusColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildShimmerTransactions(bool isSmallScreen) {
-    return Column(
-      children: List.generate(
-        3,
-        (index) => const Padding(
-          padding: EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            children: [
-              DPSkeleton(width: 42, height: 42, radius: 14),
-              SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DPSkeleton(width: 140),
-                    SizedBox(height: 8),
-                    DPSkeleton(width: 90, height: 11),
-                  ],
-                ),
-              ),
-              DPSkeleton(width: 60, height: 14),
-            ],
-          ),
+      title: description,
+      subtitle: '${_activityTime(date)}  •  $statusLabel',
+      trailing: Text(
+        '${isCredit ? '+ ' : '- '}${DP.naira(amount)}',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: isCredit ? DP.green : DP.red,
+          fontFeatures: const [FontFeature.tabularFigures()],
         ),
       ),
     );
   }
 
-  Widget _buildEmptyTransactions(bool isSmallScreen) {
-    return const DPEmptyState(
-      icon: DPIcons.receipt,
-      title: 'No activity yet',
-      message: 'Your payments and top-ups will show up here.',
-    );
+  void _onNavTap(int i) {
+    HapticFeedback.lightImpact();
+    switch (i) {
+      case 0:
+      case 2:
+        if (_selectedIndex != i) setState(() => _selectedIndex = i);
+        break;
+      case 1:
+        setState(() => _selectedIndex = 1);
+        _navigateToTransactions();
+        break;
+      case 3:
+        setState(() => _selectedIndex = 3);
+        _navigateToSettings();
+        break;
+    }
+    _resetIdleTimer();
   }
 
   Widget _buildCustomBottomNavBar(bool isSmallScreen) {
@@ -3125,30 +2827,13 @@ class _DashboardScreenState extends State<DashboardScreen>
       index: _selectedIndex,
       items: const [
         DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
-        DPNavItem(DPIcons.activity, 'Activity'),
-        DPNavItem(DPIcons.earnings, 'Earnings'),
+        DPNavItem(Icons.receipt_long_outlined, 'Transactions',
+            activeIcon: Icons.receipt_long_rounded),
+        DPNavItem(Icons.grid_view_outlined, 'Services',
+            activeIcon: Icons.grid_view_rounded),
         DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
       ],
-      onTap: (i) {
-        HapticFeedback.lightImpact();
-        if (_selectedIndex != i) setState(() => _selectedIndex = i);
-        switch (i) {
-          case 0:
-            break;
-          case 1:
-            _navigateToTransactions();
-            break;
-          case 2:
-            _navigateToCommission();
-            // return to Home highlight once the page closes
-            setState(() => _selectedIndex = 0);
-            break;
-          case 3:
-            _navigateToSettings();
-            break;
-        }
-        _resetIdleTimer();
-      },
+      onTap: _onNavTap,
     );
   }
 
@@ -3161,21 +2846,17 @@ class _DashboardScreenState extends State<DashboardScreen>
     return ListTile(
       leading: Icon(
         icon,
-        color: isLogout ? Colors.red : const Color(0xFF102C68),
+        color: isLogout ? Colors.red : const Color(0xFF15368A),
       ),
       title: Text(
         title,
         style: GoogleFonts.inter(
-          color: isLogout ? Colors.red : const Color(0xFF102C68),
+          color: isLogout ? Colors.red : const Color(0xFF15368A),
           fontWeight: FontWeight.w500,
         ),
       ),
       onTap: onTap,
     );
-  }
-
-  void _showAllServices(bool isSmallScreen) {
-    _openPayBills();
   }
 
   // ==================== CUSTOM DRAWER METHODS ====================
@@ -3477,80 +3158,63 @@ class _DashboardScreenState extends State<DashboardScreen>
               ),
         body: SafeArea(
           bottom: false,
-          child: Column(
-            children: [
-              DPAppear(offsetY: -8, child: _buildAppBar(isSmallScreen)),
-              Expanded(
-                child: RefreshIndicator(
-                  color: DP.green,
-                  onRefresh: _refreshAllData,
-                  child: SingleChildScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(top: 10, bottom: 28),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          child: PopScope(
+            canPop: _selectedIndex != 2,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop && _selectedIndex == 2) {
+                setState(() => _selectedIndex = 0);
+              }
+            },
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 260),
+              switchInCurve: Curves.easeOutCubic,
+              transitionBuilder: (child, a) =>
+                  FadeTransition(opacity: a, child: child),
+              child: _selectedIndex == 2
+                  ? ServicesView(
+                      key: const ValueKey('services'),
+                      recentTransactions: _recentTransactions,
+                      onSelect: _openServiceRoute,
+                    )
+                  : Column(
+                      key: const ValueKey('home'),
                       children: [
-                        _buildApprovalBanner(isSmallScreen),
-                        DPAppear(
-                          scaleFrom: 0.96,
-                          offsetY: 18,
-                          child: _buildModernBalanceCard(isSmallScreen),
-                        ),
-                        DPAppear(
-                          delay: const Duration(milliseconds: 100),
-                          child: _buildDedicatedAccountSection(isSmallScreen),
-                        ),
-                        const SizedBox(height: 24),
-                        DPAppear(
-                          delay: const Duration(milliseconds: 160),
-                          child: _buildSectionHeader(
-                            'Pay bills',
-                            isSmallScreen,
-                          ),
-                        ),
-                        _buildServicesGrid(_quickServices, isSmallScreen),
-                        const SizedBox(height: 24),
-                        DPAppear(
-                          delay: const Duration(milliseconds: 280),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            child: DPSectionHeader('Earn while you pay'),
-                          ),
-                        ),
-                        DPAppear(
-                          delay: const Duration(milliseconds: 320),
-                          child: _buildRewardsRow(isSmallScreen),
-                        ),
-                        const SizedBox(height: 24),
-                        DPAppear(
-                          delay: const Duration(milliseconds: 380),
-                          child: _buildRecentTransactions(isSmallScreen),
-                        ),
-                        const SizedBox(height: 22),
-                        const DPAppear(
-                          delay: Duration(milliseconds: 480),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                DPIcons.shieldCheck,
-                                size: 15,
-                                color: DP.muted,
+                        _buildAppBar(isSmallScreen),
+                        Expanded(
+                          child: RefreshIndicator(
+                            color: DP.green,
+                            onRefresh: _refreshAllData,
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              padding: const EdgeInsets.only(top: 6, bottom: 24),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildApprovalBanner(isSmallScreen),
+                                  DPAppear(
+                                    scaleFrom: 0.97,
+                                    child: _buildModernBalanceCard(isSmallScreen),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  _buildServicesGrid(
+                                    _quickServices,
+                                    isSmallScreen,
+                                  ),
+                                  const SizedBox(height: 18),
+                                  DPAppear(
+                                    delay: const Duration(milliseconds: 300),
+                                    child: _buildReferBanner(isSmallScreen),
+                                  ),
+                                  const SizedBox(height: 18),
+                                  _buildRecentTransactions(isSmallScreen),
+                                ],
                               ),
-                              SizedBox(width: 6),
-                              Text(
-                                'Every payment is protected by your PIN',
-                                style: DP.caption,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
         bottomNavigationBar: _buildCustomBottomNavBar(isSmallScreen),
@@ -3559,237 +3223,3 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 }
 
-/// Round action button on the balance card ("Add money", "Send", …).
-class _BalanceAction extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final bool highlight;
-
-  const _BalanceAction({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.highlight = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: label,
-      child: DPPressable(
-        pressedScale: 0.9,
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            HapticFeedback.lightImpact();
-            onTap();
-          },
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: highlight
-                      ? DP.mint
-                      : Colors.white.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(16),
-                  border: highlight
-                      ? null
-                      : Border.all(color: Colors.white.withValues(alpha: 0.12)),
-                ),
-                child: Icon(
-                  icon,
-                  size: 22,
-                  color: highlight ? DP.navy : Colors.white,
-                ),
-              ),
-              const SizedBox(height: 7),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.92),
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Service shortcut on Home: tinted rounded icon with a label.
-class _HomeServiceTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color background;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _HomeServiceTile({
-    required this.icon,
-    required this.label,
-    required this.background,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: label,
-      child: DPPressable(
-        pressedScale: 0.9,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(DP.rLg),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: background,
-                    borderRadius: BorderRadius.circular(17),
-                  ),
-                  child: Icon(icon, size: 24, color: color),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 12.5,
-                    fontWeight: FontWeight.w500,
-                    color: DP.ink,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Small tinted card in the "Earn while you pay" row.
-class _RewardTile extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final Color background;
-  final String label;
-  final String value;
-  final String action;
-  final VoidCallback onTap;
-  final VoidCallback? onLongPress;
-
-  const _RewardTile({
-    required this.icon,
-    required this.color,
-    required this.background,
-    required this.label,
-    required this.value,
-    required this.action,
-    required this.onTap,
-    this.onLongPress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DPPressable(
-      pressedScale: 0.97,
-      child: Material(
-        color: background,
-        borderRadius: BorderRadius.circular(DP.rXl),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(DP.rXl),
-          onTap: onTap,
-          onLongPress: onLongPress,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(14, 14, 12, 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.7),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(icon, size: 17, color: color),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: color,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      color: DP.ink,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: -0.2,
-                      fontFeatures: const [FontFeature.tabularFigures()],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        action,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: color,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 2),
-                    Icon(DPIcons.chevronRight, size: 16, color: color),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

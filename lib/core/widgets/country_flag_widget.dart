@@ -115,7 +115,7 @@ class CountryFlagWidget extends StatelessWidget {
           height: size * 0.4,
           child: const CircularProgressIndicator(
             strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF15368A)),
           ),
         ),
       ),

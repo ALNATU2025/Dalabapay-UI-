@@ -86,23 +86,27 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  /// Loader from the design: navy dot · green pill · light-green dot,
+  /// the pill travelling between them.
   Widget _dots() {
     return AnimatedBuilder(
       animation: _mainController,
       builder: (context, _) {
-        final active = (_mainController.value * 3).floor().clamp(0, 2);
+        final active = ((_mainController.value * 6).floor() % 3);
+        const colors = [DP.navy, DP.green, DP.greenSoft];
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: List.generate(3, (i) {
             final on = i == active;
             return AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              margin: const EdgeInsets.symmetric(horizontal: 3),
-              width: 6,
-              height: 6,
+              duration: const Duration(milliseconds: 260),
+              curve: Curves.easeOutCubic,
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: on ? 30 : 10,
+              height: 10,
               decoration: BoxDecoration(
-                color: on ? DP.green : DP.border,
-                shape: BoxShape.circle,
+                color: colors[i],
+                borderRadius: BorderRadius.circular(5),
               ),
             );
           }),
@@ -113,51 +117,74 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: DP.surface,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: FadeTransition(
+      body: Stack(
+        children: [
+          Positioned(
+            top: 0,
+            right: 0,
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: DPWaves(top: true, height: h * 0.18),
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: DPWaves(height: h * 0.28),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                const Spacer(flex: 5),
+                FadeTransition(
                   opacity: _fade,
                   child: ScaleTransition(
                     scale: _scale,
-                    child: Stack(
-                      alignment: Alignment.center,
+                    child: Column(
                       children: [
-                        Container(
-                          width: 250,
-                          height: 250,
-                          decoration: const BoxDecoration(
-                            color: DP.bg,
-                            shape: BoxShape.circle,
+                        const DPLogoMark(size: 110),
+                        const SizedBox(height: 20),
+                        const Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'Dalaba',
+                                style: TextStyle(color: DP.navy),
+                              ),
+                              TextSpan(
+                                text: 'pay',
+                                style: TextStyle(color: DP.green),
+                              ),
+                            ],
+                          ),
+                          style: TextStyle(
+                            fontSize: 44,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -1,
                           ),
                         ),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const DPWordmark(height: 44),
-                            const SizedBox(height: 14),
-                            Text(
-                              'Everyday payments. Extra possibilities.',
-                              style: DP.body.copyWith(color: DP.muted),
-                            ),
-                          ],
+                        const SizedBox(height: 10),
+                        Text(
+                          'Smart Life Fast Pay',
+                          style: DP.body.copyWith(
+                            color: DP.navy,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 40),
+                _dots(),
+                const Spacer(flex: 6),
+              ],
             ),
-            _dots(),
-            const SizedBox(height: 18),
-            const Text('YOUR EVERYDAY, SIMPLIFIED', style: DP.tiny),
-            const SizedBox(height: 36),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

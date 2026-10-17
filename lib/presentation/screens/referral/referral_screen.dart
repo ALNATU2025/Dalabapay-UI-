@@ -183,7 +183,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           message,
           style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF168566),
+        backgroundColor: const Color(0xFF079A68),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -237,12 +237,12 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
 
   Color _getBonusColor(String type) {
     final typeLower = type.toLowerCase();
-    if (typeLower.contains('direct')) return const Color(0xFF168566);
-    if (typeLower.contains('indirect')) return const Color(0xFFA76B1D);
-    if (typeLower.contains('welcome')) return const Color(0xFF173D88);
+    if (typeLower.contains('direct')) return const Color(0xFF079A68);
+    if (typeLower.contains('indirect')) return const Color(0xFFB7791F);
+    if (typeLower.contains('welcome')) return const Color(0xFF2563EB);
     if (typeLower.contains('deposit')) return const Color(0xFF8E44AD);
-    if (typeLower.contains('commission')) return const Color(0xFF102C68);
-    return const Color(0xFF173D88);
+    if (typeLower.contains('commission')) return const Color(0xFF15368A);
+    return const Color(0xFF2563EB);
   }
 
   IconData _getBonusIcon(String type) {
@@ -297,7 +297,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
               description:
                   description.isNotEmpty ? description : 'Bonus credited',
               customMessage: '✓ Bonus successfully credited to your account',
-              primaryColor: const Color(0xFF102C68),
+              primaryColor: const Color(0xFF15368A),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -313,7 +313,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       appBar: _buildAppBar(),
       body: RefreshIndicator(
         onRefresh: _loadReferralData,
-        color: const Color(0xFF102C68),
+        color: const Color(0xFF15368A),
         backgroundColor: Colors.white,
         child: _isLoading ? _buildLoadingState() : _buildBody(),
       ),
@@ -327,7 +327,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF102C68),
+          color: Color(0xFF15368A),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
@@ -340,7 +340,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
+              color: const Color(0xFF15368A),
               letterSpacing: 0.09,
             ),
           ),
@@ -349,7 +349,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF168566),
+              color: const Color(0xFF079A68),
               letterSpacing: 0.09,
             ),
           ),
@@ -358,7 +358,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(Icons.refresh, color: Color(0xFF102C68), size: 22),
+          icon: const Icon(Icons.refresh, color: Color(0xFF15368A), size: 22),
           onPressed: _loadReferralData,
           tooltip: 'Refresh',
         ),
@@ -370,7 +370,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
   Widget _buildLoadingState() {
     return Center(
       child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
+        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF15368A)),
       ),
     );
   }
@@ -424,13 +424,13 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
+          colors: [Color(0xFF35C08E), Color(0xFF15368A)],
           stops: [0.06, 0.41],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF168566).withValues(alpha: 0.3),
+            color: const Color(0xFF079A68).withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -518,7 +518,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           style: GoogleFonts.inter(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
+            color: const Color(0xFF15368A),
           ),
         ),
         const SizedBox(height: 12),
@@ -529,7 +529,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 'Direct Referral',
                 _referralData['formatted']?['directReferralEarnings'] ??
                     '₦0.00',
-                const Color(0xFF168566),
+                const Color(0xFF079A68),
                 Icons.person_add_alt_1,
               ),
             ),
@@ -539,7 +539,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 'Indirect Referral',
                 _referralData['formatted']?['indirectReferralEarnings'] ??
                     '₦0.00',
-                const Color(0xFFA76B1D),
+                const Color(0xFFB7791F),
                 Icons.people_outline,
               ),
             ),
@@ -552,7 +552,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
               child: _buildBonusCard(
                 'Welcome Bonus',
                 _referralData['formatted']?['welcomeBonusEarnings'] ?? '₦0.00',
-                const Color(0xFF173D88),
+                const Color(0xFF2563EB),
                 Icons.card_giftcard,
               ),
             ),
@@ -561,7 +561,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
               child: _buildBonusCard(
                 'Commission',
                 '₦${((_referralData['totalEarned'] ?? 0.0) - (_referralData['commissionBalance'] ?? 0.0)).toStringAsFixed(2)}',
-                const Color(0xFF173D88),
+                const Color(0xFF2563EB),
                 Icons.monetization_on,
               ),
             ),
@@ -647,9 +647,9 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0x05102C68),
+              color: const Color(0x0515368A),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0x0A102C68)),
+              border: Border.all(color: const Color(0x0A15368A)),
             ),
             child: Row(
               children: [
@@ -659,7 +659,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                     style: GoogleFonts.inter(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF102C68),
+                      color: const Color(0xFF15368A),
                       letterSpacing: 2,
                     ),
                   ),
@@ -670,12 +670,12 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0x0A102C68),
+                      color: const Color(0x0A15368A),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
                       Icons.copy,
-                      color: Color(0xFF102C68),
+                      color: Color(0xFF15368A),
                       size: 20,
                     ),
                   ),
@@ -686,12 +686,12 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF168566).withValues(alpha: 0.1),
+                      color: const Color(0xFF079A68).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
                       Icons.share,
-                      color: Color(0xFF168566),
+                      color: Color(0xFF079A68),
                       size: 20,
                     ),
                   ),
@@ -724,7 +724,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
               style: GoogleFonts.inter(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
               ),
             ),
             if (_referralTransactions.isNotEmpty)
@@ -738,7 +738,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                   style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF168566),
+                    color: const Color(0xFF079A68),
                   ),
                 ),
               ),
@@ -839,7 +839,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                     style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF14263D),
+                      color: const Color(0xFF10255A),
                     ),
                   ),
                   if (description.isNotEmpty) ...[
@@ -924,7 +924,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
             children: [
               Icon(
                 Icons.info_outline,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -933,7 +933,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF102C68),
+                  color: const Color(0xFF15368A),
                 ),
               ),
             ],
@@ -947,14 +947,14 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0x05102C68),
+              color: const Color(0x0515368A),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.lightbulb_outline,
-                  color: const Color(0xFF102C68),
+                  color: const Color(0xFF15368A),
                   size: 16,
                 ),
                 const SizedBox(width: 8),
@@ -963,7 +963,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                     'All bonuses are credited to your commission balance and can be used for payments or withdrawn.',
                     style: GoogleFonts.inter(
                       fontSize: 11,
-                      color: const Color(0xFF102C68),
+                      color: const Color(0xFF15368A),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -986,7 +986,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: const Color(0x05102C68),
+              color: const Color(0x0515368A),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -995,7 +995,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF102C68),
+                  color: const Color(0xFF15368A),
                 ),
               ),
             ),

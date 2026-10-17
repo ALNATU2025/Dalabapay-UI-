@@ -27,15 +27,15 @@ class UserDisputesPage extends StatefulWidget {
 class _UserDisputesPageState extends State<UserDisputesPage>
     with TickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color secondaryColor = Color(0xFF168566);
-  static const Color successColor = Color(0xFF168566);
-  static const Color warningColor = Color(0xFFA76B1D);
-  static const Color errorColor = Color(0xFFC0392B);
-  static const Color infoColor = Color(0xFF173D88);
-  static const Color textPrimary = Color(0xFF14263D);
-  static const Color textSecondary = Color(0xFF728078);
-  static const Color backgroundLight = Color(0xFFF8F9F5);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color secondaryColor = Color(0xFF079A68);
+  static const Color successColor = Color(0xFF079A68);
+  static const Color warningColor = Color(0xFFB7791F);
+  static const Color errorColor = Color(0xFFE5484D);
+  static const Color infoColor = Color(0xFF2563EB);
+  static const Color textPrimary = Color(0xFF10255A);
+  static const Color textSecondary = Color(0xFF7B87A1);
+  static const Color backgroundLight = Color(0xFFF7F9FC);
 
   // ==================== STATE ====================
   List<dynamic> _disputes = [];
@@ -596,7 +596,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                       gradient: const LinearGradient(
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
-                        colors: [Color(0xFF5BB592), Color(0xFF102C68)],
+                        colors: [Color(0xFF35C08E), Color(0xFF15368A)],
                         stops: [0.06, 0.41],
                       ),
                       borderRadius: const BorderRadius.only(
@@ -1720,7 +1720,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
+          colors: [Color(0xFF35C08E), Color(0xFF15368A)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(

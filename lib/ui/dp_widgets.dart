@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'dp_logo.dart';
 import 'dp_motion.dart';
 import 'dp_tokens.dart';
 
@@ -31,16 +32,19 @@ class DPTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+      padding: const EdgeInsets.fromLTRB(12, 10, 20, 8),
       child: Row(
         children: [
+          if (!showBack) const SizedBox(width: 8),
           if (showBack) ...[
             DPIconSquare(
               icon: DPIcons.back,
+              size: 40,
+              background: Colors.transparent,
               onTap: onBack ?? () => Navigator.of(context).maybePop(),
               semanticLabel: 'Back',
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
           ],
           Expanded(
             child: Text(
@@ -271,7 +275,7 @@ class DPButton extends StatelessWidget {
     this.leadingIcon,
     this.background = DP.green,
     this.foreground = Colors.white,
-    this.height = 56,
+    this.height = 52,
   });
 
   /// Mint button used on the navy balance card ("Add money").
@@ -298,15 +302,7 @@ class DPButton extends StatelessWidget {
         duration: DPMotion.fast,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(DP.rLg),
-          boxShadow: enabled && background == DP.green
-              ? const [
-                  BoxShadow(
-                    color: Color(0x33168566),
-                    blurRadius: 16,
-                    offset: Offset(0, 6),
-                  ),
-                ]
-              : const [],
+          boxShadow: const [],
         ),
         child: Material(
         color: enabled ? background : background.withValues(alpha: 0.45),
@@ -337,8 +333,8 @@ class DPButton extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 15.5,
+                            fontWeight: FontWeight.w700,
                             color: foreground,
                           ),
                         ),
@@ -370,7 +366,7 @@ class DPOutlineButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
-    this.color = DP.ink,
+    this.color = DP.green,
     this.height = 52,
   });
 
@@ -385,7 +381,10 @@ class DPOutlineButton extends StatelessWidget {
         color: DP.surface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(DP.rLg),
-          side: const BorderSide(color: DP.border),
+          side: BorderSide(
+            color: onPressed == null ? DP.border : color,
+            width: 1.3,
+          ),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(DP.rLg),
@@ -396,8 +395,8 @@ class DPOutlineButton extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 15.5,
+                  fontWeight: FontWeight.w700,
                   color: onPressed == null ? DP.faint : color,
                 ),
               ),
@@ -517,7 +516,7 @@ class DPField extends StatelessWidget {
         );
     return InputDecoration(
       hintText: hint,
-      hintStyle: const TextStyle(color: DP.faint, fontSize: 16),
+      hintStyle: const TextStyle(color: DP.faint, fontSize: 14.5),
       filled: true,
       fillColor: DP.surface,
       isDense: false,
@@ -526,8 +525,14 @@ class DPField extends StatelessWidget {
       errorMaxLines: 3,
       errorStyle: const TextStyle(color: DP.red, fontSize: 12.5),
       prefixText: prefixText,
-      prefixStyle: const TextStyle(color: DP.ink, fontSize: 16),
+      prefixStyle: const TextStyle(
+        color: DP.ink,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+      ),
       prefixIcon: prefix,
+      prefixIconColor: DP.muted,
+      prefixIconConstraints: const BoxConstraints(minWidth: 46, minHeight: 44),
       suffixIcon: suffix == null
           ? null
           : Padding(
@@ -536,7 +541,7 @@ class DPField extends StatelessWidget {
             ),
       suffixIconConstraints: const BoxConstraints(minWidth: 44, minHeight: 44),
       suffixIconColor: DP.muted,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
       border: b(DP.border),
       enabledBorder: b(DP.border),
       disabledBorder: b(DP.borderSoft),
@@ -567,7 +572,7 @@ class DPField extends StatelessWidget {
       textCapitalization: textCapitalization,
       maxLines: obscureText ? 1 : maxLines,
       cursorColor: DP.green,
-      style: style ?? const TextStyle(fontSize: 16, color: DP.ink),
+      style: style ?? const TextStyle(fontSize: 15, color: DP.ink),
       decoration: decoration(
         hint: hint,
         suffix: suffix,
@@ -611,7 +616,7 @@ class DPSelectField extends StatelessWidget {
         borderRadius: BorderRadius.circular(DP.rMd),
         onTap: enabled ? onTap : null,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
           child: Row(
             children: [
               if (leading != null) ...[leading!, const SizedBox(width: 12)],
@@ -621,8 +626,9 @@ class DPSelectField extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     color: has ? DP.ink : DP.faint,
+                    fontWeight: has ? FontWeight.w500 : FontWeight.w400,
                   ),
                 ),
               ),
@@ -926,6 +932,9 @@ class DPChipRow extends StatelessWidget {
   final ValueChanged<String> onSelect;
   final double spacing;
   final double height;
+
+  /// Show provider logos (MTN, Airtel, DSTV…) when the image files exist.
+  final bool logos;
   const DPChipRow({
     super.key,
     required this.options,
@@ -933,6 +942,7 @@ class DPChipRow extends StatelessWidget {
     required this.onSelect,
     this.spacing = 10,
     this.height = 44,
+    this.logos = false,
   });
 
   @override
@@ -947,6 +957,17 @@ class DPChipRow extends StatelessWidget {
             selected: options[i] == selected,
             height: height,
             onTap: () => onSelect(options[i]),
+            leading: !logos || DPAssets.providerFor(options[i]) == null
+                ? null
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: DPImage(
+                      DPAssets.providerFor(options[i])!,
+                      width: 20,
+                      height: 20,
+                      fallback: const SizedBox.shrink(),
+                    ),
+                  ),
           ),
         ),
       );
@@ -1049,7 +1070,7 @@ class DPCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(18),
     this.color = DP.surface,
     this.borderColor = DP.border,
-    this.radius = 20,
+    this.radius = DP.rLg,
     this.onTap,
     this.margin,
   });
@@ -1263,10 +1284,7 @@ class DPIconBadge extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: background,
-        borderRadius: BorderRadius.circular(size * 0.32),
-      ),
+      decoration: BoxDecoration(color: background, shape: BoxShape.circle),
       child: Icon(icon, color: color, size: iconSize),
     );
   }
@@ -1317,7 +1335,8 @@ class DPListRow extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: DP.body.copyWith(
-                      fontSize: 15.5,
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w600,
                       color: titleColor ?? DP.ink,
                     ),
                   ),
@@ -1364,12 +1383,10 @@ class DPMenuRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return DPListRow(
       onTap: onTap,
-      leading: DPIconBadge(
-        icon,
-        color: color ?? DP.navyIcon,
-        background: color == null ? DP.blueTint : color!.withValues(alpha: 0.1),
-        size: 40,
-        iconSize: 20,
+      padding: const EdgeInsets.symmetric(vertical: 13),
+      leading: SizedBox(
+        width: 28,
+        child: Icon(icon, color: color ?? DP.navy, size: 22),
       ),
       title: title,
       titleColor: color,
@@ -1380,13 +1397,20 @@ class DPMenuRow extends StatelessWidget {
   }
 }
 
-/// White square service tile with green line icon and label below.
+/// Service tile from the design: white bordered card, round tinted icon
+/// (or the 3D icon image when [image] exists), label underneath.
 class DPServiceTile extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback? onTap;
   final bool disabled;
   final String? tag;
+
+  /// Optional image (e.g. DPAssets.svcAirtime). Falls back to [icon].
+  final String? image;
+  final Color? color;
+  final Color? tint;
+
   const DPServiceTile({
     super.key,
     required this.icon,
@@ -1394,81 +1418,98 @@ class DPServiceTile extends StatelessWidget {
     this.onTap,
     this.disabled = false,
     this.tag,
+    this.image,
+    this.color,
+    this.tint,
   });
 
   @override
   Widget build(BuildContext context) {
+    final c = disabled ? DP.faint : (color ?? DP.navyIcon);
+    final iconWidget = Icon(icon, size: 22, color: c);
     return Semantics(
       button: true,
       label: label,
       child: DPPressable(
         enabled: onTap != null && !disabled,
-        pressedScale: 0.92,
-        child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(DP.rLg),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
+        pressedScale: 0.94,
+        child: Material(
+          color: DP.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(DP.rLg),
+            side: const BorderSide(color: DP.border),
+          ),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(DP.rLg),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(4, 12, 4, 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: DP.surface,
-                      borderRadius: BorderRadius.circular(DP.rLg),
-                      border: Border.all(color: DP.border),
-                    ),
-                    child: Icon(
-                      icon,
-                      size: 26,
-                      color: disabled ? DP.faint : DP.green,
-                    ),
-                  ),
-                  if (tag != null)
-                    Positioned(
-                      top: -6,
-                      right: -10,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Container(
+                        width: 42,
+                        height: 42,
+                        alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: DP.amberBg,
-                          borderRadius: BorderRadius.circular(8),
+                          color: tint ?? c.withValues(alpha: 0.1),
+                          shape: BoxShape.circle,
                         ),
-                        child: Text(
-                          tag!,
-                          style: const TextStyle(
-                            fontSize: 9.5,
-                            fontWeight: FontWeight.w700,
-                            color: DP.amber,
+                        child: image == null
+                            ? iconWidget
+                            : DPImage(
+                                image!,
+                                width: 30,
+                                height: 30,
+                                fallback: iconWidget,
+                              ),
+                      ),
+                      if (tag != null)
+                        Positioned(
+                          top: -6,
+                          right: -14,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 5,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: DP.amberBg,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              tag!,
+                              style: const TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                color: DP.amber,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    label,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      height: 1.2,
+                      fontWeight: FontWeight.w500,
+                      color: disabled ? DP.faint : DP.ink,
                     ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: disabled ? DP.faint : DP.ink,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -1500,9 +1541,19 @@ class DPServiceGrid extends StatelessWidget {
           ),
         );
       }
-      if (rows.isNotEmpty) rows.add(const SizedBox(height: 14));
+      if (rows.isNotEmpty) rows.add(const SizedBox(height: 12));
       rows.add(
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: cells),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (var k = 0; k < cells.length; k++) ...[
+                if (k > 0) const SizedBox(width: 12),
+                cells[k],
+              ],
+            ],
+          ),
+        ),
       );
     }
     return Column(children: rows);
@@ -1942,7 +1993,7 @@ class DPBottomNav extends StatelessWidget {
       ),
       padding: EdgeInsets.only(
         top: 8,
-        bottom: 8 + MediaQuery.of(context).padding.bottom,
+        bottom: 6 + MediaQuery.of(context).padding.bottom,
       ),
       child: Row(
         children: List.generate(items.length, (i) {
@@ -1957,38 +2008,26 @@ class DPBottomNav extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 260),
-                      curve: Curves.easeOutCubic,
-                      width: active ? 58 : 40,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: active ? DP.mint : Colors.transparent,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: AnimatedScale(
-                        scale: active ? 1.08 : 1,
-                        duration: const Duration(milliseconds: 260),
-                        curve: Curves.easeOutBack,
-                        child: Icon(
-                          active ? (it.activeIcon ?? it.icon) : it.icon,
-                          color: c,
-                          size: 24,
-                        ),
+                    AnimatedScale(
+                      scale: active ? 1.1 : 1,
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOutBack,
+                      child: Icon(
+                        active ? (it.activeIcon ?? it.icon) : it.icon,
+                        color: c,
+                        size: 24,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    AnimatedDefaultTextStyle(
-                      duration: const Duration(milliseconds: 200),
-                      style: DefaultTextStyle.of(context).style.merge(
-                        TextStyle(
-                          fontSize: 12,
-                          color: c,
-                          fontWeight:
-                              active ? FontWeight.w600 : FontWeight.w400,
-                        ),
+                    Text(
+                      it.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        color: c,
+                        fontWeight: active ? FontWeight.w700 : FontWeight.w500,
                       ),
-                      child: Text(it.label),
                     ),
                   ],
                 ),
@@ -1999,6 +2038,156 @@ class DPBottomNav extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Segmented tabs from the design ("Bank Transfer | Card | USSD").
+class DPSegmented extends StatelessWidget {
+  final List<String> options;
+  final int index;
+  final ValueChanged<int> onChanged;
+  const DPSegmented({
+    super.key,
+    required this.options,
+    required this.index,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F4F8),
+        borderRadius: BorderRadius.circular(DP.rMd),
+      ),
+      child: Row(
+        children: List.generate(options.length, (i) {
+          final active = i == index;
+          return Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                if (!active) {
+                  HapticFeedback.selectionClick();
+                  onChanged(i);
+                }
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                padding: const EdgeInsets.symmetric(vertical: 11),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: active ? DP.green : Colors.transparent,
+                  borderRadius: BorderRadius.circular(DP.rSm),
+                ),
+                child: Text(
+                  options[i],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    fontWeight: FontWeight.w600,
+                    color: active ? Colors.white : DP.inkSoft,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
+/// Wave background from the splash / login design: green and navy waves
+/// at the bottom, or a green swoosh for the top-right corner ([top]).
+class DPWaves extends StatelessWidget {
+  final double height;
+  final bool top;
+  const DPWaves({super.key, this.height = 160, this.top = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: SizedBox(
+        height: height,
+        width: double.infinity,
+        child: CustomPaint(painter: _WavesPainter(top: top)),
+      ),
+    );
+  }
+}
+
+class _WavesPainter extends CustomPainter {
+  final bool top;
+  _WavesPainter({required this.top});
+
+  @override
+  void paint(Canvas canvas, Size s) {
+    final w = s.width, h = s.height;
+    if (top) {
+      final light = Path()
+        ..moveTo(w * 0.45, 0)
+        ..quadraticBezierTo(w * 0.70, h * 0.75, w, h * 0.95)
+        ..lineTo(w, 0)
+        ..close();
+      canvas.drawPath(light, Paint()..color = const Color(0xFFDDF5EA));
+      final green = Path()
+        ..moveTo(w * 0.58, 0)
+        ..quadraticBezierTo(w * 0.80, h * 0.62, w, h * 0.8)
+        ..lineTo(w, 0)
+        ..close();
+      canvas.drawPath(
+        green,
+        Paint()
+          ..shader = const LinearGradient(
+            colors: [Color(0xFF3DD69B), Color(0xFF079A68)],
+          ).createShader(Offset.zero & s),
+      );
+      return;
+    }
+    final mintPath = Path()
+      ..moveTo(0, h * 0.10)
+      ..cubicTo(w * 0.35, h * 0.0, w * 0.55, h * 0.55, w, h * 0.62)
+      ..lineTo(w, h)
+      ..lineTo(0, h)
+      ..close();
+    canvas.drawPath(mintPath, Paint()..color = const Color(0xFFD4F3E5));
+    final greenPath = Path()
+      ..moveTo(0, h * 0.2)
+      ..cubicTo(w * 0.30, h * 0.12, w * 0.50, h * 0.62, w * 0.85, h * 0.80)
+      ..lineTo(w * 0.85, h)
+      ..lineTo(0, h)
+      ..close();
+    canvas.drawPath(
+      greenPath,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF5BE3B0), Color(0xFF079A68)],
+        ).createShader(Offset.zero & s),
+    );
+    final navyPath = Path()
+      ..moveTo(0, h * 0.42)
+      ..cubicTo(w * 0.30, h * 0.30, w * 0.55, h * 0.78, w, h * 0.86)
+      ..lineTo(w, h)
+      ..lineTo(0, h)
+      ..close();
+    canvas.drawPath(
+      navyPath,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF1E4BB0), Color(0xFF15368A), Color(0xFF0E2766)],
+        ).createShader(Offset.zero & s),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _WavesPainter old) => old.top != top;
 }
 
 // ════════════════════════════════════════════════════════════

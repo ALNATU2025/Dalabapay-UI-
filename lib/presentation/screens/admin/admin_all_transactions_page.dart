@@ -33,14 +33,14 @@ class AdminAllTransactionsPage extends StatefulWidget {
 class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color secondaryColor = Color(0xFF168566);
-  static const Color successColor = Color(0xFF168566);
-  static const Color warningColor = Color(0xFFA76B1D);
-  static const Color errorColor = Color(0xFFC0392B);
-  static const Color textPrimary = Color(0xFF14263D);
-  static const Color textSecondary = Color(0xFF728078);
-  static const Color backgroundLight = Color(0xFFF8F9F5);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color secondaryColor = Color(0xFF079A68);
+  static const Color successColor = Color(0xFF079A68);
+  static const Color warningColor = Color(0xFFB7791F);
+  static const Color errorColor = Color(0xFFE5484D);
+  static const Color textPrimary = Color(0xFF10255A);
+  static const Color textSecondary = Color(0xFF7B87A1);
+  static const Color backgroundLight = Color(0xFFF7F9FC);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -1170,7 +1170,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
+          colors: [const Color(0xFF35C08E), const Color(0xFF15368A)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -2660,7 +2660,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           style: pw.TextStyle(
                             fontSize: 24,
                             fontWeight: pw.FontWeight.bold,
-                            color: PdfColor.fromInt(0xFF102C68),
+                            color: PdfColor.fromInt(0xFF15368A),
                           ),
                         ),
                         pw.Text(
@@ -2684,7 +2684,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               pw.Container(
                 padding: const pw.EdgeInsets.all(12),
                 decoration: pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFFF8F9F5),
+                  color: PdfColor.fromInt(0xFFF7F9FC),
                   borderRadius: pw.BorderRadius.circular(8),
                 ),
                 child: pw.Row(
@@ -2719,7 +2719,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 children: [
                   pw.TableRow(
                     decoration: const pw.BoxDecoration(
-                      color: PdfColor.fromInt(0xFF102C68),
+                      color: PdfColor.fromInt(0xFF15368A),
                     ),
                     children:
                         [
@@ -2826,7 +2826,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               pw.Container(
                 padding: const pw.EdgeInsets.all(12),
                 decoration: pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFFF8F9F5),
+                  color: PdfColor.fromInt(0xFFF7F9FC),
                   borderRadius: pw.BorderRadius.circular(8),
                 ),
                 child: pw.Center(
@@ -2878,13 +2878,13 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
   PdfColor _getStatusColorPdf(String status) {
     final statusLower = status.toLowerCase();
     if (statusLower.contains('success') || statusLower.contains('completed')) {
-      return PdfColor.fromInt(0xFF168566);
+      return PdfColor.fromInt(0xFF079A68);
     } else if (statusLower.contains('pending') ||
         statusLower.contains('processing')) {
-      return PdfColor.fromInt(0xFFA76B1D);
+      return PdfColor.fromInt(0xFFB7791F);
     } else if (statusLower.contains('failed') ||
         statusLower.contains('cancelled')) {
-      return PdfColor.fromInt(0xFFC0392B);
+      return PdfColor.fromInt(0xFFE5484D);
     }
     return PdfColors.grey;
   }

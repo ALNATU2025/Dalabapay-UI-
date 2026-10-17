@@ -30,7 +30,7 @@ class AppColors {
   );
 
   static const BoxShadow cardShadow = BoxShadow(
-    color: Color(0x0A14263D),
+    color: Color(0x0A10255A),
     blurRadius: 18,
     offset: Offset(0, 6),
   );
