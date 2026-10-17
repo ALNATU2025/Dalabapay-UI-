@@ -61,7 +61,6 @@ dependencies:
   flutter_app_badger: ^1.5.0
 
   # Icons
-  font_awesome_flutter: ^10.10.0
   iconsax: ^0.0.8
 
 
@@ -93,7 +92,6 @@ dependencies:
 
 
 dependency_overrides:
-  archive: ^3.6.1
   firebase_core_web: 3.10.0
   web: ^1.0.0
 
