@@ -32,6 +32,22 @@ subprojects {
         }
     }
 }
+// Old plugins compiled against very old SDKs fail resource linking
+// (e.g. "android:attr/lStar not found"). Raise their compileSdk.
+subprojects {
+    val raiseCompileSdk: Project.() -> Unit = {
+        val android = extensions.findByName("android")
+        if (android != null && plugins.hasPlugin("com.android.library")) {
+            val current = android.javaClass.getMethod("getCompileSdkVersion").invoke(android) as String?
+            val level = current?.substringAfter("android-")?.toIntOrNull() ?: 0
+            if (level in 1..33) {
+                android.javaClass.getMethod("compileSdkVersion", Int::class.javaPrimitiveType)
+                    .invoke(android, 35)
+            }
+        }
+    }
+    if (state.executed) raiseCompileSdk() else afterEvaluate { raiseCompileSdk() }
+}
 subprojects {
     project.evaluationDependsOn(":app")
 }
