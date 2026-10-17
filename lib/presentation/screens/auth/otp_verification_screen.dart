@@ -31,8 +31,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
-  static const Color _brand = Color(0xFF219C7E);
-  static const Color _brandDark = Color(0xFF1C2D5A);
+  static const Color _brand = Color(0xFF168566);
+  static const Color _brandDark = Color(0xFF14263D);
   static const Color _white = Colors.white;
 
   @override
@@ -242,7 +242,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
                   // Heading
                   Text(
                     'Verify OTP',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 28,
                       fontWeight: FontWeight.w800,
                       color: _brandDark,
@@ -390,7 +390,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
         maxLength: 1,
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.inter(
           fontSize: 24,
           fontWeight: FontWeight.w700,
           color: _brandDark,
@@ -413,7 +413,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
         gradient: const LinearGradient(
-          colors: [Color(0xFF27B48F), Color(0xFF1A8A68)],
+          colors: [Color(0xFF168566), Color(0xFF0F6B51)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -443,7 +443,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
                     )
                     : Text(
                       'VERIFY OTP',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -460,9 +460,9 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0FBF7),
+        color: const Color(0xFFEEF8F2),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -471,13 +471,13 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
           Container(
             width: 1,
             height: 20,
-            color: const Color(0xFF219C7E).withOpacity(0.18),
+            color: const Color(0xFF168566).withOpacity(0.18),
           ),
           const _TrustBadge(icon: Icons.bolt_rounded, label: 'Fast'),
           Container(
             width: 1,
             height: 20,
-            color: const Color(0xFF219C7E).withOpacity(0.18),
+            color: const Color(0xFF168566).withOpacity(0.18),
           ),
           const _TrustBadge(icon: Icons.verified_rounded, label: 'Reliable'),
         ],
@@ -496,14 +496,14 @@ class _TrustBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF219C7E)),
+        Icon(icon, size: 16, color: const Color(0xFF168566)),
         const SizedBox(width: 6),
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF1C2D5A),
+            color: const Color(0xFF14263D),
           ),
         ),
       ],

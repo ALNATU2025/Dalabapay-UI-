@@ -61,7 +61,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF243889),
+        backgroundColor: const Color(0xFF102C68),
         foregroundColor: Colors.white,
         elevation: 0,
         title: Column(
@@ -69,7 +69,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
           children: [
             Text(
               'User Transactions',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -110,7 +110,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                     ElevatedButton(
                       onPressed: _loadTransactions,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF243889),
+                        backgroundColor: const Color(0xFF102C68),
                       ),
                       child: const Text('Retry'),
                     ),
@@ -130,7 +130,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                     const SizedBox(height: 16),
                     Text(
                       'No Transactions Found',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey.shade600,
@@ -180,10 +180,10 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                             color:
                                 (t['isCommission'] == true)
                                     ? const Color(
-                                      0xFF219C7E,
+                                      0xFF168566,
                                     ).withValues(alpha: 0.1)
                                     : const Color(
-                                      0xFF243889,
+                                      0xFF102C68,
                                     ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -196,8 +196,8 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 : Icons.receipt_rounded,
                             color:
                                 (t['isCommission'] == true)
-                                    ? const Color(0xFF219C7E)
-                                    : const Color(0xFF243889),
+                                    ? const Color(0xFF168566)
+                                    : const Color(0xFF102C68),
                             size: 20,
                           ),
                         ),
@@ -210,7 +210,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 type,
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF243889),
+                                  color: const Color(0xFF102C68),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -237,7 +237,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                     (t['isCommission'] == true ||
                                             type.contains('Fund') ||
                                             type.contains('Wallet'))
-                                        ? const Color(0xFF219C7E)
+                                        ? const Color(0xFF168566)
                                         : Colors.red.shade700,
                               ),
                             ),
@@ -250,7 +250,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 color:
                                     status == 'completed'
                                         ? const Color(
-                                          0xFF219C7E,
+                                          0xFF168566,
                                         ).withValues(alpha: 0.1)
                                         : Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
@@ -262,7 +262,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                   fontWeight: FontWeight.w600,
                                   color:
                                       status == 'completed'
-                                          ? const Color(0xFF219C7E)
+                                          ? const Color(0xFF168566)
                                           : Colors.orange,
                                 ),
                               ),

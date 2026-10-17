@@ -59,12 +59,12 @@ class _KYCScreenState extends State<KYCScreen>
   late Animation<Offset> _slideAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryColor = Color(0xFF243889);
-  static const Color _secondaryColor = Color(0xFF219C7E);
-  static const Color _errorColor = Color(0xFFEF4444);
-  static const Color _textPrimary = Color(0xFF1C2D5A);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _backgroundLight = Color(0xFFF8FAFC);
+  static const Color _primaryColor = Color(0xFF102C68);
+  static const Color _secondaryColor = Color(0xFF168566);
+  static const Color _errorColor = Color(0xFFC0392B);
+  static const Color _textPrimary = Color(0xFF14263D);
+  static const Color _textSecondary = Color(0xFF728078);
+  static const Color _backgroundLight = Color(0xFFF8F9F5);
 
   @override
   void initState() {
@@ -322,7 +322,7 @@ class _KYCScreenState extends State<KYCScreen>
                   const SizedBox(height: 20),
                   Text(
                     'Creating Your Account...',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: _textPrimary,
@@ -406,7 +406,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 20),
                           Text(
                             '🎉 Account Created!',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: _textPrimary,
@@ -610,7 +610,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 18),
                           Text(
                             'Something Went Wrong',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: _textPrimary,
@@ -791,7 +791,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 18),
                           Text(
                             title,
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: _textPrimary,
@@ -1075,7 +1075,7 @@ class _KYCScreenState extends State<KYCScreen>
               // Header
               Text(
                 'Complete Your KYC',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: _textPrimary,
@@ -1417,7 +1417,7 @@ class _KYCScreenState extends State<KYCScreen>
         color: _backgroundLight,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF243889).withValues(alpha: 0.08),
+          color: const Color(0xFF102C68).withValues(alpha: 0.08),
         ),
       ),
       child: Column(
@@ -1425,7 +1425,7 @@ class _KYCScreenState extends State<KYCScreen>
         children: [
           Text(
             'Your Information',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: _textSecondary,
@@ -1547,7 +1547,7 @@ class _KYCScreenState extends State<KYCScreen>
             hintText: hint,
             hintStyle: GoogleFonts.inter(
               fontSize: 14,
-              color: const Color(0xFF94A3B8),
+              color: const Color(0xFFA9B2AC),
             ),
             prefixIcon: Icon(icon, color: _primaryColor, size: 20),
             prefixIconConstraints: const BoxConstraints(minWidth: 48),
@@ -1620,7 +1620,7 @@ class _KYCScreenState extends State<KYCScreen>
           (context) => SimpleDialog(
             title: Text(
               'Select Gender',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              style: GoogleFonts.inter(fontWeight: FontWeight.bold),
             ),
             children:
                 ['Male', 'Female', 'Other'].map((g) {

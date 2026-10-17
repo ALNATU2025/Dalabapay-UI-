@@ -98,8 +98,8 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   bool get _isApproved => !_isPending && !_isRejected;
 
-  static const Color _successColor = Color(0xFF219C7E);
-  static const Color _warningColor = Color(0xFFF39C12);
+  static const Color _successColor = Color(0xFF168566);
+  static const Color _warningColor = Color(0xFFA76B1D);
 
   // Transaction state management
   bool _isTransactionInProgress = false;
@@ -118,28 +118,28 @@ class _DashboardScreenState extends State<DashboardScreen>
       'name': 'Airtime',
       'route': '/airtime',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFF4A90E2),
+      'iconColor': const Color(0xFF173D88),
     },
     {
       'icon': HugeIcons.strokeRoundedWifi01,
       'name': 'Data',
       'route': '/data',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFF9B59B6),
+      'iconColor': const Color(0xFF173D88),
     },
     {
       'icon': HugeIcons.strokeRoundedBulb,
       'name': 'Electricity',
       'route': '/electricity',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFFF39C12),
+      'iconColor': const Color(0xFFA76B1D),
     },
     {
       'icon': HugeIcons.strokeRoundedTv01,
       'name': 'Cable TV',
       'route': '/cable',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFFE74C3C),
+      'iconColor': const Color(0xFFC0392B),
     },
     {
       'icon': HugeIcons.strokeRoundedMortarboard01,
@@ -160,14 +160,14 @@ class _DashboardScreenState extends State<DashboardScreen>
       'name': 'Tickets',
       'route': '/ticket',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFFE67E22),
+      'iconColor': const Color(0xFFA76B1D),
     },
     {
       'icon': HugeIcons.strokeRoundedPercent,
       'name': 'Commission',
       'route': '/commission',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFF219C7E),
+      'iconColor': const Color(0xFF168566),
     },
   ];
 
@@ -178,14 +178,14 @@ class _DashboardScreenState extends State<DashboardScreen>
       'name': 'Internet',
       'route': '/internet',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFF3498DB),
+      'iconColor': const Color(0xFF173D88),
     },
     {
       'icon': HugeIcons.strokeRoundedDice,
       'name': 'Betting',
       'route': '/betting',
       'isHugeIcon': true,
-      'iconColor': const Color(0xFFE74C3C),
+      'iconColor': const Color(0xFFC0392B),
     },
     {
       'icon': HugeIcons.strokeRoundedShield01,
@@ -206,7 +206,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       'name': 'Airtime Cash',
       'route': null,
       'isHugeIcon': true,
-      'iconColor': const Color(0xFF4A90E2),
+      'iconColor': const Color(0xFF173D88),
       'comingSoon': true,
     },
     {
@@ -214,7 +214,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       'name': 'Wallet Transfer',
       'route': null,
       'isHugeIcon': true,
-      'iconColor': const Color(0xFFF39C12),
+      'iconColor': const Color(0xFFA76B1D),
       'comingSoon': true,
     },
     {
@@ -725,7 +725,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   gradient: const LinearGradient(
                     begin: Alignment.topRight,
                     end: Alignment.bottomLeft,
-                    colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                    colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                   ),
                   shape: BoxShape.circle,
                 ),
@@ -738,10 +738,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               const SizedBox(height: 20),
               Text(
                 'Get Your Dedicated Account',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -751,7 +751,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 'Complete your KYC to get your personal virtual account for seamless transactions.',
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -759,17 +759,17 @@ class _DashboardScreenState extends State<DashboardScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF243889).withValues(alpha: 0.05),
+                  color: const Color(0xFF102C68).withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF243889).withValues(alpha: 0.1),
+                    color: const Color(0xFF102C68).withValues(alpha: 0.1),
                   ),
                 ),
                 child: Row(
                   children: [
                     Icon(
                       Icons.security,
-                      color: const Color(0xFF219C7E),
+                      color: const Color(0xFF168566),
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -778,7 +778,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         'Your account details are secure and private.',
                         style: GoogleFonts.inter(
                           fontSize: 12,
-                          color: const Color(0xFF219C7E),
+                          color: const Color(0xFF168566),
                         ),
                       ),
                     ),
@@ -805,7 +805,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         _navigateToKYC();
                       },
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF243889)),
+                        side: const BorderSide(color: Color(0xFF102C68)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -815,7 +815,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         'Complete KYC',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF243889),
+                          color: const Color(0xFF102C68),
                         ),
                       ),
                     ),
@@ -838,7 +838,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         _navigateToKYC();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF243889),
+                        backgroundColor: const Color(0xFF102C68),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -861,7 +861,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 child: Text(
                   'Remind Me Later',
                   style: GoogleFonts.inter(
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                     fontSize: 13,
                   ),
                 ),
@@ -1498,10 +1498,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                 // Title
                 Text(
                   'Logout?',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -1512,7 +1512,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                     height: 1.5,
                   ),
                 ),
@@ -1536,7 +1536,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           'Cancel',
                           style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF64748B),
+                            color: const Color(0xFF728078),
                             fontSize: 15,
                           ),
                         ),
@@ -1583,7 +1583,7 @@ class _DashboardScreenState extends State<DashboardScreen>
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Logging out...', style: GoogleFonts.poppins()),
+          content: Text('Logging out...', style: GoogleFonts.inter()),
           duration: const Duration(seconds: 1),
           behavior: SnackBarBehavior.floating,
         ),
@@ -1605,7 +1605,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           SnackBar(
             content: Text(
               'Logged out successfully',
-              style: GoogleFonts.poppins(),
+              style: GoogleFonts.inter(),
             ),
             backgroundColor: _successColor,
             behavior: SnackBarBehavior.floating,
@@ -1631,7 +1631,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Logged out', style: GoogleFonts.poppins()),
+            content: Text('Logged out', style: GoogleFonts.inter()),
             backgroundColor: _warningColor,
             behavior: SnackBarBehavior.floating,
           ),
@@ -1910,10 +1910,10 @@ class _DashboardScreenState extends State<DashboardScreen>
               // Title
               Text(
                 title,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -1926,7 +1926,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 message,
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -1961,7 +1961,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         'Dismiss',
                         style: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF64748B),
+                          color: const Color(0xFF728078),
                         ),
                       ),
                     ),
@@ -1980,7 +1980,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         _navigateFromNotification(screen, data);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF243889),
+                        backgroundColor: const Color(0xFF102C68),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -2059,19 +2059,19 @@ class _DashboardScreenState extends State<DashboardScreen>
       case 'wallet_credit':
       case 'wallet_funded':
       case 'transfer_received':
-        return const Color(0xFF219C7E); // Green
+        return const Color(0xFF168566); // Green
       case 'payment_failed':
       case 'alert':
         return Colors.red.shade600;
       case 'commission_earned':
       case 'referral_bonus':
-        return const Color(0xFFF59E0B); // Amber
+        return const Color(0xFFA76B1D); // Amber
       case 'transfer_sent':
-        return const Color(0xFF3B82F6); // Blue
+        return const Color(0xFF173D88); // Blue
       case 'announcement':
-        return const Color(0xFF8B5CF6); // Purple
+        return const Color(0xFF173D88); // Purple
       default:
-        return const Color(0xFF243889); // Primary
+        return const Color(0xFF102C68); // Primary
     }
   }
 
@@ -2163,15 +2163,15 @@ class _DashboardScreenState extends State<DashboardScreen>
               children: [
                 Icon(
                   Icons.construction_outlined,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                   size: 28,
                 ),
                 const SizedBox(width: 12),
                 Text(
                   'Coming Soon',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF243889),
+                    color: const Color(0xFF102C68),
                     fontSize: 20,
                   ),
                 ),
@@ -2189,17 +2189,17 @@ class _DashboardScreenState extends State<DashboardScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF219C7E).withOpacity(0.08),
+                    color: const Color(0xFF168566).withOpacity(0.08),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: const Color(0xFF219C7E).withOpacity(0.15),
+                      color: const Color(0xFF168566).withOpacity(0.15),
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.info_outline,
-                        color: const Color(0xFF219C7E),
+                        color: const Color(0xFF168566),
                         size: 18,
                       ),
                       const SizedBox(width: 8),
@@ -2208,7 +2208,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           'We\'re working hard to bring you this feature. Stay tuned!',
                           style: GoogleFonts.inter(
                             fontSize: 13,
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                           ),
                         ),
                       ),
@@ -2224,7 +2224,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   'OK',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
+                    color: const Color(0xFF168566),
                     fontSize: 14,
                   ),
                 ),
@@ -2239,7 +2239,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message, style: GoogleFonts.inter()),
-          backgroundColor: const Color(0xFF219C7E),
+          backgroundColor: const Color(0xFF168566),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
         ),
@@ -2382,38 +2382,38 @@ class _DashboardScreenState extends State<DashboardScreen>
     final typeLower = type.toLowerCase();
 
     if (typeLower.contains('commission')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
     if (typeLower.contains('fund wallet') ||
         typeLower.contains('wallet funding')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
-    if (typeLower.contains('transfer received')) return const Color(0xFF219C7E);
-    if (typeLower.contains('refund')) return const Color(0xFF219C7E);
-    if (typeLower.contains('airtime')) return const Color(0xFF4A90E2);
-    if (typeLower.contains('data')) return const Color(0xFF9B59B6);
-    if (typeLower.contains('electricity')) return const Color(0xFFF39C12);
+    if (typeLower.contains('transfer received')) return const Color(0xFF168566);
+    if (typeLower.contains('refund')) return const Color(0xFF168566);
+    if (typeLower.contains('airtime')) return const Color(0xFF173D88);
+    if (typeLower.contains('data')) return const Color(0xFF173D88);
+    if (typeLower.contains('electricity')) return const Color(0xFFA76B1D);
     if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return const Color(0xFFE74C3C);
+      return const Color(0xFFC0392B);
     }
     if (typeLower.contains('education')) return const Color(0xFF2ECC71);
     if (typeLower.contains('insurance')) return const Color(0xFF1ABC9C);
-    if (typeLower.contains('betting')) return const Color(0xFFE74C3C);
-    if (typeLower.contains('internet')) return const Color(0xFF3498DB);
+    if (typeLower.contains('betting')) return const Color(0xFFC0392B);
+    if (typeLower.contains('internet')) return const Color(0xFF173D88);
     if (typeLower.contains('transfer sent')) return Colors.orange;
     if (typeLower.contains('transfer')) return Colors.orange;
     if (typeLower.contains('failed')) return Colors.red;
 
-    return const Color(0xFF243889);
+    return const Color(0xFF102C68);
   }
 
   Color _getAmountColor(String type, bool isCredit) {
-    if (isCredit) return const Color(0xFF219C7E);
+    if (isCredit) return const Color(0xFF168566);
 
     final typeLower = type.toLowerCase();
-    if (typeLower.contains('commission')) return const Color(0xFF219C7E);
+    if (typeLower.contains('commission')) return const Color(0xFF168566);
     if (typeLower.contains('fund') || typeLower.contains('wallet')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
     if (typeLower.contains('withdraw')) return Colors.red;
     if (typeLower.contains('transfer')) return Colors.red;
@@ -2541,7 +2541,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             isCommission: isCommission,
             commissionSource:
                 isCommission ? _getCommissionSource(description) : null,
-            primaryColor: const Color(0xFF243889),
+            primaryColor: const Color(0xFF102C68),
             showWatermark: true,
             customerName: customerName,
             customerAddress: customerEmail,
@@ -2635,7 +2635,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               ],
             ),
             child: IconButton(
-              icon: Icon(Icons.menu, color: const Color(0xFF243889), size: 22),
+              icon: Icon(Icons.menu, color: const Color(0xFF102C68), size: 22),
               onPressed: () {
                 _scaffoldKey.currentState?.openDrawer();
               },
@@ -2663,7 +2663,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 child: IconButton(
                   icon: Icon(
                     Icons.refresh,
-                    color: const Color(0xFF243889),
+                    color: const Color(0xFF102C68),
                     size: 22,
                   ),
                   onPressed: () async {
@@ -2694,7 +2694,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     child: IconButton(
                       icon: Icon(
                         Icons.notifications_none,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                         size: 22,
                       ),
                       onPressed: _navigateToNotifications,
@@ -2709,7 +2709,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         width: 8,
                         height: 8,
                         decoration: const BoxDecoration(
-                          color: Color(0xFF219C7E),
+                          color: Color(0xFF168566),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -2731,10 +2731,10 @@ class _DashboardScreenState extends State<DashboardScreen>
         children: [
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: isSmallScreen ? 14 : 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
             ),
           ),
           GestureDetector(
@@ -2746,14 +2746,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: GoogleFonts.inter(
                     fontSize: isSmallScreen ? 10 : 12,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
+                    color: const Color(0xFF168566),
                   ),
                 ),
                 const SizedBox(width: 4),
                 Icon(
                   Icons.arrow_forward_ios,
                   size: isSmallScreen ? 8 : 10,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                 ),
               ],
             ),
@@ -2820,7 +2820,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isSmallScreen ? 14 : 15,
                     fontWeight: FontWeight.w700,
                     color: bannerColor,
@@ -2831,7 +2831,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   message,
                   style: GoogleFonts.inter(
                     fontSize: isSmallScreen ? 12 : 13,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                     height: 1.4,
                   ),
                 ),
@@ -2917,12 +2917,12 @@ class _DashboardScreenState extends State<DashboardScreen>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF219C7E).withValues(alpha: 0.3),
+            color: const Color(0xFF168566).withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -2977,7 +2977,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               _isBalanceVisible
                   ? '₦${_formatBalance(_walletBalance)}'
                   : '••••••••',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
@@ -3296,7 +3296,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   child: _buildActionButton(
                     'Add Money',
                     Icons.add,
-                    const Color(0xFF219C7E),
+                    const Color(0xFF168566),
                     Colors.white,
                     _navigateToAddMoney,
                     isSmallScreen,
@@ -3331,12 +3331,12 @@ class _DashboardScreenState extends State<DashboardScreen>
           gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF243889), Color(0xFF1E377E), Color(0xFF92D394)],
+            colors: [Color(0xFF102C68), Color(0xFF102C68), Color(0xFF5BB592)],
             stops: [0.0, 0.5, 1.0],
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF243889).withValues(alpha: 0.35),
+              color: const Color(0xFF102C68).withValues(alpha: 0.35),
               blurRadius: 24,
               offset: const Offset(0, 12),
             ),
@@ -3479,7 +3479,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                 key: ValueKey(
                                   'bal_${_isBalanceVisible}_$_walletBalance',
                                 ),
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   color: Colors.white,
                                   fontSize: isSmallScreen ? 26 : 30,
                                   fontWeight: FontWeight.w800,
@@ -3864,7 +3864,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           children: [
             Icon(
               icon,
-              color: isPrimary ? const Color(0xFF243889) : Colors.white,
+              color: isPrimary ? const Color(0xFF102C68) : Colors.white,
               size: isSmallScreen ? 15 : 17,
             ),
             const SizedBox(width: 6),
@@ -3873,7 +3873,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               style: GoogleFonts.inter(
                 fontSize: isSmallScreen ? 11 : 13,
                 fontWeight: FontWeight.w600,
-                color: isPrimary ? const Color(0xFF243889) : Colors.white,
+                color: isPrimary ? const Color(0xFF102C68) : Colors.white,
               ),
             ),
           ],
@@ -4022,7 +4022,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         itemBuilder: (context, index) {
           final service = services[index];
           final isHugeIcon = service['isHugeIcon'] ?? false;
-          final iconColor = service['iconColor'] ?? const Color(0xFF243889);
+          final iconColor = service['iconColor'] ?? const Color(0xFF102C68);
           final isComingSoon = service['comingSoon'] ?? false;
 
           return InkWell(
@@ -4115,7 +4115,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         color:
                             isComingSoon
                                 ? Colors.grey.shade500
-                                : const Color(0xFF243889),
+                                : const Color(0xFF102C68),
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
@@ -4142,10 +4142,10 @@ class _DashboardScreenState extends State<DashboardScreen>
             children: [
               Text(
                 'Recent Transactions',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isSmallScreen ? 14 : 16,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
               ),
               GestureDetector(
@@ -4157,14 +4157,14 @@ class _DashboardScreenState extends State<DashboardScreen>
                       style: GoogleFonts.inter(
                         fontSize: isSmallScreen ? 10 : 12,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF219C7E),
+                        color: const Color(0xFF168566),
                       ),
                     ),
                     const SizedBox(width: 4),
                     Icon(
                       Icons.arrow_forward_ios,
                       size: isSmallScreen ? 8 : 10,
-                      color: const Color(0xFF219C7E),
+                      color: const Color(0xFF168566),
                     ),
                   ],
                 ),
@@ -4256,7 +4256,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     style: GoogleFonts.inter(
                       fontSize: isSmallScreen ? 13 : 14,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1C2D5A),
+                      color: const Color(0xFF14263D),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -4292,7 +4292,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       vertical: 1,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withValues(alpha: 0.1),
+                      color: const Color(0xFF168566).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -4300,7 +4300,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       style: GoogleFonts.inter(
                         fontSize: isSmallScreen ? 7 : 8,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF219C7E),
+                        color: const Color(0xFF168566),
                       ),
                     ),
                   )
@@ -4313,7 +4313,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     decoration: BoxDecoration(
                       color:
                           status == 'completed'
-                              ? const Color(0xFF219C7E).withValues(alpha: 0.1)
+                              ? const Color(0xFF168566).withValues(alpha: 0.1)
                               : Colors.orange.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -4324,7 +4324,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                         fontWeight: FontWeight.w600,
                         color:
                             status == 'completed'
-                                ? const Color(0xFF219C7E)
+                                ? const Color(0xFF168566)
                                 : Colors.orange,
                       ),
                     ),
@@ -4486,7 +4486,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       // ✅ Active pill background
                       color:
                           isSelected
-                              ? const Color(0xFF243889).withValues(alpha: 0.08)
+                              ? const Color(0xFF102C68).withValues(alpha: 0.08)
                               : Colors.transparent,
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -4502,7 +4502,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                             size: 22,
                             color:
                                 isSelected
-                                    ? const Color(0xFF243889)
+                                    ? const Color(0xFF102C68)
                                     : const Color(0xFF9AA0A6),
                           ),
                         ),
@@ -4512,7 +4512,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           style: TextStyle(
                             color:
                                 isSelected
-                                    ? const Color(0xFF243889)
+                                    ? const Color(0xFF102C68)
                                     : const Color(0xFF9AA0A6),
                             fontSize: 11,
                             fontWeight:
@@ -4540,12 +4540,12 @@ class _DashboardScreenState extends State<DashboardScreen>
     return ListTile(
       leading: Icon(
         icon,
-        color: isLogout ? Colors.red : const Color(0xFF243889),
+        color: isLogout ? Colors.red : const Color(0xFF102C68),
       ),
       title: Text(
         title,
         style: GoogleFonts.inter(
-          color: isLogout ? Colors.red : const Color(0xFF243889),
+          color: isLogout ? Colors.red : const Color(0xFF102C68),
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -4585,10 +4585,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                     const SizedBox(height: 20),
                     Text(
                       'All Services',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -4606,7 +4606,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           final service = allServices[index];
                           final isHugeIcon = service['isHugeIcon'] ?? false;
                           final iconColor =
-                              service['iconColor'] ?? const Color(0xFF243889);
+                              service['iconColor'] ?? const Color(0xFF102C68);
                           final isComingSoon = service['comingSoon'] ?? false;
 
                           return InkWell(
@@ -4722,7 +4722,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                           color:
                                               isComingSoon
                                                   ? Colors.grey.shade500
-                                                  : const Color(0xFF243889),
+                                                  : const Color(0xFF102C68),
                                         ),
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
@@ -4741,7 +4741,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                                         vertical: 2,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF219C7E),
+                                        color: const Color(0xFF168566),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Text(
@@ -4778,8 +4778,8 @@ class _DashboardScreenState extends State<DashboardScreen>
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           colors: [
-            const Color(0xFF243889),
-            const Color(0xFF243889).withValues(alpha: 0.8),
+            const Color(0xFF102C68),
+            const Color(0xFF102C68).withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -4796,7 +4796,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF243889),
+                    color: Color(0xFF102C68),
                   ),
                 ),
               ),

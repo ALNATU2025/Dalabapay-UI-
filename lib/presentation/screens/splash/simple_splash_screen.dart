@@ -141,7 +141,7 @@ class _SimpleAnimatedSplashScreenState extends State<SimpleAnimatedSplashScreen>
                     style: TextStyle(
                       fontSize: 70,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF219C7E),
+                      color: Color(0xFF168566),
                     ),
                   ),
                 );

@@ -42,11 +42,11 @@ class _LoginScreenState extends State<LoginScreen>
   Animation<double>? _fadeAnimation;
   AnimationController? _pulseController;
 
-  static const Color _primaryLight = Color(0xFF243889);
-  static const Color _secondary = Color(0xFF219C7E);
+  static const Color _primaryLight = Color(0xFF102C68);
+  static const Color _secondary = Color(0xFF168566);
   static const Color _white = Colors.white;
-  static const Color _darkText = Color(0xFF0A1628);
-  static const Color _greyText = Color(0xFF64748B);
+  static const Color _darkText = Color(0xFF14263D);
+  static const Color _greyText = Color(0xFF728078);
 
   @override
   void initState() {
@@ -420,7 +420,7 @@ class _LoginScreenState extends State<LoginScreen>
                   const SizedBox(height: 16),
                   Text(
                     'Sign In Failed',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                       color: _primaryLight,
@@ -451,7 +451,7 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                       child: Text(
                         'Try Again',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -539,8 +539,8 @@ class _LoginScreenState extends State<LoginScreen>
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF219C7E).withOpacity(0.08),
-                      const Color(0xFF219C7E).withOpacity(0.03),
+                      const Color(0xFF168566).withOpacity(0.08),
+                      const Color(0xFF168566).withOpacity(0.03),
                       Colors.transparent,
                     ],
                     stops: const [0, 0.5, 1],
@@ -565,8 +565,8 @@ class _LoginScreenState extends State<LoginScreen>
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF1E377E).withOpacity(0.08),
-                      const Color(0xFF1E377E).withOpacity(0.03),
+                      const Color(0xFF102C68).withOpacity(0.08),
+                      const Color(0xFF102C68).withOpacity(0.03),
                       Colors.transparent,
                     ],
                     stops: const [0, 0.5, 1],
@@ -618,7 +618,7 @@ class _LoginScreenState extends State<LoginScreen>
         children: [
           Text(
             'Welcome Back!',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 26,
               fontWeight: FontWeight.w800,
               color: _primaryLight,
@@ -812,7 +812,7 @@ class _LoginScreenState extends State<LoginScreen>
       prefixIcon: Icon(icon, color: _secondary, size: 20),
       suffixIcon: suffix,
       filled: true,
-      fillColor: const Color(0xFFF8FAFC),
+      fillColor: const Color(0xFFF8F9F5),
       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
@@ -842,7 +842,7 @@ class _LoginScreenState extends State<LoginScreen>
         gradient:
             _formValid
                 ? const LinearGradient(
-                  colors: [Color(0xFF219C7E), Color(0xFF1A8A68)],
+                  colors: [Color(0xFF168566), Color(0xFF0F6B51)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 )
@@ -880,7 +880,7 @@ class _LoginScreenState extends State<LoginScreen>
                       children: [
                         Text(
                           'SIGN IN',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                             color:
@@ -946,7 +946,7 @@ class _LoginScreenState extends State<LoginScreen>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: const Color(0xFFF8F9F5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200, width: 1),
       ),
@@ -975,7 +975,7 @@ class _FieldLabel extends StatelessWidget {
       style: GoogleFonts.inter(
         fontSize: 12.5,
         fontWeight: FontWeight.w600,
-        color: const Color(0xFF1C2D5A),
+        color: const Color(0xFF14263D),
         letterSpacing: 0.3,
       ),
     );
@@ -992,14 +992,14 @@ class _TrustBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF219C7E)),
+        Icon(icon, size: 16, color: const Color(0xFF168566)),
         const SizedBox(width: 6),
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF1C2D5A),
+            color: const Color(0xFF14263D),
           ),
         ),
       ],

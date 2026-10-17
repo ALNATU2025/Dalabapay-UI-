@@ -87,7 +87,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
       'apiName': 'mtn',
       'image': 'assets/mtn.jpg',
       'color': const Color(0xFFFFCB05),
-      'textColor': const Color(0xFF1A1A2E),
+      'textColor': const Color(0xFF14263D),
     },
     {
       'name': 'Airtel',
@@ -107,7 +107,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
       'name': '9mobile',
       'apiName': 'etisalat',
       'image': 'assets/t2.png',
-      'color': const Color(0xFFF57C00),
+      'color': const Color(0xFFA76B1D),
       'textColor': Colors.white,
     },
   ];
@@ -624,15 +624,15 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Buy Data',
-        style: GoogleFonts.poppins(
-          color: const Color(0xFF243889),
+        style: GoogleFonts.inter(
+          color: const Color(0xFF102C68),
           fontSize: 18,
           fontWeight: FontWeight.w800,
         ),
@@ -643,14 +643,14 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
           margin: const EdgeInsets.only(right: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0x05243889),
+            color: const Color(0x05102C68),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.account_balance_wallet_outlined,
-                color: Color(0xFF243889),
+                color: Color(0xFF102C68),
                 size: 16,
               ),
               const SizedBox(width: 4),
@@ -662,8 +662,8 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF243889),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF102C68),
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -680,7 +680,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
     if (_isLoadingUserData) {
       return Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF243889)),
+          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
         ),
       );
     }
@@ -704,10 +704,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               // Network Selection
               Text(
                 'Mobile Network',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
               ),
               const SizedBox(height: 12),
@@ -730,10 +730,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               // Phone Number
               Text(
                 'Phone Number',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
               ),
               const SizedBox(height: 8),
@@ -753,7 +753,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   ],
                   decoration: InputDecoration(
                     hintText: 'Enter 11-digit phone number',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: GoogleFonts.inter(
                       color: Colors.grey.shade400,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -762,7 +762,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                       padding: const EdgeInsets.all(12),
                       child: HugeIcon(
                         icon: HugeIcons.strokeRoundedSmartPhone01,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                         size: 22,
                       ),
                     ),
@@ -777,7 +777,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                       vertical: 14,
                     ),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -807,7 +807,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                         const SizedBox(height: 12),
                         Text(
                           'Select a network to view data plans',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: const Color.fromRGBO(117, 117, 117, 1),
@@ -822,10 +822,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               // Quick Amounts
               Text(
                 'Quick Amount',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
               ),
               const SizedBox(height: 8),
@@ -877,20 +877,20 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                           decoration: BoxDecoration(
                             color:
                                 isSelected
-                                    ? const Color(0xFF243889).withOpacity(0.1)
+                                    ? const Color(0xFF102C68).withOpacity(0.1)
                                     : Colors.white,
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
                               color:
                                   isSelected
-                                      ? const Color(0xFF243889)
-                                      : const Color(0x14243889),
+                                      ? const Color(0xFF102C68)
+                                      : const Color(0x14102C68),
                               width: isSelected ? 2 : 1,
                             ),
                           ),
                           child: Text(
                             '₦$amount',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight:
                                   isSelected
@@ -898,9 +898,9 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                                       : FontWeight.w600,
                               color:
                                   isSelected
-                                      ? const Color(0xFF243889)
+                                      ? const Color(0xFF102C68)
                                       : const Color(
-                                        0xFF243889,
+                                        0xFF102C68,
                                       ).withOpacity(0.7),
                             ),
                           ),
@@ -914,7 +914,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0x05243889),
+                  color: const Color(0x05102C68),
                   borderRadius: BorderRadius.circular(13),
                 ),
                 child: Row(
@@ -923,12 +923,12 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                       width: 23,
                       height: 23,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF243889).withOpacity(0.1),
+                        color: const Color(0xFF102C68).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(13),
                       ),
                       child: const Icon(
                         Icons.info_outline,
-                        color: Color(0xFF243889),
+                        color: Color(0xFF102C68),
                         size: 16,
                       ),
                     ),
@@ -936,10 +936,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                     Expanded(
                       child: Text(
                         'Choose a data plan and stay connected.',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF243889),
+                          color: const Color(0xFF102C68),
                           height: 1.3,
                         ),
                       ),
@@ -959,7 +959,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                           ? null
                           : _openPaymentSheet,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF219C7E),
+                    backgroundColor: const Color(0xFF168566),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -987,7 +987,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                               const SizedBox(width: 8),
                               Text(
                                 'Continue',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white,
@@ -1016,10 +1016,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
         children: [
           Text(
             'Data Plans',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
             ),
           ),
           const SizedBox(height: 12),
@@ -1032,7 +1032,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             ),
             child: const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
               ),
             ),
           ),
@@ -1058,7 +1058,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             const SizedBox(height: 12),
             Text(
               'No data plans available',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Colors.grey.shade700,
@@ -1066,7 +1066,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             ),
             Text(
               'Please try another network',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey.shade500,
@@ -1082,10 +1082,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
       children: [
         Text(
           'Data Plans',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 12),
@@ -1119,17 +1119,17 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
         curve: Curves.easeInOut,
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF243889) : Colors.white,
+          color: isSelected ? const Color(0xFF102C68) : Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isSelected ? const Color(0xFF243889) : Colors.grey.shade200,
+            color: isSelected ? const Color(0xFF102C68) : Colors.grey.shade200,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: [
             BoxShadow(
               color:
                   isSelected
-                      ? const Color(0xFF243889).withOpacity(0.2)
+                      ? const Color(0xFF102C68).withOpacity(0.2)
                       : Colors.black.withOpacity(0.03),
               blurRadius: 8,
               offset: const Offset(0, 2),
@@ -1145,10 +1145,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               children: [
                 Text(
                   plan['name'],
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: isSelected ? Colors.white : const Color(0xFF243889),
+                    color: isSelected ? Colors.white : const Color(0xFF102C68),
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -1168,7 +1168,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   ),
                   child: Text(
                     plan['validity'],
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
                       color:
@@ -1186,10 +1186,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               children: [
                 Text(
                   '₦${plan['amount']}',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: isSelected ? Colors.white : const Color(0xFF219C7E),
+                    color: isSelected ? Colors.white : const Color(0xFF168566),
                   ),
                 ),
                 Container(
@@ -1202,7 +1202,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                     isSelected ? Icons.check : Icons.arrow_forward_ios,
                     color:
                         isSelected
-                            ? const Color(0xFF243889)
+                            ? const Color(0xFF102C68)
                             : Colors.grey.shade400,
                     size: 14,
                   ),
@@ -1289,7 +1289,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                                         child: const Icon(
                                           Icons.close,
                                           size: 18,
-                                          color: Color(0xFF64748B),
+                                          color: Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -1300,10 +1300,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
 
                               Text(
                                 'Confirm Payment',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -1356,7 +1356,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.inter(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -1442,10 +1442,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   const SizedBox(width: 10),
                   Text(
                     'Network',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1453,10 +1453,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               const Spacer(),
               Text(
                 _selectedNetwork ?? 'N/A',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
               ),
             ],
@@ -1471,22 +1471,22 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedSmartPhone01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Text(
                     'Phone Number',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1494,10 +1494,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               const Spacer(),
               Text(
                 phone.isNotEmpty ? phone : 'N/A',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
               ),
             ],
@@ -1512,22 +1512,22 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF8B5CF6).withOpacity(0.08),
+                      color: const Color(0xFF173D88).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedWifi01,
-                      color: const Color(0xFF8B5CF6),
+                      color: const Color(0xFF173D88),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Text(
                     'Data Plan',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1538,18 +1538,18 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                 children: [
                   Text(
                     planName,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1C2D5A),
+                      color: const Color(0xFF14263D),
                     ),
                   ),
                   Text(
                     planDetails['validity'] ?? '',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1566,22 +1566,22 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withOpacity(0.08),
+                      color: const Color(0xFF168566).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedMoney01,
-                      color: const Color(0xFF219C7E),
+                      color: const Color(0xFF168566),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 10),
                   Text(
                     'Amount',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1589,10 +1589,10 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               const Spacer(),
               Text(
                 '₦${amount.toStringAsFixed(2)}',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                 ),
               ),
             ],
@@ -1607,9 +1607,9 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.08),
+        color: const Color(0xFF168566).withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1618,26 +1618,26 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             children: [
               HugeIcon(
                 icon: HugeIcons.strokeRoundedWallet01,
-                color: const Color(0xFF219C7E),
+                color: const Color(0xFF168566),
                 size: 18,
               ),
               const SizedBox(width: 8),
               Text(
                 'Available Balance',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                 ),
               ),
             ],
           ),
           Text(
             '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF219C7E),
+              color: const Color(0xFF168566),
             ),
           ),
         ],
@@ -1655,11 +1655,11 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
           color:
               _useBiometric
                   ? Colors.grey.shade50
-                  : const Color(0xFF243889).withOpacity(0.04),
+                  : const Color(0xFF102C68).withOpacity(0.04),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color:
-                _useBiometric ? Colors.grey.shade300 : const Color(0xFF243889),
+                _useBiometric ? Colors.grey.shade300 : const Color(0xFF102C68),
             width: _useBiometric ? 1 : 2,
           ),
         ),
@@ -1674,7 +1674,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                 enabled: !_useBiometric,
                 decoration: InputDecoration(
                   hintText: 'Enter 6-digit transaction PIN',
-                  hintStyle: GoogleFonts.poppins(
+                  hintStyle: GoogleFonts.inter(
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
@@ -1687,7 +1687,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
-                            : const Color(0xFF243889),
+                            : const Color(0xFF102C68),
                     size: 20,
                   ),
                   border: InputBorder.none,
@@ -1697,7 +1697,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   ),
                   errorText: _pinValidationError,
                 ),
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: _useBiometric ? Colors.grey.shade400 : Colors.black,
@@ -1727,7 +1727,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   backgroundColor:
                       _useBiometric
                           ? Colors.transparent
-                          : const Color(0xFF219C7E),
+                          : const Color(0xFF168566),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -1758,7 +1758,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                             const SizedBox(width: 8),
                             Text(
                               _useBiometric ? 'Switch to PIN' : 'Pay with PIN',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color:
@@ -1805,13 +1805,13 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
           decoration: BoxDecoration(
             color:
                 _useBiometric
-                    ? const Color(0xFF243889).withOpacity(0.08)
+                    ? const Color(0xFF102C68).withOpacity(0.08)
                     : Colors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color:
                   _useBiometric
-                      ? const Color(0xFF243889)
+                      ? const Color(0xFF102C68)
                       : Colors.grey.shade300,
               width: _useBiometric ? 2 : 1,
             ),
@@ -1823,7 +1823,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                         strokeWidth: 2.5,
                       ),
                     ),
@@ -1835,7 +1835,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                         Icons.fingerprint,
                         color:
                             _useBiometric
-                                ? const Color(0xFF243889)
+                                ? const Color(0xFF102C68)
                                 : Colors.grey.shade600,
                         size: 28,
                       ),
@@ -1845,12 +1845,12 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                           _useBiometric
                               ? '🔐 Tap to authenticate with fingerprint'
                               : 'Pay with Biometric',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color:
                                 _useBiometric
-                                    ? const Color(0xFF243889)
+                                    ? const Color(0xFF102C68)
                                     : Colors.grey.shade700,
                           ),
                         ),
@@ -1859,7 +1859,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                         Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -1922,7 +1922,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             const SizedBox(height: 6),
             Text(
               network['name'],
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                 color: isSelected ? Colors.white : Colors.grey.shade800,
@@ -1954,8 +1954,8 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFF243889).withOpacity(0.3),
-              const Color(0xFF219C7E).withOpacity(0.15),
+              const Color(0xFF102C68).withOpacity(0.3),
+              const Color(0xFF168566).withOpacity(0.15),
               Colors.transparent,
             ],
             stops: const [0.0, 0.4, 0.7],
@@ -1981,7 +1981,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color:
@@ -1996,7 +1996,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Data service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -2005,7 +2005,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
+                backgroundColor: const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -2017,7 +2017,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),
@@ -2063,7 +2063,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               description: '$plan (${planDetails['validity']})',
               customMessage: '✓ Verified by VTpass Payment Gateway',
               mobileOperator: network,
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -2088,7 +2088,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: Colors.red.shade700,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -2098,7 +2098,7 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -2108,8 +2108,8 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF219C7E),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF168566),
                     fontWeight: FontWeight.w700,
                   ),
                 ),

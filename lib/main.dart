@@ -321,10 +321,10 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                     const SizedBox(height: 16),
                     Text(
                       'Something went wrong',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1C2D5A),
+                        color: const Color(0xFF14263D),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -773,7 +773,7 @@ class RoleBasedDashboard extends StatelessWidget {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
               ),
             ),
           );
@@ -812,10 +812,10 @@ class NotFoundScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   'Page Not Found',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -833,7 +833,7 @@ class NotFoundScreen extends StatelessWidget {
                     Navigator.pushReplacementNamed(context, '/');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF219C7E),
+                    backgroundColor: const Color(0xFF168566),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
                       vertical: 12,

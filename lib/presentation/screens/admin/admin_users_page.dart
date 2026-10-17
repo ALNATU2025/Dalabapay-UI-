@@ -28,15 +28,15 @@ class AdminUsersPage extends StatefulWidget {
 class _AdminUsersPageState extends State<AdminUsersPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color infoColor = Color(0xFF173D88);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== STATE VARIABLES ====================
@@ -1118,7 +1118,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               SizedBox(width: 8),
               Text(
                 'Registration Statistics',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 16 : 20,
                   fontWeight: FontWeight.w600,
                   color: primaryColor,
@@ -1335,7 +1335,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               SizedBox(width: 8),
               Text(
                 'Registration Statistics',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 16 : 20,
                   fontWeight: FontWeight.w600,
                   color: primaryColor,
@@ -1479,7 +1479,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1655,7 +1655,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                   children: [
                     Text(
                       'Manage Users',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -2561,7 +2561,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 SizedBox(width: 12),
                 Text(
                   'Access Restricted',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w700,
                     fontSize: isMobile ? 18 : 20,
                     color: textPrimary,
@@ -2787,7 +2787,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                             children: [
                               Text(
                                 'Wallet Adjustment',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: isMobile ? 16 : 18,
                                   fontWeight: FontWeight.w700,
                                   color: primaryColor,
@@ -3695,7 +3695,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                   SizedBox(height: isMobile ? 16 : 20),
                   Text(
                     'Fund Wallet',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 20 : 24,
                       fontWeight: FontWeight.w700,
                       color: primaryColor,
@@ -3874,7 +3874,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                         SizedBox(height: 16),
                         Text(
                           'PIN Management',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: primaryColor,
@@ -4167,7 +4167,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                   SizedBox(height: 16),
                   Text(
                     'PIN Status Details',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 18 : 20,
                       fontWeight: FontWeight.w700,
                       color: primaryColor,
@@ -4323,7 +4323,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             ),
             title: Text(
               title,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontWeight: FontWeight.bold,
                 color: primaryColor,
               ),
@@ -4476,7 +4476,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 const SizedBox(width: 10),
                 Text(
                   'Reject User?',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
                   ),
@@ -4699,7 +4699,7 @@ void _openUserHistory(Map<String, dynamic> user) {
           SizedBox(height: isMobile ? 16 : 20),
           Text(
             'Loading Users...',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: isMobile ? 16 : 18,
               fontWeight: FontWeight.w600,
               color: primaryColor,
@@ -4744,7 +4744,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: Colors.red.shade700,
@@ -4817,7 +4817,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Users Found',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: primaryColor,

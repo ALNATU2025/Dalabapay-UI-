@@ -16806,7 +16806,7 @@ class ApiService {
 /// Private widget for the enhanced session expired dialog
 /// Uses the same gradient as your dashboard balance card:
 /// begin: Alignment.topRight, end: Alignment.bottomLeft
-/// colors: [Color(0xFF92D394), Color(0xFF1E377E)]
+/// colors: [Color(0xFF5BB592), Color(0xFF102C68)]
 class _SessionExpiredDialogContent extends StatefulWidget {
   final String title;
   final String message;
@@ -16836,12 +16836,12 @@ class _SessionExpiredDialogContentState
 
   // DalabaPay Brand Colors from dashboard
   static const Color _primaryBlue = Color(
-    0xFF1E377E,
+    0xFF102C68,
   ); // From balance card gradient
   static const Color _primaryGreen = Color(
-    0xFF92D394,
+    0xFF5BB592,
   ); // From balance card gradient
-  static const Color _darkBlue = Color(0xFF243889); // Primary text color
+  static const Color _darkBlue = Color(0xFF102C68); // Primary text color
 
   @override
   void initState() {
@@ -16863,7 +16863,7 @@ class _SessionExpiredDialogContentState
     return Container(
       width: MediaQuery.of(context).size.width > 500 ? 460 : double.infinity,
       decoration: BoxDecoration(
-        color: widget.isDark ? const Color(0xFF1A1A2E) : Colors.white,
+        color: widget.isDark ? const Color(0xFF14263D) : Colors.white,
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
@@ -16905,7 +16905,7 @@ class _SessionExpiredDialogContentState
             gradient: const LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+              colors: [Color(0xFF5BB592), Color(0xFF102C68)],
               stops: [0.06, 0.41],
             ),
             borderRadius: const BorderRadius.only(
@@ -17010,7 +17010,7 @@ class _SessionExpiredDialogContentState
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFF1E377E), Color(0xFF92D394)],
+                      colors: [Color(0xFF102C68), Color(0xFF5BB592)],
                     ),
                     shape: BoxShape.circle,
                     boxShadow: [
@@ -17062,13 +17062,13 @@ class _SessionExpiredDialogContentState
               color:
                   widget.isDark
                       ? const Color(0xFF1A1A3E).withOpacity(0.5)
-                      : const Color(0xFF1E377E).withOpacity(0.05),
+                      : const Color(0xFF102C68).withOpacity(0.05),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color:
                     widget.isDark
                         ? const Color(0xFF2D2D5E).withOpacity(0.5)
-                        : const Color(0xFF1E377E).withOpacity(0.1),
+                        : const Color(0xFF102C68).withOpacity(0.1),
                 width: 1,
               ),
             ),
@@ -17081,15 +17081,15 @@ class _SessionExpiredDialogContentState
                     color:
                         widget.isDark
                             ? const Color(0xFF0D2847)
-                            : const Color(0xFF92D394).withOpacity(0.15),
+                            : const Color(0xFF5BB592).withOpacity(0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.info_outline_rounded,
                     color:
                         widget.isDark
-                            ? const Color(0xFF92D394)
-                            : const Color(0xFF1E377E),
+                            ? const Color(0xFF5BB592)
+                            : const Color(0xFF102C68),
                     size: 20,
                   ),
                 ),
@@ -17121,8 +17121,8 @@ class _SessionExpiredDialogContentState
                   Icons.shield_outlined,
                   color:
                       widget.isDark
-                          ? const Color(0xFF92D394).withOpacity(0.5)
-                          : const Color(0xFF1E377E).withOpacity(0.5),
+                          ? const Color(0xFF5BB592).withOpacity(0.5)
+                          : const Color(0xFF102C68).withOpacity(0.5),
                   size: 16,
                 ),
                 const SizedBox(width: 10),
@@ -17192,8 +17192,8 @@ class _SessionExpiredDialogContentState
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 backgroundColor:
                     widget.isDark
-                        ? const Color(0xFF92D394)
-                        : const Color(0xFF1E377E),
+                        ? const Color(0xFF5BB592)
+                        : const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),

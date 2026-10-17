@@ -629,7 +629,7 @@ class _TicketScreenState extends State<TicketScreen>
               description:
                   '${ticket['from']} → ${ticket['to']} (${ticket['category']})',
               customMessage: '✓ Booking confirmed! Enjoy your trip.',
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -653,7 +653,7 @@ class _TicketScreenState extends State<TicketScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: Colors.red.shade700,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -663,7 +663,7 @@ class _TicketScreenState extends State<TicketScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -673,8 +673,8 @@ class _TicketScreenState extends State<TicketScreen>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF219C7E),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF168566),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -734,10 +734,10 @@ class _TicketScreenState extends State<TicketScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF243889) : Colors.white,
+          color: isSelected ? const Color(0xFF102C68) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? const Color(0xFF243889) : Colors.grey.shade300,
+            color: isSelected ? const Color(0xFF102C68) : Colors.grey.shade300,
             width: 1.5,
           ),
         ),
@@ -747,15 +747,15 @@ class _TicketScreenState extends State<TicketScreen>
             HugeIcon(
               icon: category['icon'] as dynamic,
               size: 18,
-              color: isSelected ? Colors.white : const Color(0xFF243889),
+              color: isSelected ? Colors.white : const Color(0xFF102C68),
             ),
             const SizedBox(width: 8),
             Text(
               category['name'] as String,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
-                color: isSelected ? Colors.white : const Color(0xFF243889),
+                color: isSelected ? Colors.white : const Color(0xFF102C68),
               ),
             ),
           ],
@@ -777,10 +777,10 @@ class _TicketScreenState extends State<TicketScreen>
       children: [
         Text(
           hint,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -796,7 +796,7 @@ class _TicketScreenState extends State<TicketScreen>
             decoration: InputDecoration(
               prefixIcon: HugeIcon(
                 icon: icon,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: InputBorder.none,
@@ -805,16 +805,16 @@ class _TicketScreenState extends State<TicketScreen>
                 vertical: 12,
               ),
               hintText: 'Select $hint',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
             ),
             items:
                 _locations.map((location) {
@@ -822,7 +822,7 @@ class _TicketScreenState extends State<TicketScreen>
                     value: location,
                     child: Text(
                       location,
-                      style: GoogleFonts.poppins(fontSize: 14),
+                      style: GoogleFonts.inter(fontSize: 14),
                     ),
                   );
                 }).toList(),
@@ -834,7 +834,7 @@ class _TicketScreenState extends State<TicketScreen>
             dropdownColor: Colors.white,
             icon: HugeIcon(
               icon: HugeIcons.strokeRoundedArrowDown01,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
               size: 20,
             ),
           ),
@@ -849,10 +849,10 @@ class _TicketScreenState extends State<TicketScreen>
       children: [
         Text(
           'Travel Date',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -866,9 +866,9 @@ class _TicketScreenState extends State<TicketScreen>
               builder: (context, child) {
                 return Theme(
                   data: ThemeData.light().copyWith(
-                    primaryColor: const Color(0xFF243889),
+                    primaryColor: const Color(0xFF102C68),
                     colorScheme: const ColorScheme.light(
-                      primary: Color(0xFF243889),
+                      primary: Color(0xFF102C68),
                     ),
                     buttonTheme: const ButtonThemeData(
                       textTheme: ButtonTextTheme.primary,
@@ -898,19 +898,19 @@ class _TicketScreenState extends State<TicketScreen>
               enabled: false,
               decoration: InputDecoration(
                 hintText: 'Select Date',
-                hintStyle: GoogleFonts.poppins(
+                hintStyle: GoogleFonts.inter(
                   color: Colors.grey.shade400,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
                 prefixIcon: HugeIcon(
                   icon: HugeIcons.strokeRoundedCalendar01,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                   size: 22,
                 ),
                 suffixIcon: HugeIcon(
                   icon: HugeIcons.strokeRoundedArrowDown01,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                   size: 20,
                 ),
                 border: OutlineInputBorder(
@@ -924,12 +924,12 @@ class _TicketScreenState extends State<TicketScreen>
                   vertical: 14,
                 ),
               ),
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color:
                     _selectedDate != null
-                        ? const Color(0xFF243889)
+                        ? const Color(0xFF102C68)
                         : Colors.grey.shade400,
               ),
             ),
@@ -945,10 +945,10 @@ class _TicketScreenState extends State<TicketScreen>
       children: [
         Text(
           'Quick Trips',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -969,13 +969,13 @@ class _TicketScreenState extends State<TicketScreen>
                     decoration: BoxDecoration(
                       color:
                           isSelected
-                              ? const Color(0xFF243889).withOpacity(0.1)
+                              ? const Color(0xFF102C68).withOpacity(0.1)
                               : Colors.white,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color:
                             isSelected
-                                ? const Color(0xFF243889)
+                                ? const Color(0xFF102C68)
                                 : Colors.grey.shade300,
                         width: 1,
                       ),
@@ -988,19 +988,19 @@ class _TicketScreenState extends State<TicketScreen>
                           size: 14,
                           color:
                               isSelected
-                                  ? const Color(0xFF243889)
+                                  ? const Color(0xFF102C68)
                                   : Colors.grey.shade600,
                         ),
                         const SizedBox(width: 6),
                         Text(
                           '${trip['from']} → ${trip['to']}',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight:
                                 isSelected ? FontWeight.w700 : FontWeight.w500,
                             color:
                                 isSelected
-                                    ? const Color(0xFF243889)
+                                    ? const Color(0xFF102C68)
                                     : Colors.grey.shade700,
                           ),
                         ),
@@ -1020,10 +1020,10 @@ class _TicketScreenState extends State<TicketScreen>
       children: [
         Text(
           'Passenger Details',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1041,14 +1041,14 @@ class _TicketScreenState extends State<TicketScreen>
                   controller: _passengerNameController,
                   decoration: InputDecoration(
                     hintText: 'Full Name',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: GoogleFonts.inter(
                       color: Colors.grey.shade400,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                     prefixIcon: HugeIcon(
                       icon: HugeIcons.strokeRoundedUser,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 22,
                     ),
                     border: OutlineInputBorder(
@@ -1062,7 +1062,7 @@ class _TicketScreenState extends State<TicketScreen>
                       vertical: 14,
                     ),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1085,7 +1085,7 @@ class _TicketScreenState extends State<TicketScreen>
                       icon: HugeIcon(
                         icon: HugeIcons.strokeRoundedMinusSign,
                         size: 20,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                       onPressed: _decrementPassengers,
                       padding: EdgeInsets.zero,
@@ -1093,17 +1093,17 @@ class _TicketScreenState extends State<TicketScreen>
                     ),
                     Text(
                       '$_passengerCount',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                     ),
                     IconButton(
                       icon: HugeIcon(
                         icon: HugeIcons.strokeRoundedAdd01,
                         size: 20,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                       onPressed: _incrementPassengers,
                       padding: EdgeInsets.zero,
@@ -1125,10 +1125,10 @@ class _TicketScreenState extends State<TicketScreen>
       children: [
         Text(
           'Contact Details',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1143,14 +1143,14 @@ class _TicketScreenState extends State<TicketScreen>
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: 'Email Address',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedMail01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1164,7 +1164,7 @@ class _TicketScreenState extends State<TicketScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1186,14 +1186,14 @@ class _TicketScreenState extends State<TicketScreen>
             ],
             decoration: InputDecoration(
               hintText: 'Phone Number (11 digits)',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedSmartPhone01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1207,7 +1207,7 @@ class _TicketScreenState extends State<TicketScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1221,7 +1221,7 @@ class _TicketScreenState extends State<TicketScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0x05243889),
+        color: const Color(0x05102C68),
         borderRadius: BorderRadius.circular(13),
       ),
       child: Row(
@@ -1230,12 +1230,12 @@ class _TicketScreenState extends State<TicketScreen>
             width: 23,
             height: 23,
             decoration: BoxDecoration(
-              color: const Color(0xFF243889).withOpacity(0.1),
+              color: const Color(0xFF102C68).withOpacity(0.1),
               borderRadius: BorderRadius.circular(13),
             ),
             child: const Icon(
               Icons.info_outline,
-              color: Color(0xFF243889),
+              color: Color(0xFF102C68),
               size: 16,
             ),
           ),
@@ -1243,10 +1243,10 @@ class _TicketScreenState extends State<TicketScreen>
           Expanded(
             child: Text(
               'Book your tickets instantly.\nSecure and reliable.',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 height: 1.3,
               ),
             ),
@@ -1328,7 +1328,7 @@ class _TicketScreenState extends State<TicketScreen>
                                         child: const Icon(
                                           Icons.close,
                                           size: 18,
-                                          color: Color(0xFF64748B),
+                                          color: Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -1338,10 +1338,10 @@ class _TicketScreenState extends State<TicketScreen>
                               const SizedBox(height: 4),
                               Text(
                                 'Confirm Booking',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -1386,7 +1386,7 @@ class _TicketScreenState extends State<TicketScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.inter(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -1441,22 +1441,22 @@ class _TicketScreenState extends State<TicketScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedTicket01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Category',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1464,10 +1464,10 @@ class _TicketScreenState extends State<TicketScreen>
               Flexible(
                 child: Text(
                   _selectedCategory ?? 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1487,22 +1487,22 @@ class _TicketScreenState extends State<TicketScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedAirplaneTakeOff01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'From',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1510,10 +1510,10 @@ class _TicketScreenState extends State<TicketScreen>
               Flexible(
                 child: Text(
                   _selectedFrom ?? 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1533,22 +1533,22 @@ class _TicketScreenState extends State<TicketScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedAirplaneLanding01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'To',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1556,10 +1556,10 @@ class _TicketScreenState extends State<TicketScreen>
               Flexible(
                 child: Text(
                   _selectedTo ?? 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1579,22 +1579,22 @@ class _TicketScreenState extends State<TicketScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedCalendar01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Date',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1602,10 +1602,10 @@ class _TicketScreenState extends State<TicketScreen>
               Flexible(
                 child: Text(
                   formattedDate,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1625,32 +1625,32 @@ class _TicketScreenState extends State<TicketScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedUser,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Passengers',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 '$_passengerCount',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
               ),
             ],
@@ -1666,32 +1666,32 @@ class _TicketScreenState extends State<TicketScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withOpacity(0.08),
+                      color: const Color(0xFF168566).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedMoney01,
-                      color: const Color(0xFF219C7E),
+                      color: const Color(0xFF168566),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Total',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 '₦${price.toStringAsFixed(2)}',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                 ),
               ),
             ],
@@ -1706,9 +1706,9 @@ class _TicketScreenState extends State<TicketScreen>
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.08),
+        color: const Color(0xFF168566).withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1719,17 +1719,17 @@ class _TicketScreenState extends State<TicketScreen>
               children: [
                 HugeIcon(
                   icon: HugeIcons.strokeRoundedWallet01,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                   size: 16,
                 ),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     'Available Balance',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1742,10 +1742,10 @@ class _TicketScreenState extends State<TicketScreen>
           Flexible(
             child: Text(
               '₦${_walletBalance.toStringAsFixed(2)}',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF219C7E),
+                color: const Color(0xFF168566),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -1766,11 +1766,11 @@ class _TicketScreenState extends State<TicketScreen>
           color:
               _useBiometric
                   ? Colors.grey.shade50
-                  : const Color(0xFF243889).withOpacity(0.04),
+                  : const Color(0xFF102C68).withOpacity(0.04),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color:
-                _useBiometric ? Colors.grey.shade300 : const Color(0xFF243889),
+                _useBiometric ? Colors.grey.shade300 : const Color(0xFF102C68),
             width: _useBiometric ? 1 : 2,
           ),
         ),
@@ -1785,7 +1785,7 @@ class _TicketScreenState extends State<TicketScreen>
                 enabled: !_useBiometric,
                 decoration: InputDecoration(
                   hintText: 'Enter 6-digit transaction PIN',
-                  hintStyle: GoogleFonts.poppins(
+                  hintStyle: GoogleFonts.inter(
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
@@ -1798,7 +1798,7 @@ class _TicketScreenState extends State<TicketScreen>
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
-                            : const Color(0xFF243889),
+                            : const Color(0xFF102C68),
                     size: 18,
                   ),
                   border: InputBorder.none,
@@ -1807,12 +1807,12 @@ class _TicketScreenState extends State<TicketScreen>
                     vertical: 12,
                   ),
                   errorText: _pinValidationError,
-                  errorStyle: GoogleFonts.poppins(
+                  errorStyle: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _useBiometric ? Colors.grey.shade400 : Colors.black,
@@ -1836,7 +1836,7 @@ class _TicketScreenState extends State<TicketScreen>
                   backgroundColor:
                       _useBiometric
                           ? Colors.transparent
-                          : const Color(0xFF219C7E),
+                          : const Color(0xFF168566),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -1867,7 +1867,7 @@ class _TicketScreenState extends State<TicketScreen>
                             const SizedBox(width: 6),
                             Text(
                               _useBiometric ? 'Switch to PIN' : 'Pay with PIN',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 color:
@@ -1904,13 +1904,13 @@ class _TicketScreenState extends State<TicketScreen>
           decoration: BoxDecoration(
             color:
                 _useBiometric
-                    ? const Color(0xFF243889).withOpacity(0.08)
+                    ? const Color(0xFF102C68).withOpacity(0.08)
                     : Colors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color:
                   _useBiometric
-                      ? const Color(0xFF243889)
+                      ? const Color(0xFF102C68)
                       : Colors.grey.shade300,
               width: _useBiometric ? 2 : 1,
             ),
@@ -1922,7 +1922,7 @@ class _TicketScreenState extends State<TicketScreen>
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                         strokeWidth: 2.5,
                       ),
                     ),
@@ -1934,7 +1934,7 @@ class _TicketScreenState extends State<TicketScreen>
                         Icons.fingerprint,
                         color:
                             _useBiometric
-                                ? const Color(0xFF243889)
+                                ? const Color(0xFF102C68)
                                 : Colors.grey.shade600,
                         size: 24,
                       ),
@@ -1944,12 +1944,12 @@ class _TicketScreenState extends State<TicketScreen>
                           _useBiometric
                               ? 'Tap to authenticate with $_biometricName'
                               : 'Pay with $_biometricName',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color:
                                 _useBiometric
-                                    ? const Color(0xFF243889)
+                                    ? const Color(0xFF102C68)
                                     : Colors.grey.shade700,
                           ),
                           maxLines: 2,
@@ -1960,7 +1960,7 @@ class _TicketScreenState extends State<TicketScreen>
                         Container(
                           padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -1999,7 +1999,7 @@ class _TicketScreenState extends State<TicketScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
@@ -2012,7 +2012,7 @@ class _TicketScreenState extends State<TicketScreen>
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
               letterSpacing: 0.09,
             ),
           ),
@@ -2021,7 +2021,7 @@ class _TicketScreenState extends State<TicketScreen>
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF219C7E),
+              color: const Color(0xFF168566),
               letterSpacing: 0.09,
             ),
           ),
@@ -2033,14 +2033,14 @@ class _TicketScreenState extends State<TicketScreen>
           margin: const EdgeInsets.only(right: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0x05243889),
+            color: const Color(0x05102C68),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.account_balance_wallet_outlined,
-                color: Color(0xFF243889),
+                color: Color(0xFF102C68),
                 size: 16,
               ),
               const SizedBox(width: 4),
@@ -2052,8 +2052,8 @@ class _TicketScreenState extends State<TicketScreen>
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF243889),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF102C68),
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -2070,7 +2070,7 @@ class _TicketScreenState extends State<TicketScreen>
     if (_isLoadingUserData) {
       return Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF243889)),
+          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
         ),
       );
     }
@@ -2143,7 +2143,7 @@ class _TicketScreenState extends State<TicketScreen>
                 ? null
                 : _openPaymentSheet,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF219C7E),
+          backgroundColor: const Color(0xFF168566),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -2172,7 +2172,7 @@ class _TicketScreenState extends State<TicketScreen>
                     const SizedBox(width: 8),
                     Text(
                       'Book Ticket',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
@@ -2204,10 +2204,10 @@ class _TicketScreenState extends State<TicketScreen>
       children: [
         Text(
           'Select Category',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 12),
@@ -2242,7 +2242,7 @@ class _TicketScreenState extends State<TicketScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color:
@@ -2257,7 +2257,7 @@ class _TicketScreenState extends State<TicketScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Ticket booking service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -2266,7 +2266,7 @@ class _TicketScreenState extends State<TicketScreen>
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
+                backgroundColor: const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -2278,7 +2278,7 @@ class _TicketScreenState extends State<TicketScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

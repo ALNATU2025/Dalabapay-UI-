@@ -199,7 +199,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                                     style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF219C7E),
+                                      color: Color(0xFF168566),
                                     ),
                                   ),
                                 ),
@@ -281,7 +281,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                                       style: TextStyle(
                                         fontSize: 80,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xFF219C7E),
+                                        color: Color(0xFF168566),
                                       ),
                                     ),
                                   ),

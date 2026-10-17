@@ -26,24 +26,24 @@ class AdminServiceCommissionPage extends StatefulWidget {
 class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
   static const Color cardShadow = Color(0x1A000000);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== SERVICE COLORS & ICONS ====================
   static const Map<String, Color> serviceColors = {
-    'airtime': Color(0xFF4F46E5),
-    'international_airtime': Color(0xFF7C3AED),
-    'cable': Color(0xFF059669),
-    'data': Color(0xFF0891B2),
-    'electricity': Color(0xFFD97706),
-    'education': Color(0xFFDC2626),
-    'ticket': Color(0xFF2563EB),
+    'airtime': Color(0xFF173D88),
+    'international_airtime': Color(0xFF173D88),
+    'cable': Color(0xFF168566),
+    'data': Color(0xFF168566),
+    'electricity': Color(0xFFA76B1D),
+    'education': Color(0xFFC0392B),
+    'ticket': Color(0xFF173D88),
   };
 
   static const Map<String, String> serviceIcons = {
@@ -804,7 +804,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                     ),
                     Text(
                       'Revenue Tracker',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 18 : 24,
                         fontWeight: FontWeight.w700,
@@ -877,7 +877,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const SizedBox(height: 4),
                       Text(
                         _formatCurrency(totalCommission),
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           color: Colors.white,
                           fontSize: isMobile ? 20 : 28,
                           fontWeight: FontWeight.w700,
@@ -921,7 +921,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const SizedBox(height: 2),
                       Text(
                         _formatCurrency(avgCommission),
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           color: Colors.white,
                           fontSize: isMobile ? 16 : 22,
                           fontWeight: FontWeight.w700,
@@ -1079,7 +1079,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 Text(
                   _formatCurrency(totalVolume),
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -1146,7 +1146,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
           const SizedBox(height: 4),
           Text(
             value,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: isMobile ? 14 : 18,
               fontWeight: FontWeight.w700,
               color: color,
@@ -1620,7 +1620,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                   Expanded(
                                     child: Text(
                                       _formatCurrency(commission),
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.inter(
                                         fontSize: isMobile ? 14 : 18,
                                         fontWeight: FontWeight.w700,
                                         color: color,
@@ -1905,7 +1905,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                   children: [
                                     Text(
                                       _formatCurrency(commission),
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.inter(
                                         fontSize: isMobile ? 13 : 16,
                                         fontWeight: FontWeight.w700,
                                         color:
@@ -2149,7 +2149,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                               children: [
                                 Text(
                                   _formatCurrency(commission),
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.inter(
                                     fontSize: isMobile ? 14 : 18,
                                     fontWeight: FontWeight.w700,
                                     color: color,
@@ -2366,7 +2366,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                           children: [
                             Text(
                               _formatCurrency(amount),
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: isMobile ? 13 : 15,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -2602,7 +2602,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                             children: [
                               Text(
                                 serviceLabel,
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: isMobile ? 16 : 20,
                                   fontWeight: FontWeight.w700,
                                   color: textPrimary,
@@ -3019,7 +3019,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 const SizedBox(height: 16),
                 Text(
                   'Something went wrong',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 20 : 24,
                     fontWeight: FontWeight.w700,
                     color: errorColor,

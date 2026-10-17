@@ -45,12 +45,12 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
   bool _hasExistingPin = false;
 
   // Colors - matching Dashboard
-  final Color _primaryColor = const Color(0xFF243889);
-  final Color _secondaryColor = const Color(0xFF219C7E);
+  final Color _primaryColor = const Color(0xFF102C68);
+  final Color _secondaryColor = const Color(0xFF168566);
   final Color _backgroundColor = Colors.white;
-  final Color _digitColor = const Color(0xFF1C2D5A);
-  final Color _pinDotColor = const Color(0xFF243889);
-  final Color _errorColor = const Color(0xFFE74C3C);
+  final Color _digitColor = const Color(0xFF14263D);
+  final Color _pinDotColor = const Color(0xFF102C68);
+  final Color _errorColor = const Color(0xFFC0392B);
 
   @override
   void initState() {
@@ -202,7 +202,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                     gradient: const LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
-                      colors: [Color(0xFF92D394), Color(0xFF243889)],
+                      colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                     ),
                     shape: BoxShape.circle,
                   ),
@@ -215,7 +215,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                 const SizedBox(height: 16),
                 Text(
                   'Welcome, ${widget.fullName.split(' ').first}!',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: _primaryColor,
@@ -228,7 +228,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
               'Set up your transaction PIN to secure your account and transactions.',
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: const Color(0xFF64748B),
+                color: const Color(0xFF728078),
               ),
               textAlign: TextAlign.center,
             ),
@@ -274,7 +274,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                 const SizedBox(width: 12),
                 Text(
                   'PIN Already Set',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold,
                     color: _primaryColor,
                     fontSize: 18,
@@ -295,7 +295,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                   'You can change it here, or use your existing PIN to login.',
                   style: GoogleFonts.inter(
                     fontSize: 13,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -350,7 +350,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                   'Use Existing PIN',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                   ),
                 ),
               ),
@@ -436,7 +436,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                 const SizedBox(height: 16),
                 Text(
                   isFirstTime ? 'PIN Set Successfully!' : 'PIN Updated!',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: _primaryColor,
@@ -449,7 +449,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
               message,
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: const Color(0xFF64748B),
+                color: const Color(0xFF728078),
               ),
               textAlign: TextAlign.center,
             ),
@@ -498,7 +498,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                     gradient: const LinearGradient(
                       begin: Alignment.topRight,
                       end: Alignment.bottomLeft,
-                      colors: [Color(0xFF92D394), Color(0xFF243889)],
+                      colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                     ),
                     shape: BoxShape.circle,
                   ),
@@ -511,7 +511,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                 const SizedBox(height: 16),
                 Text(
                   'Enable Biometric?',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: _primaryColor,
@@ -527,7 +527,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                   'Enable fingerprint or Face ID for faster and more secure access.',
                   style: GoogleFonts.inter(
                     fontSize: 14,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -554,7 +554,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                           'Your biometric data stays on your device and is never shared.',
                           style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: const Color(0xFF64748B),
+                            color: const Color(0xFF728078),
                           ),
                         ),
                       ),
@@ -573,7 +573,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                   'Skip',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                   ),
                 ),
               ),
@@ -626,14 +626,14 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                   ),
                   child: const Icon(
                     Icons.fingerprint,
-                    color: Color(0xFF219C7E),
+                    color: Color(0xFF168566),
                     size: 36,
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Biometric Enabled!',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: _primaryColor,
@@ -646,7 +646,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
               'You can now use fingerprint or Face ID to quickly access your account.',
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: const Color(0xFF64748B),
+                color: const Color(0xFF728078),
               ),
               textAlign: TextAlign.center,
             ),
@@ -704,7 +704,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold,
                     color: _errorColor,
                     fontSize: 18,
@@ -1169,7 +1169,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
         child: Center(
           child: Text(
             digit,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 24,
               fontWeight: FontWeight.w600,
               color: _digitColor,
@@ -1191,7 +1191,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
           color: Colors.grey.shade100,
           border: Border.all(color: Colors.grey.shade300, width: 1),
         ),
-        child: const Icon(Icons.backspace, size: 24, color: Color(0xFF1C2D5A)),
+        child: const Icon(Icons.backspace, size: 24, color: Color(0xFF14263D)),
       ),
     );
   }
@@ -1222,11 +1222,11 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
           gradient: const LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [Color(0xFF92D394), Color(0xFF243889)],
+            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           ),
           boxShadow: [
             BoxShadow(
-              color: Color(0xFF243889).withValues(alpha: 0.3),
+              color: Color(0xFF102C68).withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -1289,7 +1289,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
             _hasExistingPin
                 ? 'Change PIN'
                 : (widget.isFirstTime ? 'Set Transaction PIN' : 'Change PIN'),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: _primaryColor,
@@ -1307,7 +1307,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                     : 'Create a secure 6-digit PIN'),
             style: GoogleFonts.inter(
               fontSize: 14,
-              color: const Color(0xFF64748B),
+              color: const Color(0xFF728078),
             ),
             textAlign: TextAlign.center,
           ),
@@ -1424,7 +1424,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
                 'Back to Login',
                 style: GoogleFonts.inter(
                   fontSize: 13,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                 ),
               ),
             ),
@@ -1441,7 +1441,7 @@ class _PinSetupScreenState extends State<PinSetupScreen> {
         backgroundColor: _backgroundColor,
         body: const Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
           ),
         ),
       );

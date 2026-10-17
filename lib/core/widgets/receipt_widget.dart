@@ -79,7 +79,7 @@ class ReceiptWidget extends StatefulWidget {
     this.isCommission = false,
     this.commissionSource,
     this.isService = false,
-    this.primaryColor = const Color(0xFF243889),
+    this.primaryColor = const Color(0xFF102C68),
     this.customMessage,
     this.vtpassResponse,
     this.showWatermark = true,
@@ -116,9 +116,9 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
   bool _isViewerAdminLoaded = false;
 
   // Brand Colors
-  static const Color _brandPrimary = Color(0xFF243889);
-  static const Color _brandSecondary = Color(0xFF219C7E);
-  static const Color _brandLight = Color(0xFF92D394);
+  static const Color _brandPrimary = Color(0xFF102C68);
+  static const Color _brandSecondary = Color(0xFF168566);
+  static const Color _brandLight = Color(0xFF5BB592);
   static const Color _brandWhite = Color(0xFFFFFFFF);
 
   @override
@@ -360,7 +360,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                     children: [
                       Text(
                         '📄 PDF Certificate',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: Colors.grey.shade700,
@@ -369,7 +369,7 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
                       const SizedBox(height: 4),
                       Text(
                         url.length > 80 ? '${url.substring(0, 80)}...' : url,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 11,
                           color: Colors.blue.shade700,
                         ),
@@ -546,7 +546,7 @@ Powered by Dalabapay''';
               Expanded(
                 child: Text(
                   message,
-                  style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+                  style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
                 ),
               ),
             ],
@@ -576,7 +576,7 @@ Powered by Dalabapay''';
               Expanded(
                 child: Text(
                   message,
-                  style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+                  style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
                 ),
               ),
             ],
@@ -606,7 +606,7 @@ Powered by Dalabapay''';
               Expanded(
                 child: Text(
                   message,
-                  style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+                  style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
                 ),
               ),
             ],
@@ -656,7 +656,7 @@ Powered by Dalabapay''';
           const SizedBox(width: 8),
           Text(
             status.toUpperCase(),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 12,
               fontWeight: FontWeight.bold,
               color: statusColor,
@@ -684,7 +684,7 @@ Powered by Dalabapay''';
             flex: 2,
             child: Text(
               label,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey.shade600,
@@ -700,7 +700,7 @@ Powered by Dalabapay''';
                   child: Text(
                     value,
                     textAlign: TextAlign.right,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight:
                           highlight || isAmount
@@ -788,16 +788,16 @@ Powered by Dalabapay''';
                 child: const Icon(
                   Icons.admin_panel_settings_rounded,
                   size: 14,
-                  color: Color(0xFFB45309),
+                  color: Color(0xFFA76B1D),
                 ),
               ),
               const SizedBox(width: 8),
               Text(
                 'ADMIN ACTION DETAILS',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFFB45309),
+                  color: const Color(0xFFA76B1D),
                   letterSpacing: 0.8,
                 ),
               ),
@@ -863,7 +863,7 @@ Powered by Dalabapay''';
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 2),
-          child: Icon(icon, size: 14, color: const Color(0xFFB45309)),
+          child: Icon(icon, size: 14, color: const Color(0xFFA76B1D)),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -872,10 +872,10 @@ Powered by Dalabapay''';
             children: [
               Text(
                 label,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFFB45309),
+                  color: const Color(0xFFA76B1D),
                   letterSpacing: 0.3,
                 ),
               ),
@@ -885,7 +885,7 @@ Powered by Dalabapay''';
                   Expanded(
                     child: Text(
                       value,
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey.shade900,
@@ -901,7 +901,7 @@ Powered by Dalabapay''';
                         child: Icon(
                           Icons.content_copy_rounded,
                           size: 13,
-                          color: Color(0xFFB45309),
+                          color: Color(0xFFA76B1D),
                         ),
                       ),
                     ),
@@ -953,7 +953,7 @@ Powered by Dalabapay''';
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [_brandPrimary, Color(0xFF1A2E6E)],
+                    colors: [_brandPrimary, Color(0xFF0C2152)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -1006,7 +1006,7 @@ Powered by Dalabapay''';
                               children: [
                                 Text(
                                   'Dalabapay',
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.inter(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -1015,7 +1015,7 @@ Powered by Dalabapay''';
                                 ),
                                 Text(
                                   'Transaction Receipt',
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.inter(
                                     fontSize: 11,
                                     color: Colors.white.withOpacity(0.85),
                                     fontWeight: FontWeight.w500,
@@ -1039,7 +1039,7 @@ Powered by Dalabapay''';
                             const SizedBox(width: 6),
                             Text(
                               _formattedDate,
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 11,
                                 color: Colors.white.withOpacity(0.85),
                                 fontWeight: FontWeight.w500,
@@ -1106,7 +1106,7 @@ Powered by Dalabapay''';
                           children: [
                             Text(
                               'Amount',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 12,
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w600,
@@ -1115,7 +1115,7 @@ Powered by Dalabapay''';
                             const SizedBox(height: 4),
                             Text(
                               _formattedAmount,
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold,
                                 color: _brandSecondary,
@@ -1141,7 +1141,7 @@ Powered by Dalabapay''';
                                   ),
                                   child: Text(
                                     widget.transactionType.toUpperCase(),
-                                    style: GoogleFonts.poppins(
+                                    style: GoogleFonts.inter(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       color: _brandPrimary,
@@ -1172,7 +1172,7 @@ Powered by Dalabapay''';
                                         const SizedBox(width: 4),
                                         Text(
                                           operator,
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.inter(
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
                                             color: _operatorColor,
@@ -1281,7 +1281,7 @@ Powered by Dalabapay''';
                                       children: [
                                         Text(
                                           '⚡ ELECTRICITY TOKEN',
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.inter(
                                             fontSize: 11,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.orange.shade800,
@@ -1343,7 +1343,7 @@ Powered by Dalabapay''';
                                                   _isCopyingToken
                                                       ? 'Copying...'
                                                       : 'Copy',
-                                                  style: GoogleFonts.poppins(
+                                                  style: GoogleFonts.inter(
                                                     fontSize: 10,
                                                     fontWeight: FontWeight.w600,
                                                     color:
@@ -1379,7 +1379,7 @@ Powered by Dalabapay''';
                                             Expanded(
                                               child: Text(
                                                 widget.electricityToken!,
-                                                style: GoogleFonts.poppins(
+                                                style: GoogleFonts.inter(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
                                                   color: Colors.grey.shade900,
@@ -1400,7 +1400,7 @@ Powered by Dalabapay''';
                                     const SizedBox(height: 4),
                                     Text(
                                       'Tap token to copy • Also sent via SMS',
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.inter(
                                         fontSize: 9,
                                         color: Colors.grey.shade500,
                                       ),
@@ -1598,7 +1598,7 @@ Powered by Dalabapay''';
                                           ? (widget.adminNote ??
                                               '🔧 ADMIN TRANSACTION')
                                           : '👑 ADMIN USER',
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.inter(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.amber.shade800,
@@ -1609,7 +1609,7 @@ Powered by Dalabapay''';
                                       const SizedBox(height: 2),
                                       Text(
                                         widget.adminNote!,
-                                        style: GoogleFonts.poppins(
+                                        style: GoogleFonts.inter(
                                           fontSize: 10,
                                           color: Colors.amber.shade700,
                                         ),
@@ -1646,7 +1646,7 @@ Powered by Dalabapay''';
                               const SizedBox(width: 6),
                               Text(
                                 'Commission Transaction',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 11,
                                   color: _brandSecondary,
                                   fontWeight: FontWeight.w500,
@@ -1679,7 +1679,7 @@ Powered by Dalabapay''';
                               const SizedBox(width: 6),
                               Text(
                                 'Service Fee',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 11,
                                   color: Colors.blue.shade800,
                                   fontWeight: FontWeight.w500,
@@ -1723,7 +1723,7 @@ Powered by Dalabapay''';
                               Expanded(
                                 child: Text(
                                   widget.customMessage!,
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.inter(
                                     fontSize: 12,
                                     color: _statusColor,
                                     fontWeight: FontWeight.w500,
@@ -1768,7 +1768,7 @@ Powered by Dalabapay''';
                             const SizedBox(height: 4),
                             Text(
                               'Thank you for choosing Dalabapay!',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 11,
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
@@ -1777,7 +1777,7 @@ Powered by Dalabapay''';
                             ),
                             Text(
                               '💚 Secure • Fast • Reliable',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 9,
                                 color: Colors.grey.shade400,
                               ),
@@ -1831,13 +1831,13 @@ Powered by Dalabapay''';
                             _isDownloadingCertificate
                                 ? 'Loading...'
                                 : '📄 Download Certificate',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFDC2626),
+                            backgroundColor: const Color(0xFFC0392B),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
@@ -1860,7 +1860,7 @@ Powered by Dalabapay''';
                             ),
                             label: Text(
                               _isSaving ? 'Saving...' : 'Save',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -1886,7 +1886,7 @@ Powered by Dalabapay''';
                             ),
                             label: Text(
                               _isSharing ? 'Sharing...' : 'Share',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -1918,7 +1918,7 @@ Powered by Dalabapay''';
                         ),
                         child: Text(
                           'Close Receipt',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             color: Colors.grey.shade700,
                             fontWeight: FontWeight.w600,
                             fontSize: 13,

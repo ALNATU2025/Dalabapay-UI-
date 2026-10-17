@@ -80,19 +80,19 @@ class _DonationScreenState extends State<DonationScreen>
     {
       'name': 'Education',
       'icon': HugeIcons.strokeRoundedBook01,
-      'color': const Color(0xFF4A90E2),
+      'color': const Color(0xFF173D88),
       'description': 'Support education for underprivileged children',
     },
     {
       'name': 'Health',
       'icon': HugeIcons.strokeRoundedHealth,
-      'color': const Color(0xFFE74C3C),
+      'color': const Color(0xFFC0392B),
       'description': 'Provide healthcare to those in need',
     },
     {
       'name': 'Food',
       'icon': HugeIcons.strokeRoundedRestaurant01,
-      'color': const Color(0xFFF39C12),
+      'color': const Color(0xFFA76B1D),
       'description': 'Feed the hungry and fight hunger',
     },
     {
@@ -104,13 +104,13 @@ class _DonationScreenState extends State<DonationScreen>
     {
       'name': 'Disaster',
       'icon': HugeIcons.strokeRoundedDanger,
-      'color': const Color(0xFFE67E22),
+      'color': const Color(0xFFA76B1D),
       'description': 'Support disaster relief efforts',
     },
     {
       'name': 'General',
       'icon': HugeIcons.strokeRoundedFavouriteSquare,
-      'color': const Color(0xFF9B59B6),
+      'color': const Color(0xFF173D88),
       'description': 'General donation to support our mission',
     },
   ];
@@ -565,7 +565,7 @@ class _DonationScreenState extends State<DonationScreen>
               phoneNumber: _phoneController.text.trim(),
               description: 'Donation to $cause',
               customMessage: '✓ Thank you for your generous donation!',
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -590,7 +590,7 @@ class _DonationScreenState extends State<DonationScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: Colors.red.shade700,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -600,7 +600,7 @@ class _DonationScreenState extends State<DonationScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -610,8 +610,8 @@ class _DonationScreenState extends State<DonationScreen>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF219C7E),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF168566),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -678,7 +678,7 @@ class _DonationScreenState extends State<DonationScreen>
             const SizedBox(height: 6),
             Text(
               cause['name'] as String,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 color: isSelected ? Colors.white : Colors.grey.shade800,
@@ -763,7 +763,7 @@ class _DonationScreenState extends State<DonationScreen>
                                         child: const Icon(
                                           Icons.close,
                                           size: 18,
-                                          color: Color(0xFF64748B),
+                                          color: Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -773,10 +773,10 @@ class _DonationScreenState extends State<DonationScreen>
                               const SizedBox(height: 4),
                               Text(
                                 'Confirm Donation',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -821,7 +821,7 @@ class _DonationScreenState extends State<DonationScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.inter(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -878,22 +878,22 @@ class _DonationScreenState extends State<DonationScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedFavouriteSquare,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Cause',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -901,10 +901,10 @@ class _DonationScreenState extends State<DonationScreen>
               Flexible(
                 child: Text(
                   cause,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -924,22 +924,22 @@ class _DonationScreenState extends State<DonationScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedUser,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Donor',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -947,10 +947,10 @@ class _DonationScreenState extends State<DonationScreen>
               Flexible(
                 child: Text(
                   donorName.isNotEmpty ? donorName : 'Anonymous',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -970,32 +970,32 @@ class _DonationScreenState extends State<DonationScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withOpacity(0.08),
+                      color: const Color(0xFF168566).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedMoney01,
-                      color: const Color(0xFF219C7E),
+                      color: const Color(0xFF168566),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Amount',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 formattedAmount,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                 ),
               ),
             ],
@@ -1010,9 +1010,9 @@ class _DonationScreenState extends State<DonationScreen>
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.08),
+        color: const Color(0xFF168566).withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1023,17 +1023,17 @@ class _DonationScreenState extends State<DonationScreen>
               children: [
                 HugeIcon(
                   icon: HugeIcons.strokeRoundedWallet01,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                   size: 16,
                 ),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     'Available Balance',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1046,10 +1046,10 @@ class _DonationScreenState extends State<DonationScreen>
           Flexible(
             child: Text(
               '₦${_walletBalance.toStringAsFixed(2)}',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF219C7E),
+                color: const Color(0xFF168566),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -1070,11 +1070,11 @@ class _DonationScreenState extends State<DonationScreen>
           color:
               _useBiometric
                   ? Colors.grey.shade50
-                  : const Color(0xFF243889).withOpacity(0.04),
+                  : const Color(0xFF102C68).withOpacity(0.04),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color:
-                _useBiometric ? Colors.grey.shade300 : const Color(0xFF243889),
+                _useBiometric ? Colors.grey.shade300 : const Color(0xFF102C68),
             width: _useBiometric ? 1 : 2,
           ),
         ),
@@ -1089,7 +1089,7 @@ class _DonationScreenState extends State<DonationScreen>
                 enabled: !_useBiometric,
                 decoration: InputDecoration(
                   hintText: 'Enter 6-digit transaction PIN',
-                  hintStyle: GoogleFonts.poppins(
+                  hintStyle: GoogleFonts.inter(
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
@@ -1102,7 +1102,7 @@ class _DonationScreenState extends State<DonationScreen>
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
-                            : const Color(0xFF243889),
+                            : const Color(0xFF102C68),
                     size: 18,
                   ),
                   border: InputBorder.none,
@@ -1111,12 +1111,12 @@ class _DonationScreenState extends State<DonationScreen>
                     vertical: 12,
                   ),
                   errorText: _pinValidationError,
-                  errorStyle: GoogleFonts.poppins(
+                  errorStyle: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _useBiometric ? Colors.grey.shade400 : Colors.black,
@@ -1140,7 +1140,7 @@ class _DonationScreenState extends State<DonationScreen>
                   backgroundColor:
                       _useBiometric
                           ? Colors.transparent
-                          : const Color(0xFF219C7E),
+                          : const Color(0xFF168566),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -1171,7 +1171,7 @@ class _DonationScreenState extends State<DonationScreen>
                             const SizedBox(width: 6),
                             Text(
                               _useBiometric ? 'Switch to PIN' : 'Pay with PIN',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 color:
@@ -1208,13 +1208,13 @@ class _DonationScreenState extends State<DonationScreen>
           decoration: BoxDecoration(
             color:
                 _useBiometric
-                    ? const Color(0xFF243889).withOpacity(0.08)
+                    ? const Color(0xFF102C68).withOpacity(0.08)
                     : Colors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color:
                   _useBiometric
-                      ? const Color(0xFF243889)
+                      ? const Color(0xFF102C68)
                       : Colors.grey.shade300,
               width: _useBiometric ? 2 : 1,
             ),
@@ -1226,7 +1226,7 @@ class _DonationScreenState extends State<DonationScreen>
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                         strokeWidth: 2.5,
                       ),
                     ),
@@ -1238,7 +1238,7 @@ class _DonationScreenState extends State<DonationScreen>
                         Icons.fingerprint,
                         color:
                             _useBiometric
-                                ? const Color(0xFF243889)
+                                ? const Color(0xFF102C68)
                                 : Colors.grey.shade600,
                         size: 24,
                       ),
@@ -1248,12 +1248,12 @@ class _DonationScreenState extends State<DonationScreen>
                           _useBiometric
                               ? 'Tap to authenticate with $_biometricName'
                               : 'Pay with $_biometricName',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color:
                                 _useBiometric
-                                    ? const Color(0xFF243889)
+                                    ? const Color(0xFF102C68)
                                     : Colors.grey.shade700,
                           ),
                           maxLines: 2,
@@ -1264,7 +1264,7 @@ class _DonationScreenState extends State<DonationScreen>
                         Container(
                           padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -1303,15 +1303,15 @@ class _DonationScreenState extends State<DonationScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Donations',
-        style: GoogleFonts.poppins(
-          color: const Color(0xFF243889),
+        style: GoogleFonts.inter(
+          color: const Color(0xFF102C68),
           fontSize: 18,
           fontWeight: FontWeight.w800,
         ),
@@ -1322,14 +1322,14 @@ class _DonationScreenState extends State<DonationScreen>
           margin: const EdgeInsets.only(right: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0x05243889),
+            color: const Color(0x05102C68),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.account_balance_wallet_outlined,
-                color: Color(0xFF243889),
+                color: Color(0xFF102C68),
                 size: 16,
               ),
               const SizedBox(width: 4),
@@ -1341,8 +1341,8 @@ class _DonationScreenState extends State<DonationScreen>
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF243889),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF102C68),
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1359,7 +1359,7 @@ class _DonationScreenState extends State<DonationScreen>
     if (_isLoadingUserData) {
       return Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF243889)),
+          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
         ),
       );
     }
@@ -1408,10 +1408,10 @@ class _DonationScreenState extends State<DonationScreen>
       children: [
         Text(
           'Select Cause',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 12),
@@ -1436,10 +1436,10 @@ class _DonationScreenState extends State<DonationScreen>
       children: [
         Text(
           'Donor Name (Optional)',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1454,14 +1454,14 @@ class _DonationScreenState extends State<DonationScreen>
             focusNode: _donorNameFocusNode,
             decoration: InputDecoration(
               hintText: 'Enter your name',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedUser,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1475,7 +1475,7 @@ class _DonationScreenState extends State<DonationScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1491,10 +1491,10 @@ class _DonationScreenState extends State<DonationScreen>
       children: [
         Text(
           'Amount',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1511,14 +1511,14 @@ class _DonationScreenState extends State<DonationScreen>
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               hintText: 'Enter donation amount (min ₦100)',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedMoney01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1532,7 +1532,7 @@ class _DonationScreenState extends State<DonationScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1543,7 +1543,7 @@ class _DonationScreenState extends State<DonationScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFF219C7E).withOpacity(0.1),
+              color: const Color(0xFF168566).withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -1551,16 +1551,16 @@ class _DonationScreenState extends State<DonationScreen>
               children: [
                 HugeIcon(
                   icon: HugeIcons.strokeRoundedInformationCircle,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                   size: 14,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Minimum: ₦100 | Maximum: ₦1,000,000',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
+                    color: const Color(0xFF168566),
                   ),
                 ),
               ],
@@ -1588,26 +1588,26 @@ class _DonationScreenState extends State<DonationScreen>
                 decoration: BoxDecoration(
                   color:
                       isSelected
-                          ? const Color(0xFF243889).withOpacity(0.1)
+                          ? const Color(0xFF102C68).withOpacity(0.1)
                           : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color:
                         isSelected
-                            ? const Color(0xFF243889)
-                            : const Color(0x14243889),
+                            ? const Color(0xFF102C68)
+                            : const Color(0x14102C68),
                     width: isSelected ? 2 : 1,
                   ),
                 ),
                 child: Text(
                   '₦${NumberFormat('#,###').format(amount)}',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                     color:
                         isSelected
-                            ? const Color(0xFF243889)
-                            : const Color(0xFF243889).withOpacity(0.7),
+                            ? const Color(0xFF102C68)
+                            : const Color(0xFF102C68).withOpacity(0.7),
                   ),
                 ),
               ),
@@ -1622,10 +1622,10 @@ class _DonationScreenState extends State<DonationScreen>
       children: [
         Text(
           'Contact Details (Optional)',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1641,14 +1641,14 @@ class _DonationScreenState extends State<DonationScreen>
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: 'Email address',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedMail01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1662,7 +1662,7 @@ class _DonationScreenState extends State<DonationScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1685,14 +1685,14 @@ class _DonationScreenState extends State<DonationScreen>
             ],
             decoration: InputDecoration(
               hintText: 'Phone number (11 digits)',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedSmartPhone01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1706,7 +1706,7 @@ class _DonationScreenState extends State<DonationScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1722,10 +1722,10 @@ class _DonationScreenState extends State<DonationScreen>
       children: [
         Text(
           'Message (Optional)',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1741,14 +1741,14 @@ class _DonationScreenState extends State<DonationScreen>
             maxLines: 3,
             decoration: InputDecoration(
               hintText: 'Leave a message of support...',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedMessage01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1762,7 +1762,7 @@ class _DonationScreenState extends State<DonationScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1776,7 +1776,7 @@ class _DonationScreenState extends State<DonationScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0x05243889),
+        color: const Color(0x05102C68),
         borderRadius: BorderRadius.circular(13),
       ),
       child: Row(
@@ -1785,12 +1785,12 @@ class _DonationScreenState extends State<DonationScreen>
             width: 23,
             height: 23,
             decoration: BoxDecoration(
-              color: const Color(0xFF243889).withOpacity(0.1),
+              color: const Color(0xFF102C68).withOpacity(0.1),
               borderRadius: BorderRadius.circular(13),
             ),
             child: const Icon(
               Icons.favorite_outline,
-              color: Color(0xFF243889),
+              color: Color(0xFF102C68),
               size: 16,
             ),
           ),
@@ -1798,10 +1798,10 @@ class _DonationScreenState extends State<DonationScreen>
           Expanded(
             child: Text(
               'Thank you for your Kind Support',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 height: 1.3,
               ),
             ),
@@ -1821,7 +1821,7 @@ class _DonationScreenState extends State<DonationScreen>
                 ? null
                 : _openPaymentSheet,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF219C7E),
+          backgroundColor: const Color(0xFF168566),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -1850,7 +1850,7 @@ class _DonationScreenState extends State<DonationScreen>
                     const SizedBox(width: 8),
                     Text(
                       'Donate Now',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
@@ -1892,7 +1892,7 @@ class _DonationScreenState extends State<DonationScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color:
@@ -1907,7 +1907,7 @@ class _DonationScreenState extends State<DonationScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Donation service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -1916,7 +1916,7 @@ class _DonationScreenState extends State<DonationScreen>
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
+                backgroundColor: const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -1928,7 +1928,7 @@ class _DonationScreenState extends State<DonationScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

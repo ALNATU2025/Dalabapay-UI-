@@ -98,7 +98,7 @@ class _BettingScreenState extends State<BettingScreen>
       'apiName': 'sportybet',
       'logoUrl':
           'https://play-lh.googleusercontent.com/IgO7ZtqQTAefBbpPAiUkaxXwJawUp1dqzjW-mCDX4MhiC5X5l0udupzfcoe47wdWaJ_98gWRAwj3mrLwxrui=w240-h480-rw',
-      'color': const Color(0xFFE74C3C),
+      'color': const Color(0xFFC0392B),
     },
     {
       'name': 'NairaBet',
@@ -554,7 +554,7 @@ class _BettingScreenState extends State<BettingScreen>
               phoneNumber: username,
               description: '$platform Account Funding',
               customMessage: '✓ Account funded successfully!',
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -579,7 +579,7 @@ class _BettingScreenState extends State<BettingScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: Colors.red.shade700,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -589,7 +589,7 @@ class _BettingScreenState extends State<BettingScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -599,8 +599,8 @@ class _BettingScreenState extends State<BettingScreen>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF219C7E),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF168566),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -706,7 +706,7 @@ class _BettingScreenState extends State<BettingScreen>
                   child: Center(
                     child: Text(
                       platform['name'].substring(0, 1).toUpperCase(),
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: isSelected ? Colors.white : platform['color'],
@@ -722,7 +722,7 @@ class _BettingScreenState extends State<BettingScreen>
             const SizedBox(height: 6),
             Text(
               platform['name'],
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 10,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 color: isSelected ? Colors.white : Colors.grey.shade800,
@@ -806,7 +806,7 @@ class _BettingScreenState extends State<BettingScreen>
                                         child: const Icon(
                                           Icons.close,
                                           size: 18,
-                                          color: Color(0xFF64748B),
+                                          color: Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -816,10 +816,10 @@ class _BettingScreenState extends State<BettingScreen>
                               const SizedBox(height: 4),
                               Text(
                                 'Confirm Deposit',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -864,7 +864,7 @@ class _BettingScreenState extends State<BettingScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: GoogleFonts.inter(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -921,22 +921,22 @@ class _BettingScreenState extends State<BettingScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedGame,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Platform',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -944,10 +944,10 @@ class _BettingScreenState extends State<BettingScreen>
               Flexible(
                 child: Text(
                   platform,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -967,22 +967,22 @@ class _BettingScreenState extends State<BettingScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedUser,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Username',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -990,10 +990,10 @@ class _BettingScreenState extends State<BettingScreen>
               Flexible(
                 child: Text(
                   username.isNotEmpty ? username : 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1013,32 +1013,32 @@ class _BettingScreenState extends State<BettingScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withOpacity(0.08),
+                      color: const Color(0xFF168566).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedMoney01,
-                      color: const Color(0xFF219C7E),
+                      color: const Color(0xFF168566),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Amount',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 formattedAmount,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                 ),
               ),
             ],
@@ -1053,9 +1053,9 @@ class _BettingScreenState extends State<BettingScreen>
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.08),
+        color: const Color(0xFF168566).withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1066,17 +1066,17 @@ class _BettingScreenState extends State<BettingScreen>
               children: [
                 HugeIcon(
                   icon: HugeIcons.strokeRoundedWallet01,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                   size: 16,
                 ),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     'Available Balance',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1089,10 +1089,10 @@ class _BettingScreenState extends State<BettingScreen>
           Flexible(
             child: Text(
               '₦${_walletBalance.toStringAsFixed(2)}',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF219C7E),
+                color: const Color(0xFF168566),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -1113,11 +1113,11 @@ class _BettingScreenState extends State<BettingScreen>
           color:
               _useBiometric
                   ? Colors.grey.shade50
-                  : const Color(0xFF243889).withOpacity(0.04),
+                  : const Color(0xFF102C68).withOpacity(0.04),
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color:
-                _useBiometric ? Colors.grey.shade300 : const Color(0xFF243889),
+                _useBiometric ? Colors.grey.shade300 : const Color(0xFF102C68),
             width: _useBiometric ? 1 : 2,
           ),
         ),
@@ -1132,7 +1132,7 @@ class _BettingScreenState extends State<BettingScreen>
                 enabled: !_useBiometric,
                 decoration: InputDecoration(
                   hintText: 'Enter 6-digit transaction PIN',
-                  hintStyle: GoogleFonts.poppins(
+                  hintStyle: GoogleFonts.inter(
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
@@ -1145,7 +1145,7 @@ class _BettingScreenState extends State<BettingScreen>
                     color:
                         _useBiometric
                             ? Colors.grey.shade400
-                            : const Color(0xFF243889),
+                            : const Color(0xFF102C68),
                     size: 18,
                   ),
                   border: InputBorder.none,
@@ -1154,12 +1154,12 @@ class _BettingScreenState extends State<BettingScreen>
                     vertical: 12,
                   ),
                   errorText: _pinValidationError,
-                  errorStyle: GoogleFonts.poppins(
+                  errorStyle: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _useBiometric ? Colors.grey.shade400 : Colors.black,
@@ -1183,7 +1183,7 @@ class _BettingScreenState extends State<BettingScreen>
                   backgroundColor:
                       _useBiometric
                           ? Colors.transparent
-                          : const Color(0xFF219C7E),
+                          : const Color(0xFF168566),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -1214,7 +1214,7 @@ class _BettingScreenState extends State<BettingScreen>
                             const SizedBox(width: 6),
                             Text(
                               _useBiometric ? 'Switch to PIN' : 'Pay with PIN',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700,
                                 color:
@@ -1251,13 +1251,13 @@ class _BettingScreenState extends State<BettingScreen>
           decoration: BoxDecoration(
             color:
                 _useBiometric
-                    ? const Color(0xFF243889).withOpacity(0.08)
+                    ? const Color(0xFF102C68).withOpacity(0.08)
                     : Colors.white,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color:
                   _useBiometric
-                      ? const Color(0xFF243889)
+                      ? const Color(0xFF102C68)
                       : Colors.grey.shade300,
               width: _useBiometric ? 2 : 1,
             ),
@@ -1269,7 +1269,7 @@ class _BettingScreenState extends State<BettingScreen>
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                         strokeWidth: 2.5,
                       ),
                     ),
@@ -1281,7 +1281,7 @@ class _BettingScreenState extends State<BettingScreen>
                         Icons.fingerprint,
                         color:
                             _useBiometric
-                                ? const Color(0xFF243889)
+                                ? const Color(0xFF102C68)
                                 : Colors.grey.shade600,
                         size: 24,
                       ),
@@ -1291,12 +1291,12 @@ class _BettingScreenState extends State<BettingScreen>
                           _useBiometric
                               ? 'Tap to authenticate with $_biometricName'
                               : 'Pay with $_biometricName',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color:
                                 _useBiometric
-                                    ? const Color(0xFF243889)
+                                    ? const Color(0xFF102C68)
                                     : Colors.grey.shade700,
                           ),
                           maxLines: 2,
@@ -1307,7 +1307,7 @@ class _BettingScreenState extends State<BettingScreen>
                         Container(
                           padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -1346,15 +1346,15 @@ class _BettingScreenState extends State<BettingScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Fund Betting',
-        style: GoogleFonts.poppins(
-          color: const Color(0xFF243889),
+        style: GoogleFonts.inter(
+          color: const Color(0xFF102C68),
           fontSize: 18,
           fontWeight: FontWeight.w800,
         ),
@@ -1365,14 +1365,14 @@ class _BettingScreenState extends State<BettingScreen>
           margin: const EdgeInsets.only(right: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0x05243889),
+            color: const Color(0x05102C68),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.account_balance_wallet_outlined,
-                color: Color(0xFF243889),
+                color: Color(0xFF102C68),
                 size: 16,
               ),
               const SizedBox(width: 4),
@@ -1384,8 +1384,8 @@ class _BettingScreenState extends State<BettingScreen>
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF243889),
+                  style: GoogleFonts.inter(
+                    color: const Color(0xFF102C68),
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1402,7 +1402,7 @@ class _BettingScreenState extends State<BettingScreen>
     if (_isLoadingUserData) {
       return Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF243889)),
+          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
         ),
       );
     }
@@ -1447,10 +1447,10 @@ class _BettingScreenState extends State<BettingScreen>
       children: [
         Text(
           'Select Platform',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 12),
@@ -1478,10 +1478,10 @@ class _BettingScreenState extends State<BettingScreen>
       children: [
         Text(
           'Username / Account ID',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1496,14 +1496,14 @@ class _BettingScreenState extends State<BettingScreen>
             focusNode: _usernameFocusNode,
             decoration: InputDecoration(
               hintText: 'Enter username or account ID',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedUser,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1517,7 +1517,7 @@ class _BettingScreenState extends State<BettingScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1533,10 +1533,10 @@ class _BettingScreenState extends State<BettingScreen>
       children: [
         Text(
           'Amount',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1553,14 +1553,14 @@ class _BettingScreenState extends State<BettingScreen>
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               hintText: 'Enter amount (min ₦100)',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedMoney01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1574,7 +1574,7 @@ class _BettingScreenState extends State<BettingScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1585,7 +1585,7 @@ class _BettingScreenState extends State<BettingScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFF219C7E).withOpacity(0.1),
+              color: const Color(0xFF168566).withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -1593,16 +1593,16 @@ class _BettingScreenState extends State<BettingScreen>
               children: [
                 HugeIcon(
                   icon: HugeIcons.strokeRoundedInformationCircle,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                   size: 14,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Minimum: ₦100 | Maximum: ₦100,000',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
+                    color: const Color(0xFF168566),
                   ),
                 ),
               ],
@@ -1630,26 +1630,26 @@ class _BettingScreenState extends State<BettingScreen>
                 decoration: BoxDecoration(
                   color:
                       isSelected
-                          ? const Color(0xFF243889).withOpacity(0.1)
+                          ? const Color(0xFF102C68).withOpacity(0.1)
                           : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color:
                         isSelected
-                            ? const Color(0xFF243889)
-                            : const Color(0x14243889),
+                            ? const Color(0xFF102C68)
+                            : const Color(0x14102C68),
                     width: isSelected ? 2 : 1,
                   ),
                 ),
                 child: Text(
                   '₦$amount',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 13,
                     fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                     color:
                         isSelected
-                            ? const Color(0xFF243889)
-                            : const Color(0xFF243889).withOpacity(0.7),
+                            ? const Color(0xFF102C68)
+                            : const Color(0xFF102C68).withOpacity(0.7),
                   ),
                 ),
               ),
@@ -1662,7 +1662,7 @@ class _BettingScreenState extends State<BettingScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0x05243889),
+        color: const Color(0x05102C68),
         borderRadius: BorderRadius.circular(13),
       ),
       child: Row(
@@ -1671,12 +1671,12 @@ class _BettingScreenState extends State<BettingScreen>
             width: 23,
             height: 23,
             decoration: BoxDecoration(
-              color: const Color(0xFF243889).withOpacity(0.1),
+              color: const Color(0xFF102C68).withOpacity(0.1),
               borderRadius: BorderRadius.circular(13),
             ),
             child: const Icon(
               Icons.info_outline,
-              color: Color(0xFF243889),
+              color: Color(0xFF102C68),
               size: 16,
             ),
           ),
@@ -1684,10 +1684,10 @@ class _BettingScreenState extends State<BettingScreen>
           Expanded(
             child: Text(
               'Ensure correct details for instant funding.\nSecure and reliable.',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 height: 1.3,
               ),
             ),
@@ -1707,7 +1707,7 @@ class _BettingScreenState extends State<BettingScreen>
                 ? null
                 : _openPaymentSheet,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF219C7E),
+          backgroundColor: const Color(0xFF168566),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -1736,7 +1736,7 @@ class _BettingScreenState extends State<BettingScreen>
                     const SizedBox(width: 8),
                     Text(
                       'Continue',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
@@ -1778,7 +1778,7 @@ class _BettingScreenState extends State<BettingScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color:
@@ -1793,7 +1793,7 @@ class _BettingScreenState extends State<BettingScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Betting service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -1802,7 +1802,7 @@ class _BettingScreenState extends State<BettingScreen>
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
+                backgroundColor: const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -1814,7 +1814,7 @@ class _BettingScreenState extends State<BettingScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

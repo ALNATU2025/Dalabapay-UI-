@@ -27,15 +27,15 @@ class UserDisputesPage extends StatefulWidget {
 class _UserDisputesPageState extends State<UserDisputesPage>
     with TickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color infoColor = Color(0xFF173D88);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _disputes = [];
@@ -596,7 +596,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                       gradient: const LinearGradient(
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
-                        colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                        colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                         stops: [0.06, 0.41],
                       ),
                       borderRadius: const BorderRadius.only(
@@ -611,7 +611,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         Expanded(
                           child: Text(
                             'Evidence (${evidence.length} file${evidence.length > 1 ? 's' : ''})',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -862,7 +862,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     const SizedBox(width: 12),
                     Text(
                       'File a Dispute',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
                         color: textPrimary,
@@ -1319,7 +1319,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 Expanded(
                   child: Text(
                     'Dispute Details',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                       color: textPrimary,
@@ -1720,7 +1720,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1800,7 +1800,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                   children: [
                     Text(
                       'Manage Disputes',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1974,7 +1974,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 14 : 18,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,

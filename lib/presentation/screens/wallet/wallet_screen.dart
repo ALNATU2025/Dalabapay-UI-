@@ -97,15 +97,15 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
   bool _dedicatedAccountLoaded = false;
 
   // ==================== COLORS ====================
-  final Color _primaryColor = const Color(0xFF243889);
-  final Color _secondaryColor = const Color(0xFF219C7E);
+  final Color _primaryColor = const Color(0xFF102C68);
+  final Color _secondaryColor = const Color(0xFF168566);
   final Color _white = Colors.white;
-  final Color _textColor = const Color(0xFF1C2D5A);
-  final Color _hintColor = const Color(0xFF94A3B8);
-  final Color _successColor = const Color(0xFF219C7E);
-  final Color _errorColor = const Color(0xFFEF4444);
-  final Color _warningColor = const Color(0xFFF59E0B);
-  final Color _accentColor = const Color(0xFF7C3AED);
+  final Color _textColor = const Color(0xFF14263D);
+  final Color _hintColor = const Color(0xFFA9B2AC);
+  final Color _successColor = const Color(0xFF168566);
+  final Color _errorColor = const Color(0xFFC0392B);
+  final Color _warningColor = const Color(0xFFA76B1D);
+  final Color _accentColor = const Color(0xFF173D88);
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -351,7 +351,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         name: 'Virtual Account',
         description: 'Generate a one-time account with 1.5% fee',
         icon: HugeIcons.strokeRoundedAtm02,
-        color: Color(0xFF7C3AED),
+        color: Color(0xFF173D88),
         instant: true,
         popular: false,
         badge: '1.5% Fee',
@@ -365,7 +365,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         name: 'Manual Funding',
         description: 'Contact admin for assistance',
         icon: HugeIcons.strokeRoundedCustomerService,
-        color: Color(0xFFF59E0B),
+        color: Color(0xFFA76B1D),
         instant: false,
         badge: 'Admin',
       ),
@@ -399,7 +399,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: _errorColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -409,7 +409,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(fontSize: 14, color: _textColor),
+              style: GoogleFonts.inter(fontSize: 14, color: _textColor),
             ),
             actions: [
               TextButton(
@@ -417,7 +417,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 style: TextButton.styleFrom(foregroundColor: _primaryColor),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -440,7 +440,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: _successColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -450,7 +450,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(fontSize: 14, color: _textColor),
+              style: GoogleFonts.inter(fontSize: 14, color: _textColor),
             ),
             actions: [
               TextButton(
@@ -458,7 +458,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 style: TextButton.styleFrom(foregroundColor: _primaryColor),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -499,7 +499,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         gradient: const LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
-                          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                         ),
                         shape: BoxShape.circle,
                       ),
@@ -512,10 +512,10 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     const SizedBox(height: 20),
                     Text(
                       'Get Your Dedicated Account',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -525,7 +525,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       'Complete your KYC to get your personal static account for seamless transactions.',
                       style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: const Color(0xFF64748B),
+                        color: const Color(0xFF728078),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -533,17 +533,17 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF243889).withValues(alpha: 0.05),
+                        color: const Color(0xFF102C68).withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF243889).withValues(alpha: 0.1),
+                          color: const Color(0xFF102C68).withValues(alpha: 0.1),
                         ),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.security,
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                             size: 20,
                           ),
                           const SizedBox(width: 12),
@@ -552,7 +552,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               'Your account details are secure and private.',
                               style: GoogleFonts.inter(
                                 fontSize: 12,
-                                color: const Color(0xFF219C7E),
+                                color: const Color(0xFF168566),
                               ),
                             ),
                           ),
@@ -585,7 +585,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               _navigateToKYC();
                             },
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xFF243889)),
+                              side: const BorderSide(color: Color(0xFF102C68)),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -595,7 +595,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               'Complete KYC',
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
-                                color: const Color(0xFF243889),
+                                color: const Color(0xFF102C68),
                               ),
                             ),
                           ),
@@ -624,7 +624,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               _navigateToKYC();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF243889),
+                              backgroundColor: const Color(0xFF102C68),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -647,7 +647,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       child: Text(
                         'Remind Me Later',
                         style: GoogleFonts.inter(
-                          color: const Color(0xFF64748B),
+                          color: const Color(0xFF728078),
                           fontSize: 13,
                         ),
                       ),
@@ -1165,7 +1165,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 Expanded(
                   child: Text(
                     'Service Unavailable',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       color: _warningColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -1180,7 +1180,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               children: [
                 Text(
                   'The virtual account service is currently unavailable for $formattedAmount.',
-                  style: GoogleFonts.poppins(fontSize: 14, color: _textColor),
+                  style: GoogleFonts.inter(fontSize: 14, color: _textColor),
                 ),
                 const SizedBox(height: 16),
 
@@ -1207,7 +1207,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                             _hasDedicatedAccount
                                 ? 'Use Dedicated Account'
                                 : 'Get a Dedicated Account',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: _primaryColor,
@@ -1220,7 +1220,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         _hasDedicatedAccount
                             ? 'You already have a dedicated account with 1.5% fee per transaction. Use it now!'
                             : 'Complete your KYC to get a personal dedicated account with 1.5% fee per transaction, static account number, and instant funding.',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _textColor,
                         ),
@@ -1255,7 +1255,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                             _hasDedicatedAccount
                                 ? 'Use Dedicated Account'
                                 : 'Complete KYC',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -1288,7 +1288,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 10),
                           Text(
                             'Manual Funding',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: _warningColor,
@@ -1299,7 +1299,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       const SizedBox(height: 8),
                       Text(
                         'Contact admin for manual funding assistance.',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _textColor,
                         ),
@@ -1315,7 +1315,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           ),
                           label: Text(
                             'Contact Admin',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -1356,7 +1356,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     ),
                     child: Text(
                       'Retry Virtual Account',
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
@@ -1375,7 +1375,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 ),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w500),
                 ),
               ),
             ],
@@ -1415,7 +1415,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     isBankError
                         ? 'Service Unavailable'
                         : 'Virtual Account Failed',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       color: isBankError ? _warningColor : _errorColor,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -1432,7 +1432,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                   isBankError
                       ? 'The virtual account service is currently unavailable for $formattedAmount.'
                       : 'Unable to generate virtual account for $formattedAmount.',
-                  style: GoogleFonts.poppins(fontSize: 14, color: _textColor),
+                  style: GoogleFonts.inter(fontSize: 14, color: _textColor),
                 ),
                 const SizedBox(height: 16),
 
@@ -1460,7 +1460,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               _hasDedicatedAccount
                                   ? 'Use Your Dedicated Account'
                                   : 'Get a Dedicated Account',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                                 color: _primaryColor,
@@ -1479,7 +1479,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               ),
                               child: Text(
                                 '1.5% Fee',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 9,
                                   fontWeight: FontWeight.bold,
                                   color: _accentColor,
@@ -1493,7 +1493,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         _hasDedicatedAccount
                             ? 'Use your existing dedicated account with 1.5% fee per transaction. Funds are credited instantly.'
                             : 'Complete your KYC to get a personal dedicated account with 1.5% fee per transaction, static account number, and instant funding.',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _textColor,
                         ),
@@ -1529,7 +1529,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                             _hasDedicatedAccount
                                 ? 'Use Dedicated Account'
                                 : 'Complete KYC',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
                             ),
@@ -1563,7 +1563,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 10),
                           Text(
                             'Manual Funding',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: _warningColor,
@@ -1574,7 +1574,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       const SizedBox(height: 6),
                       Text(
                         'Contact admin for manual funding assistance.',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _textColor,
                         ),
@@ -1590,7 +1590,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           ),
                           label: Text(
                             'Contact Admin',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontWeight: FontWeight.w600,
                               fontSize: 13,
                             ),
@@ -1640,7 +1640,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         Expanded(
                           child: Text(
                             'This is a temporary issue. You can retry or use one of the options above.',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               color: Colors.blue.shade700,
                             ),
@@ -1663,7 +1663,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     ),
                     child: Text(
                       'Retry Virtual Account',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
@@ -1685,7 +1685,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 ),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.w500,
                     fontSize: 13,
                   ),
@@ -1719,7 +1719,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 const SizedBox(width: 12),
                 Text(
                   'Service Unavailable',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: _warningColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -1733,7 +1733,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               children: [
                 Text(
                   'The virtual account service is currently unavailable for $formattedAmount.',
-                  style: GoogleFonts.poppins(fontSize: 14, color: _textColor),
+                  style: GoogleFonts.inter(fontSize: 14, color: _textColor),
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -1756,7 +1756,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 10),
                           Text(
                             'Get a Dedicated Account',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: _primaryColor,
@@ -1767,7 +1767,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       const SizedBox(height: 8),
                       Text(
                         'Complete your KYC to get a personal dedicated account with:',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _textColor,
                         ),
@@ -1783,7 +1783,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 6),
                           Text(
                             '1.5% service fee per transaction',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               color: _accentColor,
                               fontWeight: FontWeight.w500,
@@ -1801,7 +1801,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 6),
                           Text(
                             'Static account number (always the same)',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               color: _successColor,
                               fontWeight: FontWeight.w500,
@@ -1819,7 +1819,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 6),
                           Text(
                             'Instant funding anytime',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               color: _successColor,
                               fontWeight: FontWeight.w500,
@@ -1842,7 +1842,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 style: TextButton.styleFrom(foregroundColor: _primaryColor),
                 child: Text(
                   'Complete KYC',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                 ),
               ),
               TextButton(
@@ -1854,7 +1854,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 style: TextButton.styleFrom(foregroundColor: _secondaryColor),
                 child: Text(
                   'Retry',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                 ),
               ),
               TextButton(
@@ -1869,7 +1869,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 ),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w500),
                 ),
               ),
             ],
@@ -1908,7 +1908,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 10,
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w500,
@@ -1916,7 +1916,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 ),
                 Text(
                   value,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 13,
                     color: Colors.black87,
                     fontWeight: FontWeight.w600,
@@ -2002,7 +2002,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 const SizedBox(width: 12),
                 Text(
                   'Manual Funding Request',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: _primaryColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -2016,7 +2016,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               children: [
                 Text(
                   'Your funding request for $formattedAmount has been submitted.',
-                  style: GoogleFonts.poppins(fontSize: 14, color: _textColor),
+                  style: GoogleFonts.inter(fontSize: 14, color: _textColor),
                 ),
                 const SizedBox(height: 12),
                 Container(
@@ -2031,7 +2031,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     children: [
                       Text(
                         '📌 Next Steps:',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontWeight: FontWeight.bold,
                           color: _warningColor,
                           fontSize: 13,
@@ -2043,7 +2043,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         '2. You will receive bank details via notification\n'
                         '3. Transfer the amount to the provided account\n'
                         '4. Your wallet will be credited automatically',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _textColor,
                         ),
@@ -2062,7 +2062,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     ),
                     label: Text(
                       'Contact Admin via WhatsApp',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -2117,7 +2117,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 style: TextButton.styleFrom(foregroundColor: _primaryColor),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -2145,7 +2145,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios_new_rounded,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 18,
         ),
         onPressed: () => Navigator.pop(context),
@@ -2180,7 +2180,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         unselectedLabelColor: _hintColor,
         indicatorColor: _secondaryColor,
         indicatorWeight: 3,
-        labelStyle: GoogleFonts.poppins(
+        labelStyle: GoogleFonts.inter(
           fontWeight: FontWeight.w600,
           fontSize: isMobile ? 13 : 14,
         ),
@@ -2261,7 +2261,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             const SizedBox(width: 12),
             Text(
               'Checking dedicated account...',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 12 : 13,
                 color: _textColor,
               ),
@@ -2282,13 +2282,13 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
           gradient: const LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
             stops: [0.06, 0.41],
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF219C7E).withAlpha(76),
+              color: const Color(0xFF168566).withAlpha(76),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -2318,7 +2318,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     const SizedBox(width: 8),
                     Text(
                       'Dedicated Account',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white70,
                         fontSize: isMobile ? 10 : 11,
                         fontWeight: FontWeight.w500,
@@ -2391,7 +2391,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                   Expanded(
                     child: SelectableText(
                       _dedicatedAccountNumber!,
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 16 : 18,
                         fontWeight: FontWeight.bold,
@@ -2424,7 +2424,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         const SizedBox(width: 4),
                         Text(
                           'Active',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             color: Colors.white,
                             fontSize: isMobile ? 8 : 10,
                             fontWeight: FontWeight.w600,
@@ -2448,7 +2448,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 ),
                 child: Text(
                   _dedicatedBankName!,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: Colors.white70,
                     fontSize: isMobile ? 9 : 10,
                     fontWeight: FontWeight.w500,
@@ -2463,7 +2463,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               const SizedBox(height: 4),
               Text(
                 _dedicatedAccountName!,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   color: Colors.white60,
                   fontSize: isMobile ? 10 : 11,
                 ),
@@ -2511,7 +2511,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 children: [
                   Text(
                     'Get Your Dedicated Account',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 13 : 14,
                       fontWeight: FontWeight.w600,
                       color: _textColor,
@@ -2519,7 +2519,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                   ),
                   Text(
                     'Complete KYC to get your personal static account (1.5% fee per transaction)',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 10 : 11,
                       color: _hintColor,
                     ),
@@ -2554,7 +2554,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         children: [
           Text(
             'Enter Amount',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: isMobile ? 16 : 18,
               fontWeight: FontWeight.w600,
               color: _textColor,
@@ -2569,13 +2569,13 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             ],
             decoration: InputDecoration(
               hintText: '₦0.00',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 color: _hintColor,
                 fontWeight: FontWeight.w300,
               ),
               prefixText: '₦',
-              prefixStyle: GoogleFonts.poppins(
+              prefixStyle: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w600,
                 color: _textColor,
@@ -2583,7 +2583,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(vertical: 8),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: isMobile ? 24 : 28,
               fontWeight: FontWeight.w600,
               color: _textColor,
@@ -2633,7 +2633,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
           child: Center(
             child: Text(
               '₦${_formatBalance(amount)}',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 10 : 12,
                 fontWeight: FontWeight.w600,
                 color: _primaryColor,
@@ -2668,7 +2668,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             children: [
               Text(
                 'Funding Options',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 15 : 17,
                   fontWeight: FontWeight.w600,
                   color: _textColor,
@@ -2683,7 +2683,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 ),
                 child: Text(
                   'Secure',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: _successColor,
@@ -2695,7 +2695,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
           const SizedBox(height: 4),
           Text(
             'Choose how you want to fund your wallet',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: isMobile ? 11 : 12,
               color: _hintColor,
             ),
@@ -2779,7 +2779,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     children: [
                       Text(
                         method.name,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: isMobile ? 14 : 15,
                           fontWeight: FontWeight.w600,
                           color:
@@ -2801,7 +2801,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           ),
                           child: Text(
                             'Popular',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 8,
                               fontWeight: FontWeight.w600,
                               color: _secondaryColor,
@@ -2824,7 +2824,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           ),
                           child: Text(
                             method.badge!,
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 8,
                               fontWeight: FontWeight.w600,
                               color:
@@ -2847,7 +2847,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           ),
                           child: Text(
                             'KYC Required',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 7,
                               fontWeight: FontWeight.w600,
                               color: _warningColor,
@@ -2860,7 +2860,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                   const SizedBox(height: 2),
                   Text(
                     isDisabled ? 'Complete KYC to unlock' : method.description,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 10 : 11,
                       color: isDisabled ? Colors.grey.shade400 : _hintColor,
                     ),
@@ -2887,7 +2887,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 4),
                           Text(
                             '1.5% service fee applies',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 8,
                               color: _accentColor,
                               fontWeight: FontWeight.w500,
@@ -2921,7 +2921,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                           const SizedBox(width: 4),
                           Text(
                             '1.5% service fee applies',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 8,
                               color: _accentColor,
                               fontWeight: FontWeight.w500,
@@ -2947,7 +2947,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     Icon(Icons.flash_on, color: _successColor, size: 12),
                     Text(
                       'Instant',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 9,
                         fontWeight: FontWeight.w600,
                         color: _successColor,
@@ -2996,7 +2996,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         children: [
           Text(
             'Authentication',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: isMobile ? 15 : 17,
               fontWeight: FontWeight.w600,
               color: _textColor,
@@ -3024,7 +3024,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       children: [
                         Text(
                           'Use Biometric',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontWeight: FontWeight.w600,
                             fontSize: isMobile ? 13 : 14,
                             color: _textColor,
@@ -3032,7 +3032,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         ),
                         Text(
                           'Fingerprint or Face ID',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: isMobile ? 10 : 11,
                             color: _hintColor,
                           ),
@@ -3068,7 +3068,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               ],
               decoration: InputDecoration(
                 hintText: 'Enter 6-digit PIN',
-                hintStyle: GoogleFonts.poppins(
+                hintStyle: GoogleFonts.inter(
                   fontSize: isMobile ? 13 : 14,
                   color: _hintColor,
                 ),
@@ -3096,7 +3096,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                   vertical: 14,
                 ),
               ),
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 16 : 18,
                 color: _textColor,
                 letterSpacing: 4,
@@ -3143,7 +3143,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     children: [
                       Text(
                         isDisabled ? 'Complete KYC to Fund' : 'Fund Wallet',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: isMobile ? 16 : 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -3184,7 +3184,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
           Expanded(
             child: Text(
               _statusMessage,
-              style: GoogleFonts.poppins(fontSize: 13, color: _statusColor),
+              style: GoogleFonts.inter(fontSize: 13, color: _statusColor),
             ),
           ),
         ],
@@ -3200,12 +3200,12 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF219C7E).withAlpha(76),
+            color: const Color(0xFF168566).withAlpha(76),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -3270,7 +3270,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                 _isBalanceVisible
                     ? '₦${_formatBalance(_currentBalance)}'
                     : '••••••••',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: isMobile ? 28 : 32,
                   fontWeight: FontWeight.w800,
@@ -3323,7 +3323,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             const SizedBox(height: 16),
             Text(
               'Wallet Transfer',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 18 : 22,
                 fontWeight: FontWeight.w600,
                 color: _textColor,
@@ -3332,7 +3332,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             const SizedBox(height: 8),
             Text(
               'Send money to other DalabaPay users',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 13 : 15,
                 color: _hintColor,
               ),
@@ -3352,7 +3352,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                   Expanded(
                     child: Text(
                       'Coming soon! You will be able to send money to other users.',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: isMobile ? 12 : 13,
                         color: _warningColor,
                       ),
@@ -3409,7 +3409,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
   int _timeRemaining = 0;
   Timer? _countdownTimer;
   bool _showVerification = false;
-  final Color _secondaryColor = const Color(0xFF219C7E);
+  final Color _secondaryColor = const Color(0xFF168566);
 
   @override
   void initState() {
@@ -3499,7 +3499,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                           widget.isDedicated
                               ? 'Dedicated Account'
                               : 'Virtual Account',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontWeight: FontWeight.bold,
                             fontSize: isMobile ? 16 : 18,
                             color: widget.primaryColor,
@@ -3512,15 +3512,15 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF7C3AED).withAlpha(25),
+                            color: const Color(0xFF173D88).withAlpha(25),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
                             '1.5% Fee',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
-                              color: const Color(0xFF7C3AED),
+                              color: const Color(0xFF173D88),
                             ),
                           ),
                         ),
@@ -3602,27 +3602,27 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF7C3AED).withAlpha(12),
+                          color: const Color(0xFF173D88).withAlpha(12),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF7C3AED).withAlpha(25),
+                            color: const Color(0xFF173D88).withAlpha(25),
                           ),
                         ),
                         child: Row(
                           children: [
                             const Icon(
                               Icons.info_outline,
-                              color: Color(0xFF7C3AED),
+                              color: Color(0xFF173D88),
                               size: 18,
                             ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 '1.5% of ₦${widget.totalPayable.toStringAsFixed(2)} (₦${widget.fee.toStringAsFixed(2)}) will be deducted from your funding. You will receive ₦${(widget.totalPayable - widget.fee).toStringAsFixed(2)} in your wallet.',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF7C3AED),
+                                  color: const Color(0xFF173D88),
                                 ),
                               ),
                             ),
@@ -3669,7 +3669,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                               children: [
                                 Text(
                                   'Expires In',
-                                  style: GoogleFonts.poppins(
+                                  style: GoogleFonts.inter(
                                     fontSize: 11,
                                     color: Colors.grey.shade600,
                                   ),
@@ -3679,7 +3679,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                                   children: [
                                     Text(
                                       'Time remaining:',
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.inter(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                         color:
@@ -3703,7 +3703,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                                       ),
                                       child: Text(
                                         _formatTime(_timeRemaining),
-                                        style: GoogleFonts.poppins(
+                                        style: GoogleFonts.inter(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                           color:
@@ -3733,7 +3733,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                         children: [
                           Text(
                             '⚠️ Important',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue.shade800,
@@ -3745,7 +3745,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                             '⚠️ A 1.5% service fee (₦${widget.fee.toStringAsFixed(2)}) will be deducted from the amount funded.\n'
                             'Your wallet will be credited automatically when payment is received.\n'
                             '⏰ This account expires in ${widget.expiresIn} minutes.',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               color: Colors.blue.shade700,
                             ),
@@ -3791,7 +3791,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                     ),
                     child: Text(
                       'Cancel',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.grey.shade600,
                         fontSize: 14,
                       ),
@@ -3837,7 +3837,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                           ),
                           child: Text(
                             'History',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               color: widget.primaryColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -3871,7 +3871,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                             ),
                             child: Text(
                               'I\'ve Made Payment',
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 12,
                               ),
@@ -3926,7 +3926,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 10,
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w500,
@@ -3935,7 +3935,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isHighlighted ? 16 : 14,
                     fontWeight:
                         isHighlighted ? FontWeight.bold : FontWeight.w600,
@@ -4192,13 +4192,13 @@ class _VerificationDialogState extends State<_VerificationDialog>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF219C7E).withAlpha(25),
+                  color: const Color(0xFF168566).withAlpha(25),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.check_circle,
                   size: 48,
-                  color: Color(0xFF219C7E),
+                  color: Color(0xFF168566),
                 ),
               ),
             if (_isTimeout)
@@ -4217,12 +4217,12 @@ class _VerificationDialogState extends State<_VerificationDialog>
             const SizedBox(height: 20),
             Text(
               _statusMessage,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color:
                     _isSuccess
-                        ? const Color(0xFF219C7E)
+                        ? const Color(0xFF168566)
                         : (_isTimeout
                             ? Colors.orange.shade700
                             : widget.primaryColor),
@@ -4247,7 +4247,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                     const SizedBox(width: 8),
                     Text(
                       '${_timeRemaining ~/ 60}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: widget.primaryColor,
@@ -4266,7 +4266,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
               const SizedBox(height: 12),
               Text(
                 'Attempt $_attempts/20',
-                style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey),
+                style: GoogleFonts.inter(fontSize: 12, color: Colors.grey),
               ),
             ],
             if (_isSuccess) ...[
@@ -4274,28 +4274,28 @@ class _VerificationDialogState extends State<_VerificationDialog>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF219C7E).withAlpha(12),
+                  color: const Color(0xFF168566).withAlpha(12),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF219C7E).withAlpha(25),
+                    color: const Color(0xFF168566).withAlpha(25),
                   ),
                 ),
                 child: Column(
                   children: [
                     Text(
                       'Amount Credited',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: const Color(0xFF219C7E),
+                        color: const Color(0xFF168566),
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '₦${_creditedAmount.toStringAsFixed(2)}',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF219C7E),
+                        color: const Color(0xFF168566),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -4304,7 +4304,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                         Expanded(
                           child: Text(
                             'Previous Balance',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 11,
                               color: Colors.grey.shade600,
                             ),
@@ -4312,7 +4312,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                         ),
                         Text(
                           '₦${_oldBalance.toStringAsFixed(2)}',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey.shade600,
@@ -4326,19 +4326,19 @@ class _VerificationDialogState extends State<_VerificationDialog>
                         Expanded(
                           child: Text(
                             'New Balance',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF219C7E),
+                              color: const Color(0xFF168566),
                             ),
                           ),
                         ),
                         Text(
                           '₦${_newBalance.toStringAsFixed(2)}',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                           ),
                         ),
                       ],
@@ -4358,7 +4358,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                 ),
                 label: Text(
                   _isSuccess ? 'View Receipt' : 'View Transaction History',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
@@ -4366,7 +4366,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       _isSuccess
-                          ? const Color(0xFF219C7E)
+                          ? const Color(0xFF168566)
                           : widget.primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -4396,7 +4396,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
               },
               child: Text(
                 _isComplete ? 'Close' : 'Cancel',
-                style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                style: GoogleFonts.inter(color: Colors.grey.shade600),
               ),
             ),
           ],

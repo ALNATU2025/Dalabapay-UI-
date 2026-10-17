@@ -24,14 +24,14 @@ class AdminRefundSystemPage extends StatefulWidget {
 class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -380,7 +380,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
       return warningColor;
     }
     if (lowerStatus == 'failed') return errorColor;
-    if (lowerStatus == 'refunded') return const Color(0xFF8B5CF6);
+    if (lowerStatus == 'refunded') return const Color(0xFF173D88);
     if (lowerStatus == 'resolved') return successColor;
     if (lowerStatus == 'rejected') return errorColor;
     if (lowerStatus == 'under_review') return Colors.orange;
@@ -694,7 +694,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -794,7 +794,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                   children: [
                     Text(
                       'Refund & Dispute',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1598,7 +1598,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               const SizedBox(height: 16),
               Text(
                 'No Disputes Found',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 18 : 20,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1852,7 +1852,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               const SizedBox(height: 16),
               Text(
                 'No Refunds Found',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 18 : 20,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2507,7 +2507,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Create Dispute',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2679,7 +2679,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Resolve Dispute',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2863,7 +2863,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Process Refund',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -3016,7 +3016,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Refund Details',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -3117,7 +3117,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Error Loading Data',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -3191,7 +3191,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Items Found',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,

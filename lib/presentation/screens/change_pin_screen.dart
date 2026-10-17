@@ -32,12 +32,12 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
   bool _obscureConfirm = true;
   String? _errorMessage;
 
-  final Color _primaryColor = const Color(0xFF243889);
-  final Color _secondaryColor = const Color(0xFF219C7E);
-  final Color _textColor = const Color(0xFF1C2D5A);
-  final Color _hintColor = const Color(0xFF94A3B8);
-  final Color _successColor = const Color(0xFF219C7E);
-  final Color _errorColor = const Color(0xFFEF4444);
+  final Color _primaryColor = const Color(0xFF102C68);
+  final Color _secondaryColor = const Color(0xFF168566);
+  final Color _textColor = const Color(0xFF14263D);
+  final Color _hintColor = const Color(0xFFA9B2AC);
+  final Color _successColor = const Color(0xFF168566);
+  final Color _errorColor = const Color(0xFFC0392B);
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +49,14 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: Color(0xFF243889),
+            color: Color(0xFF102C68),
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           widget.hasExistingPin ? 'Change PIN' : 'Set Transaction PIN',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             color: _primaryColor,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -84,7 +84,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                       widget.hasExistingPin
                           ? 'Enter your current PIN to change it. New PIN must be 6 digits.'
                           : 'Set a 6-digit PIN for secure transactions.',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 12,
                         color: _textColor,
                       ),
@@ -141,7 +141,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                     Expanded(
                       child: Text(
                         _errorMessage!,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _errorColor,
                         ),
@@ -178,7 +178,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                         )
                         : Text(
                           widget.hasExistingPin ? 'Change PIN' : 'Set PIN',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -203,7 +203,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: _textColor,
@@ -220,7 +220,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
           ],
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: GoogleFonts.poppins(fontSize: 14, color: _hintColor),
+            hintStyle: GoogleFonts.inter(fontSize: 14, color: _hintColor),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -247,7 +247,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               vertical: 14,
             ),
           ),
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 16,
             color: _textColor,
             letterSpacing: 4,
@@ -371,7 +371,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
   void _showSuccess(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: GoogleFonts.poppins()),
+        content: Text(message, style: GoogleFonts.inter()),
         backgroundColor: _successColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

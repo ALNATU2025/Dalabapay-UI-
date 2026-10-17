@@ -18,10 +18,10 @@ class AdminNotificationsPage extends StatefulWidget {
 }
 
 class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
 
   List<AdminNotificationModel> _notifications = [];
   bool _isLoading = true;
@@ -264,7 +264,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
           children: [
             Text(
               'Admin Alerts',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
               ),
@@ -450,7 +450,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
             const SizedBox(height: 12),
             Text(
               'No notifications yet',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -646,7 +646,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                     Expanded(
                       child: Text(
                         n.title,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: textPrimary,

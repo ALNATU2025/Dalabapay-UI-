@@ -24,15 +24,15 @@ class AdminVerifyPaymentPage extends StatefulWidget {
 class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color infoColor = Color(0xFF173D88);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== CONTROLLERS ====================
   final TextEditingController _transactionIdController =
@@ -787,7 +787,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -890,7 +890,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   children: [
                     Text(
                       'Verify Payment',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1069,7 +1069,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 16 : 20,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1137,7 +1137,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   children: [
                     Text(
                       'Transaction Verification',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: isMobile ? 16 : 18,
                         fontWeight: FontWeight.w600,
                         color: textPrimary,
@@ -1738,7 +1738,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                         isSuccess
                             ? 'Transaction Verified!'
                             : 'Verification Failed',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: isMobile ? 16 : 18,
                           fontWeight: FontWeight.w700,
                           color: isSuccess ? successColor : errorColor,
@@ -1986,7 +1986,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                       Expanded(
                         child: Text(
                           'Transaction Details',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: isMobile ? 16 : 18,
                             fontWeight: FontWeight.w700,
                             color: textPrimary,
@@ -2135,7 +2135,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             SizedBox(height: isMobile ? 16 : 20),
             Text(
               'No Transaction Found',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 18 : 22,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -2181,7 +2181,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             SizedBox(height: isMobile ? 16 : 20),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: errorColor,

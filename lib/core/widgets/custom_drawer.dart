@@ -60,26 +60,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   // Define vibrant colors for different icons
   final Map<String, Color> _iconColors = {
-    'Admin Dashboard': const Color(0xFF4F46E5), // Indigo
-    'All Services': const Color(0xFF0891B2), // Cyan
-    'Manage Users': const Color(0xFF059669), // Emerald
-    'Transactions': const Color(0xFF2563EB), // Blue
-    'Status Update': const Color(0xFF7C3AED), // Purple
-    'Refund System': const Color(0xFFDC2626), // Red
+    'Admin Dashboard': const Color(0xFF173D88), // Indigo
+    'All Services': const Color(0xFF168566), // Cyan
+    'Manage Users': const Color(0xFF168566), // Emerald
+    'Transactions': const Color(0xFF173D88), // Blue
+    'Status Update': const Color(0xFF173D88), // Purple
+    'Refund System': const Color(0xFFC0392B), // Red
     'Fund Wallet': const Color(0xFF16A34A), // Green
-    'VTpass Settings': const Color(0xFFF59E0B), // Amber
-    'Self Fund': const Color(0xFFD97706), // Orange
+    'VTpass Settings': const Color(0xFFA76B1D), // Amber
+    'Self Fund': const Color(0xFFA76B1D), // Orange
     'Verify Payments': const Color(0xFF0D9488), // Teal
-    'Notifications': const Color(0xFFEC4899), // Pink
-    'Admin Control': const Color(0xFF6366F1), // Indigo
-    'App Update': const Color(0xFF8B5CF6), // Violet
-    'Transaction Validation': const Color(0xFF0891B2), // Cyan
-    'My Disputes': const Color(0xFFEF4444), // Red
+    'Notifications': const Color(0xFF173D88), // Pink
+    'Admin Control': const Color(0xFF173D88), // Indigo
+    'App Update': const Color(0xFF173D88), // Violet
+    'Transaction Validation': const Color(0xFF168566), // Cyan
+    'My Disputes': const Color(0xFFC0392B), // Red
     'App Settings': const Color(0xFF6B7280), // Gray
-    'Service Commission': const Color(0xFF7C3AED), // Purple
+    'Service Commission': const Color(0xFF173D88), // Purple
     // ✅ ADD TRANSACTION LIMITS COLOR
-    'Transaction Limits': const Color(0xFFF59E0B), // Amber/Yellow for limits
-    'Logout': const Color(0xFFEF4444), // Red
+    'Transaction Limits': const Color(0xFFA76B1D), // Amber/Yellow for limits
+    'Logout': const Color(0xFFC0392B), // Red
   };
 
   @override
@@ -270,7 +270,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     _iconMap[item.title] ?? HugeIcons.strokeRoundedCircle;
                 final iconColor =
                     isSelected
-                        ? const Color(0xFF243889)
+                        ? const Color(0xFF102C68)
                         : (_iconColors[item.title] ?? Colors.grey.shade600);
 
                 return MouseRegion(
@@ -291,14 +291,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         color:
                             isSelected
                                 ? const Color(
-                                  0xFF243889,
+                                  0xFF102C68,
                                 ).withValues(alpha: 0.08)
                                 : Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
                         border:
                             isSelected
                                 ? Border.all(
-                                  color: const Color(0xFF243889),
+                                  color: const Color(0xFF102C68),
                                   width: 1.5,
                                 )
                                 : null,
@@ -311,7 +311,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               color:
                                   isSelected
                                       ? const Color(
-                                        0xFF243889,
+                                        0xFF102C68,
                                       ).withValues(alpha: 0.1)
                                       : iconColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(6),
@@ -320,7 +320,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               icon: iconData,
                               color:
                                   isSelected
-                                      ? const Color(0xFF243889)
+                                      ? const Color(0xFF102C68)
                                       : iconColor,
                               size: 20,
                             ),
@@ -332,7 +332,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               style: TextStyle(
                                 color:
                                     isSelected
-                                        ? const Color(0xFF243889)
+                                        ? const Color(0xFF102C68)
                                         : Colors.grey.shade700,
                                 fontWeight:
                                     isSelected
@@ -351,9 +351,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    const Color(0xFF219C7E),
+                                    const Color(0xFF168566),
                                     const Color(
-                                      0xFF219C7E,
+                                      0xFF168566,
                                     ).withValues(alpha: 0.7),
                                   ],
                                 ),
@@ -412,7 +412,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           height: 12,
                           child: CircularProgressIndicator(
                             strokeWidth: 1.5,
-                            color: const Color(0xFF243889),
+                            color: const Color(0xFF102C68),
                           ),
                         ),
                       ),

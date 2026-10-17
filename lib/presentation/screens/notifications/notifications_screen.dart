@@ -275,9 +275,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 const SizedBox(width: 12),
                 Text(
                   'Delete Notification',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                     fontSize: 18,
                   ),
                 ),
@@ -291,7 +291,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   'Are you sure you want to delete this notification?',
                   style: GoogleFonts.inter(
                     fontSize: 15,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -338,7 +338,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   'Cancel',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                   ),
                 ),
               ),
@@ -684,7 +684,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: textPrimary,
@@ -864,7 +864,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             const SizedBox(height: 16),
             Text(
               'No notifications yet',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -883,9 +883,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   // ==================== BUILD ====================
 
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
 
   @override
   Widget build(BuildContext context) {
@@ -904,7 +904,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
         title: Text(
           'Notifications',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             color: primaryColor,
             fontWeight: FontWeight.w700,
             fontSize: 18,

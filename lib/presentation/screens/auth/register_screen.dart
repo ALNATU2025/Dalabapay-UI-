@@ -69,13 +69,13 @@ class _RegisterScreenState extends State<RegisterScreen>
   AnimationController? _pulseController;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primary = Color(0xFF1E377E);
-  static const Color _primaryLight = Color(0xFF243889);
-  static const Color _secondary = Color(0xFF219C7E);
-  static const Color _secondaryLight = Color(0xFF92D394);
-  static const Color _dark = Color(0xFF0A1628);
+  static const Color _primary = Color(0xFF102C68);
+  static const Color _primaryLight = Color(0xFF102C68);
+  static const Color _secondary = Color(0xFF168566);
+  static const Color _secondaryLight = Color(0xFF5BB592);
+  static const Color _dark = Color(0xFF14263D);
   static const Color _white = Colors.white;
-  static const Color _greyText = Color(0xFF64748B);
+  static const Color _greyText = Color(0xFF728078);
 
   @override
   void initState() {
@@ -562,7 +562,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               const SizedBox(height: 16),
               Text(
                 'Registration Failed',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: _primaryLight,
@@ -593,7 +593,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                   ),
                   child: Text(
                     'Try Again',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -618,7 +618,7 @@ class _RegisterScreenState extends State<RegisterScreen>
             Expanded(child: Text(message, style: GoogleFonts.inter())),
           ],
         ),
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: const Color(0xFFF8F9F5),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 3),
@@ -702,8 +702,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF219C7E).withOpacity(0.08),
-                      const Color(0xFF219C7E).withOpacity(0.03),
+                      const Color(0xFF168566).withOpacity(0.08),
+                      const Color(0xFF168566).withOpacity(0.03),
                       Colors.transparent,
                     ],
                     stops: const [0, 0.5, 1],
@@ -727,8 +727,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      const Color(0xFF1E377E).withOpacity(0.08),
-                      const Color(0xFF1E377E).withOpacity(0.03),
+                      const Color(0xFF102C68).withOpacity(0.08),
+                      const Color(0xFF102C68).withOpacity(0.03),
                       Colors.transparent,
                     ],
                     stops: const [0, 0.5, 1],
@@ -748,7 +748,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               width: 2 + (index % 3).toDouble(),
               height: 2 + (index % 3).toDouble(),
               decoration: BoxDecoration(
-                color: const Color(0xFF219C7E).withOpacity(0.08),
+                color: const Color(0xFF168566).withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
             ),
@@ -796,7 +796,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         children: [
           Text(
             'Create Account',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 26,
               fontWeight: FontWeight.w800,
               color: _primaryLight,
@@ -934,7 +934,7 @@ class _RegisterScreenState extends State<RegisterScreen>
           children: [
             const Icon(
               Icons.verified_rounded,
-              color: Color(0xFF219C7E),
+              color: Color(0xFF168566),
               size: 20,
             ),
             const SizedBox(width: 10),
@@ -944,7 +944,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                 style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1E377E),
+                  color: const Color(0xFF102C68),
                 ),
               ),
             ),
@@ -961,7 +961,7 @@ class _RegisterScreenState extends State<RegisterScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF0FBF7),
+              color: const Color(0xFFEEF8F2),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: _secondary.withOpacity(0.2)),
             ),
@@ -970,7 +970,7 @@ class _RegisterScreenState extends State<RegisterScreen>
               children: [
                 const Icon(
                   Icons.mark_email_read_rounded,
-                  color: Color(0xFF219C7E),
+                  color: Color(0xFF168566),
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -981,7 +981,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                         : 'Check your email for the 6-digit code.',
                     style: GoogleFonts.inter(
                       fontSize: 12,
-                      color: const Color(0xFF1E377E),
+                      color: const Color(0xFF102C68),
                       height: 1.4,
                     ),
                   ),
@@ -1051,7 +1051,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                         )
                       : Text(
                           'Verify',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -1091,13 +1091,13 @@ class _RegisterScreenState extends State<RegisterScreen>
                     height: 16,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      color: Color(0xFF219C7E),
+                      color: Color(0xFF168566),
                     ),
                   )
                 : const Icon(Icons.mail_outline_rounded, size: 18),
             label: Text(
               _isSendingOtp ? 'Sending code...' : 'Verify Email Address',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),
@@ -1303,7 +1303,7 @@ class _RegisterScreenState extends State<RegisterScreen>
       suffixIcon: suffix,
       counterText: counterText,
       filled: true,
-      fillColor: const Color(0xFFF8FAFC),
+      fillColor: const Color(0xFFF8F9F5),
       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
@@ -1329,7 +1329,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0FBF7),
+        color: const Color(0xFFEEF8F2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: _secondary.withOpacity(0.15)),
       ),
@@ -1440,7 +1440,7 @@ class _RegisterScreenState extends State<RegisterScreen>
         borderRadius: BorderRadius.circular(16),
         gradient: _formValid
             ? const LinearGradient(
-                colors: [Color(0xFF219C7E), Color(0xFF1A8A68)],
+                colors: [Color(0xFF168566), Color(0xFF0F6B51)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               )
@@ -1476,7 +1476,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                     children: [
                       Text(
                         'CREATE ACCOUNT',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: _formValid
@@ -1506,7 +1506,7 @@ class _RegisterScreenState extends State<RegisterScreen>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
+        color: const Color(0xFFF8F9F5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade200, width: 1),
       ),
@@ -1537,7 +1537,7 @@ class _FieldLabel extends StatelessWidget {
       style: GoogleFonts.inter(
         fontSize: 12.5,
         fontWeight: FontWeight.w600,
-        color: const Color(0xFF1C2D5A),
+        color: const Color(0xFF14263D),
         letterSpacing: 0.3,
       ),
     );
@@ -1554,14 +1554,14 @@ class _TrustBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF219C7E)),
+        Icon(icon, size: 16, color: const Color(0xFF168566)),
         const SizedBox(width: 6),
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF1C2D5A),
+            color: const Color(0xFF14263D),
           ),
         ),
       ],

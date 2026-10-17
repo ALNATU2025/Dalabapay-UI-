@@ -25,13 +25,13 @@ class AdminSendNotificationPage extends StatefulWidget {
 class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== CONTROLLERS ====================
   final TextEditingController _titleController = TextEditingController();
@@ -344,19 +344,19 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
   Color _getTemplateColor(String type) {
     switch (type) {
       case 'onboarding':
-        return const Color(0xFF4A90E2);
+        return const Color(0xFF173D88);
       case 'promotion':
-        return const Color(0xFFF59E0B);
+        return const Color(0xFFA76B1D);
       case 'alert':
-        return const Color(0xFFEF4444);
+        return const Color(0xFFC0392B);
       case 'transaction':
-        return const Color(0xFF219C7E);
+        return const Color(0xFF168566);
       case 'commission':
-        return const Color(0xFF8B5CF6);
+        return const Color(0xFF173D88);
       case 'referral':
-        return const Color(0xFFEC4899);
+        return const Color(0xFF173D88);
       case 'kyc':
-        return const Color(0xFF3B82F6);
+        return const Color(0xFF173D88);
       case 'announcement':
         return const Color(0xFFF97316);
       default:
@@ -655,7 +655,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                 const SizedBox(height: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                     color: textPrimary,
@@ -1104,7 +1104,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1203,7 +1203,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   children: [
                     Text(
                       'Send Notification',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1273,14 +1273,14 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
             title: 'Sent',
             value: _sentNotifications.toString(),
             icon: HugeIcons.strokeRoundedSent02,
-            color: const Color(0xFF3B82F6),
+            color: const Color(0xFF173D88),
             isMobile: isMobile,
           ),
           _buildStatCard(
             title: 'Success Rate',
             value: '${_successRate.toStringAsFixed(1)}%',
             icon: HugeIcons.strokeRoundedAutoConversations,
-            color: const Color(0xFFF59E0B),
+            color: const Color(0xFFA76B1D),
             isMobile: isMobile,
           ),
         ],
@@ -1337,7 +1337,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 16 : 20,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1447,7 +1447,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                             width: 16,
                             height: 16,
                             decoration: const BoxDecoration(
-                              color: Color(0xFF219C7E),
+                              color: Color(0xFF168566),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -1867,7 +1867,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                                   ? Container(
                                     padding: const EdgeInsets.all(4),
                                     decoration: const BoxDecoration(
-                                      color: Color(0xFF219C7E),
+                                      color: Color(0xFF168566),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
@@ -2062,7 +2062,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   SizedBox(width: isMobile ? 10 : 14),
                   Text(
                     'Compose Notification',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 16 : 18,
                       fontWeight: FontWeight.w600,
                       color: textPrimary,
@@ -2275,7 +2275,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
               SizedBox(height: isMobile ? 16 : 20),
               Text(
                 'Access Denied',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 20 : 24,
                   fontWeight: FontWeight.w700,
                   color: errorColor,

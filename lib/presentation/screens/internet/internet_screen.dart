@@ -83,11 +83,11 @@ class _InternetScreenState extends State<InternetScreen>
   late Animation<double> _shakeAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryNavy = Color(0xFF243889);
-  static const Color _secondaryTeal = Color(0xFF219C7E);
-  static const Color _textDark = Color(0xFF1C2D5A);
-  static const Color _textMuted = Color(0xFF64748B);
-  static const Color _bgCanvas = Color(0xFFF8FAFC);
+  static const Color _primaryNavy = Color(0xFF102C68);
+  static const Color _secondaryTeal = Color(0xFF168566);
+  static const Color _textDark = Color(0xFF14263D);
+  static const Color _textMuted = Color(0xFF728078);
+  static const Color _bgCanvas = Color(0xFFF8F9F5);
 
   // Network Providers
   final List<Map<String, dynamic>> _networks = [
@@ -116,7 +116,7 @@ class _InternetScreenState extends State<InternetScreen>
       'name': '9mobile',
       'apiName': 'etisalat',
       'image': 'assets/t2.png',
-      'color': const Color(0xFFF57C00),
+      'color': const Color(0xFFA76B1D),
       'serviceId': 'etisalat-data',
     },
   ];
@@ -287,7 +287,7 @@ class _InternetScreenState extends State<InternetScreen>
           SnackBar(
             content: Text(
               'Please type phone number or select from contacts',
-              style: GoogleFonts.poppins(fontSize: 13),
+              style: GoogleFonts.inter(fontSize: 13),
             ),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -330,7 +330,7 @@ class _InternetScreenState extends State<InternetScreen>
                       const SizedBox(width: 8),
                       Text(
                         'Select Contact (Web Test Mode)',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
                           color: _primaryNavy,
@@ -347,7 +347,7 @@ class _InternetScreenState extends State<InternetScreen>
               const SizedBox(height: 4),
               Text(
                 'Note: On native Android builds, your device\'s native phonebook will open automatically.',
-                style: GoogleFonts.poppins(fontSize: 12, color: _textMuted),
+                style: GoogleFonts.inter(fontSize: 12, color: _textMuted),
               ),
               const SizedBox(height: 16),
               ...webTestContacts.map((contact) {
@@ -360,7 +360,7 @@ class _InternetScreenState extends State<InternetScreen>
                     backgroundColor: _primaryNavy.withValues(alpha: 0.08),
                     child: Text(
                       contact['name']![0],
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: _primaryNavy,
                         fontWeight: FontWeight.bold,
                       ),
@@ -368,7 +368,7 @@ class _InternetScreenState extends State<InternetScreen>
                   ),
                   title: Text(
                     contact['name']!,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                       color: _textDark,
@@ -376,7 +376,7 @@ class _InternetScreenState extends State<InternetScreen>
                   ),
                   subtitle: Text(
                     contact['phone']!,
-                    style: GoogleFonts.poppins(fontSize: 12, color: _textMuted),
+                    style: GoogleFonts.inter(fontSize: 12, color: _textMuted),
                   ),
                   onTap: () {
                     _phoneController.text = contact['phone']!;
@@ -773,7 +773,7 @@ class _InternetScreenState extends State<InternetScreen>
             Expanded(
               child: Text(
                 displayMsg,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -782,7 +782,7 @@ class _InternetScreenState extends State<InternetScreen>
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFDC2626),
+        backgroundColor: const Color(0xFFC0392B),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -1201,7 +1201,7 @@ class _InternetScreenState extends State<InternetScreen>
       ),
       title: Text(
         'Internet Data Top-Up',
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.inter(
           color: _primaryNavy,
           fontSize: 18,
           fontWeight: FontWeight.w700,
@@ -1238,7 +1238,7 @@ class _InternetScreenState extends State<InternetScreen>
               _isBalanceVisible
                   ? '₦${_walletBalance.toStringAsFixed(2)}'
                   : '••••••',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 color: _primaryNavy,
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -1356,7 +1356,7 @@ class _InternetScreenState extends State<InternetScreen>
                 const SizedBox(width: 8),
                 Text(
                   'No recent data recharges yet',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 13,
                     color: _textMuted,
                     fontWeight: FontWeight.w500,
@@ -1397,7 +1397,7 @@ class _InternetScreenState extends State<InternetScreen>
                   backgroundColor: _primaryNavy.withValues(alpha: 0.08),
                   child: Text(
                     (contact['name'] ?? 'U')[0].toUpperCase(),
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       color: _primaryNavy,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -1432,7 +1432,7 @@ class _InternetScreenState extends State<InternetScreen>
             const SizedBox(height: 6),
             Text(
               contact['name'] ?? '',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: _textDark,
@@ -1489,7 +1489,7 @@ class _InternetScreenState extends State<InternetScreen>
             ],
             decoration: InputDecoration(
               hintText: 'Enter 11-digit phone number',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
               ),
@@ -1531,7 +1531,7 @@ class _InternetScreenState extends State<InternetScreen>
                 vertical: 16,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w600,
               color: _textDark,
@@ -1606,7 +1606,7 @@ class _InternetScreenState extends State<InternetScreen>
                   const SizedBox(height: 4),
                   Text(
                     network['name'],
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 11,
                       fontWeight:
                           isSelected ? FontWeight.w800 : FontWeight.w600,
@@ -1642,7 +1642,7 @@ class _InternetScreenState extends State<InternetScreen>
           const SizedBox(height: 12),
           Text(
             'Select a Network Operator',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 15,
               fontWeight: FontWeight.w700,
               color: _textDark,
@@ -1652,7 +1652,7 @@ class _InternetScreenState extends State<InternetScreen>
           Text(
             'Choose your network provider above to view available data bundles.',
             textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(fontSize: 13, color: _textMuted),
+            style: GoogleFonts.inter(fontSize: 13, color: _textMuted),
           ),
         ],
       ),
@@ -1700,7 +1700,7 @@ class _InternetScreenState extends State<InternetScreen>
             const SizedBox(height: 12),
             Text(
               'No data plans available',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: _textDark,
@@ -1709,7 +1709,7 @@ class _InternetScreenState extends State<InternetScreen>
             const SizedBox(height: 4),
             Text(
               'Please try selecting another network operator',
-              style: GoogleFonts.poppins(fontSize: 12, color: _textMuted),
+              style: GoogleFonts.inter(fontSize: 12, color: _textMuted),
             ),
           ],
         ),
@@ -1790,7 +1790,7 @@ class _InternetScreenState extends State<InternetScreen>
                           children: [
                             Text(
                               planName,
-                              style: GoogleFonts.poppins(
+                              style: GoogleFonts.inter(
                                 fontSize: 13,
                                 fontWeight:
                                     isSelected
@@ -1802,7 +1802,7 @@ class _InternetScreenState extends State<InternetScreen>
                             if (validity.isNotEmpty)
                               Text(
                                 'Validity: $validity',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 11,
                                   color: _textMuted,
                                 ),
@@ -1813,7 +1813,7 @@ class _InternetScreenState extends State<InternetScreen>
                       const SizedBox(width: 8),
                       Text(
                         '₦$amount',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
                           color: _secondaryTeal,
@@ -1918,7 +1918,7 @@ class _InternetScreenState extends State<InternetScreen>
                           const SizedBox(width: 8),
                           Text(
                             'Proceed to Pay',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -2016,7 +2016,7 @@ class _InternetScreenState extends State<InternetScreen>
                               const SizedBox(height: 4),
                               Text(
                                 'Confirm Payment',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
                                   color: _textDark,
@@ -2078,7 +2078,7 @@ class _InternetScreenState extends State<InternetScreen>
             children: [
               Text(
                 'Network',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _textMuted,
@@ -2098,7 +2098,7 @@ class _InternetScreenState extends State<InternetScreen>
                   const SizedBox(width: 6),
                   Text(
                     _selectedNetwork ?? 'N/A',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
                       color: _textDark,
@@ -2114,7 +2114,7 @@ class _InternetScreenState extends State<InternetScreen>
             children: [
               Text(
                 'Phone Number',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _textMuted,
@@ -2122,7 +2122,7 @@ class _InternetScreenState extends State<InternetScreen>
               ),
               Text(
                 phone.isNotEmpty ? phone : 'N/A',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
                   color: _textDark,
@@ -2136,7 +2136,7 @@ class _InternetScreenState extends State<InternetScreen>
             children: [
               Text(
                 'Data Bundle',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _textMuted,
@@ -2146,7 +2146,7 @@ class _InternetScreenState extends State<InternetScreen>
                 child: Text(
                   planName,
                   textAlign: TextAlign.right,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
                     color: _textDark,
@@ -2163,7 +2163,7 @@ class _InternetScreenState extends State<InternetScreen>
             children: [
               Text(
                 'Amount',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: _textMuted,
@@ -2171,7 +2171,7 @@ class _InternetScreenState extends State<InternetScreen>
               ),
               Text(
                 '₦${amount.toStringAsFixed(2)}',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
                   color: _secondaryTeal,
@@ -2198,7 +2198,7 @@ class _InternetScreenState extends State<InternetScreen>
         children: [
           Text(
             'Available Balance',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: _textMuted,
@@ -2206,7 +2206,7 @@ class _InternetScreenState extends State<InternetScreen>
           ),
           Text(
             '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w800,
               color: _secondaryTeal,
@@ -2235,11 +2235,11 @@ class _InternetScreenState extends State<InternetScreen>
           decoration: BoxDecoration(
             color:
                 hasError
-                    ? const Color(0xFFFEF2F2)
+                    ? const Color(0xFFFDECEA)
                     : _primaryNavy.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: hasError ? const Color(0xFFEF4444) : _primaryNavy,
+              color: hasError ? const Color(0xFFC0392B) : _primaryNavy,
               width: hasError ? 2 : 1.5,
             ),
           ),
@@ -2253,25 +2253,25 @@ class _InternetScreenState extends State<InternetScreen>
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Enter transaction PIN',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: GoogleFonts.inter(
                       color:
                           hasError
-                              ? const Color(0xFFEF4444).withValues(alpha: 0.7)
+                              ? const Color(0xFFC0392B).withValues(alpha: 0.7)
                               : Colors.grey.shade600,
                       fontSize: 13,
                     ),
                     prefixIcon: Icon(
                       Icons.lock_outline_rounded,
-                      color: hasError ? const Color(0xFFEF4444) : _primaryNavy,
+                      color: hasError ? const Color(0xFFC0392B) : _primaryNavy,
                       size: 20,
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: hasError ? const Color(0xFFDC2626) : Colors.black,
+                    color: hasError ? const Color(0xFFC0392B) : Colors.black,
                   ),
                   keyboardType: TextInputType.number,
                   inputFormatters: [
@@ -2292,22 +2292,22 @@ class _InternetScreenState extends State<InternetScreen>
                     horizontal: 16,
                     vertical: 6,
                   ),
-                  color: const Color(0xFFFEE2E2),
+                  color: const Color(0xFFFDECEA),
                   child: Row(
                     children: [
                       const Icon(
                         Icons.warning_amber_rounded,
-                        color: Color(0xFFDC2626),
+                        color: Color(0xFFC0392B),
                         size: 16,
                       ),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           _pinValidationError!,
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFFDC2626),
+                            color: const Color(0xFFC0392B),
                           ),
                         ),
                       ),
@@ -2321,7 +2321,7 @@ class _InternetScreenState extends State<InternetScreen>
                       _isProcessingPayment ? null : _processPaymentWithPIN,
                   style: TextButton.styleFrom(
                     backgroundColor:
-                        hasError ? const Color(0xFFDC2626) : _secondaryTeal,
+                        hasError ? const Color(0xFFC0392B) : _secondaryTeal,
                     foregroundColor: Colors.white,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.vertical(
@@ -2351,7 +2351,7 @@ class _InternetScreenState extends State<InternetScreen>
                               const SizedBox(width: 8),
                               Text(
                                 'Pay with PIN',
-                                style: GoogleFonts.poppins(
+                                style: GoogleFonts.inter(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -2412,7 +2412,7 @@ class _InternetScreenState extends State<InternetScreen>
                       Expanded(
                         child: Text(
                           'Pay with $_biometricName',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: _primaryNavy,
@@ -2442,7 +2442,7 @@ class _InternetScreenState extends State<InternetScreen>
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: GoogleFonts.poppins(
+      style: GoogleFonts.inter(
         fontSize: 14,
         fontWeight: FontWeight.w700,
         color: _primaryNavy,
@@ -2461,7 +2461,7 @@ class _InternetScreenState extends State<InternetScreen>
             const SizedBox(height: 16),
             Text(
               'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: _textDark,
@@ -2471,7 +2471,7 @@ class _InternetScreenState extends State<InternetScreen>
             Text(
               'Internet data service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 14, color: _textMuted),
+              style: GoogleFonts.inter(fontSize: 14, color: _textMuted),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
@@ -2489,7 +2489,7 @@ class _InternetScreenState extends State<InternetScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w700),
+                style: GoogleFonts.inter(fontWeight: FontWeight.w700),
               ),
             ),
           ],
@@ -2556,7 +2556,7 @@ class _InternetScreenState extends State<InternetScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: Colors.red.shade700,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -2566,7 +2566,7 @@ class _InternetScreenState extends State<InternetScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -2576,7 +2576,7 @@ class _InternetScreenState extends State<InternetScreen>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     color: _secondaryTeal,
                     fontWeight: FontWeight.w700,
                   ),

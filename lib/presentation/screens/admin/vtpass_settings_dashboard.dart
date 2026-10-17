@@ -25,15 +25,15 @@ class VtpassSettingsDashboard extends StatefulWidget {
 class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color infoColor = Color(0xFF173D88);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   bool _useSandbox = true;
@@ -1049,7 +1049,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1148,7 +1148,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                   children: [
                     Text(
                       'VTpass Settings',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isSmall ? 16 : (isMobile ? 20 : 28),
                         fontWeight: FontWeight.w700,
@@ -2449,7 +2449,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
             ),
             title: Text(
               'All VTpass Alerts',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 18 : 20,
                 fontWeight: FontWeight.bold,
                 color: textPrimary,
@@ -2621,7 +2621,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 SizedBox(height: isMobile ? 16 : 24),
                 Text(
                   'Access Denied',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 22 : 28,
                     fontWeight: FontWeight.w700,
                     color: errorColor,

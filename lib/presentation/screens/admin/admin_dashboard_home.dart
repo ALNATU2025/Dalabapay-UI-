@@ -72,14 +72,14 @@ class AdminDashboardHome extends StatefulWidget {
 class _AdminDashboardHomeState extends State<AdminDashboardHome>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color infoColor = Color(0xFF173D88);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== STATE ====================
@@ -527,7 +527,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -553,7 +553,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   children: [
                     Text(
                       '👋 Welcome back, Admin!',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 18 : 24,
                         fontWeight: FontWeight.w700,
@@ -811,7 +811,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   ),
                 Text(
                   value,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 18 : 24,
                     fontWeight: FontWeight.w700,
                     color: textPrimary,
@@ -897,7 +897,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Period Performance',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1045,7 +1045,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'User Growth (Last 7 Days)',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1140,7 +1140,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Revenue Trend (Last 7 Days)',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1241,7 +1241,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Transaction Status',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1377,7 +1377,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Recent Transactions',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1598,7 +1598,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                     // Title
                     Text(
                       'Transaction Details',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: isMobile ? 18 : 20,
                         fontWeight: FontWeight.w700,
                         color: textPrimary,
@@ -1767,7 +1767,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
             const SizedBox(height: 16),
             Text(
               'Failed to Load Dashboard',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,

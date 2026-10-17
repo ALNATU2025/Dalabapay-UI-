@@ -143,7 +143,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundColor: const Color(0xFF1E377E),
+                backgroundColor: const Color(0xFF102C68),
                 child: Text(
                   _fullName.isNotEmpty ? _fullName[0].toUpperCase() : 'U',
                   style: const TextStyle(fontSize: 30, color: Colors.white),
@@ -154,10 +154,10 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 _fullName.isNotEmpty
                     ? 'Welcome back, $_fullName'
                     : 'Welcome back',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
               ),
               const SizedBox(height: 4),
@@ -165,7 +165,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 'Enter your PIN to unlock',
                 style: GoogleFonts.inter(
                   fontSize: 14,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                 ),
               ),
 
@@ -184,12 +184,12 @@ class _PinLockScreenState extends State<PinLockScreen> {
                       shape: BoxShape.circle,
                       color:
                           isFilled
-                              ? const Color(0xFF1E377E)
+                              ? const Color(0xFF102C68)
                               : Colors.grey.shade200,
                       border: Border.all(
                         color:
                             isFilled
-                                ? const Color(0xFF1E377E)
+                                ? const Color(0xFF102C68)
                                 : Colors.grey.shade300,
                         width: 1.5,
                       ),
@@ -288,10 +288,10 @@ class _PinLockScreenState extends State<PinLockScreen> {
         child: Center(
           child: Text(
             digit,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 24,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF1C2D5A),
+              color: const Color(0xFF14263D),
             ),
           ),
         ),
@@ -310,7 +310,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
           color: Colors.grey.shade100,
           border: Border.all(color: Colors.grey.shade300, width: 1),
         ),
-        child: const Icon(Icons.backspace, size: 24, color: Color(0xFF1C2D5A)),
+        child: const Icon(Icons.backspace, size: 24, color: Color(0xFF14263D)),
       ),
     );
   }
@@ -341,7 +341,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [Color(0xFF92D394), Color(0xFF243889)],
+            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           ),
         ),
         child:

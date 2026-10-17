@@ -23,15 +23,15 @@ class AdminControlPage extends StatefulWidget {
 class _AdminControlPageState extends State<AdminControlPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color infoColor = Color(0xFF173D88);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== CONTROLLERS ====================
@@ -789,7 +789,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                 Expanded(
                   child: Text(
                     user['fullName']?.toString() ?? 'User Details',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1250,7 +1250,7 @@ class _AdminControlPageState extends State<AdminControlPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1360,7 +1360,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                   children: [
                     Text(
                       'Admin Control',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1514,7 +1514,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 16 : 20,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1807,7 +1807,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               const SizedBox(width: 8),
               Text(
                 'Admin Users (${_adminsList.length})',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2007,7 +2007,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               const SizedBox(width: 8),
               Text(
                 'Add User as Admin',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2138,7 +2138,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               const SizedBox(width: 8),
               Text(
                 'Users (${_filteredUsers.length})',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,

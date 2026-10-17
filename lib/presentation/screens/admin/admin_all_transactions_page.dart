@@ -33,14 +33,14 @@ class AdminAllTransactionsPage extends StatefulWidget {
 class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -928,7 +928,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           const SizedBox(height: 16),
                           Text(
                             'No Transactions Found',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: isMobile ? 20 : 24,
                               fontWeight: FontWeight.w700,
                               color: textPrimary,
@@ -1170,7 +1170,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1331,7 +1331,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                   children: [
                     Text(
                       'All Transactions',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1552,7 +1552,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                     const SizedBox(height: 4),
                     Text(
                       _formatCurrency(allTime['amount'] ?? 0.0),
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 22 : 30,
                         fontWeight: FontWeight.w700,
@@ -1685,7 +1685,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
             const SizedBox(height: 4),
             Text(
               _formatCurrency(amount),
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 16 : 20,
                 fontWeight: FontWeight.w700,
                 color: color,
@@ -2660,7 +2660,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           style: pw.TextStyle(
                             fontSize: 24,
                             fontWeight: pw.FontWeight.bold,
-                            color: PdfColor.fromInt(0xFF243889),
+                            color: PdfColor.fromInt(0xFF102C68),
                           ),
                         ),
                         pw.Text(
@@ -2684,7 +2684,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               pw.Container(
                 padding: const pw.EdgeInsets.all(12),
                 decoration: pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFFF8FAFC),
+                  color: PdfColor.fromInt(0xFFF8F9F5),
                   borderRadius: pw.BorderRadius.circular(8),
                 ),
                 child: pw.Row(
@@ -2719,7 +2719,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 children: [
                   pw.TableRow(
                     decoration: const pw.BoxDecoration(
-                      color: PdfColor.fromInt(0xFF243889),
+                      color: PdfColor.fromInt(0xFF102C68),
                     ),
                     children:
                         [
@@ -2826,7 +2826,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               pw.Container(
                 padding: const pw.EdgeInsets.all(12),
                 decoration: pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFFF8FAFC),
+                  color: PdfColor.fromInt(0xFFF8F9F5),
                   borderRadius: pw.BorderRadius.circular(8),
                 ),
                 child: pw.Center(
@@ -2878,13 +2878,13 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
   PdfColor _getStatusColorPdf(String status) {
     final statusLower = status.toLowerCase();
     if (statusLower.contains('success') || statusLower.contains('completed')) {
-      return PdfColor.fromInt(0xFF219C7E);
+      return PdfColor.fromInt(0xFF168566);
     } else if (statusLower.contains('pending') ||
         statusLower.contains('processing')) {
-      return PdfColor.fromInt(0xFFF59E0B);
+      return PdfColor.fromInt(0xFFA76B1D);
     } else if (statusLower.contains('failed') ||
         statusLower.contains('cancelled')) {
-      return PdfColor.fromInt(0xFFEF4444);
+      return PdfColor.fromInt(0xFFC0392B);
     }
     return PdfColors.grey;
   }
@@ -2933,7 +2933,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 const SizedBox(height: 16),
                 Text(
                   'Export Options',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 18 : 20,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -3193,7 +3193,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 const SizedBox(height: 16),
                 Text(
                   'Something went wrong',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 20 : 24,
                     fontWeight: FontWeight.w700,
                     color: errorColor,

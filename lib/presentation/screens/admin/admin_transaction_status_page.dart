@@ -26,15 +26,15 @@ class AdminTransactionStatusPage extends StatefulWidget {
 class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
   // ignore: unused_field
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -129,7 +129,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Transaction Locked',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -724,7 +724,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
       return warningColor;
     }
     if (lowerStatus == 'failed') return errorColor;
-    if (lowerStatus == 'refunded') return const Color(0xFF8B5CF6);
+    if (lowerStatus == 'refunded') return const Color(0xFF173D88);
     return Colors.grey;
   }
 
@@ -1027,7 +1027,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1126,7 +1126,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   children: [
                     Text(
                       'Transaction Status',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1303,7 +1303,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   value: _refundedCount.toString(),
                   label: 'Refunded',
                   icon: HugeIcons.strokeRoundedMoney02,
-                  color: const Color(0xFF8B5CF6),
+                  color: const Color(0xFF173D88),
                   isMobile: isMobile,
                 ),
               ),
@@ -1711,7 +1711,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               const SizedBox(height: 16),
               Text(
                 'Select a Transaction',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -3436,7 +3436,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                  colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                   stops: [0.06, 0.41],
                 ),
                 borderRadius: BorderRadius.only(
@@ -3465,7 +3465,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       children: [
                         Text(
                           'Confirm Status Change',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: isMobile ? 16 : 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -3804,7 +3804,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Confirm Wallet Funding',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -3938,7 +3938,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     const SizedBox(width: 8),
                     Text(
                       'Funding Successful!',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: textPrimary,
@@ -4110,7 +4110,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Status Updated!',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -4215,7 +4215,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   const SizedBox(height: 12),
                   Text(
                     'Transaction Receipt',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: isMobile ? 18 : 20,
                       fontWeight: FontWeight.bold,
                       color: textPrimary,
@@ -4334,7 +4334,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Error Loading Transactions',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -4408,7 +4408,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Transactions Found',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -4591,7 +4591,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           const SizedBox(height: 16),
                           Text(
                             'Select a Transaction',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: textPrimary,

@@ -25,14 +25,14 @@ class AdminFundWalletPage extends StatefulWidget {
 class _AdminFundWalletPageState extends State<AdminFundWalletPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
-  static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
+  static const Color errorColor = Color(0xFFC0392B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _users = [];
@@ -602,7 +602,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -703,7 +703,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                   children: [
                     Text(
                       'Fund Wallet',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1908,7 +1908,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             ),
             title: Text(
               title,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontWeight: FontWeight.bold,
                 color: textPrimary,
               ),
@@ -1974,7 +1974,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -2049,7 +2049,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Users Found',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,

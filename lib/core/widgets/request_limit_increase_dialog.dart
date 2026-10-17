@@ -19,9 +19,9 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
     required this.requestedAmount,
   });
 
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color warningColor = Color(0xFFF59E0B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color warningColor = Color(0xFFA76B1D);
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +63,15 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
                     children: [
                       Text(
                         'Limit Reached',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: isMobile ? 16 : 18,
                           fontWeight: FontWeight.w700,
-                          color: const Color(0xFF1C2D5A),
+                          color: const Color(0xFF14263D),
                         ),
                       ),
                       Text(
                         '$serviceLabel - $limitLabel',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: isMobile ? 12 : 13,
                           color: Colors.grey.shade600,
                         ),
@@ -147,7 +147,7 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Contact admin to request a limit increase for this service.',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: isMobile ? 12 : 13,
                         fontWeight: FontWeight.w600,
                         color: Colors.blue.shade800,
@@ -180,7 +180,7 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
                 ),
                 label: Text(
                   'Chat Admin on WhatsApp',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 14 : 16,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
@@ -204,7 +204,7 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
                 ),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: isMobile ? 13 : 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey.shade700,
@@ -224,7 +224,7 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: Colors.grey.shade600,
@@ -232,7 +232,7 @@ class RequestLimitIncreaseDialog extends StatelessWidget {
         ),
         Text(
           value,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w700,
             color: valueColor,

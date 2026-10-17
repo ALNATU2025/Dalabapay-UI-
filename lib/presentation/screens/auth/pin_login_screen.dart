@@ -32,12 +32,12 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   bool _isAutoLogout = false;
   bool _biometricAvailable = false;
 
-  final Color _primaryColor = const Color(0xFF243889);
-  final Color _secondaryColor = const Color(0xFF219C7E);
+  final Color _primaryColor = const Color(0xFF102C68);
+  final Color _secondaryColor = const Color(0xFF168566);
   final Color _backgroundColor = Colors.white;
-  final Color _digitColor = const Color(0xFF1C2D5A);
-  final Color _pinDotColor = const Color(0xFF243889);
-  final Color _errorColor = const Color(0xFFE74C3C);
+  final Color _digitColor = const Color(0xFF14263D);
+  final Color _pinDotColor = const Color(0xFF102C68);
+  final Color _errorColor = const Color(0xFFC0392B);
 
   @override
   void initState() {
@@ -232,7 +232,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                 Expanded(
                   child: Text(
                     title,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold,
                       color: _errorColor,
                       fontSize: 18,
@@ -287,7 +287,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                 const SizedBox(width: 12),
                 Text(
                   'Invalid PIN',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold,
                     color: _errorColor,
                     fontSize: 18,
@@ -374,7 +374,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                 const SizedBox(width: 12),
                 Text(
                   'Account Locked',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold,
                     color: Colors.red.shade700,
                     fontSize: 18,
@@ -791,7 +791,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
               const SizedBox(width: 12),
               Text(
                 _fullName,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: _primaryColor,
@@ -893,7 +893,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
         child: Center(
           child: Text(
             digit,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 24,
               fontWeight: FontWeight.w600,
               color: _digitColor,
@@ -918,7 +918,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
         child: const Icon(
           Icons.backspace,
           size: 24,
-          color: Color(0xFF1C2D5A),
+          color: Color(0xFF14263D),
         ),
       ),
     );
@@ -950,11 +950,11 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
           gradient: const LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
-            colors: [Color(0xFF92D394), Color(0xFF243889)],
+            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF243889).withOpacity(0.3),
+              color: const Color(0xFF102C68).withOpacity(0.3),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -1014,7 +1014,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
         children: [
           Text(
             _transactionPinSet ? 'Enter Your PIN' : 'PIN Not Set',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color:
@@ -1033,7 +1033,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
               fontSize: 14,
               color:
                   _transactionPinSet
-                      ? const Color(0xFF64748B)
+                      ? const Color(0xFF728078)
                       : Colors.orange.shade700,
             ),
             textAlign: TextAlign.center,
@@ -1062,7 +1062,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                   const SizedBox(height: 12),
                   Text(
                     'No PIN Set',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.orange.shade700,
@@ -1073,7 +1073,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                     'You need to set up a transaction PIN before you can login with PIN.',
                     style: GoogleFonts.inter(
                       fontSize: 14,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -1146,7 +1146,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
                 'Login with Email',
                 style: GoogleFonts.inter(
                   fontSize: 13,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                 ),
               ),
             ),

@@ -53,11 +53,11 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
   bool _obscureResetConfirmPin = true;
 
   // Brand Colors
-  static const Color _brand = Color(0xFF219C7E);
-  static const Color _brandDark = Color(0xFF1C2D5A);
-  static const Color _primaryColor = Color(0xFF243889);
-  static const Color _errorColor = Color(0xFFE74C3C);
-  static const Color _greyText = Color(0xFF64748B);
+  static const Color _brand = Color(0xFF168566);
+  static const Color _brandDark = Color(0xFF14263D);
+  static const Color _primaryColor = Color(0xFF102C68);
+  static const Color _errorColor = Color(0xFFC0392B);
+  static const Color _greyText = Color(0xFF728078);
 
   @override
   void initState() {
@@ -379,7 +379,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
             const SizedBox(height: 16),
             Text(
               title,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: _primaryColor,
@@ -443,7 +443,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
             const SizedBox(height: 16),
             Text(
               'PIN Reset Successful!',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: _primaryColor,
@@ -497,7 +497,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
           _showResetSection
               ? 'Reset PIN'
               : (widget.hasExistingPin ? 'Change PIN' : 'Set PIN'),
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: _brandDark,
@@ -557,7 +557,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
             gradient: const LinearGradient(
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
-              colors: [Color(0xFF92D394), _primaryColor],
+              colors: [Color(0xFF5BB592), _primaryColor],
             ),
             borderRadius: BorderRadius.circular(16),
           ),
@@ -579,7 +579,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               const SizedBox(height: 12),
               Text(
                 isSetMode ? 'Set Transaction PIN' : 'Change Transaction PIN',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -691,7 +691,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color(0xFFF0FBF7),
+            color: const Color(0xFFEEF8F2),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: _brand.withOpacity(0.15)),
           ),
@@ -817,7 +817,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               const SizedBox(height: 12),
               Text(
                 'Reset Transaction PIN',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -840,7 +840,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFFF7FDFB),
+            color: const Color(0xFFF3FAF6),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: Colors.grey.shade200),
           ),
@@ -902,7 +902,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                           _resetCooldown > 0
                               ? 'Wait ${_resetCooldown}s'
                               : 'SEND RESET CODE',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -960,7 +960,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
                       )
                     : Text(
                         'VERIFY CODE',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: _primaryColor,
@@ -978,7 +978,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
           const SizedBox(height: 16),
           Text(
             'Set New PIN',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: _primaryColor,
@@ -1111,7 +1111,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
             : null,
         counterText: '',
         filled: true,
-        fillColor: const Color(0xFFF7FDFB),
+        fillColor: const Color(0xFFF3FAF6),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         enabledBorder: OutlineInputBorder(
@@ -1137,7 +1137,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
         gradient: const LinearGradient(
-          colors: [Color(0xFF27B48F), Color(0xFF1A8A68)],
+          colors: [Color(0xFF168566), Color(0xFF0F6B51)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -1170,7 +1170,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
               )
             : Text(
                 label,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,

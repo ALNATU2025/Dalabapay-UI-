@@ -31,12 +31,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _hasNumber = false;
   bool _hasSpecialChar = false;
 
-  final Color _primaryColor = const Color(0xFF243889);
-  final Color _secondaryColor = const Color(0xFF219C7E);
-  final Color _textColor = const Color(0xFF1C2D5A);
-  final Color _hintColor = const Color(0xFF94A3B8);
-  final Color _successColor = const Color(0xFF219C7E);
-  final Color _errorColor = const Color(0xFFEF4444);
+  final Color _primaryColor = const Color(0xFF102C68);
+  final Color _secondaryColor = const Color(0xFF168566);
+  final Color _textColor = const Color(0xFF14263D);
+  final Color _hintColor = const Color(0xFFA9B2AC);
+  final Color _successColor = const Color(0xFF168566);
+  final Color _errorColor = const Color(0xFFC0392B);
 
   void _validatePassword(String password) {
     setState(() {
@@ -66,14 +66,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: Color(0xFF243889),
+            color: Color(0xFF102C68),
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Change Password',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             color: _primaryColor,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -99,7 +99,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Expanded(
                     child: Text(
                       'Your new password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 12,
                         color: _textColor,
                       ),
@@ -125,7 +125,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     Expanded(
                       child: Text(
                         _errorMessage!,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _errorColor,
                         ),
@@ -150,7 +150,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     Expanded(
                       child: Text(
                         _successMessage!,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 12,
                           color: _successColor,
                         ),
@@ -198,7 +198,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 children: [
                   Text(
                     'Password must contain:',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: _textColor,
@@ -250,7 +250,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         )
                         : Text(
                           'Change Password',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.inter(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -276,7 +276,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.inter(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: _textColor,
@@ -289,7 +289,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           onChanged: onChanged,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: GoogleFonts.poppins(fontSize: 14, color: _hintColor),
+            hintStyle: GoogleFonts.inter(fontSize: 14, color: _hintColor),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300),
@@ -316,7 +316,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               vertical: 14,
             ),
           ),
-          style: GoogleFonts.poppins(fontSize: 14, color: _textColor),
+          style: GoogleFonts.inter(fontSize: 14, color: _textColor),
         ),
       ],
     );
@@ -335,7 +335,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           const SizedBox(width: 8),
           Text(
             text,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.inter(
               color: isMet ? _successColor : _hintColor,
               fontSize: 12,
             ),

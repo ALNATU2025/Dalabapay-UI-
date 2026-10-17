@@ -48,7 +48,7 @@ class _AdminWrapperState extends State<AdminWrapper> {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF219C7E)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF168566)),
           ),
         ),
       );

@@ -453,7 +453,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       case 'success':
       case 'successful':
       case 'resolved':
-        return const Color(0xFF219C7E);
+        return const Color(0xFF168566);
       case 'pending':
       case 'processing':
         return Colors.orange;
@@ -461,7 +461,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       case 'cancelled':
         return Colors.red;
       case 'refunded':
-        return const Color(0xFF8B5CF6);
+        return const Color(0xFF173D88);
     }
 
     // ✅ PRIORITY 2: Fall back to flags only if status was unknown
@@ -534,19 +534,19 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     final typeLower = type.toLowerCase();
 
     if (typeLower.contains('commission')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
     if (typeLower.contains('fund wallet') ||
         typeLower.contains('wallet funding')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
-    if (typeLower.contains('transfer received')) return const Color(0xFF219C7E);
-    if (typeLower.contains('refund')) return const Color(0xFF219C7E);
-    if (typeLower.contains('airtime')) return const Color(0xFF4A90E2);
-    if (typeLower.contains('data')) return const Color(0xFF9B59B6);
-    if (typeLower.contains('electricity')) return const Color(0xFFF39C12);
+    if (typeLower.contains('transfer received')) return const Color(0xFF168566);
+    if (typeLower.contains('refund')) return const Color(0xFF168566);
+    if (typeLower.contains('airtime')) return const Color(0xFF173D88);
+    if (typeLower.contains('data')) return const Color(0xFF173D88);
+    if (typeLower.contains('electricity')) return const Color(0xFFA76B1D);
     if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return const Color(0xFFE74C3C);
+      return const Color(0xFFC0392B);
     }
     if (typeLower.contains('education')) return const Color(0xFF2ECC71);
     if (typeLower.contains('insurance')) return const Color(0xFF1ABC9C);
@@ -554,7 +554,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     if (typeLower.contains('transfer')) return Colors.orange;
     if (typeLower.contains('failed')) return Colors.red;
 
-    return const Color(0xFF243889);
+    return const Color(0xFF102C68);
   }
 
   String _getCommissionSource(String description) {
@@ -733,7 +733,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               isCommission: isCommission,
               commissionSource:
                   isCommission ? _getCommissionSource(description) : null,
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -766,7 +766,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
@@ -779,7 +779,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
               letterSpacing: 0.09,
             ),
           ),
@@ -788,7 +788,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF219C7E),
+              color: const Color(0xFF168566),
               letterSpacing: 0.09,
             ),
           ),
@@ -797,7 +797,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(Icons.refresh, color: Color(0xFF243889), size: 22),
+          icon: const Icon(Icons.refresh, color: Color(0xFF102C68), size: 22),
           onPressed: _refreshData,
         ),
         const SizedBox(width: 8),
@@ -809,7 +809,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
         ),
       );
     }
@@ -835,12 +835,12 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF219C7E).withValues(alpha: 0.3),
+            color: const Color(0xFF168566).withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -890,7 +890,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   else
                     Text(
                       '₦${_currentBalance?.toStringAsFixed(2) ?? '0.00'}',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
@@ -919,13 +919,13 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             controller: _searchController,
             decoration: InputDecoration(
               hintText: 'Search transactions...',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: GoogleFonts.inter(
                 color: Colors.grey.shade400,
                 fontSize: 14,
               ),
               prefixIcon: const Icon(
                 Icons.search,
-                color: Color(0xFF243889),
+                color: Color(0xFF102C68),
                 size: 20,
               ),
               border: OutlineInputBorder(
@@ -949,7 +949,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       )
                       : null,
             ),
-            style: GoogleFonts.poppins(fontSize: 14),
+            style: GoogleFonts.inter(fontSize: 14),
             onChanged: (_) => _applyFilter(),
           ),
           const SizedBox(height: 12),
@@ -973,7 +973,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       children: [
                         Icon(
                           Icons.calendar_today,
-                          color: const Color(0xFF243889),
+                          color: const Color(0xFF102C68),
                           size: 16,
                         ),
                         const SizedBox(width: 8),
@@ -982,11 +982,11 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                             _startDate != null && _endDate != null
                                 ? '${DateFormat('MMM dd').format(_startDate!)} - ${DateFormat('MMM dd, yyyy').format(_endDate!)}'
                                 : 'Select Date Range',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.inter(
                               fontSize: 12,
                               color:
                                   (_startDate != null && _endDate != null)
-                                      ? const Color(0xFF243889)
+                                      ? const Color(0xFF102C68)
                                       : Colors.grey.shade400,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -1020,7 +1020,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   child: FilterChip(
                     label: Text(
                       filter,
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -1034,13 +1034,13 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                     },
                     backgroundColor: Colors.white,
                     selectedColor: const Color(
-                      0xFF243889,
+                      0xFF102C68,
                     ).withValues(alpha: 0.1),
-                    checkmarkColor: const Color(0xFF243889),
+                    checkmarkColor: const Color(0xFF102C68),
                     labelStyle: TextStyle(
                       color:
                           isSelected
-                              ? const Color(0xFF243889)
+                              ? const Color(0xFF102C68)
                               : Colors.grey.shade600,
                     ),
                     shape: RoundedRectangleBorder(
@@ -1048,7 +1048,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       side: BorderSide(
                         color:
                             isSelected
-                                ? const Color(0xFF243889)
+                                ? const Color(0xFF102C68)
                                 : Colors.grey.shade300,
                       ),
                     ),
@@ -1070,7 +1070,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         child: Padding(
           padding: EdgeInsets.all(16),
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
             strokeWidth: 2,
           ),
         ),
@@ -1083,7 +1083,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
     return RefreshIndicator(
       onRefresh: _refreshData,
-      color: const Color(0xFF243889),
+      color: const Color(0xFF102C68),
       backgroundColor: Colors.white,
       child: ListView.builder(
         controller: _scrollController,
@@ -1146,10 +1146,10 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                 children: [
                   Text(
                     type,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1C2D5A),
+                      color: const Color(0xFF14263D),
                     ),
                   ),
                   if (description.isNotEmpty)
@@ -1157,7 +1157,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       description.length > 40
                           ? '${description.substring(0, 40)}...'
                           : description,
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.inter(
                         fontSize: 11,
                         color: Colors.grey.shade500,
                       ),
@@ -1167,7 +1167,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                   const SizedBox(height: 2),
                   Text(
                     _formatDate(date),
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.inter(
                       fontSize: 10,
                       color: Colors.grey.shade400,
                     ),
@@ -1181,10 +1181,10 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               children: [
                 Text(
                   '${isCredit ? '+' : '-'}₦$amount',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: isCredit ? const Color(0xFF219C7E) : Colors.red,
+                    color: isCredit ? const Color(0xFF168566) : Colors.red,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1222,7 +1222,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                       const SizedBox(width: 4),
                       Text(
                         status,
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.inter(
                           fontSize: 9,
                           fontWeight: FontWeight.w600,
                           color: statusColor,
@@ -1254,16 +1254,16 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             const SizedBox(height: 16),
             Text(
               'No Transactions Yet',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Your transactions will appear here',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 color: Colors.grey.shade500,
               ),
@@ -1286,17 +1286,17 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             const SizedBox(height: 16),
             Text(
               'Something went wrong',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               _errorMessage ?? 'Unable to load transactions',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.inter(
                 fontSize: 14,
                 color: Colors.grey.shade500,
               ),
@@ -1305,7 +1305,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
             ElevatedButton(
               onPressed: _refreshData,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
+                backgroundColor: const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
@@ -1317,7 +1317,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               ),
               child: Text(
                 'Try Again',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.inter(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
