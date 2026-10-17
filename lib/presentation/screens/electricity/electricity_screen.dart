@@ -14,6 +14,9 @@ import '../../../core/services/api_service.dart';
 import '../../../core/services/biometric_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
+import '../../../ui/ui.dart';
+import '../../../core/widgets/commission_estimate.dart';
+import '../../../core/services/commission_rates_service.dart';
 
 class ElectricityScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -675,40 +678,6 @@ class _ElectricityScreenState extends State<ElectricityScreen>
     }
   }
 
-  Widget _buildDetailRow(String label, String value, {int maxLines = 1}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: _textMuted,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: _textDark,
-              ),
-              textAlign: TextAlign.right,
-              maxLines: maxLines,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== OPEN PAYMENT SHEET ====================
   void _openPaymentSheet() {
@@ -1230,223 +1199,15 @@ class _ElectricityScreenState extends State<ElectricityScreen>
   }
 
   // ==================== DIALOGS ====================
+  // Meter details are shown inline under the meter field (design), so a
+  // short confirmation is enough here.
   void _showValidationSuccessDialog(
     String customerName,
     String address,
     String meterNumber,
     String meterType,
   ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: Colors.white,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              width: MediaQuery.of(context).size.width * 0.9,
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.8,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            _secondaryTeal,
-                            _secondaryTeal.withOpacity(0.7),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: _secondaryTeal.withOpacity(0.3),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.check_circle_outline,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Meter Validated Successfully',
-                      style: GoogleFonts.inter(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: _primaryNavy,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _secondaryTeal.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        'Verification Complete',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: _secondaryTeal,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Divider(color: Color(0xFFEEEEEE)),
-                    const SizedBox(height: 16),
-                    _buildDetailRow('Customer Name', customerName),
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Address', address, maxLines: 3),
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Meter Number', meterNumber),
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Meter Type', meterType.toUpperCase()),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: _primaryNavy.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: _primaryNavy.withOpacity(0.1),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.shield_outlined,
-                            color: _primaryNavy,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Text(
-                              'This meter has been verified and is ready for payment.',
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: _primaryNavy,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextButton(
-                            onPressed: () {
-                              if (Navigator.canPop(context)) {
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                } else {
-                                  // Navigate to a fallback screen
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    '/home',
-                                  );
-                                }
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                              setState(() {
-                                _isValidated = false;
-                                _customerName = null;
-                                _customerAddress = null;
-                              });
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.grey.shade700,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                side: BorderSide(color: Colors.grey.shade300),
-                              ),
-                            ),
-                            child: Text(
-                              'Retry',
-                              style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (Navigator.canPop(context)) {
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                } else {
-                                  // Navigate to a fallback screen
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    '/home',
-                                  );
-                                }
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                              FocusScope.of(
-                                context,
-                              ).requestFocus(_amountFocusNode);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _primaryNavy,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              elevation: 2,
-                            ),
-                            child: Text(
-                              'Proceed to Pay',
-                              style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-    );
+    dpSnack(context, 'Meter found: $customerName', success: true);
   }
 
   void _showSuccessDialog({
@@ -1497,1409 +1258,419 @@ class _ElectricityScreenState extends State<ElectricityScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  color: Colors.red.shade700,
-                  size: 24,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    color: Colors.red.shade700,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              message,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    color: _secondaryTeal,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: title,
+      message: message,
+      confirmLabel: 'OK',
+      tone: DPTone.error,
     );
   }
 
   // ==================== BUILD METHODS ====================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bgCanvas,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
+    return PopScope(
+      canPop: !_showPaymentSheet,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showPaymentSheet && !_isProcessingPayment) {
+          _closePaymentSheet();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  DPTopBar(
+                    title: 'Electricity',
+                    actionLabel: 'History',
+                    onAction: () => Navigator.pushNamed(
+                      context,
+                      '/transactions',
+                      arguments: {'userId': widget.userId},
+                    ),
+                  ),
+                  Expanded(child: _buildBody()),
+                ],
+              ),
+            ),
+            if (_showPaymentSheet) _buildPaymentSheetOverlay(),
+          ],
+        ),
+        bottomNavigationBar: _showPaymentSheet ? null : _buildStickyBottomCTA(),
       ),
-      bottomNavigationBar: _showPaymentSheet ? null : _buildStickyBottomCTA(),
     );
+  }
+
+  Map<String, dynamic>? get _providerData {
+    for (final p in _providers) {
+      if (p['id'] == _selectedProvider) return p;
+    }
+    return null;
   }
 
   // ==================== HEADER / APP BAR ====================
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      scrolledUnderElevation: 0.5,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: _primaryNavy,
-          size: 18,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Electricity',
-        style: GoogleFonts.inter(
-          color: _primaryNavy,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      centerTitle: true,
-      actions: [_buildWalletBalanceBadge(), const SizedBox(width: 16)],
-    );
-  }
 
-  Widget _buildWalletBalanceBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: _primaryNavy.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _primaryNavy.withOpacity(0.1)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.account_balance_wallet_rounded,
-            color: _primaryNavy,
-            size: 15,
-          ),
-          const SizedBox(width: 6),
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() => _isBalanceVisible = !_isBalanceVisible);
-            },
-            child: Text(
-              _isBalanceVisible
-                  ? '₦${_walletBalance.toStringAsFixed(2)}'
-                  : '••••••',
-              style: GoogleFonts.inter(
-                color: _primaryNavy,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== BODY CONTENT ====================
   Widget _buildBody() {
     if (_isLoadingUserData) {
-      return const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(_primaryNavy),
-        ),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (!_isUserActive || !_electricityServiceEnabled) {
       return _buildServiceUnavailable();
     }
 
+    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
+
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 12,
-            bottom: 100,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCleanBanner(),
-              const SizedBox(height: 20),
-
-              // Provider Selection
-              _buildSectionTitle('Select Provider'),
-              const SizedBox(height: 12),
-              _buildProviderGrid(),
-              const SizedBox(height: 24),
-
-              // Meter Type
-              _buildSectionTitle('Meter Type'),
-              const SizedBox(height: 12),
-              _buildMeterTypeToggle(),
-              const SizedBox(height: 24),
-
-              // Meter Number
-              _buildMeterNumberInput(),
-              const SizedBox(height: 24),
-
-              // Amount Selection
-              _buildSectionTitle('Select Amount'),
-              const SizedBox(height: 12),
-              _buildQuickAmountGrid(),
-              const SizedBox(height: 16),
-              _buildCustomAmountInput(),
-              const SizedBox(height: 20),
-
-              // Phone Number
-              _buildSectionTitle('Phone Number'),
-              const SizedBox(height: 8),
-              _buildPhoneNumberInput(),
-              const SizedBox(height: 24),
-
-              // Info Card
-              _buildInfoCard(),
-            ],
-          ),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'A brighter day starts here. Top up your meter.',
+              style: DP.body.copyWith(color: DP.muted),
+            ),
+            const SizedBox(height: 20),
+            const DPLabel('Electricity provider'),
+            _buildProviderGrid(),
+            const SizedBox(height: 14),
+            _buildMeterTypeToggle(),
+            const SizedBox(height: 20),
+            _buildMeterNumberInput(),
+            const SizedBox(height: 20),
+            const DPLabel('Amount'),
+            _buildCustomAmountInput(),
+            const DPHelper('Minimum purchase: ₦2,000'),
+            const SizedBox(height: 12),
+            _buildQuickAmountGrid(),
+            const SizedBox(height: 20),
+            const DPLabel('Phone number for token'),
+            _buildPhoneNumberInput(),
+            const SizedBox(height: 20),
+            WalletCommissionCard(
+              walletBalance: _walletBalance,
+              amount: amount,
+              service: 'electricity',
+              balanceVisible: _isBalanceVisible,
+            ),
+            const SizedBox(height: 14),
+            _buildInfoCard(),
+          ],
         ),
       ),
     );
   }
 
   // ==================== CLEAN BANNER ====================
-  Widget _buildCleanBanner() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-          image: AssetImage('assets/electricity_banner.png'),
-          fit: BoxFit.cover,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== PROVIDER GRID ====================
   Widget _buildProviderGrid() {
-    return SizedBox(
-      height: 82,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: _providers.length,
-        itemBuilder: (context, index) {
-          final provider = _providers[index];
-          final isSelected = _selectedProvider == provider['id'];
-          return GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() {
-                _selectedProvider = provider['id'];
-                _selectedMeterType = null;
-                _isValidated = false;
-                _customerName = null;
-                _customerAddress = null;
-              });
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOutCubic,
-              width: 76,
-              margin: const EdgeInsets.only(right: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isSelected ? provider['color'] : Colors.grey.shade200,
-                  width: isSelected ? 2.5 : 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        isSelected
-                            ? (provider['color'] as Color).withOpacity(0.25)
-                            : Colors.black.withOpacity(0.03),
-                    blurRadius: isSelected ? 8 : 4,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      provider['logo'],
-                      width: 32,
-                      height: 32,
-                      fit: BoxFit.contain,
-                      errorBuilder:
-                          (context, error, stackTrace) => Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: provider['color'].withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              Icons.electrical_services,
-                              color: provider['color'],
-                              size: 18,
-                            ),
-                          ),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    provider['name'],
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      fontWeight:
-                          isSelected ? FontWeight.w800 : FontWeight.w600,
-                      color: _textDark,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+    final p = _providerData;
+    return DPSelectField(
+      value: p == null ? null : p['fullName'] as String,
+      hint: 'Choose your provider',
+      leading: const Icon(DPIcons.bolt, color: DP.green, size: 20),
+      onTap: () async {
+        final picked = await dpPickFromList<Map<String, dynamic>>(
+          context,
+          title: 'Electricity provider',
+          items: _providers,
+          selected: p,
+          labelOf: (x) => x['fullName'] as String,
+          subtitleOf: (x) => x['name'] as String,
+        );
+        if (picked == null || !mounted) return;
+        HapticFeedback.selectionClick();
+        setState(() {
+          _selectedProvider = picked['id'] as String;
+          _selectedMeterType = null;
+          _isValidated = false;
+          _customerName = null;
+          _customerAddress = null;
+        });
+      },
     );
   }
 
   // ==================== METER TYPE TOGGLE ====================
   Widget _buildMeterTypeToggle() {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          _buildTypeOption('Prepaid', 'prepaid'),
-          _buildTypeOption('Postpaid', 'postpaid'),
-        ],
-      ),
+    const labels = {'prepaid': 'Prepaid meter', 'postpaid': 'Postpaid account'};
+    return DPChipRow(
+      options: labels.values.toList(),
+      selected: _selectedMeterType == null ? null : labels[_selectedMeterType],
+      height: 46,
+      onSelect: (label) {
+        final value =
+            labels.entries.firstWhere((e) => e.value == label).key;
+        HapticFeedback.selectionClick();
+        setState(() {
+          _selectedMeterType = value;
+          _isValidated = false;
+          _customerName = null;
+          _customerAddress = null;
+        });
+      },
     );
   }
 
-  Widget _buildTypeOption(String label, String value) {
-    final isSelected = _selectedMeterType == value;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          setState(() {
-            _selectedMeterType = value;
-            _isValidated = false;
-            _customerName = null;
-            _customerAddress = null;
-          });
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: isSelected ? _primaryNavy : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                value == 'prepaid'
-                    ? Icons.electrical_services_rounded
-                    : Icons.receipt_long_rounded,
-                color: isSelected ? Colors.white : Colors.grey.shade600,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: isSelected ? Colors.white : Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== METER NUMBER INPUT ====================
   Widget _buildMeterNumberInput() {
+    final canVerify = !_isValidating &&
+        _meterController.text.trim().length >= 11 &&
+        _selectedProvider != null &&
+        _selectedMeterType != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Meter Number'),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color:
-                        _meterFocusNode.hasFocus
-                            ? _primaryNavy
-                            : Colors.grey.shade200,
-                    width: _meterFocusNode.hasFocus ? 1.5 : 1.0,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
+        DPLabel(
+          'Meter number',
+          trailing: _isValidated
+              ? null
+              : DPTextLink(
+                  label: _isValidating ? 'Checking…' : 'Verify meter',
+                  color: canVerify ? DP.green : DP.faint,
+                  onTap: canVerify ? _validateMeter : null,
                 ),
-                child: TextField(
-                  controller: _meterController,
-                  focusNode: _meterFocusNode,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(13),
-                  ],
-                  decoration: InputDecoration(
-                    hintText: 'Enter 11-13 digit meter number',
-                    hintStyle: GoogleFonts.inter(
-                      color: Colors.grey.shade400,
-                      fontSize: 14,
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(12),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedLeftToRightListNumber,
-                        color: _primaryNavy,
-                        size: 22,
-                      ),
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 14,
-                    ),
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: _textDark,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 90,
-              height: 48,
-              child: ElevatedButton(
-                onPressed:
-                    _isValidating ||
-                            _meterController.text.isEmpty ||
-                            _selectedProvider == null ||
-                            _selectedMeterType == null
-                        ? null
-                        : _validateMeter,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _secondaryTeal,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: EdgeInsets.zero,
-                ),
-                child:
-                    _isValidating
-                        ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                        : Text(
-                          'Validate',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                          ),
-                        ),
-              ),
-            ),
-          ],
         ),
-        const SizedBox(height: 12),
-        // Validation Status
-        if (_isValidated && _customerName != null)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: _secondaryTeal.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _secondaryTeal.withOpacity(0.2)),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: _secondaryTeal.withOpacity(0.15),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.check_circle_outline,
-                    color: _secondaryTeal,
-                    size: 18,
-                  ),
+        DPField(
+          controller: _meterController,
+          focusNode: _meterFocusNode,
+          hint: '11–13 digit meter number',
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(13),
+          ],
+          onChanged: (_) {
+            setState(() {
+              if (_isValidated) {
+                _isValidated = false;
+                _customerName = null;
+                _customerAddress = null;
+              }
+            });
+          },
+          onSubmitted: (_) {
+            if (canVerify) _validateMeter();
+          },
+          style: const TextStyle(fontSize: 17, color: DP.ink, letterSpacing: 0.6),
+          suffix: _isValidating
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Icon(
+                  _isValidated ? DPIcons.checkCircle : DPIcons.scan,
+                  color: _isValidated ? DP.green : DP.muted,
                 ),
-                const SizedBox(width: 10),
+        ),
+        if (_isValidated && _customerName != null) ...[
+          const SizedBox(height: 12),
+          DPCard(
+            color: DP.mint,
+            borderColor: null,
+            radius: DP.rLg,
+            padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(DPIcons.checkCircle, color: DP.green, size: 22),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Meter Validated',
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: _secondaryTeal,
+                        _customerName!.toUpperCase(),
+                        style: const TextStyle(
+                          color: DP.green,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
                         ),
                       ),
-                      Text(
-                        _customerName!,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: _secondaryTeal,
+                      if (_customerAddress != null &&
+                          _customerAddress!.isNotEmpty &&
+                          _customerAddress != 'N/A')
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Text(
+                            _customerAddress!,
+                            style: const TextStyle(
+                              color: DP.green,
+                              fontSize: 12.5,
+                            ),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
+        ],
       ],
     );
   }
 
   // ==================== QUICK AMOUNT GRID ====================
   Widget _buildQuickAmountGrid() {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 2.2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-      ),
-      itemCount: _quickAmounts.length,
-      itemBuilder: (context, index) {
-        final amount = _quickAmounts[index];
-        final isSelected = _selectedQuickAmount == amount;
-
-        return GestureDetector(
-          onTap: () => _selectQuickAmount(amount),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            decoration: BoxDecoration(
-              color: isSelected ? _primaryNavy : Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: isSelected ? _primaryNavy : Colors.grey.shade200,
-                width: isSelected ? 2 : 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color:
-                      isSelected
-                          ? _primaryNavy.withOpacity(0.2)
-                          : Colors.black.withOpacity(0.02),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                '₦${NumberFormat('#,##0').format(amount)}',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                  color: isSelected ? Colors.white : _textDark,
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+    final labels =
+        _quickAmounts.map((a) => DP.naira(a, decimals: false)).toList();
+    return DPChipScroller(
+      options: labels,
+      selected: _selectedQuickAmount == null
+          ? null
+          : DP.naira(_selectedQuickAmount, decimals: false),
+      onSelect: (l) => _selectQuickAmount(_quickAmounts[labels.indexOf(l)]),
     );
   }
 
   // ==================== CUSTOM AMOUNT INPUT ====================
   Widget _buildCustomAmountInput() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color:
-              _amountFocusNode.hasFocus ? _primaryNavy : Colors.grey.shade200,
-          width: _amountFocusNode.hasFocus ? 1.5 : 1.0,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: _amountController,
-        focusNode: _amountFocusNode,
-        keyboardType: TextInputType.number,
-        onChanged: (_) {
-          setState(() => _selectedQuickAmount = null);
-        },
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(
-          hintText: 'Enter custom amount (min ₦2,000)',
-          hintStyle: GoogleFonts.inter(
-            color: Colors.grey.shade400,
-            fontSize: 13,
-          ),
-          prefixIcon: const Icon(
-            Icons.payments_rounded,
-            color: _secondaryTeal,
-            size: 20,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
-        ),
-        style: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: _textDark,
-        ),
-      ),
+    return DPField(
+      controller: _amountController,
+      focusNode: _amountFocusNode,
+      hint: '0.00',
+      prefixText: '₦',
+      keyboardType: TextInputType.number,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+      onChanged: (_) {
+        setState(() => _selectedQuickAmount = null);
+      },
+      style: const TextStyle(fontSize: 17, color: DP.ink),
     );
   }
 
   // ==================== PHONE NUMBER INPUT ====================
   Widget _buildPhoneNumberInput() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: _phoneFocusNode.hasFocus ? _primaryNavy : Colors.grey.shade200,
-          width: _phoneFocusNode.hasFocus ? 1.5 : 1.0,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: _phoneController,
-        focusNode: _phoneFocusNode,
-        keyboardType: TextInputType.phone,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-          LengthLimitingTextInputFormatter(11),
-        ],
-        decoration: InputDecoration(
-          hintText: 'Enter 11-digit phone number',
-          hintStyle: GoogleFonts.inter(
-            color: Colors.grey.shade400,
-            fontSize: 14,
-          ),
-          prefixIcon: Container(
-            padding: const EdgeInsets.all(12),
-            child: HugeIcon(
-              icon: HugeIcons.strokeRoundedSmartPhone01,
-              color: _primaryNavy,
-              size: 22,
-            ),
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 4,
-            vertical: 14,
-          ),
-        ),
-        style: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: _textDark,
-        ),
-      ),
+    return DPField(
+      controller: _phoneController,
+      focusNode: _phoneFocusNode,
+      hint: '0803 456 7890',
+      keyboardType: TextInputType.phone,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(11),
+      ],
+      onChanged: (_) => setState(() {}),
+      suffix: const Icon(DPIcons.phone, color: DP.muted),
     );
   }
 
   // ==================== INFO CARD ====================
   Widget _buildInfoCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _primaryNavy.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: _primaryNavy.withOpacity(0.08)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: BoxDecoration(
-              color: _primaryNavy.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.info_outline_rounded,
-              color: _primaryNavy,
-              size: 18,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Make sure you enter the correct meter number. Double-check before validating.',
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: _textMuted,
-                height: 1.3,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return const DPBanner(
+      'Your units are set by your provider\'s tariff. Your token will appear on your receipt and arrive by SMS.',
     );
   }
 
   // ==================== SECTION TITLE ====================
   Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.inter(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: _primaryNavy,
-      ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(title, style: DP.section),
     );
   }
 
   // ==================== STICKY BOTTOM CTA ====================
   Widget _buildStickyBottomCTA() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: Container(
-            decoration: BoxDecoration(
-              color: _secondaryTeal, // ✅ Plain green color
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: _secondaryTeal.withOpacity(0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ElevatedButton(
-              onPressed:
-                  _isProcessingPayment || _isAuthenticating
-                      ? null
-                      : _openPaymentSheet,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child:
-                  _isProcessingPayment || _isAuthenticating
-                      ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2.5,
-                        ),
-                      )
-                      : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.bolt_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Proceed to Pay',
-                            style: GoogleFonts.inter(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
-          ),
-        ),
+    return DPBottomAction(
+      child: DPButton(
+        label: 'Review electricity payment',
+        icon: DPIcons.forward,
+        loading: _isProcessingPayment || _isAuthenticating,
+        onPressed: _openPaymentSheet,
       ),
     );
   }
 
   // ==================== PAYMENT SHEET OVERLAY ====================
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
+    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
+    final p = _providerData;
+    final providerName = (p?['fullName'] ?? '') as String;
+    final biometricOk = !kIsWeb &&
+        (Platform.isAndroid || Platform.isIOS) &&
+        _biometricEnabled &&
+        _biometricAllowed;
+    return Positioned.fill(
       child: AnimatedBuilder(
         animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/dalabapay2.png',
-                                      height: 38,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close_rounded,
-                                          size: 18,
-                                          color: _textMuted,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Confirm Payment',
-                                style: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: _textDark,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-                              Divider(color: Colors.grey.shade200, height: 1),
-                              const SizedBox(height: 20),
-
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.warning_amber_rounded,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+        builder: (context, child) => FractionalTranslation(
+          translation: Offset(0, 1 - _sheetAnimation.value),
+          child: child,
+        ),
+        child: AnimatedBuilder(
+          animation: _shakeAnimation,
+          builder: (context, child) => Transform.translate(
+            offset: Offset(_shakeAnimation.value, 0),
+            child: child,
+          ),
+          child: DPReviewPanel(
+            icon: DPIcons.bolt,
+            title: providerName,
+            amount: amount,
+            rows: [
+              DPReviewRow('Customer', _customerName ?? '—'),
+              DPReviewRow('Meter number', _meterController.text.trim()),
+              DPReviewRow(
+                'Meter type',
+                _selectedMeterType == 'postpaid' ? 'Postpaid' : 'Prepaid',
               ),
-            ),
-          );
-        },
+              DPReviewRow('Token sent to', _phoneController.text.trim()),
+              const DPReviewRow('Service fee', '₦0.00'),
+              DPReviewRow('Total to pay', DP.naira(amount), strong: true),
+            ],
+            walletBalance: _walletBalance,
+            totalDebit: amount,
+            commission: CommissionRatesService.estimate('electricity', amount),
+            pinController: _pinController,
+            pinFocusNode: _pinFocusNode,
+            pinRequired: _transactionPinSet && _pinRequired,
+            pinError: _pinValidationError,
+            processing: _isProcessingPayment,
+            onPay: _processPaymentWithPIN,
+            onClose: _closePaymentSheet,
+            biometricAvailable: biometricOk,
+            biometricLabel: _biometricName,
+            onBiometric: _processPaymentWithBiometric,
+            footnote: 'Check the meter number. Electricity tokens can\'t be reversed.',
+          ),
+        ),
       ),
     );
   }
 
   // ==================== PAYMENT SHEET DETAILS ====================
-  Widget _buildPaymentSheetDetails() {
-    final provider = _providers.firstWhere(
-      (p) => p['id'] == _selectedProvider,
-      orElse: () => _providers.first,
-    );
-    final meterNumber = _meterController.text.trim();
-    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
-    final phone = _phoneController.text.trim();
-    final meterType = _selectedMeterType?.toUpperCase() ?? 'N/A';
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          _buildPaymentRow(
-            icon: Icons.electrical_services_rounded,
-            iconColor: provider['color'] as Color,
-            label: 'Provider',
-            value: provider['fullName'] ?? 'N/A',
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          _buildPaymentRow(
-            icon: Icons.electrical_services_rounded,
-            iconColor: const Color(0xFF173D88),
-            label: 'Meter Type',
-            value: meterType,
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          _buildPaymentRow(
-            icon: Icons.numbers_rounded,
-            iconColor: _primaryNavy,
-            label: 'Meter Number',
-            value: meterNumber,
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          _buildPaymentRow(
-            icon: Icons.person_outline_rounded,
-            iconColor: _secondaryTeal,
-            label: 'Customer',
-            value: _customerName ?? 'N/A',
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          _buildPaymentRow(
-            icon: Icons.payments_rounded,
-            iconColor: _secondaryTeal,
-            label: 'Amount',
-            value: '₦${amount.toStringAsFixed(2)}',
-            isAmount: true,
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildPaymentRow({
-    required IconData icon,
-    required Color iconColor,
-    required String label,
-    required String value,
-    bool isAmount = false,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(icon, color: iconColor, size: 18),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: _textMuted,
-              ),
-            ),
-          ],
-        ),
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: isAmount ? 16 : 14,
-            fontWeight: isAmount ? FontWeight.w800 : FontWeight.w700,
-            color: isAmount ? _secondaryTeal : _textDark,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: _secondaryTeal.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondaryTeal.withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Available Balance',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: _textMuted,
-            ),
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: _secondaryTeal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== PIN OPTION ====================
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_shakeAnimation.value, 0),
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFDECEA)
-                    : _primaryNavy.withOpacity(0.04),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: hasError ? const Color(0xFFC0392B) : _primaryNavy,
-              width: hasError ? 2 : 1.5,
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.inter(
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B).withOpacity(0.7)
-                              : Colors.grey.shade600,
-                      fontSize: 13,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock_outline_rounded,
-                      color: hasError ? const Color(0xFFC0392B) : _primaryNavy,
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: hasError ? const Color(0xFFC0392B) : Colors.black,
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFDECEA),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        color: Color(0xFFC0392B),
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFC0392B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment ? null : _processPaymentWithPIN,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError ? const Color(0xFFC0392B) : _secondaryTeal,
-                    foregroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(12),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.lock_outline_rounded,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Pay with PIN',
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported =
-        !kIsWeb && (Platform.isAndroid || Platform.isIOS);
-
-    if (!isBiometricSupported || !_biometricEnabled) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: GestureDetector(
-        onTap: _isProcessingPayment ? null : _processPaymentWithBiometric,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          decoration: BoxDecoration(
-            color: _primaryNavy.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _primaryNavy, width: 1.5),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? const Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: _primaryNavy,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.fingerprint_rounded,
-                        color: _primaryNavy,
-                        size: 28,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Pay with $_biometricName',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: _primaryNavy,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: _secondaryTeal,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== SERVICE UNAVAILABLE ====================
   Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              !_isUserActive ? Icons.account_circle : Icons.electrical_services,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'Electricity service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _primaryNavy,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: DPEmptyState(
+          icon: DPIcons.bolt,
+          title: 'Electricity is unavailable right now',
+          message: 'Please try again in a little while.',
+          actionLabel: 'Go back',
+          onAction: () => Navigator.pop(context),
         ),
       ),
     );
