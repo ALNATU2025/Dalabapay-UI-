@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dalabapay/presentation/screens/transactions/transactions_screen.dart';
 import 'package:dalabapay/presentation/screens/commission/commission_screen.dart';
 import 'package:dalabapay/presentation/screens/settings/settings_screen.dart';
+import 'package:dalabapay/presentation/screens/notifications/notifications_screen.dart';
+import 'package:dalabapay/presentation/screens/referral/referral_screen.dart';
 import 'harness.dart';
 import 'home_test.dart' show demoPrefs;
 
@@ -30,4 +32,8 @@ void main() {
   testWidgets('commission', (t) async => shoot(t, '20_commission',
       CommissionScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 1500));
   testWidgets('profile', (t) async => shoot(t, '21_profile', const SettingsScreen(), height: 1500));
+  testWidgets('notifications', (t) async =>
+      shoot(t, '24_notifications', const NotificationsScreen(), settle: const Duration(seconds: 6)));
+  testWidgets('referral', (t) async =>
+      shoot(t, '25_referral', const ReferralEarningsPage(userId: 'u1'), height: 1600));
 }

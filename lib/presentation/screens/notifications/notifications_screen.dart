@@ -4,10 +4,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 import '../../../core/services/socket_service.dart' hide debugPrint;
 import '../../../core/services/api_service.dart';
+import '../../../ui/ui.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -247,125 +247,17 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   void _deleteNotification(String notificationId) {
-    // Show confirmation dialog first
-    showDialog(
-      context: context,
+    showDPDialog<bool>(
+      context,
+      title: 'Delete this notification?',
+      message: 'This can’t be undone.',
+      tone: DPDialogTone.warn,
+      icon: DPIcons.trash2,
+      primaryLabel: 'Delete',
+      onPrimary: () => Navigator.of(context).pop(true),
+      secondaryLabel: 'Cancel',
+      onSecondary: () => Navigator.of(context).pop(false),
       barrierDismissible: false,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.delete_outline_rounded,
-                    color: Colors.red.shade600,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Delete Notification',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF14263D),
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Are you sure you want to delete this notification?',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: const Color(0xFF14263D),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.amber.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: Colors.amber.shade700,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'This action cannot be undone.',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.amber.shade700,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              // Cancel button
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 10,
-                  ),
-                ),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF728078),
-                  ),
-                ),
-              ),
-              // Delete button
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red.shade600,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
-                ),
-                child: Text(
-                  'Delete',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
     ).then((confirmed) {
       if (confirmed == true) {
         // Optimistic update first (UI feels faster)
@@ -374,26 +266,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             (n) => n['id'] == notificationId || n['_id'] == notificationId,
           );
         });
-
-        // Call API to delete
-        ApiService.deleteNotification(notificationId)
-            .then((_) {
-              debugPrint('✅ Notification deleted successfully');
-            })
-            .catchError((e) {
-              debugPrint('❌ Error deleting notification: $e');
-              // Revert optimistic update if failed
-              setState(() {
-                // You might want to reload notifications here
-                _loadNotifications();
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Failed to delete notification'),
-                  backgroundColor: Colors.red.shade600,
-                ),
-              );
-            });
+        ApiService.deleteNotification(notificationId).then((_) {
+          debugPrint('✅ Notification deleted successfully');
+        }).catchError((e) {
+          debugPrint('❌ Error deleting notification: $e');
+          if (!mounted) return;
+          setState(() => _loadNotifications());
+          dpSnack(context, 'Failed to delete notification', error: true);
+        });
       }
     });
   }
@@ -403,28 +283,26 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
       case 'alert':
-        return Colors.orange.shade700;
-      case 'update':
-        return Colors.green.shade700;
-      case 'promotion':
-        return Colors.purple.shade700;
-      case 'system':
-        return Colors.grey.shade700;
-      case 'transfer_sent':
-        return Colors.blue.shade700;
-      case 'transfer_received':
-        return Colors.green.shade700;
-      case 'payment_success':
-        return Colors.green.shade700;
+        return DP.warn;
       case 'payment_failed':
-        return Colors.red.shade700;
+        return DP.danger;
+      case 'update':
+      case 'transfer_received':
+      case 'payment_success':
       case 'commission_earned':
-        return Colors.amber.shade700;
       case 'wallet_funded':
-        return Colors.teal.shade700;
+        return DP.green;
       default:
-        return primaryColor;
+        return DP.blue;
     }
+  }
+
+  Color _getTypeBg(String type) {
+    final c = _getTypeColor(type);
+    if (c == DP.warn) return DP.warnSoft;
+    if (c == DP.danger) return DP.dangerSoft;
+    if (c == DP.green) return DP.greenSoft;
+    return DP.blueSoft;
   }
 
   String _getTypeLabel(String type) {
@@ -454,94 +332,67 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  dynamic _getTypeIcon(String type) {
+  DPIconData _getTypeIcon(String type) {
     switch (type.toLowerCase()) {
       case 'alert':
-        return HugeIcons.strokeRoundedAlert02;
+        return DPIcons.triangleAlert;
       case 'update':
-        return HugeIcons.strokeRoundedSystemUpdate01;
+        return DPIcons.refreshCw;
       case 'promotion':
-        return HugeIcons.strokeRoundedPercent;
+        return DPIcons.badgePercent;
       case 'system':
-        return HugeIcons.strokeRoundedSetting06;
+        return DPIcons.settings;
       case 'transfer_sent':
-        return HugeIcons.strokeRoundedSent02;
+        return DPIcons.arrowUpRight;
       case 'transfer_received':
-        return HugeIcons.strokeRoundedDownload03;
+        return DPIcons.arrowDownLeft;
       case 'payment_success':
-        return HugeIcons.strokeRoundedCheckmarkCircle01;
+        return DPIcons.circleCheck;
       case 'payment_failed':
-        return HugeIcons.strokeRoundedCancelCircle;
+        return DPIcons.circleX;
       case 'commission_earned':
-        return HugeIcons.strokeRoundedMoney01;
+        return DPIcons.sparkles;
       case 'wallet_funded':
-        return HugeIcons.strokeRoundedWallet01;
+        return DPIcons.wallet;
       default:
-        return HugeIcons.strokeRoundedNotification01;
+        return DPIcons.bell;
     }
+  }
+
+  String _relativeTime(DateTime d) {
+    final local = d.toLocal();
+    final diff = DateTime.now().difference(local);
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
+    if (diff.inHours < 24) return '${diff.inHours} h ago';
+    if (diff.inDays == 1) return 'Yesterday';
+    return DateFormat('d MMM, h:mm a').format(local);
   }
 
   // ==================== UI BUILDERS ====================
 
   Widget _buildNotificationItem(Map<String, dynamic> notification) {
-    final isRead =
-        notification['isRead'] == true || notification['read'] == true;
-    final type = notification['type'] ?? 'general';
-    final title = notification['title'] ?? 'Notification';
-    final message = notification['message'] ?? '';
-    final createdAt =
-        notification['createdAt'] != null
-            ? DateTime.parse(notification['createdAt'].toString())
-            : DateTime.now();
-
+    final isRead = notification['isRead'] == true || notification['read'] == true;
+    final type = (notification['type'] ?? 'general').toString();
+    final title = (notification['title'] ?? 'Notification').toString();
+    final message = (notification['message'] ?? '').toString();
+    final createdAt = DateTime.tryParse(notification['createdAt']?.toString() ?? '') ?? DateTime.now();
     final id = notification['id'] ?? notification['_id'];
 
-    return GestureDetector(
+    return InkWell(
+      borderRadius: BorderRadius.circular(DP.rMd),
       onTap: () {
         _showNotificationDetails(notification);
-        if (!isRead && id != null) {
-          _markAsRead(id.toString());
-        }
+        if (!isRead && id != null) _markAsRead(id.toString());
       },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: isRead ? Colors.white : primaryColor.withValues(alpha: 0.03),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color:
-                isRead
-                    ? Colors.grey.shade100
-                    : primaryColor.withValues(alpha: 0.1),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+      onLongPress: id == null ? null : () => _deleteNotification(id.toString()),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: _getTypeColor(type).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: HugeIcon(
-                  icon: _getTypeIcon(type),
-                  color: _getTypeColor(type),
-                  size: 20,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
+            DPIconBadge(icon: _getTypeIcon(type), bg: _getTypeBg(type), fg: _getTypeColor(type)),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -551,86 +402,31 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       Expanded(
                         child: Text(
                           title,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight:
-                                isRead ? FontWeight.w500 : FontWeight.w700,
-                            color: textPrimary,
-                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      if (!isRead)
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            shape: BoxShape.circle,
+                          style: DPText.body.copyWith(
+                            fontWeight: isRead ? FontWeight.w400 : FontWeight.w600,
                           ),
                         ),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    message,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: textSecondary,
-                      height: 1.3,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        _getTypeLabel(type),
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: _getTypeColor(type),
-                        ),
                       ),
                       const SizedBox(width: 8),
-                      Container(
-                        width: 3,
-                        height: 3,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade400,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        DateFormat('MMM dd, HH:mm').format(createdAt),
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.shade500,
-                        ),
-                      ),
+                      Text(_relativeTime(createdAt), style: DPText.small),
                     ],
                   ),
+                  const SizedBox(height: 3),
+                  Text(message,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: DPText.bodyMuted.copyWith(fontSize: 13.5)),
                 ],
               ),
             ),
-            if (id != null)
-              GestureDetector(
-                onTap: () => _deleteNotification(id.toString()),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.delete_outline_rounded,
-                    color: Colors.red.shade400,
-                    size: 18,
-                  ),
-                ),
+            if (!isRead)
+              Container(
+                margin: const EdgeInsets.only(left: 10, top: 6),
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(color: DP.green, shape: BoxShape.circle),
               ),
           ],
         ),
@@ -639,198 +435,63 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   void _showNotificationDetails(Map<String, dynamic> notification) {
-    final isRead =
-        notification['isRead'] == true || notification['read'] == true;
-    final type = notification['type'] ?? 'general';
-    final title = notification['title'] ?? 'Notification';
-    final message = notification['message'] ?? '';
-    final createdAt =
-        notification['createdAt'] != null
-            ? DateTime.parse(notification['createdAt'].toString())
-            : DateTime.now();
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color:
-                        isRead
-                            ? Colors.grey.shade100
-                            : primaryColor.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    isRead
-                        ? Icons.notifications_off_rounded
-                        : Icons.notifications_active_rounded,
-                    color: isRead ? Colors.grey.shade600 : primaryColor,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: textPrimary,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        DateFormat('MMM dd, yyyy HH:mm').format(createdAt),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Divider(color: Colors.grey),
-                const SizedBox(height: 8),
-                Text(
-                  message,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: textPrimary,
-                    height: 1.6,
-                  ),
-                ),
-                if (type != 'general') ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _getTypeColor(type).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: _getTypeColor(type).withValues(alpha: 0.2),
-                      ),
-                    ),
-                    child: Text(
-                      _getTypeLabel(type).toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: _getTypeColor(type),
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'Close',
-                  style: TextStyle(
-                    color: textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              if (!isRead)
-                ElevatedButton(
-                  onPressed: () {
-                    final id = notification['id'] ?? notification['_id'];
-                    if (id != null) {
-                      _markAsRead(id.toString());
-                      if (Navigator.canPop(context)) {
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        } else {
-                          // Navigate to a fallback screen
-                          Navigator.pushReplacementNamed(context, '/home');
-                        }
-                      } else {
-                        // Navigate to a fallback screen
-                        Navigator.pushReplacementNamed(context, '/home');
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text(
-                    'Mark as Read',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+    final type = (notification['type'] ?? 'general').toString();
+    final title = (notification['title'] ?? 'Notification').toString();
+    final message = (notification['message'] ?? '').toString();
+    final createdAt = DateTime.tryParse(notification['createdAt']?.toString() ?? '') ?? DateTime.now();
+    final id = notification['id'] ?? notification['_id'];
+    showDPSheet(
+      context,
+      title: title,
+      builder: (ctx) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              DPIconBadge(icon: _getTypeIcon(type), bg: _getTypeBg(type), fg: _getTypeColor(type), size: 36, radius: 12),
+              const SizedBox(width: 10),
+              Text(DateFormat('d MMM yyyy, h:mm a').format(createdAt.toLocal()), style: DPText.small),
             ],
           ),
+          const SizedBox(height: 16),
+          Text(message, style: DPText.body.copyWith(height: 1.55)),
+          const SizedBox(height: 24),
+          if (id != null)
+            DPButton.secondary(
+              label: 'Delete notification',
+              onPressed: () {
+                Navigator.pop(ctx);
+                _deleteNotification(id.toString());
+              },
+            ),
+          const SizedBox(height: 10),
+          DPButton(label: 'Done', onPressed: () => Navigator.pop(ctx)),
+        ],
+      ),
     );
   }
 
   Widget _buildShimmerItem() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
+        baseColor: DP.border,
+        highlightColor: DP.surface,
         child: Row(
           children: [
             Container(
               width: 44,
               height: 44,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(12),
-              ),
+              decoration: BoxDecoration(color: DP.border, borderRadius: BorderRadius.circular(14)),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: double.infinity,
-                    height: 16,
-                    color: Colors.grey.shade300,
-                  ),
-                  const SizedBox(height: 6),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: 14,
-                    color: Colors.grey.shade300,
-                  ),
-                  const SizedBox(height: 6),
-                  Container(width: 80, height: 12, color: Colors.grey.shade300),
+                  Container(width: double.infinity, height: 14, color: DP.border),
+                  const SizedBox(height: 8),
+                  Container(width: 180, height: 12, color: DP.border),
                 ],
               ),
             ),
@@ -841,41 +502,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: primaryColor.withValues(alpha: 0.06),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.notifications_off_rounded,
-                color: primaryColor.withValues(alpha: 0.3),
-                size: 40,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No notifications yet',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Your notifications will appear here',
-              style: TextStyle(fontSize: 14, color: textSecondary),
-            ),
-          ],
-        ),
+    return const Padding(
+      padding: EdgeInsets.only(top: 60),
+      child: DPEmptyState(
+        icon: DPIcons.bell,
+        title: 'You’re all caught up',
+        message: 'Payment updates, reminders and news will show up here.',
       ),
     );
   }
@@ -888,138 +520,61 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final hasUnread = _notifications.any(
-      (n) => n['isRead'] == false || n['read'] == false,
-    );
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: primaryColor, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Notifications',
-          style: TextStyle(
-            color: primaryColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
+    final hasUnread = _notifications.any((n) => n['isRead'] == false || n['read'] == false);
+    final List<Widget> body;
+    if (_isLoading) {
+      body = List.generate(6, (_) => _buildShimmerItem());
+    } else if (_errorMessage != null) {
+      body = [
+        Padding(
+          padding: const EdgeInsets.only(top: 60),
+          child: DPEmptyState(
+            icon: DPIcons.circleAlert,
+            title: 'Couldn’t load notifications',
+            message: _errorMessage,
+            actionLabel: 'Try again',
+            onAction: _loadNotifications,
           ),
         ),
-        centerTitle: true,
-        actions: [
-          if (_notifications.isNotEmpty) ...[
-            if (hasUnread)
-              TextButton(
-                onPressed: _markAllAsRead,
-                child: Text(
-                  'Mark all read',
-                  style: TextStyle(
-                    color: primaryColor,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
-                  ),
-                ),
+      ];
+    } else if (_notifications.isEmpty) {
+      body = [_buildEmptyState()];
+    } else {
+      body = [
+        if (_unreadCount > 0)
+          Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 6),
+            child: Text('$_unreadCount unread', style: DPText.small),
+          ),
+        for (final n in _notifications) _buildNotificationItem(n),
+        if (_hasMore)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Center(
+              child: SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2, color: DP.green),
               ),
-            const SizedBox(width: 8),
-          ],
-        ],
-      ),
-      body:
-          _isLoading
-              ? ListView.builder(
-                itemCount: 8,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemBuilder: (context, index) => _buildShimmerItem(),
-              )
-              : _errorMessage != null
-              ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline_rounded,
-                        color: Colors.red.shade400,
-                        size: 48,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Failed to load notifications',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _errorMessage!,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: textSecondary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _loadNotifications,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text('Try Again'),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-              : _notifications.isEmpty
-              ? _buildEmptyState()
-              : RefreshIndicator(
-                onRefresh: () async {
-                  final completer = Completer<void>();
-                  _loadNotifications();
-                  Future.delayed(const Duration(seconds: 1), () {
-                    if (!completer.isCompleted) {
-                      completer.complete();
-                    }
-                  });
-                  return completer.future;
-                },
-                color: primaryColor,
-                child: ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: _notifications.length + (_hasMore ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index >= _notifications.length) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Center(
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                primaryColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return _buildNotificationItem(_notifications[index]);
-                  },
-                ),
-              ),
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Text('Tip: press and hold a notification to delete it.',
+              style: DPText.small, textAlign: TextAlign.center),
+        ),
+      ];
+    }
+    return DPPage(
+      title: 'Notifications',
+      actionLabel: _notifications.isNotEmpty && hasUnread ? 'Mark all read' : null,
+      onAction: _notifications.isNotEmpty && hasUnread ? _markAllAsRead : null,
+      controller: _scrollController,
+      onRefresh: () async {
+        _loadNotifications();
+        await Future.delayed(const Duration(seconds: 1));
+      },
+      children: body,
     );
   }
 }

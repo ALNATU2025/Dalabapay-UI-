@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../../ui/ui.dart';
 
 class ReferralEarningsPage extends StatefulWidget {
   final String userId;
@@ -162,31 +164,13 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(fontSize: 13, color: Colors.white),
-        ),
-        backgroundColor: Colors.red.shade700,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
+    if (!mounted) return;
+    dpSnack(context, message, error: true);
   }
 
   void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyle(fontSize: 13, color: Colors.white),
-        ),
-        backgroundColor: const Color(0xFF168566),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
+    if (!mounted) return;
+    dpSnack(context, message, success: true);
   }
 
   String _formatDate(DateTime date) {
@@ -244,14 +228,14 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
     return const Color(0xFF3498DB);
   }
 
-  IconData _getBonusIcon(String type) {
+  DPIconData _getBonusIcon(String type) {
     final typeLower = type.toLowerCase();
-    if (typeLower.contains('direct')) return Icons.person_add_alt_1;
-    if (typeLower.contains('indirect')) return Icons.people_outline;
-    if (typeLower.contains('welcome')) return Icons.card_giftcard;
-    if (typeLower.contains('deposit')) return Icons.account_balance_wallet;
-    if (typeLower.contains('commission')) return Icons.monetization_on;
-    return Icons.emoji_events;
+    if (typeLower.contains('direct')) return DPIcons.userPlus;
+    if (typeLower.contains('indirect')) return DPIcons.users;
+    if (typeLower.contains('welcome')) return DPIcons.gift;
+    if (typeLower.contains('deposit')) return DPIcons.wallet;
+    if (typeLower.contains('commission')) return DPIcons.sparkles;
+    return DPIcons.star;
   }
 
   void _copyReferralCode() {
@@ -262,8 +246,14 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
   }
 
   void _shareReferralCode() {
-    // This would use share_plus package in production
-    _showSuccessSnackBar('Share dialog would open here');
+    if (_referralCode.isEmpty || _referralCode == 'N/A') {
+      _showErrorSnackBar('Your referral code is not available yet.');
+      return;
+    }
+    Share.share(
+      'Pay bills, buy airtime and data on Dalabapay. Sign up with my referral code $_referralCode',
+      subject: 'Join me on Dalabapay',
+    );
   }
 
   void _showTransactionReceipt(Map<String, dynamic> transaction) {
@@ -307,71 +297,16 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: RefreshIndicator(
-        onRefresh: _loadReferralData,
-        color: const Color(0xFF102C68),
-        backgroundColor: Colors.white,
-        child: _isLoading ? _buildLoadingState() : _buildBody(),
-      ),
+    return DPPage(
+      title: 'Referrals',
+      onRefresh: _loadReferralData,
+      children: [_isLoading ? _buildLoadingState() : _buildBody()],
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Color(0xFF102C68),
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Dalaba',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
-              letterSpacing: 0.09,
-            ),
-          ),
-          Text(
-            'pay',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF168566),
-              letterSpacing: 0.09,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.refresh, color: Color(0xFF102C68), size: 22),
-          onPressed: _loadReferralData,
-          tooltip: 'Refresh',
-        ),
-        const SizedBox(width: 8),
-      ],
-    );
-  }
 
   Widget _buildLoadingState() {
-    return Center(
-      child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
-      ),
-    );
+    return const Padding(padding: EdgeInsets.only(top: 80), child: DPLoader(message: 'Loading referrals…'));
   }
 
   Widget _buildBody() {
@@ -379,332 +314,110 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Total Earnings Card
-              _buildTotalEarningsCard(),
-              const SizedBox(height: 24),
-
-              // Bonus Breakdown
-              _buildBonusBreakdownSection(),
-              const SizedBox(height: 24),
-
-              // Referral Code Card
-              _buildReferralCodeCard(),
-              const SizedBox(height: 24),
-
-              // Recent Bonus Transactions
-              _buildTransactionsSection(),
-              const SizedBox(height: 24),
-
-              // How to Earn Guide
-              _buildGuideCard(),
-              const SizedBox(height: 30),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildReferralCodeCard(),
+            _buildTotalEarningsCard(),
+            _buildGuideCard(),
+            _buildBonusBreakdownSection(),
+            _buildTransactionsSection(),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildTotalEarningsCard() {
-    final totalEarned = _referralData['totalEarned'] ?? 0.0;
-    final totalReferrals =
-        _referralData['referralStats']?['totalReferrals'] ?? 0;
+    final totalEarned = ((_referralData['totalEarned'] ?? 0.0) as num).toDouble();
+    final totalReferrals = _referralData['referralStats']?['totalReferrals'] ?? 0;
     final tier = _referralData['referralStats']?['referralTier'] ?? 'Bronze';
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF168566).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Total Referral Earnings',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white.withValues(alpha: 0.9),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _isBalanceVisible
-                ? '₦${totalEarned.toStringAsFixed(2)}'
-                : '••••••••',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatItem(
-                'Total Referrals',
-                totalReferrals.toString(),
-                Icons.people_outline,
-              ),
-              Container(
-                width: 1,
-                height: 40,
-                color: Colors.white.withValues(alpha: 0.3),
-              ),
-              _buildStatItem('Tier', tier, Icons.emoji_events_outlined),
-              Container(
-                width: 1,
-                height: 40,
-                color: Colors.white.withValues(alpha: 0.3),
-              ),
-              _buildStatItem(
-                'Pending',
-                '₦${(_referralData['pendingEarnings'] ?? 0.0).toStringAsFixed(2)}',
-                Icons.pending_actions,
-              ),
-            ],
-          ),
-        ],
-      ),
+    return Row(
+      children: [
+        Expanded(child: _buildStatItem('Earned so far', dpNaira(totalEarned), Icons.star)),
+        const SizedBox(width: 12),
+        Expanded(child: _buildStatItem('People invited', '$totalReferrals', Icons.people)),
+        const SizedBox(width: 12),
+        Expanded(child: _buildStatItem('Tier', '$tier', Icons.star)),
+      ],
     );
   }
 
   Widget _buildStatItem(String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, color: Colors.white70, size: 20),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+    return DPCard(
+      margin: EdgeInsets.zero,
+      padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: DPText.small),
+          const SizedBox(height: 6),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(value, style: DPText.value.copyWith(fontSize: 18)),
           ),
-        ),
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: Colors.white70),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildBonusBreakdownSection() {
+    double v(String k) => ((_referralData[k] ?? 0.0) as num).toDouble();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Bonus Breakdown',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildBonusCard(
-                'Direct Referral',
-                _referralData['formatted']?['directReferralEarnings'] ??
-                    '₦0.00',
-                const Color(0xFF168566),
-                Icons.person_add_alt_1,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildBonusCard(
-                'Indirect Referral',
-                _referralData['formatted']?['indirectReferralEarnings'] ??
-                    '₦0.00',
-                const Color(0xFFE67E22),
-                Icons.people_outline,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildBonusCard(
-                'Welcome Bonus',
-                _referralData['formatted']?['welcomeBonusEarnings'] ?? '₦0.00',
-                const Color(0xFF9B59B6),
-                Icons.card_giftcard,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildBonusCard(
-                'Commission',
-                '₦${((_referralData['totalEarned'] ?? 0.0) - (_referralData['commissionBalance'] ?? 0.0)).toStringAsFixed(2)}',
-                const Color(0xFF3498DB),
-                Icons.monetization_on,
-              ),
-            ),
-          ],
-        ),
+        const DPSectionHeader('Where it came from'),
+        DPSummaryCard(rows: [
+          DPSummaryRow('Direct referrals', dpNaira(v('directReferralEarnings'))),
+          DPSummaryRow('Indirect referrals', dpNaira(v('indirectReferralEarnings'))),
+          DPSummaryRow('Welcome bonus', dpNaira(v('welcomeBonusEarnings'))),
+        ]),
       ],
     );
   }
 
-  Widget _buildBonusCard(
-    String title,
-    String amount,
-    Color color,
-    IconData icon,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.2)),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 22),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            amount,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 10,
-              color: Colors.grey.shade600,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildReferralCodeCard() {
+    final ready = _referralCode.isNotEmpty && _referralCode != 'N/A';
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      margin: const EdgeInsets.only(top: 8, bottom: 16),
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(color: DP.navy, borderRadius: BorderRadius.circular(DP.rXl)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Your Referral Code',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey.shade700,
-            ),
+          Text('INVITE FRIENDS, EARN ₦200',
+              style: DPText.overline.copyWith(color: Colors.white.withValues(alpha: 0.7))),
+          const SizedBox(height: 10),
+          Text('Your referral code', style: DPText.body.copyWith(color: Colors.white.withValues(alpha: 0.8))),
+          const SizedBox(height: 4),
+          SelectableText(
+            ready ? _referralCode : 'Not available yet',
+            style: DPText.display.copyWith(color: Colors.white, fontSize: 30, letterSpacing: 1),
           ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: const Color(0x05102C68),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0x0A243889)),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    _referralCode,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: const Color(0xFF102C68),
-                      letterSpacing: 2,
-                    ),
-                  ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: DPButton(
+                  label: 'Copy',
+                  kind: DPButtonKind.soft,
+                  leadingIcon: DPIcons.copy,
+                  height: 48,
+                  onPressed: ready ? _copyReferralCode : null,
                 ),
-                const SizedBox(width: 12),
-                GestureDetector(
-                  onTap: _copyReferralCode,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0x0A243889),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.copy,
-                      color: Color(0xFF102C68),
-                      size: 20,
-                    ),
-                  ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: DPButton(
+                  label: 'Share',
+                  leadingIcon: DPIcons.share2,
+                  height: 48,
+                  onPressed: ready ? _shareReferralCode : null,
                 ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: _shareReferralCode,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF168566).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.share,
-                      color: Color(0xFF168566),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Share this code with friends. When they join and make their first deposit (₦5000+), you both earn ₦200!',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade600,
-            ),
+              ),
+            ],
           ),
         ],
       ),
@@ -713,302 +426,78 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
 
   Widget _buildTransactionsSection() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Recent Bonus Transactions',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF102C68),
-              ),
-            ),
-            if (_referralTransactions.isNotEmpty)
-              TextButton(
-                onPressed: () {
-                  // Navigate to full history
-                  _showSuccessSnackBar('View all transactions');
-                },
-                child: Text(
-                  'See All',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF168566),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 12),
+        const DPSectionHeader('Bonus history'),
         if (_referralTransactions.isEmpty)
           _buildEmptyState()
         else
-          Column(
-            children:
-                _referralTransactions
-                    .take(5)
-                    .map((transaction) => _buildTransactionItem(transaction))
-                    .toList(),
-          ),
+          for (final t in _referralTransactions) _buildTransactionItem(t),
       ],
     );
   }
 
   Widget _buildEmptyState() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Icon(Icons.emoji_events, size: 56, color: Colors.grey.shade300),
-          const SizedBox(height: 16),
-          Text(
-            'No referral bonuses yet',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Share your referral code to start earning!',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+    return const DPEmptyState(
+      icon: DPIcons.gift,
+      title: 'No bonuses yet',
+      message: 'Share your code. When a friend funds ₦5,000 or more, you both earn.',
     );
   }
 
   Widget _buildTransactionItem(Map<String, dynamic> transaction) {
-    final amount = (transaction['amount'] ?? 0.0).toDouble();
+    final amount = ((transaction['amount'] ?? 0.0) as num).toDouble();
     final type = _getBonusType(transaction);
-    final description = transaction['description'] ?? '';
-    final date =
-        DateTime.tryParse(transaction['createdAt']?.toString() ?? '') ??
-        DateTime.now();
-    final color = _getBonusColor(type);
-    final icon = _getBonusIcon(type);
-
-    return GestureDetector(
+    final date = DateTime.tryParse(transaction['createdAt']?.toString() ?? '')?.toLocal() ?? DateTime.now();
+    return DPTransactionTile(
+      icon: _getBonusIcon(type),
+      title: type,
+      subtitle: _formatDate(date),
+      amount: '+${dpNaira(amount, decimals: amount % 1 != 0)}',
+      credit: true,
       onTap: () => _showTransactionReceipt(transaction),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon, color: color, size: 22),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    type,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF14263D),
-                    ),
-                  ),
-                  if (description.isNotEmpty) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      description,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatDate(date),
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '+₦${amount.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: color,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'BONUS',
-                    style: TextStyle(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w700,
-                      color: color,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   Widget _buildGuideCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const DPSectionHeader('How it works'),
+        DPCard(
+          child: Column(
             children: [
-              Icon(
-                Icons.info_outline,
-                color: const Color(0xFF102C68),
-                size: 20,
-              ),
-              const SizedBox(width: 8),
+              _buildGuideItem('1', 'Share your referral code with friends'),
+              _buildGuideItem('2', 'They sign up and make a first deposit of ₦5,000 or more'),
+              _buildGuideItem('3', 'You both earn ₦200 instantly'),
+              _buildGuideItem('4', 'Earn ₦20 when the people you invite bring friends'),
+              const SizedBox(height: 4),
               Text(
-                'How to Earn More',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF102C68),
-                ),
+                'Bonuses go to your earnings balance. Move them to your wallet any time from Commission & earnings.',
+                style: DPText.small,
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          _buildGuideItem('1', 'Share your referral code with friends'),
-          _buildGuideItem('2', 'They sign up and make first deposit (₦5000+)'),
-          _buildGuideItem('3', 'You both earn ₦200 instantly'),
-          _buildGuideItem('4', 'Earn ₦20 when your referrals invite others'),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0x05102C68),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.lightbulb_outline,
-                  color: const Color(0xFF102C68),
-                  size: 16,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'All bonuses are credited to your commission balance and can be used for payments or withdrawn.',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: const Color(0xFF102C68),
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildGuideItem(String number, String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: const Color(0x05102C68),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                number,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF102C68),
-                ),
-              ),
-            ),
+            width: 26,
+            height: 26,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(color: DP.greenSoft, shape: BoxShape.circle),
+            child: Text(number, style: DPText.label.copyWith(color: DP.green)),
           ),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade700,
-              ),
-            ),
-          ),
+          Expanded(child: Padding(padding: const EdgeInsets.only(top: 3), child: Text(text, style: DPText.body))),
         ],
       ),
     );
