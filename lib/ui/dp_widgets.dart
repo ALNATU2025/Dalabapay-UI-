@@ -1989,3 +1989,113 @@ class _DPCodeInputState extends State<DPCodeInput> {
     });
   }
 }
+
+enum DPDialogTone { success, error, warn, info }
+
+/// Consistent result / confirmation dialog.
+Future<T?> showDPDialog<T>(
+  BuildContext context, {
+  required String title,
+  String? message,
+  DPDialogTone tone = DPDialogTone.info,
+  DPIconData? icon,
+  List<String> bullets = const [],
+  String primaryLabel = 'OK',
+  VoidCallback? onPrimary,
+  String? secondaryLabel,
+  VoidCallback? onSecondary,
+  bool barrierDismissible = true,
+  Widget? body,
+}) {
+  late Color bg, fg;
+  late DPIconData ic;
+  switch (tone) {
+    case DPDialogTone.success:
+      bg = DP.greenSoft;
+      fg = DP.green;
+      ic = DPIcons.circleCheck;
+      break;
+    case DPDialogTone.error:
+      bg = DP.dangerSoft;
+      fg = DP.danger;
+      ic = DPIcons.circleAlert;
+      break;
+    case DPDialogTone.warn:
+      bg = DP.warnSoft;
+      fg = DP.warn;
+      ic = DPIcons.triangleAlert;
+      break;
+    case DPDialogTone.info:
+      bg = DP.blueSoft;
+      fg = DP.blue;
+      ic = DPIcons.info;
+      break;
+  }
+  return showDialog<T>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    builder: (ctx) => Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 26, vertical: 24),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 28, 24, 22),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DPIconBadge(icon: icon ?? ic, bg: bg, fg: fg, size: 60, radius: 30),
+            const SizedBox(height: 16),
+            Text(title,
+                textAlign: TextAlign.center,
+                style: DPText.title.copyWith(fontWeight: FontWeight.w500)),
+            if (message != null && message.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(message, textAlign: TextAlign.center, style: DPText.bodyMuted),
+            ],
+            if (body != null) ...[const SizedBox(height: 14), body],
+            if (bullets.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              for (final b in bullets)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 2),
+                        child: DPIcon(DPIcons.check, size: 15, color: DP.green),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(b, style: DPText.small.copyWith(fontSize: 13))),
+                    ],
+                  ),
+                ),
+            ],
+            const SizedBox(height: 22),
+            DPButton(
+              label: primaryLabel,
+              onPressed: () {
+                if (onPrimary != null) {
+                  onPrimary();
+                } else {
+                  Navigator.of(ctx).pop();
+                }
+              },
+            ),
+            if (secondaryLabel != null) ...[
+              const SizedBox(height: 10),
+              DPButton.secondary(
+                label: secondaryLabel,
+                onPressed: () {
+                  if (onSecondary != null) {
+                    onSecondary();
+                  } else {
+                    Navigator.of(ctx).pop();
+                  }
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    ),
+  );
+}

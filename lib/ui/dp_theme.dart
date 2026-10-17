@@ -1,4 +1,5 @@
 // Dalabapay design system: colour, type, spacing and the Material theme.
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

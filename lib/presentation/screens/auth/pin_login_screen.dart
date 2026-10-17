@@ -4,10 +4,10 @@ import 'dart:convert';
 import 'package:dalabapay/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/biometric_service.dart';
+import '../../../ui/ui.dart';
 
 class PinLoginScreen extends StatefulWidget {
   const PinLoginScreen({super.key});
@@ -32,12 +32,6 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   bool _isAutoLogout = false;
   bool _biometricAvailable = false;
 
-  final Color _primaryColor = const Color(0xFF243889);
-  final Color _secondaryColor = const Color(0xFF219C7E);
-  final Color _backgroundColor = Colors.white;
-  final Color _digitColor = const Color(0xFF1C2D5A);
-  final Color _pinDotColor = const Color(0xFF243889);
-  final Color _errorColor = const Color(0xFFE74C3C);
 
   @override
   void initState() {
@@ -185,17 +179,7 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
       }
 
       if (_isAutoLogout && _fullName.isNotEmpty && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Session expired. Enter PIN to continue, ${_fullName.split(' ').first}!',
-              style: GoogleFonts.inter(color: Colors.white),
-            ),
-            backgroundColor: Colors.orange.shade700,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        dpSnack(context, 'Session expired. Enter PIN to continue, ${_fullName.split(' ').first}!', error: true);
       }
     } catch (e) {
       debugPrint('Error checking PIN status: $e');
@@ -216,232 +200,65 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   // ==================== DIALOGS ====================
 
   void _showErrorDialog(String title, String message, {VoidCallback? onOk}) {
-    showDialog(
-      context: context,
+    showDPDialog(
+      context,
+      tone: DPDialogTone.error,
       barrierDismissible: false,
-      builder:
-          (ctx) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(Icons.error_outline, color: _errorColor, size: 28),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                      color: _errorColor,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            content: Text(message, style: GoogleFonts.inter(fontSize: 14)),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  if (Navigator.canPop(ctx)) Navigator.pop(ctx);
-                  if (onOk != null) onOk();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                ),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
+      title: title,
+      message: message,
+      onPrimary: () {
+        Navigator.of(context).pop();
+        if (onOk != null) onOk();
+      },
     );
   }
 
   void _showPinErrorDialog(String message, int attemptsRemaining) {
-    showDialog(
-      context: context,
+    showDPDialog(
+      context,
+      tone: DPDialogTone.error,
       barrierDismissible: false,
-      builder:
-          (ctx) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(Icons.cancel_outlined, color: _errorColor, size: 28),
-                const SizedBox(width: 12),
-                Text(
-                  'Invalid PIN',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
-                    color: _errorColor,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'The PIN you entered is incorrect.',
-                  style: GoogleFonts.inter(fontSize: 14),
-                ),
-                if (attemptsRemaining > 0) ...[
-                  const SizedBox(height: 12),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.orange.withOpacity(0.2),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.warning_amber_outlined,
-                          color: Colors.orange.shade700,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '$attemptsRemaining attempts remaining',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.orange.shade700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  if (Navigator.canPop(ctx)) Navigator.pop(ctx);
-                  setState(() {
-                    _pin = '';
-                    _errorMessage = '';
-                  });
-                },
-                child: Text(
-                  'Try Again',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    color: _primaryColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
+      title: 'Incorrect PIN',
+      message: 'The PIN you entered is incorrect.',
+      body: attemptsRemaining > 0
+          ? DPNotice(
+              '$attemptsRemaining attempts remaining',
+              kind: DPNoticeKind.warn,
+              margin: EdgeInsets.zero,
+            )
+          : null,
+      primaryLabel: 'Try again',
+      onPrimary: () {
+        Navigator.of(context).pop();
+        setState(() {
+          _pin = '';
+          _errorMessage = '';
+        });
+      },
     );
   }
 
   void _showLockoutDialog(String message, int minutesRemaining) {
-    showDialog(
-      context: context,
+    showDPDialog(
+      context,
+      tone: DPDialogTone.error,
+      icon: DPIcons.lock,
       barrierDismissible: false,
-      builder:
-          (ctx) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(Icons.lock_outline, color: Colors.red.shade700, size: 28),
-                const SizedBox(width: 12),
-                Text(
-                  'Account Locked',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red.shade700,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(message, style: GoogleFonts.inter(fontSize: 14)),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.05),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.red.withOpacity(0.2)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.timer, color: Colors.red.shade700, size: 20),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Please wait $minutesRemaining minutes before trying again.',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: Colors.red.shade700,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              ElevatedButton(
-                onPressed: () {
-                  if (Navigator.canPop(ctx)) Navigator.pop(ctx);
-                  setState(() {
-                    _pin = '';
-                    _errorMessage = '';
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                ),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
+      title: 'Account temporarily locked',
+      message: message,
+      body: DPNotice(
+        'Please wait $minutesRemaining minutes before trying again.',
+        kind: DPNoticeKind.danger,
+        icon: DPIcons.clock,
+        margin: EdgeInsets.zero,
+      ),
+      onPrimary: () {
+        Navigator.of(context).pop();
+        setState(() {
+          _pin = '';
+          _errorMessage = '';
+        });
+      },
     );
   }
 
@@ -537,19 +354,9 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
       AuthService.startSessionMonitoring();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _fullName.isNotEmpty
+        dpSnack(context, _fullName.isNotEmpty
                   ? 'Welcome back, ${_fullName.split(' ').first}!'
-                  : 'Login successful!',
-              style: GoogleFonts.inter(color: Colors.white),
-            ),
-            backgroundColor: _secondaryColor,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+                  : 'Login successful!', success: true);
       }
 
       await Future.delayed(const Duration(milliseconds: 500));
@@ -597,48 +404,18 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
         await _processSuccessfulLogin();
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Biometric cancelled. Please enter your PIN.',
-                style: GoogleFonts.inter(color: Colors.white),
-              ),
-              backgroundColor: Colors.orange.shade800,
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 2),
-            ),
-          );
+          dpSnack(context, 'Biometric cancelled. Please enter your PIN.', error: true);
         }
       }
     } on PlatformException catch (e) {
       debugPrint('Biometric PlatformException: ${e.code} - ${e.message}');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Biometric unavailable: ${e.message ?? e.code}. Please use PIN.',
-              style: GoogleFonts.inter(color: Colors.white),
-            ),
-            backgroundColor: Colors.orange.shade800,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        dpSnack(context, 'Biometric unavailable: ${e.message ?? e.code}. Please use PIN.', error: true);
       }
     } catch (e) {
       debugPrint('Biometric error: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Biometric failed. Please enter your PIN.',
-              style: GoogleFonts.inter(color: Colors.white),
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        dpSnack(context, 'Biometric failed. Please enter your PIN.', error: true);
       }
     } finally {
       if (mounted) {
@@ -705,454 +482,128 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoadingData) {
-      return Scaffold(
-        backgroundColor: _backgroundColor,
-        body: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-          ),
-        ),
-      );
+      return const Scaffold(backgroundColor: DP.bg, body: DPLoader());
     }
 
-    return Scaffold(
-      backgroundColor: _backgroundColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight: MediaQuery.of(context).size.height,
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildLogo(),
-                _buildPinForm(),
-                const SizedBox(height: 20),
-              ],
+    final firstName = _fullName.trim().isEmpty ? '' : _fullName.trim().split(' ').first;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: DPTheme.overlay,
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, c) => SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: DP.gutter),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: c.maxHeight),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 18),
+                    Row(
+                      children: [
+                        const DPLogo(height: 26),
+                        const Spacer(),
+                        DPLinkButton(label: 'Use email', onPressed: _navigateToLogin),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    _buildUserInfo(),
+                    DPHeadline(
+                      _transactionPinSet
+                          ? (firstName.isNotEmpty ? 'Welcome back, $firstName.' : 'Welcome back.')
+                          : 'Set up your PIN first.',
+                      subtitle: _transactionPinSet
+                          ? (_isAutoLogout
+                              ? 'Your session timed out. Enter your 6-digit PIN to continue.'
+                              : 'Enter your 6-digit PIN to continue.')
+                          : 'You need a transaction PIN before you can log in with one.',
+                      padding: const EdgeInsets.only(top: 18, bottom: 8),
+                    ),
+                    if (_transactionPinSet) ...[
+                      _buildPinDots(),
+                      if (_errorMessage.isNotEmpty)
+                        DPNotice(_errorMessage, kind: DPNoticeKind.danger),
+                      if (_isLoading)
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 12),
+                          child: DPLoader(),
+                        ),
+                      _buildNumberPad(),
+                    ] else ...[
+                      const SizedBox(height: 16),
+                      DPButton(label: 'Set up PIN', onPressed: _navigateToPinSetup),
+                    ],
+                    const SizedBox(height: 18),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildLogo() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 20, top: 10),
-      child: Image.asset(
-        'assets/dalabapay2.png',
-        height: 50,
-        fit: BoxFit.contain,
-        errorBuilder:
-            (_, __, ___) => Container(
-              width: 100,
-              height: 50,
-              decoration: BoxDecoration(
-                color: _primaryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(Icons.security, size: 30, color: _primaryColor),
-            ),
       ),
     );
   }
 
   Widget _buildUserInfo() {
     if (_fullName.isEmpty) return const SizedBox.shrink();
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: _primaryColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: _primaryColor.withOpacity(0.1)),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
+      children: [
+        DPAvatar(name: _fullName, size: 52),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: _primaryColor,
-                child: Text(
-                  _fullName[0].toUpperCase(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                _fullName,
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: _primaryColor,
-                ),
-              ),
+              Text(_fullName, style: DPText.body.copyWith(fontWeight: FontWeight.w500)),
+              if (_email.isNotEmpty) Text(_email, style: DPText.small),
             ],
           ),
-          if (_isAutoLogout) ...[
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 4,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.timer_outlined,
-                    size: 14,
-                    color: Colors.orange.shade700,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Session Expired - Enter PIN to continue',
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      color: Colors.orange.shade700,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
+        ),
+        if (_isAutoLogout) const DPStatusPill('Session timed out'),
+      ],
     );
   }
 
   Widget _buildPinDots() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(6, (index) {
-          final isFilled = index < _pin.length;
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
-            margin: const EdgeInsets.symmetric(horizontal: 6),
-            width: 16,
-            height: 16,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: isFilled ? _pinDotColor : Colors.grey.shade200,
-              border: Border.all(
-                color: isFilled ? _primaryColor : Colors.grey.shade300,
-                width: 1.5,
-              ),
-              boxShadow:
-                  isFilled
-                      ? [
-                        BoxShadow(
-                          color: _primaryColor.withOpacity(0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                      : null,
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildDigitButton(String digit) {
-    return GestureDetector(
-      onTap: () => _onPinDigitPressed(digit),
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: _backgroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-          border: Border.all(color: Colors.grey.shade200, width: 1),
-        ),
-        child: Center(
-          child: Text(
-            digit,
-            style: GoogleFonts.poppins(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: _digitColor,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBackspaceButton() {
-    return GestureDetector(
-      onTap: _onBackspacePressed,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.shade100,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-        ),
-        child: const Icon(
-          Icons.backspace,
-          size: 24,
-          color: Color(0xFF1C2D5A),
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 22),
+      child: DPCodeBoxes(
+        length: 6,
+        value: _pin,
+        obscure: true,
+        error: _errorMessage.isNotEmpty,
+        boxSize: 48,
       ),
     );
   }
 
   Widget _buildBiometricButton() {
-    if (!_biometricAvailable) {
-      return Opacity(
-        opacity: 0.3,
-        child: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade100,
-          ),
-          child: const Icon(Icons.fingerprint, size: 28, color: Colors.grey),
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: _isBiometricProcessing ? null : _tryBiometricLogin,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: const LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color(0xFF92D394), Color(0xFF243889)],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF243889).withOpacity(0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child:
-            _isBiometricLoading
-                ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-                : const Icon(Icons.fingerprint, size: 28, color: Colors.white),
-      ),
-    );
+    if (!_biometricAvailable) return const SizedBox();
+    return _isBiometricLoading
+        ? const SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          )
+        : const DPIcon(DPIcons.fingerprint, size: 26, color: DP.green);
   }
 
   Widget _buildNumberPad() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['1', '2', '3'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['4', '5', '6'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: ['7', '8', '9'].map(_buildDigitButton).toList(),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildBiometricButton(),
-            _buildDigitButton('0'),
-            _buildBackspaceButton(),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPinForm() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            _transactionPinSet ? 'Enter Your PIN' : 'PIN Not Set',
-            style: GoogleFonts.poppins(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color:
-                  _transactionPinSet ? _primaryColor : Colors.orange.shade700,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _transactionPinSet
-                ? (_isAutoLogout
-                    ? '🔐 Session expired. Enter PIN to continue.'
-                    : 'Enter your 6-digit PIN to continue')
-                : 'Please set up your transaction PIN first',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color:
-                  _transactionPinSet
-                      ? const Color(0xFF64748B)
-                      : Colors.orange.shade700,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          _buildUserInfo(),
-          if (_transactionPinSet) ...[
-            _buildPinDots(),
-            _buildNumberPad(),
-          ] else ...[
-            const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.orange.withOpacity(0.2)),
+    return DPKeypad(
+      onDigit: _onPinDigitPressed,
+      onBackspace: _onBackspacePressed,
+      extraKey: _biometricAvailable
+          ? GestureDetector(
+              onTap: _isBiometricProcessing ? null : _tryBiometricLogin,
+              behavior: HitTestBehavior.opaque,
+              child: SizedBox(
+                width: double.infinity,
+                height: 58,
+                child: Center(child: _buildBiometricButton()),
               ),
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.lock_open_outlined,
-                    size: 48,
-                    color: Colors.orange,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    'No PIN Set',
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.orange.shade700,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'You need to set up a transaction PIN before you can login with PIN.',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: const Color(0xFF64748B),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _navigateToPinSetup,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 12,
-                      ),
-                    ),
-                    child: Text(
-                      'Set Up PIN',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          if (_errorMessage.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: _errorColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _errorColor.withOpacity(0.2)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.error_outline, color: _errorColor, size: 18),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _errorMessage,
-                      style: GoogleFonts.inter(
-                        color: _errorColor,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          if (_isLoading) ...[
-            const SizedBox(height: 16),
-            Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                strokeWidth: 3,
-              ),
-            ),
-          ],
-          if (_transactionPinSet) ...[
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: _navigateToLogin,
-              child: Text(
-                'Login with Email',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  color: const Color(0xFF64748B),
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
+            )
+          : null,
     );
   }
 }

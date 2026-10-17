@@ -1,9 +1,10 @@
 // lib/presentation/screens/auth/otp_verification_screen.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 import '../../../core/services/api_service.dart';
+import '../../../ui/ui.dart';
 
 class OTPVerificationScreen extends StatefulWidget {
   final String email;
@@ -31,9 +32,6 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
-  static const Color _brand = Color(0xFF219C7E);
-  static const Color _brandDark = Color(0xFF1C2D5A);
-  static const Color _white = Colors.white;
 
   @override
   void initState() {
@@ -166,16 +164,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
           controller.clear();
         }
         FocusScope.of(context).requestFocus(_otpFocusNodes[0]);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'New OTP sent to your email',
-              style: GoogleFonts.inter(),
-            ),
-            backgroundColor: _brand,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        dpSnack(context, 'New code sent to your email', success: true);
       } else {
         setState(
           () => _errorMessage = response['message'] ?? 'Failed to resend OTP',
@@ -190,323 +179,121 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _white,
-      body: SafeArea(
-        child: FadeTransition(
+    final complete = _enteredOTP.length == 6;
+    final mm = (_resendCountdown ~/ 60).toString().padLeft(2, '0');
+    final ss = (_resendCountdown % 60).toString().padLeft(2, '0');
+    return DPPage(
+      title: 'Verify your email',
+      children: [
+        FadeTransition(
           opacity: _fadeAnimation,
-          child: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 24),
-
-                  // Back Button
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.arrow_back_rounded, color: _brandDark),
-                    padding: EdgeInsets.zero,
-                    alignment: Alignment.centerLeft,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Logo
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Image.asset(
-                      'assets/dalabapay2.png',
-                      width: 160,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-
-                  const SizedBox(height: 2),
-
-                  // Slogan
-                  Text(
-                    'Smart Life, Fast Pay',
-                    style: GoogleFonts.inter(
-                      fontSize: 13.5,
-                      fontWeight: FontWeight.w700,
-                      color: _brand,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Heading
-                  Text(
-                    'Verify OTP',
-                    style: GoogleFonts.poppins(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w800,
-                      color: _brandDark,
-                      height: 1.1,
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Subtitle
-                  Text(
-                    'Enter the 6-digit code sent to your email',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: Colors.grey[500],
-                      height: 1.4,
-                    ),
-                  ),
-
-                  const SizedBox(height: 28),
-
-                  // Thin Divider
-                  Container(
-                    height: 1,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [_brand.withOpacity(0.35), Colors.transparent],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // OTP Fields
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List.generate(
-                      6,
-                      (index) => _buildOTPField(index),
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Error Message
-                  if (_errorMessage.isNotEmpty)
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.05),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            color: Colors.red,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              _errorMessage,
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  const SizedBox(height: 24),
-
-                  // Verify Button
-                  _buildVerifyButton(),
-
-                  const SizedBox(height: 20),
-
-                  // Resend OTP
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Didn\'t receive the code? ',
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap:
-                            (_resendCountdown == 0 && !_isResending)
-                                ? _resendOTP
-                                : null,
-                        child: Text(
-                          _isResending
-                              ? 'Sending...'
-                              : _resendCountdown > 0
-                              ? 'Resend in ${_resendCountdown}s'
-                              : 'Resend Code',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            color:
-                                (_resendCountdown == 0 && !_isResending)
-                                    ? _brand
-                                    : Colors.grey[400],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Trust Strip
-                  _buildTrustStrip(),
-
-                  const SizedBox(height: 24),
-                ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: 18),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: DPIconBadge(
+                  icon: DPIcons.mail,
+                  bg: DP.greenSoft,
+                  fg: DP.green,
+                  size: 64,
+                  radius: 20,
+                ),
               ),
-            ),
+              DPHeadline(
+                'One quick check.',
+                subtitle: 'Enter the 6-digit code we sent to\n${widget.email}.',
+                padding: const EdgeInsets.only(top: 26, bottom: 26),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(6, _buildOTPField),
+              ),
+              if (_errorMessage.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Text(_errorMessage, style: DPText.small.copyWith(color: DP.danger)),
+              ],
+              const SizedBox(height: 18),
+              Center(
+                child: _resendCountdown > 0
+                    ? Text('Resend code in $mm:$ss', style: DPText.bodyMuted.copyWith(fontSize: 13.5))
+                    : DPLinkButton(
+                        label: _isResending ? 'Sending…' : 'Resend code',
+                        onPressed: _isResending ? null : _resendOTP,
+                      ),
+              ),
+              const SizedBox(height: 18),
+              _buildVerifyButton(complete),
+              const SizedBox(height: 10),
+              Center(
+                child: DPLinkButton(
+                  label: 'Change email address',
+                  onPressed: () => Navigator.of(context).maybePop(),
+                ),
+              ),
+              const SizedBox(height: 14),
+              _buildTrustStrip(),
+              const SizedBox(height: 48),
+              Center(child: Text('Still having trouble?', style: DPText.bodyMuted.copyWith(fontSize: 13))),
+              Center(
+                child: DPLinkButton(
+                  label: 'Get help from our team',
+                  onPressed: () => Navigator.pushNamed(context, '/support'),
+                ),
+              ),
+            ],
           ),
         ),
-      ),
+      ],
     );
   }
 
   Widget _buildOTPField(int index) {
-    return Container(
-      width: 50,
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: _otpFocusNodes[index].hasFocus ? _brand : Colors.grey.shade200,
-          width: _otpFocusNodes[index].hasFocus ? 1.6 : 1,
-        ),
-      ),
-      child: TextFormField(
+    return SizedBox(
+      width: 48,
+      height: 56,
+      child: TextField(
         controller: _otpControllers[index],
         focusNode: _otpFocusNodes[index],
-        textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
+        textAlign: TextAlign.center,
         maxLength: 1,
-        style: GoogleFonts.poppins(
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-          color: _brandDark,
-        ),
-        decoration: const InputDecoration(
+        style: DPText.title.copyWith(fontSize: 22, fontWeight: FontWeight.w500),
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+        decoration: InputDecoration(
           counterText: '',
-          border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(DP.rMd),
+            borderSide: BorderSide(
+              color: _errorMessage.isNotEmpty ? DP.danger : DP.border,
+            ),
+          ),
         ),
-        onChanged: (value) => _moveToNextField(index, value),
+        onChanged: (value) {
+          if (value.isEmpty && index > 0) {
+            FocusScope.of(context).requestFocus(_otpFocusNodes[index - 1]);
+          }
+          setState(() {});
+          _moveToNextField(index, value);
+        },
       ),
     );
   }
 
-  Widget _buildVerifyButton() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      width: double.infinity,
-      height: 54,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(13),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF27B48F), Color(0xFF1A8A68)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: _brand.withOpacity(0.35),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(13),
-          onTap: _isLoading ? null : _verifyOTP,
-          child: Center(
-            child:
-                _isLoading
-                    ? const SizedBox(
-                      width: 22,
-                      height: 22,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2.5,
-                      ),
-                    )
-                    : Text(
-                      'VERIFY OTP',
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-          ),
-        ),
-      ),
+  Widget _buildVerifyButton(bool complete) {
+    return DPButton(
+      label: 'Verify code',
+      loading: _isLoading,
+      onPressed: complete && !_isLoading ? _verifyOTP : null,
     );
   }
 
   Widget _buildTrustStrip() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0FBF7),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const _TrustBadge(icon: Icons.shield_rounded, label: 'Secure'),
-          Container(
-            width: 1,
-            height: 20,
-            color: const Color(0xFF219C7E).withOpacity(0.18),
-          ),
-          const _TrustBadge(icon: Icons.bolt_rounded, label: 'Fast'),
-          Container(
-            width: 1,
-            height: 20,
-            color: const Color(0xFF219C7E).withOpacity(0.18),
-          ),
-          const _TrustBadge(icon: Icons.verified_rounded, label: 'Reliable'),
-        ],
-      ),
-    );
-  }
-}
-
-class _TrustBadge extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  const _TrustBadge({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 16, color: const Color(0xFF219C7E)),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF1C2D5A),
-          ),
-        ),
-      ],
+    return const DPNotice(
+      'Can’t find your code? Check your inbox and spam folder, and make sure the email address is correct.',
+      margin: EdgeInsets.zero,
     );
   }
 }
