@@ -12,6 +12,7 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
+import '../../../ui/ui.dart';
 
 class EducationScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -330,50 +331,10 @@ class _EducationScreenState extends State<EducationScreen>
     int? attemptsRemaining,
   }) {
     if (!mounted) return;
-
-    final displayMsg =
-        attemptsRemaining != null
-            ? '⚠️ $message ($attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining)'
-            : '⚠️ $message';
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: const BoxDecoration(
-                color: Colors.white24,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.lock_reset_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                displayMsg,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFFDC2626),
-        behavior: SnackBarBehavior.floating,
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
-        duration: const Duration(seconds: 4),
-      ),
-    );
+    final displayMsg = attemptsRemaining != null
+        ? '$message ($attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining)'
+        : message;
+    dpSnack(context, displayMsg, error: true);
   }
 
   void _log(String message) {
@@ -417,70 +378,38 @@ class _EducationScreenState extends State<EducationScreen>
     }
   }
 
+  // Plans could not be loaded. Made-up plans are no longer shown;
+  // the UI offers a retry instead.
   void _loadMockPlans(String serviceId) {
-    final mockPlans = <Map<String, dynamic>>[];
-
-    switch (serviceId) {
-      case 'waec-registration':
-        mockPlans.addAll([
-          {
-            'name': 'WASSCE Private Candidates - Second Series',
-            'variation_code': 'waec-registration',
-            'variation_amount': '18950.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'WASSCE Private Candidates - First Series',
-            'variation_code': 'waec-registration-2',
-            'variation_amount': '18950.00',
-            'fixedPrice': true,
-          },
-        ]);
-        break;
-      case 'waec':
-        mockPlans.addAll([
-          {
-            'name': 'WASSCE Result Checker',
-            'variation_code': 'waecdirect',
-            'variation_amount': '1200.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'WASSCE GCE Result Checker',
-            'variation_code': 'waecdirect-2',
-            'variation_amount': '1200.00',
-            'fixedPrice': true,
-          },
-        ]);
-        break;
-      case 'jamb':
-        mockPlans.addAll([
-          {
-            'name': 'UTME PIN (with mock)',
-            'variation_code': 'utme-mock',
-            'variation_amount': '6300.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'UTME PIN (without mock)',
-            'variation_code': 'utme-no-mock',
-            'variation_amount': '4700.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'Direct Entry PIN',
-            'variation_code': 'direct-entry',
-            'variation_amount': '5300.00',
-            'fixedPrice': true,
-          },
-        ]);
-        break;
-    }
-
     setState(() {
-      _servicePlans[serviceId] = mockPlans;
+      _servicePlans[serviceId] = [];
       _selectedPlan = null;
     });
+  }
+
+  Map<String, dynamic>? get _selectedServiceData {
+    if (_selectedService == null) return null;
+    for (final s in _services) {
+      if (s['id'] == _selectedService) return s;
+    }
+    return null;
+  }
+
+  Map<String, dynamic>? get _selectedPlanData {
+    if (_selectedService == null || _selectedPlan == null) return null;
+    for (final p in _servicePlans[_selectedService] ?? const <Map<String, dynamic>>[]) {
+      if (p['name'] == _selectedPlan) return p;
+    }
+    return null;
+  }
+
+  double get _totalAmount {
+    final plan = _selectedPlanData;
+    if (plan == null) return 0;
+    final unit = double.tryParse(plan['variation_amount']?.toString() ?? '0') ?? 0;
+    final showQty = _selectedServiceData?['showQuantity'] == true;
+    final qty = showQty ? (int.tryParse(_quantityController.text.trim()) ?? 1) : 1;
+    return unit * (qty < 1 ? 1 : qty);
   }
 
   Future<void> _validateProfileId() async {
@@ -528,191 +457,7 @@ class _EducationScreenState extends State<EducationScreen>
   }
 
   void _showValidationSuccessDialog(String customerName) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: Colors.white,
-            child: Container(
-              padding: const EdgeInsets.all(28),
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [_secondary, _secondary.withOpacity(0.7)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: _secondary.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.white,
-                      size: 40,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Profile Validated!',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      color: _primary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _secondary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      'Verification Complete',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: _secondary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Divider(color: Color(0xFFEEEEEE)),
-                  const SizedBox(height: 16),
-                  _buildDetailRow('Customer Name', customerName),
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: _primary.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _primary.withOpacity(0.1)),
-                    ),
-                    child: Row(
-                      children: [
-                        HugeIcon(
-                          icon: HugeIcons.strokeRoundedShield01,
-                          color: _primary,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            'This profile has been verified and is ready for PIN purchase.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: _primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            if (Navigator.canPop(context)) {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                            } else {
-                              // Navigate to a fallback screen
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                            setState(() {
-                              _customerName = null;
-                              _profileIdController.clear();
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.grey.shade700,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(color: Colors.grey.shade300),
-                            ),
-                          ),
-                          child: Text(
-                            'Retry',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (Navigator.canPop(context)) {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                            } else {
-                              // Navigate to a fallback screen
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _primary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 2,
-                          ),
-                          child: Text(
-                            'Continue',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-    );
+    dpSnack(context, 'Profile verified for ${customerName.toUpperCase()}', success: true);
   }
 
   Widget _buildDetailRow(String label, String value) {
@@ -1176,1080 +921,145 @@ class _EducationScreenState extends State<EducationScreen>
   // ==================== SERVICE DROPDOWN ====================
 
   Widget _buildServiceDropdown() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedService,
-          isExpanded: true,
-          hint: Row(
-            children: [
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  shape: BoxShape.circle,
-                ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedMortarboard01,
-                  color: Colors.grey.shade400,
-                  size: 16,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                'Select Service',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: _hintColor,
-                ),
-              ),
-            ],
+    final labels = _services.map((s) => s['name'] as String).toList();
+    final idx = _services.indexWhere((s) => s['id'] == _selectedService);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const DPFieldLabel('What do you need?'),
+        for (var i = 0; i < _services.length; i++)
+          DPOptionRow(
+            leading: DPIconBadge(
+              icon: _services[i]['id'] == 'jamb' ? DPIcons.graduationCap : DPIcons.fileText,
+              size: 38,
+              radius: 12,
+            ),
+            title: labels[i],
+            subtitle: _services[i]['id'] == 'jamb'
+                ? 'UTME / Direct Entry e-PIN'
+                : (_services[i]['id'] == 'waec' ? 'Result checker PIN' : 'Exam registration PIN'),
+            selected: i == idx,
+            onTap: () {
+              final value = _services[i]['id'] as String;
+              if (value == _selectedService) return;
+              setState(() {
+                _selectedService = value;
+                _selectedPlan = null;
+                _customerName = null;
+                _showProfileIdField = _services[i]['requiresProfileId'] == true;
+              });
+              _fetchServicePlans(value);
+            },
           ),
-          icon: HugeIcon(
-            icon: HugeIcons.strokeRoundedArrowDown01,
-            color: Colors.grey,
-            size: 18,
-          ),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey.shade800,
-          ),
-          items:
-              _services.map((service) {
-                return DropdownMenuItem<String>(
-                  value: service['id'],
-                  child: Row(
-                    children: [
-                      _buildServiceLogo(
-                        service['logo'],
-                        service['color'],
-                        size: 28,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          service['fullName'],
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _selectedService = value;
-              _selectedPlan = null;
-              _customerName = null;
-              _showProfileIdField = false;
-            });
-            final service = _services.firstWhere((s) => s['id'] == value);
-            setState(() {
-              _showProfileIdField = service['requiresProfileId'] == true;
-            });
-            _fetchServicePlans(value!);
-          },
-        ),
-      ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 
   // ==================== PLAN SELECTION ====================
 
   Widget _buildPlanSelection() {
-    final plans = _servicePlans[_selectedService] ?? [];
-
-    if (_isLoadingPlans) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Select Plan',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: _primary,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    if (plans.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          children: [
-            HugeIcon(
-              icon: HugeIcons.strokeRoundedAlert02,
-              color: Colors.orange.shade700,
-              size: 40,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'No plans available',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Colors.grey.shade700,
-              ),
-            ),
-            Text(
-              'Please try another service',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
+    final plans = _servicePlans[_selectedService] ?? const <Map<String, dynamic>>[];
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Select Plan',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: _primary,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Container(
-          constraints: const BoxConstraints(maxHeight: 280),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: plans.length,
-            itemBuilder: (context, index) {
-              final plan = plans[index];
-              final isSelected = _selectedPlan == plan['name'];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: _buildPlanCard(plan, isSelected),
-              );
-            },
-          ),
-        ),
+        const DPFieldLabel('Choose a plan'),
+        if (_isLoadingPlans)
+          const DPLoader(message: 'Loading plans…')
+        else if (plans.isEmpty)
+          DPCard(
+            child: DPEmptyState(
+              icon: DPIcons.circleAlert,
+              title: 'Couldn’t load plans',
+              message: 'Check your connection and try again.',
+              actionLabel: 'Retry',
+              onAction: () => _fetchServicePlans(_selectedService!),
+            ),
+          )
+        else
+          for (final p in plans) _buildPlanCard(p, _selectedPlan == p['name']),
+        const SizedBox(height: 10),
       ],
     );
   }
 
   Widget _buildPlanCard(Map<String, dynamic> plan, bool isSelected) {
-    final amount = plan['variation_amount']?.toString() ?? '0.00';
-    final name = plan['name']?.toString() ?? 'Unknown Plan';
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedPlan = name;
-        });
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: isSelected ? _primary : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? _primary : Colors.grey.shade200,
-            width: isSelected ? 2 : 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color:
-                  isSelected
-                      ? _primary.withOpacity(0.2)
-                      : Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: isSelected ? Colors.white : _primary,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.white : _secondary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                '₦${NumberFormat('#,##0').format(double.tryParse(amount) ?? 0)}',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: isSelected ? _primary : _secondary,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    final amount = double.tryParse(plan['variation_amount']?.toString() ?? '0') ?? 0;
+    final name = plan['name']?.toString() ?? 'Unknown plan';
+    return DPOptionRow(
+      title: name,
+      trailingText: dpNaira(amount),
+      selected: isSelected,
+      onTap: () => setState(() => _selectedPlan = name),
     );
   }
 
   // ==================== PAYMENT SHEET OVERLAY ====================
 
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
-      child: AnimatedBuilder(
-        animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Header: Logo centered, Close button top-right
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/dalabapay2.png',
-                                      height: 40,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: HugeIcon(
-                                          icon:
-                                              HugeIcons
-                                                  .strokeRoundedMultiplicationSign,
-                                          size: 18,
-                                          color: const Color(0xFF728078),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-
-                              Text(
-                                'Confirm Payment',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF14263D),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Transaction Details
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-
-                              // Balance
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-
-                              Divider(
-                                color: Colors.grey.shade200,
-                                thickness: 1,
-                              ),
-                              const SizedBox(height: 20),
-
-                              // Pay with PIN Option
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              // Pay with Biometric Option
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      HugeIcon(
-                                        icon: HugeIcons.strokeRoundedAlert02,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN in Settings to make payments.',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+    final service = _selectedServiceData;
+    final plan = _selectedPlanData;
+    final showQty = service?['showQuantity'] == true;
+    final qty = int.tryParse(_quantityController.text.trim()) ?? 1;
+    final amount = _totalAmount;
+    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
+    final canBiometric = isBiometricSupported && _biometricEnabled && _biometricAllowed;
+    return DPSheetOverlay(
+      animation: _sheetAnimation,
+      onDismiss: _isProcessingPayment ? null : _closePaymentSheet,
+      child: DPPaymentReview(
+        icon: DPIcons.graduationCap,
+        serviceLabel: service?['name']?.toString() ?? 'Education',
+        amount: amount,
+        rows: [
+          DPSummaryRow('Plan', plan?['name']?.toString() ?? '—'),
+          if (_showProfileIdField) DPSummaryRow('Profile ID', _profileIdController.text.trim()),
+          if (_customerName != null) DPSummaryRow('Candidate', _customerName!),
+          DPSummaryRow('Phone number', _phoneController.text.trim()),
+          if (showQty) DPSummaryRow('Quantity', '$qty'),
+          const DPSummaryRow('Service fee', '₦0.00'),
+          DPSummaryRow('Total to pay', dpNaira(amount), emphasize: true),
+        ],
+        walletBalance: _walletBalance,
+        showPin: _transactionPinSet,
+        pinController: _pinController,
+        pinFocusNode: _pinFocusNode,
+        pinError: _pinValidationError,
+        shake: _shakeAnimation,
+        onPinChanged: (_) {
+          if (_pinValidationError != null) setState(() => _pinValidationError = null);
         },
+        processing: _isProcessingPayment,
+        processingBiometric: _useBiometric,
+        onPayWithPin: () {
+          setState(() => _useBiometric = false);
+          _processPayment();
+        },
+        onPayWithBiometric: canBiometric
+            ? () {
+                setState(() {
+                  _useBiometric = true;
+                  _pinValidationError = null;
+                });
+                _processPayment();
+              }
+            : null,
+        biometricName: 'biometrics',
+        onClose: _closePaymentSheet,
+        footnote: 'Your PIN will appear on the receipt. Exam PINs can’t be refunded once issued.',
       ),
     );
   }
 
   // ==================== PAYMENT SHEET DETAILS ====================
 
-  Widget _buildPaymentSheetDetails() {
-    final service = _services.firstWhere(
-      (s) => s['id'] == _selectedService,
-      orElse: () => _services.first,
-    );
-    final planName = _selectedPlan ?? 'N/A';
-    final phone = _phoneController.text.trim();
-    final quantity = int.tryParse(_quantityController.text.trim()) ?? 1;
-    final profileId = _profileIdController.text.trim();
-    final plans = _servicePlans[_selectedService] ?? [];
 
-    final planDetails = plans.firstWhere(
-      (p) => p['name'] == _selectedPlan,
-      orElse:
-          () => {
-            'variation_amount': '0',
-            'name': 'N/A',
-            'variation_code': 'N/A',
-          },
-    );
-    final perUnitAmount =
-        double.tryParse(planDetails['variation_amount']?.toString() ?? '0') ??
-        0;
-    final totalAmount = perUnitAmount * quantity;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          // Service Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: service['color'].withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: _buildServiceLogo(
-                      service['logo'],
-                      service['color'],
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Service',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  service['fullName'] ?? 'N/A',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Plan Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF59E0B).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedTv01,
-                      color: const Color(0xFFF59E0B),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Plan',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  planName,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Phone Number Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: _primary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedSmartPhone01,
-                      color: _primary,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Phone',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                phone.isNotEmpty ? phone : 'N/A',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF14263D),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Profile ID Row (only for JAMB)
-          if (_showProfileIdField && profileId.isNotEmpty) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF8B5CF6).withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedUser02,
-                        color: const Color(0xFF8B5CF6),
-                        size: 18,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Profile ID',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF728078),
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  profileId,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                ),
-              ],
-            ),
-            Divider(height: 14, color: Colors.grey.shade200),
-          ],
-
-          // Quantity Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6366F1).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedCalendar03,
-                      color: const Color(0xFF6366F1),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Quantity',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                '$quantity',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF14263D),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Amount Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: _secondary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedMoney01,
-                      color: _secondary,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Amount',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '₦${totalAmount.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: _secondary,
-                    ),
-                  ),
-                  if (quantity > 1)
-                    Text(
-                      '₦${perUnitAmount.toStringAsFixed(2)} × $quantity',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: _secondary.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondary.withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _secondary,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Available Balance',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF728078),
-                ),
-              ),
-            ],
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: _secondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== PIN OPTION ====================
 
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_shakeAnimation.value, 0),
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFEF2F2)
-                    : (_useBiometric
-                        ? Colors.grey.shade50
-                        : _primary.withOpacity(0.04)),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  hasError
-                      ? const Color(0xFFEF4444)
-                      : (_useBiometric ? Colors.grey.shade300 : _primary),
-              width: hasError ? 2 : (_useBiometric ? 1 : 2),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  enabled: !_useBiometric,
-                  decoration: InputDecoration(
-                    hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: TextStyle(
-                      color:
-                          hasError
-                              ? const Color(0xFFEF4444).withOpacity(0.7)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedBiometricAccess,
-                      color:
-                          hasError
-                              ? const Color(0xFFEF4444)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : _primary),
-                      size: 18,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 0,
-                      vertical: 12,
-                    ),
-                    errorText: _pinValidationError,
-                  ),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        hasError
-                            ? const Color(0xFFDC2626)
-                            : (_useBiometric
-                                ? Colors.grey.shade400
-                                : Colors.black),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFEE2E2),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedAlert02,
-                        color: const Color(0xFFDC2626),
-                        size: 14,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFDC2626),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment || _useBiometric
-                          ? null
-                          : _processPayment,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError
-                            ? const Color(0xFFDC2626)
-                            : (_useBiometric ? Colors.transparent : _secondary),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          hasError
-                              ? const BorderRadius.vertical(
-                                bottom: Radius.circular(12),
-                              )
-                              : BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedBiometricAccess,
-                                color:
-                                    hasError
-                                        ? Colors.white
-                                        : (_useBiometric
-                                            ? Colors.grey.shade400
-                                            : Colors.white),
-                                size: 16,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                hasError
-                                    ? 'Retry'
-                                    : (_useBiometric
-                                        ? 'Switch to PIN'
-                                        : 'Pay with PIN'),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color:
-                                      hasError
-                                          ? Colors.white
-                                          : (_useBiometric
-                                              ? Colors.grey.shade400
-                                              : Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
 
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
-
-    if (!isBiometricSupported) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap:
-            _isProcessingPayment
-                ? null
-                : () {
-                  setState(() {
-                    _useBiometric = true;
-                    _pinValidationError = null;
-                    _pinController.clear();
-                  });
-                  _processPayment();
-                },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-          decoration: BoxDecoration(
-            color: _useBiometric ? _primary.withOpacity(0.08) : Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: _useBiometric ? _primary : Colors.grey.shade300,
-              width: _useBiometric ? 2 : 1,
-            ),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: _primary,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.fingerprint,
-                        color: _useBiometric ? _primary : Colors.grey.shade600,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          _useBiometric
-                              ? '🔐 Tap to authenticate'
-                              : 'Pay with Biometric',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                _useBiometric ? _primary : Colors.grey.shade700,
-                          ),
-                        ),
-                      ),
-                      if (_useBiometric)
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: _secondary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-                            color: Colors.white,
-                            size: 12,
-                          ),
-                        ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== SUCCESS & ERROR DIALOGS ====================
 
@@ -2323,694 +1133,157 @@ class _EducationScreenState extends State<EducationScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    shape: BoxShape.circle,
-                  ),
-                  child: HugeIcon(
-                    icon: HugeIcons.strokeRoundedAlert02,
-                    color: Colors.red.shade700,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: Colors.red.shade700,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: Colors.grey.shade600,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'If this issue persists, please contact support.',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  backgroundColor: _primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  'OK',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
-    );
+    showDPDialog(context, tone: DPDialogTone.error, title: title, message: message);
   }
 
   // ==================== BUILD ====================
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedArrowLeft01,
-          color: _primary,
-          size: 20,
+    final available = !_isLoadingUserData && _isUserActive && _educationServiceEnabled;
+    return Stack(
+      children: [
+        DPPage(
+          title: 'Education',
+          actionLabel: 'History',
+          onAction: () => Navigator.pushNamed(context, '/transactions'),
+          bottom: available
+              ? DPButton(
+                  label: _selectedPlanData != null
+                      ? 'Review · ${dpNaira(_totalAmount)}'
+                      : 'Continue',
+                  icon: DPIcons.arrowRight,
+                  loading: _isLoading || _isAuthenticating,
+                  onPressed: (_isLoading || _isAuthenticating) ? null : _openPaymentSheet,
+                )
+              : null,
+          children: [_buildBody()],
         ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Education',
-        style: TextStyle(
-          color: _primary,
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: _primary.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _primary,
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap:
-                    () =>
-                        setState(() => _isBalanceVisible = !_isBalanceVisible),
-                child: Text(
-                  _isBalanceVisible
-                      ? '₦${_walletBalance.toStringAsFixed(2)}'
-                      : '••••',
-                  style: TextStyle(
-                    color: _primary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        if (_showPaymentSheet) _buildPaymentSheetOverlay(),
       ],
     );
   }
 
+
   Widget _buildBody() {
     if (_isLoadingUserData) {
-      return Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(_primary),
-        ),
-      );
+      return const Padding(padding: EdgeInsets.only(top: 80), child: DPLoader());
     }
-
     if (!_isUserActive || !_educationServiceEnabled) {
       return _buildServiceUnavailable();
     }
-
+    final showQty = _selectedServiceData?['showQuantity'] == true;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildBanner(),
-              const SizedBox(height: 24),
-
-              // Select Service
-              Text(
-                'Select Service',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _buildServiceDropdown(),
-              const SizedBox(height: 20),
-
-              // Plan Selection
-              if (_selectedService != null) _buildPlanSelection(),
-              const SizedBox(height: 20),
-
-              // Profile ID (for JAMB)
-              if (_showProfileIdField) ...[
-                Text(
-                  'Profile ID',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: _primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: TextField(
-                          controller: _profileIdController,
-                          focusNode: _profileFocusNode,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          decoration: InputDecoration(
-                            hintText: 'Enter your Profile ID',
-                            hintStyle: TextStyle(
-                              color: _hintColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            prefixIcon: Container(
-                              padding: const EdgeInsets.all(12),
-                              child: HugeIcon(
-                                icon: HugeIcons.strokeRoundedUser02,
-                                color: _primary,
-                                size: 22,
-                              ),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: Colors.transparent,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 14,
-                            ),
-                          ),
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onChanged: (_) {
-                            setState(() => _customerName = null);
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    SizedBox(
-                      width: 90,
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed:
-                            _isValidating || _profileIdController.text.isEmpty
-                                ? null
-                                : _validateProfileId,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _primary,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: EdgeInsets.zero,
-                        ),
-                        child:
-                            _isValidating
-                                ? SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                                : Text(
-                                  'Validate',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                if (_customerName != null)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: _secondary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _secondary.withOpacity(0.2)),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: _secondary.withOpacity(0.15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-                            color: _secondary,
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Profile Validated',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w800,
-                                  color: _secondary,
-                                ),
-                              ),
-                              Text(
-                                _customerName!,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  color: _secondary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 20),
-              ],
-
-              // Phone Number
-              Text(
-                'Phone Number',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: TextField(
-                  controller: _phoneController,
-                  focusNode: _phoneFocusNode,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
-                  ],
-                  decoration: InputDecoration(
-                    hintText: 'Enter 11-digit phone number',
-                    hintStyle: TextStyle(
-                      color: _hintColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(12),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedSmartPhone01,
-                        color: _primary,
-                        size: 22,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 14,
-                    ),
-                  ),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Quantity
-              if (_selectedService != null &&
-                  _services.firstWhere(
-                        (s) => s['id'] == _selectedService,
-                      )['showQuantity'] ==
-                      true) ...[
-                Text(
-                  'Quantity',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: _primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: TextField(
-                    controller: _quantityController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                      hintText: 'Enter quantity (min 1)',
-                      hintStyle: TextStyle(
-                        color: _hintColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      prefixIcon: Container(
-                        padding: const EdgeInsets.all(12),
-                        child: HugeIcon(
-                          icon: HugeIcons.strokeRoundedLeftToRightListNumber,
-                          color: _primary,
-                          size: 22,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.transparent,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 14,
-                      ),
-                    ),
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-
-              // Info Card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: _primary.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 23,
-                      height: 23,
-                      decoration: BoxDecoration(
-                        color: _primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: _primary,
-                        size: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: Text(
-                        'Confirm the details before proceeding.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: _primary,
-                          height: 1.3,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Continue Button
-              SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: ElevatedButton(
-                  onPressed:
-                      (_isLoading || _isAuthenticating)
-                          ? null
-                          : _openPaymentSheet,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _secondary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 0,
-                  ),
-                  child:
-                      _isLoading || _isAuthenticating
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedArrowUp01,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Continue',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBanner() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bannerHeight = screenWidth < 400 ? 100.0 : 128.0;
-
-    return Container(
-      width: double.infinity,
-      height: bannerHeight,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: const DecorationImage(
-          image: AssetImage('assets/education_banner.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              _primary.withOpacity(0.3),
-              _secondary.withOpacity(0.15),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.4, 0.7],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            HugeIcon(
-              icon:
-                  !_isUserActive
-                      ? HugeIcons.strokeRoundedUser02
-                      : HugeIcons.strokeRoundedMortarboard02,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 18),
+              child: Text('Exam PINs and result checkers, delivered instantly.',
+                  style: DPText.bodyMuted),
             ),
-            const SizedBox(height: 16),
-            Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
+            _buildServiceDropdown(),
+            if (_selectedService != null) _buildPlanSelection(),
+            if (_showProfileIdField) ...[
+              DPField(
+                label: 'JAMB profile ID',
+                labelTrailing: DPLinkButton(
+                  label: _isValidating ? 'Verifying…' : (_customerName != null ? 'Verified' : 'Verify'),
+                  onPressed: _isValidating || _profileIdController.text.isEmpty || _customerName != null
+                      ? null
+                      : _validateProfileId,
+                ),
+                controller: _profileIdController,
+                focusNode: _profileFocusNode,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                hint: 'Enter your profile ID',
+                suffixIcon: DPIcons.idCard,
+                onChanged: (_) => setState(() => _customerName = null),
+                margin: EdgeInsets.only(bottom: _customerName != null ? 10 : 18),
               ),
+              if (_customerName != null) DPVerifiedName(name: _customerName!),
+            ],
+            DPField(
+              label: 'Phone number',
+              controller: _phoneController,
+              focusNode: _phoneFocusNode,
+              keyboardType: TextInputType.phone,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
+              hint: '0803 456 7890',
+              suffixIcon: DPIcons.phone,
             ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'Education service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+            if (showQty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const DPFieldLabel('Quantity'),
+                  Row(
+                    children: [
+                      _qtyButton(DPIcons.minus, () {
+                        final q = int.tryParse(_quantityController.text) ?? 1;
+                        if (q > 1) setState(() => _quantityController.text = '${q - 1}');
+                      }),
+                      Expanded(
+                        child: Text(
+                          _quantityController.text.isEmpty ? '1' : _quantityController.text,
+                          textAlign: TextAlign.center,
+                          style: DPText.title,
+                        ),
+                      ),
+                      _qtyButton(DPIcons.plus, () {
+                        final q = int.tryParse(_quantityController.text) ?? 1;
+                        if (q < 10) setState(() => _quantityController.text = '${q + 1}');
+                      }),
+                    ],
+                  ),
+                  const SizedBox(height: 18),
+                ],
               ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
+            if (_selectedPlanData != null)
+              DPSummaryCard(rows: [
+                DPSummaryRow('Wallet balance', dpNaira(_walletBalance)),
+                const DPSummaryRow('Service fee', '₦0.00'),
+                DPSummaryRow('Total to pay', dpNaira(_totalAmount), emphasize: true),
+              ]),
+            const DPNotice(
+              'Confirm the exam and details before you continue. PINs can’t be reversed once issued.',
+              kind: DPNoticeKind.info,
+              margin: EdgeInsets.zero,
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _qtyButton(DPIconData icon, VoidCallback onTap) {
+    return Material(
+      color: DP.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DP.rMd),
+        side: const BorderSide(color: DP.border),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(DP.rMd),
+        onTap: onTap,
+        child: SizedBox(width: 52, height: 48, child: Center(child: DPIcon(icon, size: 20, color: DP.ink))),
+      ),
+    );
+  }
+
+
+  Widget _buildServiceUnavailable() {
+    return DPServiceUnavailable(
+      message: !_isUserActive
+          ? 'Your account has been deactivated. Please contact support.'
+          : 'Education payments are currently unavailable. Please try again later.',
     );
   }
 }
