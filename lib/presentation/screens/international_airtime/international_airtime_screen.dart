@@ -15,6 +15,7 @@ import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
 import '../../../core/widgets/country_flag_widget.dart';
+import '../../../ui/ui.dart';
 
 class IntlAirtimeScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -1684,51 +1685,12 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
     // 🛡️ Final safety net — refuse to display technical junk
     final sanitizedMessage = _sanitizeMessage(message);
     final sanitizedTitle = _sanitizeMessage(title);
-
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(Icons.error_outline, color: Colors.red.shade700, size: 24),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    sanitizedTitle,
-                    style: GoogleFonts.inter(
-                      color: Colors.red.shade700,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              sanitizedMessage,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF168566),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: sanitizedTitle,
+      message: sanitizedMessage,
+      confirmLabel: 'OK',
+      tone: DPTone.error,
     );
   }
 
@@ -1772,76 +1734,48 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
+    return PopScope(
+      canPop: !_showPaymentSheet,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showPaymentSheet && !_isProcessingPayment) {
+          _closePaymentSheet();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  const DPTopBar(title: 'International airtime'),
+                  Expanded(child: _buildBody()),
+                ],
+              ),
+            ),
+            if (_showPaymentSheet) _buildPaymentSheetOverlay(),
+          ],
+        ),
+        bottomNavigationBar: _showPaymentSheet ||
+                _selectedOperator == null ||
+                _isLoadingUserData ||
+                _isLoadingCountries
+            ? null
+            : DPBottomAction(child: _buildPurchaseButton()),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Color(0xFF102C68),
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Intl Airtime',
-        style: GoogleFonts.inter(
-          color: const Color(0xFF102C68),
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: const Color(0x05102C68),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.account_balance_wallet_outlined,
-                color: Color(0xFF102C68),
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap:
-                    () =>
-                        setState(() => _isBalanceVisible = !_isBalanceVisible),
-                child: Text(
-                  _isBalanceVisible
-                      ? '₦${_walletBalance.toStringAsFixed(2)}'
-                      : '••••',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF102C68),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  bool get _isFixedPlan =>
+      _selectedVariation?['fixedPrice'] == 'Yes' ||
+      _selectedVariation?['fixedPrice'] == true;
+
+  double get _nairaToPay =>
+      double.tryParse(_nairaEstimate.replaceAll(RegExp(r'[₦,\s]'), '')) ?? 0;
+
+  String _money(String currency, double v) =>
+      '$currency ${v.toStringAsFixed(v % 1 == 0 ? 0 : 2)}';
+
 
   Widget _buildBody() {
     if (_isLoadingUserData || _isLoadingCountries) {
@@ -1854,2076 +1788,392 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
 
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildBanner(),
-              const SizedBox(height: 24),
-              _buildCountrySelector(),
-              const SizedBox(height: 20),
-              if (_selectedCountry != null) ...[
-                _buildProductTypeSelector(),
-                const SizedBox(height: 20),
-                if (_selectedProductType != null) ...[
-                  _buildOperatorSelector(),
-                  const SizedBox(height: 20),
-                  if (_selectedOperator != null) ...[
-                    _buildVariationSelector(),
-                    const SizedBox(height: 20),
-                    _buildPhoneInput(),
-                    const SizedBox(height: 20),
-                    _buildAmountInput(),
-                    const SizedBox(height: 20),
-                    _buildEmailInput(),
-                    const SizedBox(height: 24),
-                    _buildPurchaseButton(),
-                  ],
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const DPHeadline(
+              'Send a little connection.',
+              subtitle: 'Top up a loved one\'s number abroad.',
+            ),
+            _buildCountrySelector(),
+            if (_selectedCountry != null) ...[
+              const SizedBox(height: 18),
+              _buildProductTypeSelector(),
+              if (_selectedProductType != null) ...[
+                const SizedBox(height: 18),
+                _buildOperatorSelector(),
+                if (_selectedOperator != null) ...[
+                  const SizedBox(height: 18),
+                  _buildPhoneInput(),
+                  const SizedBox(height: 18),
+                  _buildVariationSelector(),
+                  const SizedBox(height: 18),
+                  _buildAmountInput(),
+                  const SizedBox(height: 18),
+                  _buildEmailInput(),
+                  const SizedBox(height: 18),
+                  _buildQuoteCard(),
+                  const SizedBox(height: 14),
+                  const DPBanner(
+                    'Indicative quote. Rates may change before payment. Confirm the country and network; airtime can\'t be reversed once delivered.',
+                    tone: DPTone.warning,
+                  ),
                 ],
               ],
-              const SizedBox(height: 30),
             ],
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildDropdownButton({
-    required String label,
-    required String? selectedValue,
-    required List<Map<String, dynamic>> items,
-    required String itemIdKey,
-    required String itemNameKey,
-    required Function(Map<String, dynamic>) onSelected,
-    required bool isLoading,
-    bool showImage = false,
-    String? imageKey,
-    required bool isOpen,
-    required void Function(bool) onOpenChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
-          ),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () {
-            if (!isLoading && items.isNotEmpty) {
-              onOpenChanged(!isOpen);
-            }
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: isOpen ? const Color(0xFF102C68) : Colors.grey.shade200,
-                width: isOpen ? 2 : 1,
-              ),
-              boxShadow:
-                  isOpen
-                      ? [
-                        BoxShadow(
-                          color: const Color(0xFF102C68).withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                      : null,
-            ),
-            child: Row(
-              children: [
-                if (showImage && selectedValue != null && imageKey != null) ...[
-                  _buildOperatorImage(
-                    _selectedOperator?['operator_id']?.toString() ?? '',
-                    imageKey,
-                    size: 32,
-                  ),
-                  const SizedBox(width: 12),
-                ],
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        selectedValue ??
-                            (isLoading ? 'Loading...' : 'Select...'),
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color:
-                              selectedValue != null
-                                  ? Colors.black87
-                                  : Colors.grey.shade500,
-                        ),
-                      ),
-                      if (isLoading)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: SizedBox(
-                            width: 12,
-                            height: 12,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                const Color(0xFF102C68),
-                              ),
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  isOpen
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded,
-                  color: const Color(0xFF102C68),
-                  size: 24,
-                ),
-              ],
-            ),
-          ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          child:
-              (isOpen && !isLoading && items.isNotEmpty)
-                  ? Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.grey.shade200),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.shade200.withOpacity(0.5),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 220),
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          final item = items[index];
-                          final itemId = item[itemIdKey]?.toString() ?? '';
-                          final isSelected = _selectedItemId == itemId;
-
-                          return ListTile(
-                            leading:
-                                showImage && imageKey != null
-                                    ? _buildOperatorImage(
-                                      item[itemIdKey]?.toString() ?? '',
-                                      imageKey,
-                                      size: 32,
-                                    )
-                                    : (itemIdKey == 'product_type_id')
-                                    ? Container(
-                                      width: 32,
-                                      height: 32,
-                                      decoration: BoxDecoration(
-                                        color: const Color(
-                                          0xFF102C68,
-                                        ).withOpacity(0.08),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        item['product_type_id'] == 4
-                                            ? Icons.wifi_rounded
-                                            : Icons.smartphone_rounded,
-                                        color: const Color(0xFF102C68),
-                                        size: 18,
-                                      ),
-                                    )
-                                    : null,
-                            title: Text(
-                              item[itemNameKey] ?? 'Unknown',
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight:
-                                    isSelected
-                                        ? FontWeight.w700
-                                        : FontWeight.w500,
-                                color:
-                                    isSelected
-                                        ? const Color(0xFF102C68)
-                                        : Colors.black87,
-                              ),
-                            ),
-                            trailing:
-                                isSelected
-                                    ? Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFF168566),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(
-                                        Icons.check_rounded,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                    )
-                                    : null,
-                            onTap: () => onSelected(item),
-                            dense: false,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  )
-                  : const SizedBox.shrink(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildOperatorImage(
-    String operatorId,
-    String imageKey, {
-    double size = 24,
-  }) {
-    // ✅ Look up the operator safely
-    Map<String, dynamic> operator = {};
-    try {
-      operator = _operators.firstWhere(
-        (op) => op['operator_id']?.toString() == operatorId,
-        orElse: () => {},
-      );
-    } catch (_) {
-      operator = {};
+  Widget _buildQuoteCard() {
+    final currency = (_selectedCountry?['currency'] ?? '').toString();
+    final foreign = double.tryParse(_amountController.text) ?? 0;
+    final rows = <Widget>[];
+    if (foreign > 0) {
+      rows.add(DPSummaryRow('Recipient receives', _money(currency, foreign)));
     }
-
-    // ✅ Try multiple possible image keys
-    final rawUrl =
-        (operator[imageKey] ??
-                operator['operator_image'] ??
-                operator['image'] ??
-                operator['logo'] ??
-                '')
-            .toString()
-            .trim();
-
-    // ✅ Route the image through OUR backend to bypass network blocks
-    // The backend already validates that only vtpass.com/.../operators/ URLs pass through.
-    final String proxiedUrl =
-        (rawUrl.isNotEmpty && rawUrl.startsWith('https://vtpass.com/'))
-            ? '${ApiService.baseUrl}/api/operator-logo?url=${Uri.encodeComponent(rawUrl)}'
-            : rawUrl;
-
-    debugPrint('🖼️ Operator image [$operatorId]: "$proxiedUrl"');
-
-    if (proxiedUrl.isNotEmpty && proxiedUrl.startsWith('http')) {
-      return Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(6),
-          child: Image.network(
-            proxiedUrl,
-            width: size,
-            height: size,
-            fit: BoxFit.contain,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: SizedBox(
-                  width: size * 0.5,
-                  height: size * 0.5,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      const Color(0xFF102C68),
-                    ),
-                  ),
-                ),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              debugPrint('❌ Image load failed for $operatorId: $error');
-              return Icon(
-                Icons.business_center,
-                size: size * 0.7,
-                color: const Color(0xFF102C68),
-              );
-            },
-          ),
+    if (_nairaConversionRate > 0) {
+      rows.add(
+        DPSummaryRow(
+          'Estimated exchange rate',
+          '$currency 1 = ${DP.naira(_nairaConversionRate)}',
         ),
       );
     }
-
-    // ✅ No URL — show fallback icon
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: const Color(0xFF102C68).withOpacity(0.08),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Icon(
-        Icons.business_center,
-        size: size * 0.7,
-        color: const Color(0xFF102C68),
+    if (_nairaEstimate.isNotEmpty) {
+      rows.add(DPSummaryRow('Airtime value', DP.naira(_nairaToPay)));
+      rows.add(const DPSummaryRow('Service fee', '₦0.00'));
+      rows.add(DPSummaryRow('You pay', DP.naira(_nairaToPay), strong: true));
+    }
+    rows.add(
+      DPSummaryRow(
+        'Wallet balance',
+        _isBalanceVisible ? DP.naira(_walletBalance) : '₦ ••••',
       ),
     );
+    return DPCard(
+      padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+      child: Column(children: rows),
+    );
   }
+
+
 
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
+    final currency = (_selectedCountry?['currency'] ?? '').toString();
+    final foreign = double.tryParse(_amountController.text) ?? 0;
+    final prefix = (_selectedCountry?['prefix'] ?? '').toString();
+    final biometricOk = !kIsWeb &&
+        (Platform.isAndroid || Platform.isIOS) &&
+        _biometricEnabled &&
+        _biometricAllowed;
+    return Positioned.fill(
       child: AnimatedBuilder(
         animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/dalabapay2.png',
-                                      height: 40,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close,
-                                          size: 18,
-                                          color: Color(0xFF728078),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Confirm Payment',
-                                style: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF14263D),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-                              Divider(
-                                color: Colors.grey.shade200,
-                                thickness: 1,
-                              ),
-                              const SizedBox(height: 20),
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.warning_amber,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetDetails() {
-    final currency = _selectedCountry?['currency'] ?? 'USD';
-    final phone = _phoneController.text.trim();
-    final amount = double.tryParse(_amountController.text) ?? 0;
-
-    // ✅ Get Naira amount from variation or calculation
-    double nairaAmount = 0;
-    if (_nairaEstimate.isNotEmpty) {
-      nairaAmount =
-          double.tryParse(
-            _nairaEstimate.replaceAll('₦', '').replaceAll(',', ''),
-          ) ??
-          0;
-    }
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        children: [
-          _buildPaymentRow(
-            icon: HugeIcons.strokeRoundedGlobal,
-            label: 'Country',
-            value: _selectedCountry?['name'] ?? 'N/A',
-          ),
-          _buildPaymentDivider(),
-          _buildPaymentRow(
-            icon: HugeIcons.strokeRoundedUser,
-            label: 'Operator',
-            value: _selectedOperator?['name'] ?? 'N/A',
-          ),
-          _buildPaymentDivider(),
-          _buildPaymentRow(
-            icon: HugeIcons.strokeRoundedCertificate01,
-            label: 'Plan',
-            value: _selectedVariation?['name'] ?? 'N/A',
-          ),
-          _buildPaymentDivider(),
-          _buildPaymentRow(
-            icon: HugeIcons.strokeRoundedSmartPhone01,
-            label: 'Phone',
-            value: phone.isNotEmpty ? phone : 'N/A',
-          ),
-          _buildPaymentDivider(),
-          _buildPaymentRow(
-            icon: HugeIcons.strokeRoundedMoney01,
-            label: 'Amount',
-            value: '$currency ${amount.toStringAsFixed(2)}',
-            valueColor: const Color(0xFF102C68),
-          ),
-          // ✅ Show Naira amount prominently
-          if (nairaAmount > 0) ...[
-            _buildPaymentDivider(),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  HugeIcon(
-                    icon: HugeIcons.strokeRoundedMoney03,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'You will pay',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white70,
-                        ),
-                      ),
-                      Text(
-                        '₦${nairaAmount.toStringAsFixed(2)}',
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentRow({
-    required dynamic icon,
-    required String label,
-    required String value,
-    Color? valueColor,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: const Color(0xFF102C68).withOpacity(0.08),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: HugeIcon(
-                icon: icon,
-                color: const Color(0xFF102C68),
-                size: 18,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF728078),
-              ),
-            ),
-          ],
+        builder: (context, child) => FractionalTranslation(
+          translation: Offset(0, 1 - _sheetAnimation.value),
+          child: child,
         ),
-        Flexible(
-          child: Text(
-            value,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: valueColor ?? const Color(0xFF14263D),
-            ),
-            textAlign: TextAlign.right,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentDivider() {
-    return const Divider(height: 12, color: Color(0xFFE2E8F0));
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF168566).withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                HugeIcon(
-                  icon: HugeIcons.strokeRoundedWallet01,
-                  color: const Color(0xFF168566),
-                  size: 16,
-                ),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    'Available Balance',
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              '₦${_walletBalance.toStringAsFixed(2)}',
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
-                color: const Color(0xFF168566),
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
+        child: AnimatedBuilder(
+          animation: _shakeAnimation,
+          builder: (context, child) => Transform.translate(
             offset: Offset(_shakeAnimation.value, 0),
             child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFDECEA)
-                    : (_useBiometric
-                        ? Colors.grey.shade50
-                        : const Color(0xFF102C68).withOpacity(0.04)),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  hasError
-                      ? const Color(0xFFC0392B)
-                      : (_useBiometric
-                          ? Colors.grey.shade300
-                          : const Color(0xFF102C68)),
-              width: hasError ? 2 : (_useBiometric ? 1 : 2),
-            ),
           ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  enabled: !_useBiometric,
-                  decoration: InputDecoration(
-                    hintText: 'Enter transaction PIN',
-                    hintStyle: GoogleFonts.inter(
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B).withOpacity(0.7)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600),
-                      fontSize: 13,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock_outline_rounded,
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : const Color(0xFF102C68)),
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric
-                                ? Colors.grey.shade400
-                                : Colors.black),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
+          child: DPReviewPanel(
+            icon: DPIcons.globe,
+            title:
+                '${_selectedOperator?['name'] ?? ''} · ${_selectedCountry?['name'] ?? ''}',
+            amount: _nairaToPay,
+            rows: [
+              DPReviewRow(
+                'Phone number',
+                '${prefix.isNotEmpty ? '+$prefix ' : ''}${_phoneController.text.trim()}',
               ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFDECEA),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        color: Color(0xFFC0392B),
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFC0392B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              DPReviewRow('Plan', (_selectedVariation?['name'] ?? '').toString()),
+              if (foreign > 0)
+                DPReviewRow('Recipient receives', _money(currency, foreign)),
+              if (_nairaConversionRate > 0)
+                DPReviewRow(
+                  'Exchange rate',
+                  '$currency 1 = ${DP.naira(_nairaConversionRate)}',
                 ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment || _useBiometric
-                          ? null
-                          : _processPaymentWithPIN,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric
-                                ? Colors.transparent
-                                : const Color(0xFF168566)),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          hasError
-                              ? const BorderRadius.vertical(
-                                bottom: Radius.circular(12),
-                              )
-                              : BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.lock_outline_rounded,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                hasError
-                                    ? 'Retry'
-                                    : (_useBiometric
-                                        ? 'Switch to PIN'
-                                        : 'Pay with PIN'),
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
+              const DPReviewRow('Service fee', '₦0.00'),
+              DPReviewRow('You pay', DP.naira(_nairaToPay), strong: true),
             ],
+            walletBalance: _walletBalance,
+            totalDebit: _nairaToPay,
+            pinController: _pinController,
+            pinFocusNode: _pinFocusNode,
+            pinRequired: _transactionPinSet && _pinRequired,
+            pinError: _pinValidationError,
+            processing: _isProcessingPayment,
+            onPay: _processPaymentWithPIN,
+            onClose: _closePaymentSheet,
+            biometricAvailable: biometricOk,
+            biometricLabel: _biometricName,
+            onBiometric: _processPaymentWithBiometric,
+            footnote: 'International airtime can\'t be reversed once delivered.',
           ),
         ),
       ),
     );
   }
 
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported =
-        !kIsWeb && (Platform.isAndroid || Platform.isIOS);
 
-    if (!isBiometricSupported || !_biometricEnabled) {
-      return const SizedBox.shrink();
-    }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: GestureDetector(
-        onTap: _isProcessingPayment ? null : _processPaymentWithBiometric,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF102C68).withOpacity(0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF102C68), width: 1.5),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? const Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Color(0xFF102C68),
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.fingerprint_rounded,
-                        color: Color(0xFF102C68),
-                        size: 28,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Pay with $_biometricName',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF102C68),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF168566),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
+
+
+
 
   Widget _buildLoadingAnimation() {
-    return Center(
+    return const Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: const BoxDecoration(shape: BoxShape.circle),
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(
-                const Color(0xFF102C68),
-              ),
-              strokeWidth: 3,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            _isLoadingCountries ? 'Loading countries...' : 'Loading...',
-            style: GoogleFonts.inter(
-              color: const Color(0xFF102C68),
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _isLoadingCountries
-                ? 'Please wait while we fetch available countries'
-                : 'Please wait...',
-            style: GoogleFonts.inter(
-              color: Colors.grey.shade500,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+          CircularProgressIndicator(),
+          SizedBox(height: 14),
+          Text('Loading countries…', style: DP.caption),
         ],
       ),
     );
   }
 
   Widget _buildPurchaseButton() {
-    final isFlexible =
-        _selectedVariation?['fixedPrice'] == 'No' ||
-        _selectedVariation?['fixedPrice'] == false;
-    final bool isAmountValid =
-        _amountController.text.isNotEmpty &&
-        double.tryParse(_amountController.text) != null;
-
-    return SizedBox(
-      width: double.infinity,
-      height: 54,
-      child: ElevatedButton(
-        onPressed:
-            (_isPurchasing || _isLoadingVariations || _isAuthenticating)
-                ? null
-                : _openPaymentSheet,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF168566),
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          elevation: 0,
-          disabledBackgroundColor: Colors.grey.shade300,
-        ),
-        child:
-            _isPurchasing || _isAuthenticating
-                ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                )
-                : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    HugeIcon(
-                      icon: HugeIcons.strokeRoundedArrowUp01,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      _selectedVariation != null
-                          ? (isFlexible && !isAmountValid
-                              ? 'Enter amount above'
-                              : 'Continue')
-                          : 'Select a Plan First',
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-      ),
+    return DPButton(
+      label: 'Review international top-up',
+      icon: DPIcons.forward,
+      loading: _isProcessingPayment || _isAuthenticating,
+      onPressed: _openPaymentSheet,
     );
   }
 
-  Widget _buildBanner() {
-    return Container(
-      width: double.infinity,
-      height: 140,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF102C68).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Image.asset(
-          'assets/int_airtime_banner.png',
-          width: double.infinity,
-          height: 140,
-          fit: BoxFit.cover,
-          // ✅ Fallback if asset fails to load (e.g. forgot pubspec, wrong path)
-          errorBuilder: (context, error, stackTrace) {
-            debugPrint('❌ Banner asset load failed: $error');
-            return Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color(0xFF102C68),
-                    Color(0xFF102C68),
-                    Color(0xFF168566),
-                  ],
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  'International Airtime',
-                  style: GoogleFonts.inter(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
 
   Widget _buildCountrySelector() {
+    final c = _selectedCountry;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Select Country',
-              style: GoogleFonts.inter(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: const Color(0xFF102C68),
-              ),
-            ),
-            if (_countries.isNotEmpty)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF102C68).withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  '${_countries.length} countries',
-                  style: GoogleFonts.inter(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF102C68),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  onChanged: _filterCountries,
-                  decoration: InputDecoration(
-                    hintText: 'Search country...',
-                    hintStyle: GoogleFonts.inter(
-                      color: Colors.grey.shade400,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedSearch01,
-                      color: const Color(0xFF102C68),
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  style: GoogleFonts.inter(fontSize: 14),
-                ),
-              ),
-              const Divider(height: 1),
-              _filteredCountries.isEmpty
-                  ? Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Center(
-                      child: Text(
-                        'No countries found',
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  )
-                  : SizedBox(
-                    height: 180,
-                    child: ListView.builder(
-                      itemCount: _filteredCountries.length,
-                      itemBuilder: (context, index) {
-                        final country = _filteredCountries[index];
-                        final isSelected =
-                            _selectedCountry?['code'] == country['code'];
-                        final flagUrl = country['flag']?.toString() ?? '';
-                        final countryName =
-                            country['name']?.toString() ?? 'Unknown';
-                        final countryCode = country['code']?.toString() ?? '';
-
-                        return ListTile(
-                          leading: CountryFlagWidget(
-                            flagUrl: flagUrl,
-                            size: 36,
-                          ),
-                          title: Text(
-                            countryName,
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight:
-                                  isSelected
-                                      ? FontWeight.w700
-                                      : FontWeight.w500,
-                              color:
-                                  isSelected
-                                      ? const Color(0xFF102C68)
-                                      : Colors.black87,
-                            ),
-                          ),
-                          subtitle: Text(
-                            countryCode,
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              color: Colors.grey.shade600,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          trailing:
-                              isSelected
-                                  ? Icon(
-                                    Icons.check_circle,
-                                    color: const Color(0xFF168566),
-                                    size: 20,
-                                  )
-                                  : null,
-                          onTap: () => _selectCountry(country),
-                          dense: true,
-                        );
-                      },
-                    ),
-                  ),
-            ],
-          ),
+        const DPLabel('Destination country'),
+        DPSelectField(
+          value: c == null
+              ? null
+              : '${c['name'] ?? ''}  ·  ${c['currency'] ?? ''}',
+          hint: 'Choose a country',
+          leading: c == null
+              ? const Icon(DPIcons.globe, color: DP.green, size: 20)
+              : CountryFlagWidget(flagUrl: c['flag']?.toString(), size: 22),
+          onTap: () async {
+            final picked = await dpPickFromList<Map<String, dynamic>>(
+              context,
+              title: 'Destination country',
+              items: _countries,
+              selected: c,
+              searchable: true,
+              labelOf: (x) => (x['name'] ?? '').toString(),
+              subtitleOf: (x) => (x['currency'] ?? '').toString(),
+              leadingOf: (x) =>
+                  CountryFlagWidget(flagUrl: x['flag']?.toString(), size: 22),
+            );
+            if (picked != null && mounted) _selectCountry(picked);
+          },
         ),
       ],
     );
   }
 
   Widget _buildProductTypeSelector() {
-    return _buildDropdownButton(
-      label: 'Product Type',
-      selectedValue: _selectedProductType?['name']?.toString(),
-      items: _productTypes,
-      itemIdKey: 'product_type_id',
-      itemNameKey: 'name',
-      onSelected: (item) => _selectProductType(item),
-      isLoading: _isLoadingProductTypes,
-      isOpen: _isProductTypeDropdownOpen,
-      onOpenChanged: (value) {
-        setState(() {
-          _isProductTypeDropdownOpen = value;
-          if (value) _isOperatorDropdownOpen = false;
-        });
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const DPLabel('Top-up type'),
+        DPSelectField(
+          value: _selectedProductType?['name']?.toString(),
+          hint: _isLoadingProductTypes ? 'Loading…' : 'Choose a type',
+          enabled: !_isLoadingProductTypes && _productTypes.isNotEmpty,
+          onTap: () async {
+            final picked = await dpPickFromList<Map<String, dynamic>>(
+              context,
+              title: 'Top-up type',
+              items: _productTypes,
+              selected: _selectedProductType,
+              labelOf: (x) => (x['name'] ?? '').toString(),
+            );
+            if (picked != null && mounted) _selectProductType(picked);
+          },
+        ),
+      ],
     );
   }
 
   Widget _buildOperatorSelector() {
-    _log('📱 Building operator selector');
-    _log('📱 Operators count: ${_operators.length}');
-
-    // Log all operators
-    for (var op in _operators) {
-      _log('  📌 Available: ${op['name']} (ID: ${op['operator_id']})');
-    }
-
-    _log('📱 Selected operator: ${_selectedOperator?['name']}');
-    _log('📱 Selected operator ID: ${_selectedOperator?['operator_id']}');
-
-    return _buildDropdownButton(
-      label: 'Operator',
-      selectedValue: _selectedOperator?['name']?.toString(),
-      items: _operators,
-      itemIdKey: 'operator_id',
-      itemNameKey: 'name',
-      onSelected: (item) {
-        _log('📱 Operator selected from dropdown:');
-        _log('  📌 Name: ${item['name']}');
-        _log('  📌 ID: ${item['operator_id']}');
-        _selectOperator(item);
-      },
-      isLoading: _isLoadingOperators,
-      showImage: true,
-      imageKey: 'operator_image',
-      isOpen: _isOperatorDropdownOpen,
-      onOpenChanged: (value) {
-        setState(() {
-          _isOperatorDropdownOpen = value;
-          if (value) _isProductTypeDropdownOpen = false;
-        });
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const DPLabel('Mobile network'),
+        DPSelectField(
+          value: _selectedOperator?['name']?.toString(),
+          hint: _isLoadingOperators ? 'Loading…' : 'Choose a network',
+          enabled: !_isLoadingOperators && _operators.isNotEmpty,
+          onTap: () async {
+            final picked = await dpPickFromList<Map<String, dynamic>>(
+              context,
+              title: 'Mobile network',
+              items: _operators,
+              selected: _selectedOperator,
+              labelOf: (x) => (x['name'] ?? '').toString(),
+            );
+            if (picked != null && mounted) _selectOperator(picked);
+          },
+        ),
+      ],
     );
   }
 
   Widget _buildVariationSelector() {
+    final currency = (_selectedCountry?['currency'] ?? '').toString();
+    String labelFor(Map<String, dynamic> v) {
+      final fixed = v['fixedPrice'] == 'Yes' || v['fixedPrice'] == true;
+      final amt = double.tryParse(v['variation_amount']?.toString() ?? '');
+      if (fixed && amt != null && amt > 0) return _money(currency, amt);
+      return (v['name'] ?? 'Plan').toString();
+    }
+
+    if (_isLoadingVariations) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_variations.isEmpty) {
+      return const DPBanner(
+        'No plans are available for this network right now.',
+        tone: DPTone.warning,
+      );
+    }
+
+    final labels = _variations.map(labelFor).toList();
+    final selectedLabel =
+        _selectedVariation == null ? null : labelFor(_selectedVariation!);
+    final allFixedShort = _variations.length <= 9 &&
+        labels.every((l) => l.length <= 14);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Select Plan',
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
+        const DPLabel('Recipient gets'),
+        if (allFixedShort)
+          DPChipGrid(
+            options: labels,
+            selected: selectedLabel,
+            height: 46,
+            onSelect: (l) => _selectVariation(_variations[labels.indexOf(l)]),
+          )
+        else
+          DPSelectField(
+            value: _selectedVariation?['name']?.toString(),
+            hint: 'Choose a plan',
+            onTap: () async {
+              final picked = await dpPickFromList<Map<String, dynamic>>(
+                context,
+                title: 'Choose a plan',
+                items: _variations,
+                selected: _selectedVariation,
+                labelOf: (x) => (x['name'] ?? '').toString(),
+              );
+              if (picked != null && mounted) _selectVariation(picked);
+            },
           ),
-        ),
-        const SizedBox(height: 8),
-        _isLoadingVariations
-            ? Center(
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    const Color(0xFF102C68),
-                  ),
-                ),
-              ),
-            )
-            : _variations.isEmpty
-            ? Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: Center(
-                child: Text(
-                  'No plans available for this operator',
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            )
-            : Container(
-              height: 220,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: ListView.builder(
-                itemCount: _variations.length,
-                itemBuilder: (context, index) {
-                  final variation = _variations[index];
-                  final isSelected =
-                      _selectedVariation?['variation_code'] ==
-                      variation['variation_code'];
-                  final isFixed =
-                      variation['fixedPrice'] == 'Yes' ||
-                      variation['fixedPrice'] == true;
-
-                  String amountDisplay = '';
-                  String nairaDisplay = '';
-
-                  // ✅ Safely parse variation_amount (may be bool/string/number/null)
-                  final rawAmount = variation['variation_amount'];
-                  double? parsedAmount;
-                  if (rawAmount is num) {
-                    parsedAmount = rawAmount.toDouble();
-                  } else if (rawAmount is String) {
-                    parsedAmount = double.tryParse(rawAmount);
-                  }
-
-                  if (isFixed) {
-                    amountDisplay =
-                        parsedAmount != null
-                            ? '${_selectedCountry?['currency'] ?? 'USD'} ${parsedAmount.toStringAsFixed(2)}'
-                            : '${_selectedCountry?['currency'] ?? 'USD'} 0.00';
-
-                    // ✅ Safely parse charged_amount (VTpass sometimes returns `false` here)
-                    final rawCharged = variation['charged_amount'];
-                    double? parsedCharged;
-                    if (rawCharged is num) {
-                      parsedCharged = rawCharged.toDouble();
-                    } else if (rawCharged is String) {
-                      parsedCharged = double.tryParse(rawCharged);
-                    }
-                    // Note: `false`, `null`, empty strings → parsedCharged stays null
-
-                    if (parsedCharged != null && parsedCharged > 0) {
-                      nairaDisplay = '₦${parsedCharged.toStringAsFixed(2)}';
-                    }
-                  } else {
-                    amountDisplay = 'Flexible amount';
-
-                    // ✅ Extract min/max from VTpass response
-                    double? parsedMin;
-                    final rawMin = variation['variation_amount_min'];
-                    if (rawMin is num) {
-                      parsedMin = rawMin.toDouble();
-                    } else if (rawMin is String) {
-                      parsedMin = double.tryParse(rawMin);
-                    }
-
-                    double? parsedMax;
-                    final rawMax = variation['variation_amount_max'];
-                    if (rawMax is num) {
-                      parsedMax = rawMax.toDouble();
-                    } else if (rawMax is String) {
-                      parsedMax = double.tryParse(rawMax);
-                    }
-
-                    // ✅ Build min/max display text
-                    final currency = _selectedCountry?['currency'] ?? '';
-                    if (parsedMin != null && parsedMax != null) {
-                      amountDisplay =
-                          'Flexible: $currency ${parsedMin.toStringAsFixed(2)} - $currency ${parsedMax.toStringAsFixed(2)}';
-                    } else if (parsedMin != null) {
-                      amountDisplay =
-                          'Flexible: Min $currency ${parsedMin.toStringAsFixed(2)}';
-                    } else if (parsedMax != null) {
-                      amountDisplay =
-                          'Flexible: Max $currency ${parsedMax.toStringAsFixed(2)}';
-                    } else {
-                      amountDisplay = 'Flexible amount';
-                    }
-
-                    // ✅ Also show the rate if available
-                    final rawRate = variation['variation_rate'];
-                    double? parsedRate;
-                    if (rawRate is num) {
-                      parsedRate = rawRate.toDouble();
-                    } else if (rawRate is String) {
-                      parsedRate = double.tryParse(rawRate);
-                    }
-
-                    if (parsedRate != null && parsedRate > 0) {
-                      nairaDisplay =
-                          'Rate: ₦${parsedRate.toStringAsFixed(2)}/$currency';
-                    }
-                  }
-
-                  return ListTile(
-                    title: Text(
-                      variation['name'] ?? 'Unknown Plan',
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
-                        fontWeight:
-                            isSelected ? FontWeight.w700 : FontWeight.w500,
-                        color:
-                            isSelected
-                                ? const Color(0xFF102C68)
-                                : Colors.black87,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          amountDisplay,
-                          style: GoogleFonts.inter(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color:
-                                isFixed
-                                    ? Colors.grey.shade700
-                                    : Colors.blue.shade600,
-                          ),
-                        ),
-                        if (nairaDisplay.isNotEmpty)
-                          Text(
-                            nairaDisplay,
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF168566),
-                            ),
-                          ),
-                      ],
-                    ),
-                    trailing:
-                        isSelected
-                            ? Icon(
-                              Icons.check_circle,
-                              color: const Color(0xFF168566),
-                              size: 20,
-                            )
-                            : null,
-                    onTap: () => _selectVariation(variation),
-                    dense: false,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                  );
-                },
-              ),
-            ),
       ],
     );
   }
 
   Widget _buildPhoneInput() {
-    final prefix = _selectedCountry?['prefix'] ?? '';
-    final prefixDisplay = prefix.isNotEmpty ? '+$prefix' : '';
-
+    final prefix = (_selectedCountry?['prefix'] ?? '').toString();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Phone Number',
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: Row(
-            children: [
-              if (prefixDisplay.isNotEmpty)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(14),
-                      bottomLeft: Radius.circular(14),
-                    ),
-                  ),
-                  child: Text(
-                    prefixDisplay,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF102C68),
-                    ),
-                  ),
-                ),
-              Expanded(
-                child: TextField(
-                  controller: _phoneController,
-                  focusNode: _phoneFocusNode,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: InputDecoration(
-                    hintText: 'Enter phone number',
-                    hintStyle: GoogleFonts.inter(
-                      color: Colors.grey.shade400,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius:
-                          prefixDisplay.isNotEmpty
-                              ? const BorderRadius.only(
-                                topRight: Radius.circular(14),
-                                bottomRight: Radius.circular(14),
-                              )
-                              : BorderRadius.circular(14),
-                      borderSide: BorderSide.none,
-                    ),
-                    prefixIcon:
-                        prefixDisplay.isEmpty
-                            ? HugeIcon(
-                              icon: HugeIcons.strokeRoundedSmartPhone01,
-                              color: const Color(0xFF102C68),
-                              size: 22,
-                            )
-                            : null,
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
-                    ),
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
+        const DPLabel('Recipient\'s phone number'),
+        DPField(
+          controller: _phoneController,
+          focusNode: _phoneFocusNode,
+          hint: 'Phone number',
+          keyboardType: TextInputType.phone,
+          prefixText: prefix.isNotEmpty ? '+$prefix  ' : null,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (_) => setState(() {}),
+          suffix: const Icon(DPIcons.contact, color: DP.muted),
         ),
       ],
     );
   }
 
   Widget _buildAmountInput() {
-    final currency = _selectedCountry?['currency'] ?? 'USD';
-    final isFixed =
-        _selectedVariation?['fixedPrice'] == 'Yes' ||
-        _selectedVariation?['fixedPrice'] == true;
-
-    // ✅ Build dynamic hint text with min/max
-    String hintText;
-    if (isFixed) {
-      hintText = 'Fixed amount (auto-filled)';
-    } else if (_variationMinAmount != null && _variationMaxAmount != null) {
-      hintText =
-          'Enter $currency ${_variationMinAmount!.toStringAsFixed(2)} - ${_variationMaxAmount!.toStringAsFixed(2)}';
-    } else if (_variationMinAmount != null) {
-      hintText =
-          'Minimum: $currency ${_variationMinAmount!.toStringAsFixed(2)}';
-    } else if (_variationMaxAmount != null) {
-      hintText =
-          'Maximum: $currency ${_variationMaxAmount!.toStringAsFixed(2)}';
-    } else {
-      hintText = 'Enter amount';
-    }
-
-    // ✅ Build helper text for display below field
-    String? helperText;
-    if (!isFixed &&
-        (_variationMinAmount != null || _variationMaxAmount != null)) {
+    final currency = (_selectedCountry?['currency'] ?? 'USD').toString();
+    String? helper;
+    if (!_isFixedPlan) {
       if (_variationMinAmount != null && _variationMaxAmount != null) {
-        helperText =
-            'Allowed range: $currency ${_variationMinAmount!.toStringAsFixed(2)} - ${_variationMaxAmount!.toStringAsFixed(2)}';
+        helper =
+            'Minimum ${_money(currency, _variationMinAmount!)} · Maximum ${_money(currency, _variationMaxAmount!)}';
       } else if (_variationMinAmount != null) {
-        helperText =
-            'Minimum amount: $currency ${_variationMinAmount!.toStringAsFixed(2)}';
+        helper = 'Minimum ${_money(currency, _variationMinAmount!)}';
       } else if (_variationMaxAmount != null) {
-        helperText =
-            'Maximum amount: $currency ${_variationMaxAmount!.toStringAsFixed(2)}';
+        helper = 'Maximum ${_money(currency, _variationMaxAmount!)}';
       }
     }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          isFixed ? 'Amount (Fixed)' : 'Amount',
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
-          ),
+        DPLabel('Amount ($currency)'),
+        DPField(
+          controller: _amountController,
+          focusNode: _amountFocusNode,
+          hint: _isFixedPlan ? 'Set by the plan' : 'Enter amount',
+          keyboardType: TextInputType.number,
+          enabled: !_isFixedPlan,
+          prefixText: '$currency  ',
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (v) {
+            _calculateNairaConversion(v);
+            setState(() {});
+          },
         ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: isFixed ? Colors.grey.shade100 : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: TextField(
-            controller: _amountController,
-            focusNode: _amountFocusNode,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            enabled: !isFixed,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: GoogleFonts.inter(
-                color: isFixed ? Colors.grey.shade500 : Colors.grey.shade400,
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-              ),
-              prefixIcon: Container(
-                padding: const EdgeInsets.only(left: 16, right: 8),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      currency,
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF102C68),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.transparent,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 14,
-              ),
-            ),
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-            onChanged: _calculateNairaConversion,
-          ),
-        ),
-        // ✅ NEW: Beautiful range card for flexible plans
-        if (!isFixed &&
-            (_variationMinAmount != null || _variationMaxAmount != null))
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: _buildRangeCard(
-              currency: currency,
-              min: _variationMinAmount,
-              max: _variationMaxAmount,
-            ),
-          ),
-        // ✅ Show Naira amount prominently
-        if (_nairaEstimate.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF102C68).withValues(alpha: 0.2),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedMoney03,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'You will pay',
-                          style: GoogleFonts.inter(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white70,
-                          ),
-                        ),
-                        Text(
-                          _nairaEstimate,
-                          style: GoogleFonts.inter(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (_nairaConversionRate > 0)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        '1 ${_selectedCountry?['currency'] ?? ''} = ₦${_nairaConversionRate.toStringAsFixed(2)}',
-                        style: GoogleFonts.inter(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
+        if (helper != null) DPHelper(helper),
       ],
     );
   }
 
-  /// ✅ Beautiful min/max range card for flexible international airtime plans.
-  /// Matches the visual style of the "You will pay" gradient card.
-  Widget _buildRangeCard({
-    required String currency,
-    required double? min,
-    required double? max,
-  }) {
-    final bool hasBoth = min != null && max != null;
-    final bool hasOnlyMin = min != null && max == null;
-    final bool hasOnlyMax = min == null && max != null;
 
-    if (!hasBoth && !hasOnlyMin && !hasOnlyMax) {
-      return const SizedBox.shrink();
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        // Soft blue tint — matches the app's info-card style
-        color: const Color(0xFF102C68).withOpacity(0.06),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF102C68).withOpacity(0.15),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          // Icon chip
-          Container(
-            padding: const EdgeInsets.all(7),
-            decoration: BoxDecoration(
-              color: const Color(0xFF102C68).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.tune_rounded,
-              color: Color(0xFF102C68),
-              size: 16,
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Main content
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  hasBoth
-                      ? 'Allowed range'
-                      : hasOnlyMin
-                      ? 'Minimum amount'
-                      : 'Maximum amount',
-                  style: GoogleFonts.inter(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF728078),
-                    letterSpacing: 0.2,
-                  ),
-                ),
-                const SizedBox(height: 2),
-
-                // Value pills row
-                Row(
-                  children: [
-                    if (min != null) ...[
-                      _buildRangePill(
-                        label: hasBoth ? 'Min' : 'Minimum',
-                        value: '$currency ${min.toStringAsFixed(2)}',
-                        isMin: true,
-                      ),
-                    ],
-                    if (hasBoth) ...[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 14,
-                          color: const Color(0xFF728078).withOpacity(0.6),
-                        ),
-                      ),
-                    ],
-                    if (max != null)
-                      _buildRangePill(
-                        label: hasBoth ? 'Max' : 'Maximum',
-                        value: '$currency ${max.toStringAsFixed(2)}',
-                        isMin: false,
-                      ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRangePill({
-    required String label,
-    required String value,
-    required bool isMin,
-  }) {
-    // Green for min (start), navy for max (ceiling)
-    final pillColor = isMin ? const Color(0xFF168566) : const Color(0xFF102C68);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: pillColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: pillColor.withOpacity(0.2)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '$label: ',
-            style: GoogleFonts.inter(
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              color: pillColor.withOpacity(0.7),
-            ),
-          ),
-          Text(
-            value,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-              color: pillColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildEmailInput() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Email (Optional)',
-          style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF102C68),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: TextField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              hintText: 'Enter email for receipt',
-              hintStyle: GoogleFonts.inter(
-                color: Colors.grey.shade400,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-              prefixIcon: HugeIcon(
-                icon: HugeIcons.strokeRoundedMail01,
-                color: const Color(0xFF102C68),
-                size: 22,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.transparent,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 14,
-              ),
-            ),
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+        const DPLabel('Email for receipt (optional)'),
+        DPField(
+          controller: _emailController,
+          hint: 'you@example.com',
+          keyboardType: TextInputType.emailAddress,
+          suffix: const Icon(DPIcons.mail, color: DP.muted),
         ),
       ],
     );
   }
 
   Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              !_isUserActive ? Icons.account_circle : Icons.phone_disabled,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'International airtime service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF102C68),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: DPEmptyState(
+          icon: DPIcons.globe,
+          title: 'International airtime is unavailable right now',
+          message: 'Please try again in a little while.',
+          actionLabel: 'Go back',
+          onAction: () => Navigator.pop(context),
         ),
       ),
     );
