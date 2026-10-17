@@ -9,7 +9,16 @@
    (this redesign could not be compiled where it was made — see below).
 3. Bump `version:` in `pubspec.yaml` so the build number is higher than the
    one currently live on Google Play (e.g. `1.6.0+<live build + 1>`).
-4. Build with your existing upload keystore (`android/key.properties`).
+4. Put `secrets.json` (sent to you separately — never commit it) in the
+   project folder, next to `pubspec.yaml`. Run and build with it:
+   ```
+   flutter run --dart-define-from-file=secrets.json
+   flutter build appbundle --release --dart-define-from-file=secrets.json
+   ```
+   Without it the Paystack and VTpass keys are empty and payments fail.
+   Keys it holds: `PAYSTACK_SECRET_KEY`, `VTPASS_API_KEY`, `VTPASS_SECRET_KEY`,
+   `VTPASS_PUBLIC_KEY`, and the `VTPASS_SANDBOX_*` versions.
+5. Sign with your existing upload keystore (`android/key.properties`).
 
 ## What changed
 - New design system in `lib/ui/` (colours, Inter type, buttons, fields,

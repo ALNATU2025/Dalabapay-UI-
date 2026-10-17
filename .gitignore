@@ -28,3 +28,6 @@ ios/Flutter/flutter_export_environment.sh
 
 .DS_Store
 .env
+
+# Build-time keys (passed with --dart-define-from-file)
+secrets.json
