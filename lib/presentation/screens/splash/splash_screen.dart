@@ -1,7 +1,9 @@
 // lib/presentation/screens/splash/splash_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../ui/ui.dart';
 import '../onboarding/onboarding_screen.dart';
 import '../auth/login_screen.dart';
 
@@ -14,67 +16,33 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with TickerProviderStateMixin {
+  static const Duration _splashDuration = Duration(milliseconds: 2600);
+
   late AnimationController _mainController;
-
-  late Animation<double> _logo1Opacity;
-  late Animation<double> _logo1Scale;
-  late Animation<double> _logo1FadeOut;
-
-  late Animation<double> _logo2Opacity;
-  late Animation<double> _logo2Pulse;
+  late Animation<double> _fade;
+  late Animation<double> _rise;
+  late Animation<double> _halo;
 
   @override
   void initState() {
     super.initState();
 
-    /// TOTAL = 10 SECONDS
-    _mainController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 10),
+    _mainController = AnimationController(vsync: this, duration: _splashDuration);
+
+    _fade = CurvedAnimation(
+      parent: _mainController,
+      curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
     );
-
-    // ----------------------------
-    // SPLASH 1 (0s - 5s)
-    // dabalogo.png
-    // ----------------------------
-
-    _logo1Opacity = Tween<double>(begin: 0, end: 1).animate(
+    _rise = Tween<double>(begin: 14, end: 0).animate(
       CurvedAnimation(
         parent: _mainController,
-        curve: const Interval(0.00, 0.10, curve: Curves.easeOut),
+        curve: const Interval(0.0, 0.45, curve: Curves.easeOutCubic),
       ),
     );
-
-    _logo1Scale = Tween<double>(begin: 0.75, end: 1.0).animate(
+    _halo = Tween<double>(begin: 0.85, end: 1.0).animate(
       CurvedAnimation(
         parent: _mainController,
-        curve: const Interval(0.00, 0.18, curve: Curves.elasticOut),
-      ),
-    );
-
-    _logo1FadeOut = Tween<double>(begin: 1, end: 0).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.42, 0.50, curve: Curves.easeInOut),
-      ),
-    );
-
-    // ----------------------------
-    // SPLASH 2 (5s - 10s)
-    // dalabapay2.png
-    // ----------------------------
-
-    _logo2Opacity = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.50, 0.60, curve: Curves.easeOut),
-      ),
-    );
-
-    _logo2Pulse = Tween<double>(begin: 1.0, end: 1.08).animate(
-      CurvedAnimation(
-        parent: _mainController,
-        curve: const Interval(0.60, 1.00, curve: Curves.easeInOut),
+        curve: const Interval(0.0, 0.7, curve: Curves.easeOutCubic),
       ),
     );
 
@@ -92,97 +60,118 @@ class _SplashScreenState extends State<SplashScreen>
 
   // ✅ Modern routing logic - checks onboarding state
   Future<void> _checkRouteAfterSplash() async {
-    // Wait for splash screen animation to complete (10 seconds)
-    await Future.delayed(const Duration(seconds: 10));
+    // Wait for the splash animation to complete
+    await Future.delayed(_splashDuration);
 
     if (!mounted) return;
 
     final prefs = await SharedPreferences.getInstance();
     final bool hasSeenOnboarding = prefs.getBool('hasSeenOnboarding') ?? false;
 
-    // Modern routing logic:
+    if (!mounted) return;
+
     // First Launch: Splash -> Onboarding -> Login -> Home
     // Later Launches: Splash -> Login (or Home if already logged in)
     if (!hasSeenOnboarding) {
-      // ✅ First time user → Go to Onboarding
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 800),
+          transitionDuration: const Duration(milliseconds: 500),
           pageBuilder: (_, __, ___) => const OnboardingScreen(),
-          transitionsBuilder:
-              (_, animation, __, child) =>
-                  FadeTransition(opacity: animation, child: child),
+          transitionsBuilder: (_, animation, __, child) =>
+              FadeTransition(opacity: animation, child: child),
         ),
       );
     } else {
-      // ✅ Returning user → Go to Login
       Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 800),
+          transitionDuration: const Duration(milliseconds: 500),
           pageBuilder: (_, __, ___) => const LoginScreen(),
-          transitionsBuilder:
-              (_, animation, __, child) =>
-                  FadeTransition(opacity: animation, child: child),
+          transitionsBuilder: (_, animation, __, child) =>
+              FadeTransition(opacity: animation, child: child),
         ),
       );
     }
   }
 
-  Widget _buildFirstSplash() {
-    return FadeTransition(
-      opacity: _logo1Opacity,
-      child: FadeTransition(
-        opacity: _logo1FadeOut,
-        child: ScaleTransition(
-          scale: _logo1Scale,
-          child: Image.asset(
-            'assets/dabalogo.png',
-            width: 220,
-            height: 220,
-            fit: BoxFit.contain,
-          ),
+  Widget _dot(bool active) => AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        width: active ? 7 : 6,
+        height: active ? 7 : 6,
+        decoration: BoxDecoration(
+          color: active ? DP.green : DP.greenLine,
+          shape: BoxShape.circle,
         ),
-      ),
-    );
-  }
-
-  Widget _buildSecondSplash() {
-    return FadeTransition(
-      opacity: _logo2Opacity,
-      child: AnimatedBuilder(
-        animation: _logo2Pulse,
-        builder: (context, child) {
-          return Transform.scale(scale: _logo2Pulse.value, child: child);
-        },
-        child: Image.asset(
-          'assets/dalabapay2.png',
-          width: 260,
-          height: 260,
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
-  }
+      );
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: AnimatedBuilder(
-        animation: _mainController,
-        builder: (context, child) {
-          return Center(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                if (_mainController.value <= 0.55) _buildFirstSplash(),
-                if (_mainController.value >= 0.45) _buildSecondSplash(),
-              ],
-            ),
-          );
-        },
+    final width = MediaQuery.of(context).size.width;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: DPTheme.overlay,
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: SafeArea(
+          child: AnimatedBuilder(
+            animation: _mainController,
+            builder: (context, _) {
+              final step = (_mainController.value * 3).floor().clamp(0, 2);
+              return Column(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Transform.scale(
+                            scale: _halo.value,
+                            child: Container(
+                              width: width * 0.62,
+                              height: width * 0.62,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF1F3EE),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          Opacity(
+                            opacity: _fade.value,
+                            child: Transform.translate(
+                              offset: Offset(0, _rise.value),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const DPLogo(height: 40),
+                                  const SizedBox(height: 18),
+                                  Text(
+                                    'Everyday payments. Extra possibilities.',
+                                    style: DPText.bodyMuted.copyWith(fontSize: 14.5),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [_dot(step == 0), _dot(step == 1), _dot(step == 2)],
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    'YOUR EVERYDAY, SIMPLIFIED',
+                    style: DPText.overline.copyWith(color: DP.muted, letterSpacing: 1.1),
+                  ),
+                  const SizedBox(height: 28),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

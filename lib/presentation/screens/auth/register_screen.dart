@@ -2,10 +2,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/api_service.dart';
+import '../../../ui/ui.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -68,14 +68,6 @@ class _RegisterScreenState extends State<RegisterScreen>
   Animation<double>? _fadeAnimation;
   AnimationController? _pulseController;
 
-  // ==================== BRAND COLORS ====================
-  static const Color _primary = Color(0xFF1E377E);
-  static const Color _primaryLight = Color(0xFF243889);
-  static const Color _secondary = Color(0xFF219C7E);
-  static const Color _secondaryLight = Color(0xFF92D394);
-  static const Color _dark = Color(0xFF0A1628);
-  static const Color _white = Colors.white;
-  static const Color _greyText = Color(0xFF64748B);
 
   @override
   void initState() {
@@ -525,82 +517,27 @@ class _RegisterScreenState extends State<RegisterScreen>
       context: context,
       barrierDismissible: true,
       builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.08),
-                blurRadius: 30,
-                spreadRadius: 5,
-                offset: const Offset(0, 15),
-              ),
-            ],
-          ),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 28),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 22),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  color: Colors.red.shade50,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.error_outline_rounded,
-                  color: Colors.red.shade400,
-                  size: 36,
-                ),
+              const DPIconBadge(
+                icon: DPIcons.circleAlert,
+                bg: DP.dangerSoft,
+                fg: DP.danger,
+                size: 60,
+                radius: 30,
               ),
               const SizedBox(height: 16),
-              Text(
-                'Registration Failed',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: _primaryLight,
-                ),
-              ),
+              Text('We couldn’t create your account',
+                  textAlign: TextAlign.center,
+                  style: DPText.title.copyWith(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: _greyText,
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _secondary,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    'Try Again',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
+              Text(message, textAlign: TextAlign.center, style: DPText.bodyMuted),
+              const SizedBox(height: 22),
+              DPButton(label: 'Try again', onPressed: () => Navigator.pop(ctx)),
             ],
           ),
         ),
@@ -609,71 +546,318 @@ class _RegisterScreenState extends State<RegisterScreen>
   }
 
   void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.check_circle_rounded, color: _secondary, size: 20),
-            const SizedBox(width: 12),
-            Expanded(child: Text(message, style: GoogleFonts.inter())),
-          ],
-        ),
-        backgroundColor: const Color(0xFFF8FAFC),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    dpSnack(context, message, success: true);
   }
 
   // ==================== BUILD ====================
   @override
   Widget build(BuildContext context) {
     final fadeAnimation = _fadeAnimation ?? const AlwaysStoppedAnimation(1.0);
-
-    return Scaffold(
-      backgroundColor: _white,
-      body: SafeArea(
-        child: Stack(
-          children: [
-            _buildAuroraEffects(),
-            FadeTransition(
-              opacity: fadeAnimation,
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return DPPage(
+      title: 'Create your account',
+      onBack: () {
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        } else {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+      },
+      formKey: _formKey,
+      children: [
+        FadeTransition(
+          opacity: fadeAnimation,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const DPHeadline(
+                'Make room for simpler.',
+                subtitle: 'Your bills, wallet and rewards. Together.',
+              ),
+              _buildFullNameField(),
+              _buildEmailField(),
+              _buildEmailVerificationBlock(),
+              const SizedBox(height: 18),
+              _buildPhoneField(),
+              _buildPasswordField(),
+              _buildPasswordRequirements(),
+              const SizedBox(height: 18),
+              _buildConfirmPasswordField(),
+              _buildReferralField(),
+              _buildTermsCheckbox(),
+              const SizedBox(height: 22),
+              _buildRegisterButton(),
+              const SizedBox(height: 18),
+              Center(
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
-                    _buildLogo(),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Smart Life, Fast Pay',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: _secondary,
-                        letterSpacing: 0.5,
-                      ),
+                    Text('Already have an account?', style: DPText.bodyMuted),
+                    DPLinkButton(
+                      label: 'Log in',
+                      onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
                     ),
-                    const SizedBox(height: 32),
-                    _buildGlassCard(),
-                    const SizedBox(height: 20),
-                    _buildTrustStrip(),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: Text(
-                        'Version 1.5.0',
-                        style: GoogleFonts.inter(
-                          fontSize: 11,
-                          color: Colors.grey.shade300,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ==================== EMAIL VERIFICATION BLOCK ====================
+  Widget _buildEmailVerificationBlock() {
+    // ── STATE 1: VERIFIED ──────────────────────────────────────
+    if (_isOtpVerified) {
+      return DPVerifiedName(
+        name: 'Email verified',
+        detail: _emailController.text.trim(),
+        margin: EdgeInsets.zero,
+      );
+    }
+
+    // ── STATE 2: OTP SENT — WAITING FOR CODE ──────────────────
+    if (_isOtpSent) {
+      return DPCard(
+        margin: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const DPIconBadge(
+                  icon: DPIcons.mail,
+                  bg: DP.greenSoft,
+                  fg: DP.green,
+                  size: 40,
+                  radius: 12,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text('One quick check',
+                      style: DPText.body.copyWith(fontWeight: FontWeight.w500)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              _otpInfoMessage.isNotEmpty
+                  ? _otpInfoMessage
+                  : 'Enter the 6-digit code we sent to your email.',
+              style: DPText.small.copyWith(fontSize: 13),
+            ),
+            const SizedBox(height: 16),
+            DPCodeInput(
+              controller: _otpController,
+              length: 6,
+              autofocus: true,
+              error: _otpError.isNotEmpty,
+              onCompleted: (_) {
+                if (!_isVerifyingOtp) _verifyOtp();
+              },
+            ),
+            if (_otpError.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(_otpError, style: DPText.small.copyWith(color: DP.danger)),
+            ],
+            const SizedBox(height: 16),
+            DPButton(
+              label: 'Verify email',
+              loading: _isVerifyingOtp,
+              onPressed: _isVerifyingOtp ? null : _verifyOtp,
+              height: 50,
+            ),
+            const SizedBox(height: 6),
+            Center(
+              child: DPLinkButton(
+                label: _isSendingOtp ? 'Sending…' : 'Resend code',
+                onPressed: _isSendingOtp ? null : _sendOtp,
+              ),
+            ),
+            const SizedBox(height: 4),
+            const DPNotice(
+              'Can’t find your code? Check your spam folder and make sure the email address is correct.',
+              margin: EdgeInsets.zero,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // ── STATE 3: NO OTP SENT YET — SHOW BUTTON ────────────────
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DPButton(
+          kind: DPButtonKind.soft,
+          label: _isSendingOtp ? 'Sending code…' : 'Verify email address',
+          leadingIcon: DPIcons.mail,
+          loading: _isSendingOtp,
+          height: 48,
+          onPressed: (_isEmailValid && !_isSendingOtp) ? _sendOtp : null,
+        ),
+        if (_otpError.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(_otpError, style: DPText.small.copyWith(color: DP.danger)),
+          ),
+      ],
+    );
+  }
+
+  // ==================== FORM FIELDS ====================
+  Widget _buildFullNameField() {
+    return DPField(
+      label: 'Full name',
+      controller: _fullNameController,
+      hint: 'Adaeze Okafor',
+      textCapitalization: TextCapitalization.words,
+      autofillHints: const [AutofillHints.name],
+      errorText: _fullNameError.isEmpty ? null : _fullNameError,
+      suffixIcon: _isFullNameValid ? DPIcons.circleCheck : DPIcons.user,
+    );
+  }
+
+  Widget _buildEmailField() {
+    return DPField(
+      label: 'Email address',
+      controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
+      hint: 'you@example.com',
+      autofillHints: const [AutofillHints.email],
+      enabled: !_isOtpVerified,
+      margin: const EdgeInsets.only(bottom: 10),
+      errorText: _emailError.isEmpty ? null : _emailError,
+      suffixIcon: _isEmailValid ? DPIcons.circleCheck : DPIcons.mail,
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return DPField(
+      label: 'Phone number',
+      controller: _phoneController,
+      keyboardType: TextInputType.phone,
+      maxLength: 11,
+      hint: '0803 456 7890',
+      autofillHints: const [AutofillHints.telephoneNumber],
+      errorText: _phoneError.isEmpty ? null : _phoneError,
+      suffixIcon: _isPhoneValid ? DPIcons.circleCheck : DPIcons.phone,
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return DPField(
+      label: 'Create password',
+      controller: _passwordController,
+      obscure: _obscurePassword,
+      hint: '••••••••',
+      autofillHints: const [AutofillHints.newPassword],
+      margin: const EdgeInsets.only(bottom: 10),
+      errorText: _passwordError.isEmpty ? null : _passwordError,
+      suffixIcon: _obscurePassword ? DPIcons.eyeOff : DPIcons.eye,
+      onSuffixTap: () => setState(() => _obscurePassword = !_obscurePassword),
+    );
+  }
+
+  Widget _buildConfirmPasswordField() {
+    return DPField(
+      label: 'Confirm password',
+      controller: _confirmPasswordController,
+      obscure: _obscureConfirmPassword,
+      hint: '••••••••',
+      errorText: _confirmPasswordError.isEmpty ? null : _confirmPasswordError,
+      suffixIcon: _obscureConfirmPassword ? DPIcons.eyeOff : DPIcons.eye,
+      onSuffixTap: () => setState(
+        () => _obscureConfirmPassword = !_obscureConfirmPassword,
+      ),
+    );
+  }
+
+  Widget _buildReferralField() {
+    return DPField(
+      label: 'Referral code (optional)',
+      controller: _referralCodeController,
+      hint: 'Enter a referral code',
+      textCapitalization: TextCapitalization.characters,
+      errorText: _referralError.isEmpty ? null : _referralError,
+      helper: _referrerName != null ? 'Referred by $_referrerName' : null,
+      helperColor: DP.green,
+      suffix: _isValidatingReferral
+          ? const Padding(
+              padding: EdgeInsets.all(16),
+              child: SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            )
+          : null,
+      suffixIcon: _referrerName != null ? DPIcons.badgeCheck : DPIcons.gift,
+    );
+  }
+
+  // ==================== PASSWORD REQUIREMENTS ====================
+  Widget _buildPasswordRequirements() {
+    return Wrap(
+      spacing: 14,
+      runSpacing: 6,
+      children: [
+        _buildRequirementItem('8+ characters', _hasMinLength),
+        _buildRequirementItem('Uppercase', _hasUppercase),
+        _buildRequirementItem('Lowercase', _hasLowercase),
+        _buildRequirementItem('A number', _hasNumber),
+      ],
+    );
+  }
+
+  Widget _buildRequirementItem(String text, bool isValid) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        DPIcon(
+          isValid ? DPIcons.circleCheck : DPIcons.circleX,
+          size: 15,
+          color: isValid ? DP.green : DP.faint,
+        ),
+        const SizedBox(width: 5),
+        Text(
+          text,
+          style: DPText.small.copyWith(color: isValid ? DP.green : DP.muted),
+        ),
+      ],
+    );
+  }
+
+  // ==================== TERMS CHECKBOX ====================
+  Widget _buildTermsCheckbox() {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () => setState(() => _agreedToTerms = !_agreedToTerms),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 22,
+              height: 22,
+              child: Checkbox(
+                value: _agreedToTerms,
+                onChanged: (value) => setState(() => _agreedToTerms = value ?? false),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text.rich(
+                TextSpan(
+                  style: DPText.small.copyWith(fontSize: 13),
+                  children: const [
+                    TextSpan(text: 'By creating an account, you agree to our '),
+                    TextSpan(text: 'Terms of use', style: TextStyle(color: DP.ink, fontWeight: FontWeight.w500)),
+                    TextSpan(text: ' and '),
+                    TextSpan(text: 'Privacy policy', style: TextStyle(color: DP.ink, fontWeight: FontWeight.w500)),
+                    TextSpan(text: '.'),
                   ],
                 ),
               ),
@@ -684,887 +868,13 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
   }
 
-  // ==================== AURORA EFFECTS ====================
-  Widget _buildAuroraEffects() {
-    final pulseValue = _pulseController?.value ?? 0.0;
-
-    return Stack(
-      children: [
-        Positioned(
-          top: -100,
-          right: -100,
-          child: AnimatedBuilder(
-            animation: _pulseController ?? const AlwaysStoppedAnimation(0.0),
-            builder: (context, child) {
-              return Container(
-                width: 300,
-                height: 300,
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [
-                      const Color(0xFF219C7E).withOpacity(0.08),
-                      const Color(0xFF219C7E).withOpacity(0.03),
-                      Colors.transparent,
-                    ],
-                    stops: const [0, 0.5, 1],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                transform: Matrix4.identity()..scale(1 + pulseValue * 0.1),
-              );
-            },
-          ),
-        ),
-        Positioned(
-          bottom: -150,
-          left: -100,
-          child: AnimatedBuilder(
-            animation: _pulseController ?? const AlwaysStoppedAnimation(0.0),
-            builder: (context, child) {
-              return Container(
-                width: 250,
-                height: 250,
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: [
-                      const Color(0xFF1E377E).withOpacity(0.08),
-                      const Color(0xFF1E377E).withOpacity(0.03),
-                      Colors.transparent,
-                    ],
-                    stops: const [0, 0.5, 1],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                transform: Matrix4.identity()..scale(1 + pulseValue * 0.15),
-              );
-            },
-          ),
-        ),
-        ...List.generate(8, (index) {
-          return Positioned(
-            top: 30 + (index * 50) % 500,
-            left: 10 + (index * 35) % 350,
-            child: Container(
-              width: 2 + (index % 3).toDouble(),
-              height: 2 + (index % 3).toDouble(),
-              decoration: BoxDecoration(
-                color: const Color(0xFF219C7E).withOpacity(0.08),
-                shape: BoxShape.circle,
-              ),
-            ),
-          );
-        }),
-      ],
-    );
-  }
-
-  // ==================== LOGO ====================
-  Widget _buildLogo() {
-    return Row(
-      children: [
-        Image.asset('assets/dalabapay2.png', height: 48, fit: BoxFit.contain),
-      ],
-    );
-  }
-
-  // ==================== GLASS CARD ====================
-  Widget _buildGlassCard() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white.withOpacity(0.9),
-            Colors.white.withOpacity(0.7),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 40,
-            spreadRadius: 5,
-            offset: const Offset(0, 20),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Create Account',
-            style: GoogleFonts.poppins(
-              fontSize: 26,
-              fontWeight: FontWeight.w800,
-              color: _primaryLight,
-              height: 1.1,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Join us and start your journey',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              color: _greyText,
-              height: 1.4,
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          Container(
-            height: 1,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.grey.shade200, Colors.grey.shade100],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // ── FULL NAME ──────────────────────────────────────────
-          const _FieldLabel(label: 'Full Name'),
-          const SizedBox(height: 6),
-          _buildFullNameField(),
-
-          const SizedBox(height: 18),
-
-          // ── EMAIL ─────────────────────────────────────────────
-          const _FieldLabel(label: 'Email Address'),
-          const SizedBox(height: 6),
-          _buildEmailField(),
-
-          const SizedBox(height: 10),
-
-          // ── EMAIL VERIFICATION BLOCK ─────────────────────────
-          _buildEmailVerificationBlock(),
-
-          const SizedBox(height: 18),
-
-          // ── PHONE ─────────────────────────────────────────────
-          const _FieldLabel(label: 'Phone Number'),
-          const SizedBox(height: 6),
-          _buildPhoneField(),
-
-          const SizedBox(height: 18),
-
-          // ── PASSWORD ──────────────────────────────────────────
-          const _FieldLabel(label: 'Password'),
-          const SizedBox(height: 6),
-          _buildPasswordField(),
-
-          if (_passwordController.text.isNotEmpty && !_isPasswordValid)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: _buildPasswordRequirements(),
-            ),
-
-          const SizedBox(height: 18),
-
-          // ── CONFIRM PASSWORD ─────────────────────────────────
-          const _FieldLabel(label: 'Confirm Password'),
-          const SizedBox(height: 6),
-          _buildConfirmPasswordField(),
-
-          const SizedBox(height: 18),
-
-          // ── REFERRAL ──────────────────────────────────────────
-          const _FieldLabel(label: 'Referral Code (Optional)'),
-          const SizedBox(height: 6),
-          _buildReferralField(),
-
-          const SizedBox(height: 18),
-
-          // ── TERMS ─────────────────────────────────────────────
-          _buildTermsCheckbox(),
-
-          const SizedBox(height: 24),
-
-          // ── REGISTER BUTTON ──────────────────────────────────
-          _buildRegisterButton(),
-
-          const SizedBox(height: 16),
-
-          // ── LOGIN LINK ────────────────────────────────────────
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Already have an account? ',
-                  style: GoogleFonts.inter(fontSize: 14, color: _greyText),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                  child: Text(
-                    'Sign In',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: _secondary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ==================== EMAIL VERIFICATION BLOCK ====================
-  Widget _buildEmailVerificationBlock() {
-    // ── STATE 1: VERIFIED ──────────────────────────────────────
-    if (_isOtpVerified) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFE8F9F2),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _secondary.withOpacity(0.4)),
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.verified_rounded,
-              color: Color(0xFF219C7E),
-              size: 20,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Email verified successfully',
-                style: GoogleFonts.inter(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1E377E),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // ── STATE 2: OTP SENT — WAITING FOR CODE ──────────────────
-    if (_isOtpSent) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF0FBF7),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: _secondary.withOpacity(0.2)),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(
-                  Icons.mark_email_read_rounded,
-                  color: Color(0xFF219C7E),
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    _otpInfoMessage.isNotEmpty
-                        ? _otpInfoMessage
-                        : 'Check your email for the 6-digit code.',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      color: const Color(0xFF1E377E),
-                      height: 1.4,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: _isSendingOtp ? null : _sendOtp,
-                  child: Text(
-                    'Resend',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: _secondary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-          const _FieldLabel(label: 'Enter 6-Digit Code'),
-          const SizedBox(height: 6),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: _build3DField(
-                  child: TextFormField(
-                    controller: _otpController,
-                    keyboardType: TextInputType.number,
-                    maxLength: 6,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 8,
-                      color: _primaryLight,
-                    ),
-                    decoration: _fieldDecoration(
-                      hint: '••••••',
-                      icon: Icons.password_rounded,
-                      counterText: '',
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              SizedBox(
-                height: 54,
-                child: ElevatedButton(
-                  onPressed: _isVerifyingOtp ? null : _verifyOtp,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _secondary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    elevation: 0,
-                  ),
-                  child: _isVerifyingOtp
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(
-                          'Verify',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                ),
-              ),
-            ],
-          ),
-          if (_otpError.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Text(
-                _otpError,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  color: Colors.redAccent,
-                ),
-              ),
-            ),
-        ],
-      );
-    }
-
-    // ── STATE 3: NO OTP SENT YET — SHOW BUTTON ────────────────
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: OutlinedButton.icon(
-            onPressed: (_isEmailValid && !_isSendingOtp) ? _sendOtp : null,
-            icon: _isSendingOtp
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Color(0xFF219C7E),
-                    ),
-                  )
-                : const Icon(Icons.mail_outline_rounded, size: 18),
-            label: Text(
-              _isSendingOtp ? 'Sending code...' : 'Verify Email Address',
-              style: GoogleFonts.poppins(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              foregroundColor: _secondary,
-              side: BorderSide(
-                color: _isEmailValid ? _secondary : Colors.grey.shade300,
-                width: 1.4,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-            ),
-          ),
-        ),
-        if (_otpError.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              _otpError,
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                color: Colors.redAccent,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  // ==================== FORM FIELDS ====================
-  Widget _buildFullNameField() {
-    return _build3DField(
-      child: TextFormField(
-        controller: _fullNameController,
-        style: GoogleFonts.inter(fontSize: 15, color: _primaryLight),
-        decoration: _fieldDecoration(
-          hint: 'John Doe',
-          icon: Icons.person_outline_rounded,
-          errorText: _fullNameError.isEmpty ? null : _fullNameError,
-          suffix: _isFullNameValid
-              ? Icon(Icons.check_circle_rounded, color: _secondary, size: 20)
-              : null,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmailField() {
-    return _build3DField(
-      child: TextFormField(
-        controller: _emailController,
-        keyboardType: TextInputType.emailAddress,
-        style: GoogleFonts.inter(fontSize: 15, color: _primaryLight),
-        decoration: _fieldDecoration(
-          hint: 'you@example.com',
-          icon: Icons.mail_outline_rounded,
-          errorText: _emailError.isEmpty ? null : _emailError,
-          suffix: _isEmailValid
-              ? Icon(Icons.check_circle_rounded, color: _secondary, size: 20)
-              : null,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPhoneField() {
-    return _build3DField(
-      child: TextFormField(
-        controller: _phoneController,
-        keyboardType: TextInputType.phone,
-        style: GoogleFonts.inter(fontSize: 15, color: _primaryLight),
-        maxLength: 11,
-        decoration: _fieldDecoration(
-          hint: '09012345678',
-          icon: Icons.phone_outlined,
-          errorText: _phoneError.isEmpty ? null : _phoneError,
-          suffix: _isPhoneValid
-              ? Icon(Icons.check_circle_rounded, color: _secondary, size: 20)
-              : null,
-          counterText: '',
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return _build3DField(
-      child: TextFormField(
-        controller: _passwordController,
-        obscureText: _obscurePassword,
-        style: GoogleFonts.inter(fontSize: 15, color: _primaryLight),
-        decoration: _fieldDecoration(
-          hint: '••••••••',
-          icon: Icons.lock_outline_rounded,
-          errorText: _passwordError.isEmpty ? null : _passwordError,
-          suffix: IconButton(
-            icon: Icon(
-              _obscurePassword
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              color: Colors.grey.shade400,
-              size: 20,
-            ),
-            onPressed: () =>
-                setState(() => _obscurePassword = !_obscurePassword),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildConfirmPasswordField() {
-    return _build3DField(
-      child: TextFormField(
-        controller: _confirmPasswordController,
-        obscureText: _obscureConfirmPassword,
-        style: GoogleFonts.inter(fontSize: 15, color: _primaryLight),
-        decoration: _fieldDecoration(
-          hint: '••••••••',
-          icon: Icons.lock_outline_rounded,
-          errorText:
-              _confirmPasswordError.isEmpty ? null : _confirmPasswordError,
-          suffix: IconButton(
-            icon: Icon(
-              _obscureConfirmPassword
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              color: Colors.grey.shade400,
-              size: 20,
-            ),
-            onPressed: () => setState(
-              () => _obscureConfirmPassword = !_obscureConfirmPassword,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildReferralField() {
-    return _build3DField(
-      child: TextFormField(
-        controller: _referralCodeController,
-        style: GoogleFonts.inter(fontSize: 15, color: _primaryLight),
-        decoration: _fieldDecoration(
-          hint: 'Enter referral code (optional)',
-          icon: Icons.card_giftcard_outlined,
-          errorText: _referralError.isEmpty ? null : _referralError,
-          suffix: _isValidatingReferral
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : (_referrerName != null
-                  ? Icon(Icons.verified_rounded, color: _secondary, size: 20)
-                  : null),
-        ),
-      ),
-    );
-  }
-
-  // ==================== 3D FIELD WRAPPER ====================
-  Widget _build3DField({required Widget child}) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-            spreadRadius: 1,
-          ),
-          BoxShadow(
-            color: Colors.white.withOpacity(0.6),
-            blurRadius: 2,
-            offset: const Offset(0, -1),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-
-  // ==================== FIELD DECORATION ====================
-  InputDecoration _fieldDecoration({
-    required String hint,
-    required IconData icon,
-    String? errorText,
-    Widget? suffix,
-    String? counterText,
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14),
-      errorText: errorText,
-      errorStyle: GoogleFonts.inter(fontSize: 11, color: Colors.redAccent),
-      prefixIcon: Icon(icon, color: _secondary, size: 20),
-      suffixIcon: suffix,
-      counterText: counterText,
-      filled: true,
-      fillColor: const Color(0xFFF8FAFC),
-      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: Colors.grey.shade200),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: _secondary, width: 1.8),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Colors.redAccent, width: 1.2),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Colors.redAccent, width: 1.6),
-      ),
-    );
-  }
-
-  // ==================== PASSWORD REQUIREMENTS ====================
-  Widget _buildPasswordRequirements() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF0FBF7),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondary.withOpacity(0.15)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Password requirements:',
-            style: GoogleFonts.inter(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: _primaryLight,
-            ),
-          ),
-          const SizedBox(height: 8),
-          _buildRequirementItem('At least 8 characters', _hasMinLength),
-          const SizedBox(height: 4),
-          _buildRequirementItem('One uppercase letter', _hasUppercase),
-          const SizedBox(height: 4),
-          _buildRequirementItem('One lowercase letter', _hasLowercase),
-          const SizedBox(height: 4),
-          _buildRequirementItem('One number', _hasNumber),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRequirementItem(String text, bool isValid) {
-    return Row(
-      children: [
-        Icon(
-          isValid ? Icons.check_circle : Icons.radio_button_unchecked,
-          size: 12,
-          color: isValid ? _secondary : Colors.grey.shade400,
-        ),
-        const SizedBox(width: 6),
-        Text(
-          text,
-          style: GoogleFonts.inter(
-            fontSize: 10,
-            color: isValid ? _secondary : Colors.grey.shade500,
-            decoration: isValid ? TextDecoration.lineThrough : null,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ==================== TERMS CHECKBOX ====================
-  Widget _buildTermsCheckbox() {
-    return Row(
-      children: [
-        SizedBox(
-          width: 20,
-          height: 20,
-          child: Checkbox(
-            value: _agreedToTerms,
-            onChanged: (value) =>
-                setState(() => _agreedToTerms = value ?? false),
-            activeColor: _secondary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text.rich(
-            TextSpan(
-              text: 'I agree to the ',
-              style: GoogleFonts.inter(fontSize: 12, color: _greyText),
-              children: [
-                TextSpan(
-                  text: 'Terms of Service',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: _secondary,
-                  ),
-                ),
-                TextSpan(
-                  text: ' and ',
-                  style: GoogleFonts.inter(fontSize: 12, color: _greyText),
-                ),
-                TextSpan(
-                  text: 'Privacy Policy',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: _secondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   // ==================== REGISTER BUTTON ====================
   Widget _buildRegisterButton() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        gradient: _formValid
-            ? const LinearGradient(
-                colors: [Color(0xFF219C7E), Color(0xFF1A8A68)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
-        color: _formValid ? null : Colors.grey.shade200,
-        boxShadow: _formValid
-            ? [
-                BoxShadow(
-                  color: _secondary.withOpacity(0.35),
-                  blurRadius: 24,
-                  offset: const Offset(0, 8),
-                ),
-              ]
-            : [],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: _isLoading || !_formValid ? null : _handleRegister,
-          child: Center(
-            child: _isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2.5,
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'CREATE ACCOUNT',
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: _formValid
-                              ? Colors.white
-                              : Colors.grey.shade400,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      if (_formValid) ...[
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.arrow_forward_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ],
-                    ],
-                  ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ==================== TRUST STRIP ====================
-  Widget _buildTrustStrip() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200, width: 1),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const _TrustBadge(icon: Icons.shield_rounded, label: 'Secure'),
-          Container(width: 1, height: 20, color: Colors.grey.shade200),
-          const _TrustBadge(icon: Icons.bolt_rounded, label: 'Fast'),
-          Container(width: 1, height: 20, color: Colors.grey.shade200),
-          const _TrustBadge(icon: Icons.verified_rounded, label: 'Reliable'),
-        ],
-      ),
-    );
-  }
-}
-
-// ==================== REUSABLE WIDGETS ====================
-
-class _FieldLabel extends StatelessWidget {
-  final String label;
-  const _FieldLabel({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: GoogleFonts.inter(
-        fontSize: 12.5,
-        fontWeight: FontWeight.w600,
-        color: const Color(0xFF1C2D5A),
-        letterSpacing: 0.3,
-      ),
-    );
-  }
-}
-
-class _TrustBadge extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  const _TrustBadge({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 16, color: const Color(0xFF219C7E)),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF1C2D5A),
-          ),
-        ),
-      ],
+    return DPButton(
+      label: 'Create account',
+      icon: DPIcons.arrowRight,
+      loading: _isLoading,
+      onPressed: _isLoading || !_formValid ? null : _handleRegister,
     );
   }
 }

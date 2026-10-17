@@ -1899,3 +1899,93 @@ String dpNaira(num? value, {bool decimals = true}) {
   final s = decimals ? '₦$intPart.${parts[1]}' : '₦$intPart';
   return neg ? '-$s' : s;
 }
+
+/// Code entry (OTP / PIN): shows boxes, captures digits with a hidden field.
+class DPCodeInput extends StatefulWidget {
+  final TextEditingController controller;
+  final int length;
+  final bool obscure;
+  final bool autofocus;
+  final bool error;
+  final ValueChanged<String>? onCompleted;
+  final ValueChanged<String>? onChanged;
+  final FocusNode? focusNode;
+
+  const DPCodeInput({
+    super.key,
+    required this.controller,
+    this.length = 6,
+    this.obscure = false,
+    this.autofocus = false,
+    this.error = false,
+    this.onCompleted,
+    this.onChanged,
+    this.focusNode,
+  });
+
+  @override
+  State<DPCodeInput> createState() => _DPCodeInputState();
+}
+
+class _DPCodeInputState extends State<DPCodeInput> {
+  late final FocusNode _focus = widget.focusNode ?? FocusNode();
+
+  @override
+  void dispose() {
+    if (widget.focusNode == null) _focus.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, c) {
+      final gap = widget.length > 4 ? 8.0 : 14.0;
+      final box = ((c.maxWidth - gap * (widget.length - 1)) / widget.length).clamp(36.0, 64.0);
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _focus.requestFocus(),
+        child: Stack(
+          children: [
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: widget.controller,
+              builder: (_, v, __) => DPCodeBoxes(
+                length: widget.length,
+                value: v.text,
+                obscure: widget.obscure,
+                error: widget.error,
+                boxSize: box,
+              ),
+            ),
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.0,
+                child: TextField(
+                  controller: widget.controller,
+                  focusNode: _focus,
+                  autofocus: widget.autofocus,
+                  keyboardType: TextInputType.number,
+                  maxLength: widget.length,
+                  showCursor: false,
+                  enableInteractiveSelection: false,
+                  autofillHints: const [AutofillHints.oneTimeCode],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: const InputDecoration(
+                    counterText: '',
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    filled: false,
+                  ),
+                  onChanged: (v) {
+                    widget.onChanged?.call(v);
+                    if (v.length == widget.length) widget.onCompleted?.call(v);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
