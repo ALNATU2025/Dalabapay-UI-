@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ✅ Same import used by the admin dashboard
 import '../services/api_service.dart';
+import '../../ui/ui.dart';
 
 class ReceiptWidget extends StatefulWidget {
   final String transactionType;
@@ -531,141 +532,65 @@ Powered by Dalabapay''';
   }
 
   void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: _brandSecondary,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white, size: 20),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  message,
-                  style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    if (mounted) dpSnack(context, message.replaceAll('✅ ', ''), success: true);
   }
 
   void _showCopySuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: _brandSecondary,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white, size: 20),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  message,
-                  style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    if (mounted) dpSnack(context, message.replaceAll('✅ ', ''), success: true);
   }
 
   void _showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.red.shade600,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            children: [
-              const Icon(Icons.error_outline, color: Colors.white, size: 20),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  message,
-                  style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
-                ),
-              ),
-            ],
-          ),
+    if (mounted) dpSnack(context, message, error: true);
+  }
+
+  /// Large status mark at the top of the receipt.
+  Widget _buildStatusBadge() {
+    final s = widget.status.toLowerCase();
+    final ok = s.contains('success') ||
+        s.contains('completed') ||
+        s.contains('delivered') ||
+        s.contains('resolved');
+    final pending = s.contains('pending') || s.contains('processing');
+    final Color c = ok ? DP.green : (pending ? DP.amber : DP.red);
+    final Color bg = ok ? DP.mint : (pending ? DP.amberBg : DP.redBg);
+    return Container(
+      width: 84,
+      height: 84,
+      decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(color: c, shape: BoxShape.circle),
+        child: Icon(
+          ok ? DPIcons.check : (pending ? DPIcons.pending : DPIcons.close),
+          color: Colors.white,
+          size: 30,
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 3),
       ),
     );
   }
 
-  Widget _buildStatusBadge() {
-    final status = widget.status;
-    final statusColor = _statusColor;
-    final statusIcon =
-        status.toLowerCase().contains('success') ||
-                status.toLowerCase().contains('completed')
-            ? Icons.check_circle
-            : status.toLowerCase().contains('pending') ||
-                status.toLowerCase().contains('processing')
-            ? Icons.pending
-            : status.toLowerCase().contains('failed') ||
-                status.toLowerCase().contains('cancelled')
-            ? Icons.error
-            : Icons.info;
+  String get _headline {
+    final s = widget.status.toLowerCase();
+    if (s.contains('pending') || s.contains('processing')) {
+      return 'Payment processing';
+    }
+    if (s.contains('fail') || s.contains('cancel')) return 'Payment failed';
+    if (s.contains('refund')) return 'Payment refunded';
+    if (widget.isCommission) return 'Earnings credited';
+    return 'Payment successful';
+  }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: statusColor, width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: statusColor.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(statusIcon, color: statusColor, size: 16),
-          const SizedBox(width: 8),
-          Text(
-            status.toUpperCase(),
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: statusColor,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ],
-      ),
-    );
+  String get _subline {
+    final s = widget.status.toLowerCase();
+    if (s.contains('pending') || s.contains('processing')) {
+      return 'We\'ll update you as soon as it\'s confirmed.';
+    }
+    if (s.contains('fail') || s.contains('cancel')) {
+      return 'No money left your wallet for this payment.';
+    }
+    return 'That\'s one less thing on your list.';
   }
 
   Widget _buildDetailRow(
@@ -675,61 +600,53 @@ Powered by Dalabapay''';
     bool isAmount = false,
     bool showCopyIcon = false,
   }) {
+    final canCopy = showCopyIcon &&
+        value.isNotEmpty &&
+        value != 'N/A' &&
+        value != 'Check SMS';
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 7),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            flex: 2,
+            flex: 4,
             child: Text(
               label,
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade600,
-              ),
+              style: const TextStyle(fontSize: 14, color: DP.muted),
             ),
           ),
+          const SizedBox(width: 10),
           Expanded(
-            flex: 3,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: Text(
-                    value,
-                    textAlign: TextAlign.right,
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight:
-                          highlight || isAmount
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                      color:
-                          highlight
-                              ? _brandPrimary
-                              : isAmount
-                              ? _brandSecondary
-                              : Colors.grey.shade900,
+            flex: 6,
+            child: GestureDetector(
+              onTap: canCopy ? () => _copyTokenToClipboard(value) : null,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Text(
+                      value,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: highlight || isAmount
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        color: DP.ink,
+                      ),
                     ),
                   ),
-                ),
-                if (showCopyIcon &&
-                    value.isNotEmpty &&
-                    value != 'N/A' &&
-                    value != 'Check SMS') ...[
-                  const SizedBox(width: 6),
-                  GestureDetector(
-                    onTap: () => _copyTokenToClipboard(value),
-                    child: Icon(
-                      Icons.content_copy_rounded,
-                      size: 14,
-                      color: _brandPrimary.withOpacity(0.6),
+                  if (canCopy) ...[
+                    const SizedBox(width: 6),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 2),
+                      child: Icon(DPIcons.copy, size: 14, color: DP.faint),
                     ),
-                  ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ],
@@ -738,7 +655,7 @@ Powered by Dalabapay''';
   }
 
   Widget _buildDivider() {
-    return Divider(color: Colors.grey.shade200, height: 8, thickness: 0.5);
+    return const SizedBox.shrink();
   }
 
   // ==================== ADMIN ACTION SECTION ====================
@@ -917,1020 +834,337 @@ Powered by Dalabapay''';
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    final isMobile = screenWidth < 600;
+    final size = MediaQuery.of(context).size;
     final operator = _detectedOperator;
+    final isElectricity =
+        widget.transactionType.toLowerCase().contains('electricity');
+    final hasToken = widget.electricityToken != null &&
+        widget.electricityToken!.isNotEmpty &&
+        widget.electricityToken != 'Check SMS' &&
+        widget.electricityToken != 'N/A' &&
+        isElectricity;
+    final isFunding = widget.transactionType == 'Fund Wallet' ||
+        widget.transactionType == 'Wallet Funding';
+    String? money(String? raw) {
+      if (raw == null || raw.isEmpty || raw == 'N/A') return null;
+      final d = double.tryParse(raw.replaceAll(RegExp(r'[₦,\s]'), ''));
+      return d == null ? '₦$raw' : DP.naira(d);
+    }
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.all(isMobile ? 8 : 12),
-      child: RepaintBoundary(
-        key: _receiptKey,
-        child: Container(
-          width: screenWidth * (isMobile ? 0.92 : 0.8),
-          constraints: BoxConstraints(
-            maxWidth: 420,
-            maxHeight: screenHeight * 0.85,
+    final before = money(widget.balanceBefore);
+    final after = money(widget.balanceAfter);
+    final showAdmin = (widget.isUserAdmin || widget.isAdminTransaction) &&
+        _isViewerAdminLoaded &&
+        _isViewerAdmin;
+
+    final receiptCard = Container(
+      decoration: BoxDecoration(
+        color: DP.surface,
+        borderRadius: BorderRadius.circular(DP.rXl),
+        border: Border.all(color: DP.border),
+      ),
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
+      child: Column(
+        children: [
+          Text(
+            widget.transactionType.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: DP.tiny,
           ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 20,
-                spreadRadius: 1,
-                offset: const Offset(0, 6),
+          const SizedBox(height: 6),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              _formattedAmount,
+              style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w500,
+                color: DP.ink,
               ),
-            ],
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Header with gradient
-              Container(
-                padding: const EdgeInsets.all(16),
+          const SizedBox(height: 10),
+          const Divider(),
+          const SizedBox(height: 4),
+          if (widget.phoneNumber != null && widget.phoneNumber!.isNotEmpty)
+            _buildDetailRow('Recipient', widget.phoneNumber!, showCopyIcon: true),
+          if (operator != null) _buildDetailRow('Network', operator),
+          if (widget.description != null && widget.description!.isNotEmpty)
+            _buildDetailRow('Description', widget.description!),
+          if (widget.smartcardNumber != null &&
+              widget.smartcardNumber!.isNotEmpty)
+            _buildDetailRow(
+              'Smartcard number',
+              widget.smartcardNumber!,
+              showCopyIcon: true,
+            ),
+          if (widget.meterNumber != null && widget.meterNumber!.isNotEmpty)
+            _buildDetailRow(
+              'Meter number',
+              widget.meterNumber!,
+              showCopyIcon: true,
+            ),
+          if (isElectricity &&
+              widget.customerName != null &&
+              widget.customerName!.isNotEmpty &&
+              widget.customerName != 'N/A')
+            _buildDetailRow('Customer', widget.customerName!),
+          if (isElectricity &&
+              widget.customerAddress != null &&
+              widget.customerAddress!.isNotEmpty &&
+              widget.customerAddress != 'N/A')
+            _buildDetailRow('Address', widget.customerAddress!),
+          if (widget.packageVariationCode != null &&
+              widget.packageVariationCode!.isNotEmpty &&
+              widget.packageVariationCode != 'N/A')
+            _buildDetailRow('Package', widget.packageVariationCode!),
+          if (widget.isCommission &&
+              widget.commissionSource != null &&
+              widget.commissionSource!.isNotEmpty)
+            _buildDetailRow('Earned from', widget.commissionSource!),
+          _buildDetailRow(
+            'Paid from',
+            widget.isCommission || isFunding ? 'Dalabapay earnings' : 'Dalabapay wallet',
+          ),
+          if (before != null && (isFunding || after != null))
+            _buildDetailRow('Previous balance', before),
+          _buildDetailRow(
+            widget.isCommission || isFunding ? 'Amount' : 'Total paid',
+            _formattedAmount,
+            isAmount: true,
+          ),
+          if (after != null) _buildDetailRow('New balance', after),
+          _buildDetailRow(
+            'Date & time',
+            DateFormat('d MMM yyyy, h:mm a').format(widget.date.toLocal()),
+          ),
+          _buildDetailRow('Reference', widget.reference, showCopyIcon: true),
+          if (widget.transactionId != widget.reference)
+            _buildDetailRow(
+              'Transaction ID',
+              widget.transactionId,
+              showCopyIcon: true,
+            ),
+          if (hasToken) ...[
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: _isCopyingToken
+                  ? null
+                  : () => _copyTokenToClipboard(widget.electricityToken!),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [_brandPrimary, Color(0xFF0C2152)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Image.asset(
-                                  'assets/dalabapay2.png',
-                                  width: 40,
-                                  height: 40,
-                                  fit: BoxFit.contain,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
-                                      Icons.receipt_long,
-                                      color: _brandPrimary,
-                                      size: 30,
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Dalabapay',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    letterSpacing: 0.5,
-                                  ),
-                                ),
-                                Text(
-                                  'Transaction Receipt',
-                                  style: GoogleFonts.inter(
-                                    fontSize: 11,
-                                    color: Colors.white.withOpacity(0.85),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Spacer(),
-                            _buildStatusBadge(),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.calendar_today,
-                              size: 12,
-                              color: Colors.white.withOpacity(0.7),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              _formattedDate,
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                color: Colors.white.withOpacity(0.85),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.2),
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            size: 14,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Scrollable Content
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      // Amount Section
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              _brandSecondary.withOpacity(0.08),
-                              _brandLight.withOpacity(0.05),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: _brandSecondary.withOpacity(0.15),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Amount',
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              _formattedAmount,
-                              style: GoogleFonts.inter(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: _brandSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Wrap(
-                              spacing: 8,
-                              runSpacing: 4,
-                              alignment: WrapAlignment.center,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _brandPrimary.withOpacity(0.08),
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: _brandPrimary.withOpacity(0.15),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    widget.transactionType.toUpperCase(),
-                                    style: GoogleFonts.inter(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: _brandPrimary,
-                                    ),
-                                  ),
-                                ),
-                                if (operator != null) ...[
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: _operatorColor.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(
-                                        color: _operatorColor.withOpacity(0.2),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.sim_card,
-                                          size: 12,
-                                          color: _operatorColor,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          operator,
-                                          style: GoogleFonts.inter(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            color: _operatorColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Transaction Details
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade50,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildDetailRow(
-                              'Transaction ID',
-                              widget.transactionId,
-                              highlight: true,
-                              showCopyIcon: true,
-                            ),
-                            _buildDivider(),
-                            _buildDetailRow(
-                              'Reference',
-                              widget.reference,
-                              showCopyIcon: true,
-                            ),
-                            _buildDivider(),
-                            if (widget.gateway != null &&
-                                widget.gateway!.isNotEmpty) ...[
-                              _buildDetailRow('Gateway', widget.gateway!),
-                              _buildDivider(),
-                            ],
-                            if (widget.description != null &&
-                                widget.description!.isNotEmpty) ...[
-                              _buildDetailRow(
-                                'Description',
-                                widget.description!,
-                              ),
-                              _buildDivider(),
-                            ],
-                            if (widget.phoneNumber != null &&
-                                widget.phoneNumber!.isNotEmpty) ...[
-                              _buildDetailRow(
-                                'Phone Number',
-                                widget.phoneNumber!,
-                                showCopyIcon: true,
-                              ),
-                              _buildDivider(),
-                            ],
-                            if (widget.smartcardNumber != null &&
-                                widget.smartcardNumber!.isNotEmpty) ...[
-                              _buildDetailRow(
-                                'Smartcard Number',
-                                widget.smartcardNumber!,
-                                showCopyIcon: true,
-                              ),
-                              _buildDivider(),
-                            ],
-                            if (widget.meterNumber != null &&
-                                widget.meterNumber!.isNotEmpty) ...[
-                              _buildDetailRow(
-                                'Meter Number',
-                                widget.meterNumber!,
-                                showCopyIcon: true,
-                              ),
-                              _buildDivider(),
-                            ],
-
-                            // Electricity Token
-                            if (widget.electricityToken != null &&
-                                widget.electricityToken!.isNotEmpty &&
-                                widget.electricityToken != 'Check SMS' &&
-                                widget.electricityToken != 'N/A' &&
-                                widget.transactionType.toLowerCase().contains(
-                                  'electricity',
-                                )) ...[
-                              Container(
-                                padding: const EdgeInsets.all(14),
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade50,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: Colors.orange.shade200,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          '⚡ ELECTRICITY TOKEN',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap:
-                                              _isCopyingToken
-                                                  ? null
-                                                  : () => _copyTokenToClipboard(
-                                                    widget.electricityToken!,
-                                                  ),
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Colors.orange.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(6),
-                                              border: Border.all(
-                                                color: Colors.orange.shade300,
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                _isCopyingToken
-                                                    ? SizedBox(
-                                                      width: 12,
-                                                      height: 12,
-                                                      child: CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                        valueColor:
-                                                            AlwaysStoppedAnimation<
-                                                              Color
-                                                            >(
-                                                              Colors
-                                                                  .orange
-                                                                  .shade700,
-                                                            ),
-                                                      ),
-                                                    )
-                                                    : Icon(
-                                                      Icons
-                                                          .content_copy_rounded,
-                                                      size: 14,
-                                                      color:
-                                                          Colors
-                                                              .orange
-                                                              .shade700,
-                                                    ),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  _isCopyingToken
-                                                      ? 'Copying...'
-                                                      : 'Copy',
-                                                  style: GoogleFonts.inter(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w600,
-                                                    color:
-                                                        Colors.orange.shade700,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    GestureDetector(
-                                      onTap:
-                                          () => _copyTokenToClipboard(
-                                            widget.electricityToken!,
-                                          ),
-                                      child: Container(
-                                        width: double.infinity,
-                                        padding: const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                          border: Border.all(
-                                            color: Colors.orange.shade200,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                widget.electricityToken!,
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.grey.shade900,
-                                                  letterSpacing: 1.5,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                            Icon(
-                                              Icons.content_copy_rounded,
-                                              size: 18,
-                                              color: Colors.orange.shade600,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      'Tap token to copy • Also sent via SMS',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 9,
-                                        color: Colors.grey.shade500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              _buildDivider(),
-                            ],
-
-                            if (widget.customerName != null &&
-                                widget.customerName!.isNotEmpty &&
-                                widget.customerName != 'N/A' &&
-                                widget.transactionType.toLowerCase().contains(
-                                  'electricity',
-                                )) ...[
-                              _buildDetailRow(
-                                'Customer Name',
-                                widget.customerName!,
-                                showCopyIcon: true,
-                              ),
-                              _buildDivider(),
-                            ],
-
-                            if (widget.customerAddress != null &&
-                                widget.customerAddress!.isNotEmpty &&
-                                widget.customerAddress != 'N/A' &&
-                                widget.transactionType.toLowerCase().contains(
-                                  'electricity',
-                                )) ...[
-                              _buildDetailRow(
-                                'Customer Address',
-                                widget.customerAddress!,
-                                showCopyIcon: true,
-                              ),
-                              _buildDivider(),
-                            ],
-
-                            if (widget.packageVariationCode != null &&
-                                widget.packageVariationCode!.isNotEmpty &&
-                                widget.packageVariationCode != 'N/A') ...[
-                              _buildDetailRow(
-                                'Package',
-                                widget.packageVariationCode!,
-                                showCopyIcon: true,
-                              ),
-                              _buildDivider(),
-                            ],
-
-                            if (widget.isCommission &&
-                                widget.commissionSource != null &&
-                                widget.commissionSource!.isNotEmpty) ...[
-                              _buildDetailRow(
-                                'Commission Source',
-                                widget.commissionSource!,
-                              ),
-                              _buildDivider(),
-                            ],
-
-                            // Balance Before
-                            if ((widget.transactionType == 'Fund Wallet' ||
-                                    widget.transactionType ==
-                                        'Wallet Funding') &&
-                                widget.balanceBefore != null &&
-                                widget.balanceBefore!.isNotEmpty &&
-                                widget.balanceBefore != 'N/A' &&
-                                double.tryParse(widget.balanceBefore!) !=
-                                    null) ...[
-                              _buildDetailRow(
-                                'Previous Balance',
-                                '₦${double.parse(widget.balanceBefore!).toStringAsFixed(2)}',
-                              ),
-                              _buildDivider(),
-                            ] else if (widget.balanceBefore != null &&
-                                widget.balanceBefore!.isNotEmpty &&
-                                widget.balanceBefore != 'N/A') ...[
-                              _buildDetailRow(
-                                'Previous Balance',
-                                '₦${widget.balanceBefore}',
-                              ),
-                              _buildDivider(),
-                            ],
-
-                            _buildDetailRow(
-                              'Transaction Amount',
-                              _formattedAmount,
-                              isAmount: true,
-                            ),
-
-                            // New Balance
-                            if ((widget.transactionType == 'Fund Wallet' ||
-                                    widget.transactionType ==
-                                        'Wallet Funding') &&
-                                widget.balanceAfter != null &&
-                                widget.balanceAfter!.isNotEmpty &&
-                                widget.balanceAfter != 'N/A' &&
-                                double.tryParse(widget.balanceAfter!) !=
-                                    null) ...[
-                              _buildDivider(),
-                              _buildDetailRow(
-                                'New Balance',
-                                '₦${double.parse(widget.balanceAfter!).toStringAsFixed(2)}',
-                                isAmount: true,
-                              ),
-                            ] else if (widget.balanceAfter != null &&
-                                widget.balanceAfter!.isNotEmpty &&
-                                widget.balanceAfter != 'N/A') ...[
-                              _buildDivider(),
-                              _buildDetailRow(
-                                'New Balance',
-                                '₦${widget.balanceAfter}',
-                                isAmount: true,
-                              ),
-                            ],
-
-                            // Admin Section — ONLY shown to confirmed admin viewers
-                            if ((widget.isUserAdmin ||
-                                    widget.isAdminTransaction) &&
-                                _isViewerAdminLoaded &&
-                                _isViewerAdmin) ...[
-                              _buildDivider(),
-                              if (widget.customerName != null &&
-                                  widget.customerName!.isNotEmpty &&
-                                  widget.customerName != 'Unknown User' &&
-                                  widget.customerName != 'N/A')
-                                _buildDetailRow(
-                                  'User Name',
-                                  widget.customerName!,
-                                  highlight: true,
-                                  showCopyIcon: true,
-                                ),
-                              if (widget.customerAddress != null &&
-                                  widget.customerAddress!.isNotEmpty &&
-                                  widget.customerAddress != 'No Email' &&
-                                  widget.customerAddress != 'N/A')
-                                _buildDetailRow(
-                                  'User Email',
-                                  widget.customerAddress!,
-                                  showCopyIcon: true,
-                                ),
-                              if (widget.customerPhone != null &&
-                                  widget.customerPhone!.isNotEmpty &&
-                                  widget.customerPhone != 'No Phone' &&
-                                  widget.customerPhone != 'N/A')
-                                _buildDetailRow(
-                                  'User Phone',
-                                  widget.customerPhone!,
-                                  showCopyIcon: true,
-                                ),
-                              if (widget.customerUserId != null &&
-                                  widget.customerUserId!.isNotEmpty &&
-                                  widget.customerUserId != 'No ID' &&
-                                  widget.customerUserId != 'N/A')
-                                _buildDetailRow(
-                                  'User ID',
-                                  widget.customerUserId!,
-                                  showCopyIcon: true,
-                                ),
-                            ],
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Admin Badge — ONLY shown to confirmed admin viewers
-                      if ((widget.isAdminTransaction || widget.isUserAdmin) &&
-                          _isViewerAdminLoaded &&
-                          _isViewerAdmin)
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.amber.shade50,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.amber.shade200),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                widget.isAdminTransaction
-                                    ? Icons.shield
-                                    : Icons.verified_user,
-                                color: Colors.amber.shade700,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      widget.isAdminTransaction
-                                          ? (widget.adminNote ??
-                                              '🔧 ADMIN TRANSACTION')
-                                          : '👑 ADMIN USER',
-                                      style: GoogleFonts.inter(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.amber.shade800,
-                                      ),
-                                    ),
-                                    if (widget.isAdminTransaction &&
-                                        widget.adminNote != null) ...[
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        widget.adminNote!,
-                                        style: GoogleFonts.inter(
-                                          fontSize: 10,
-                                          color: Colors.amber.shade700,
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                      // Commission Badge
-                      if (widget.isCommission) ...[
-                        const SizedBox(height: 4),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: _brandSecondary.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: _brandSecondary.withOpacity(0.15),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.attach_money,
-                                color: _brandSecondary,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                'Commission Transaction',
-                                style: GoogleFonts.inter(
-                                  fontSize: 11,
-                                  color: _brandSecondary,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-
-                      // Service Fee Badge
-                      if (widget.isService) ...[
-                        const SizedBox(height: 4),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.blue.shade200),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.design_services,
-                                color: Colors.blue.shade700,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                'Service Fee',
-                                style: GoogleFonts.inter(
-                                  fontSize: 11,
-                                  color: Colors.blue.shade800,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-
-                      // ✅ Admin action details — ONLY shown to confirmed admin viewers
-                      if (widget.isAdminTransaction &&
-                          _isViewerAdminLoaded &&
-                          _isViewerAdmin)
-                        _buildAdminActionSection(),
-
-                      // Custom Message - REMOVED "Verified by VTpass" message
-                      if (widget.customMessage != null &&
-                          !widget.customMessage!.contains('VTpass')) ...[
-                        const SizedBox(height: 4),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: _statusColor.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: _statusColor.withOpacity(0.2),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                widget.status.toLowerCase().contains('success')
-                                    ? Icons.check_circle
-                                    : Icons.info,
-                                size: 16,
-                                color: _statusColor,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  widget.customMessage!,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    color: _statusColor,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-
-                      const SizedBox(height: 8),
-
-                      // Footer
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              _brandPrimary.withOpacity(0.05),
-                              _brandSecondary.withOpacity(0.05),
-                            ],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              'assets/dalabapay2.png',
-                              height: 24,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.receipt_long,
-                                  color: _brandPrimary,
-                                  size: 24,
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Thank you for choosing Dalabapay!',
-                              style: GoogleFonts.inter(
-                                fontSize: 11,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              '💚 Secure • Fast • Reliable',
-                              style: GoogleFonts.inter(
-                                fontSize: 9,
-                                color: Colors.grey.shade400,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Action Buttons
-              // Action Buttons
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(
-                    top: BorderSide(color: Colors.grey.shade200, width: 1),
-                  ),
+                  color: DP.amberBg,
+                  borderRadius: BorderRadius.circular(DP.rMd),
+                  border: Border.all(color: DP.amberLine),
                 ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ✅ DOWNLOAD CERTIFICATE BUTTON (only for insurance with certificate)
-                    if (widget.certificateUrl != null &&
-                        widget.certificateUrl!.isNotEmpty &&
-                        widget.transactionType.toLowerCase().contains(
-                          'insurance',
-                        )) ...[
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          onPressed:
-                              _isDownloadingCertificate
-                                  ? null
-                                  : _downloadCertificate,
-                          icon:
-                              _isDownloadingCertificate
-                                  ? const SizedBox(
-                                    width: 18,
-                                    height: 18,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                  : const Icon(Icons.picture_as_pdf, size: 18),
-                          label: Text(
-                            _isDownloadingCertificate
-                                ? 'Loading...'
-                                : '📄 Download Certificate',
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFC0392B),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            elevation: 0,
-                          ),
-                        ),
+                    const Text(
+                      'ELECTRICITY TOKEN · TAP TO COPY',
+                      style: TextStyle(
+                        fontSize: 11,
+                        letterSpacing: 0.5,
+                        fontWeight: FontWeight.w600,
+                        color: DP.amber,
                       ),
-                      const SizedBox(height: 8),
-                    ],
+                    ),
+                    const SizedBox(height: 6),
                     Row(
                       children: [
                         Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: _isSaving ? null : _saveReceipt,
-                            icon: Icon(
-                              _isSaving ? Icons.downloading : Icons.download,
-                              size: 16,
-                            ),
-                            label: Text(
-                              _isSaving ? 'Saving...' : 'Save',
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _brandSecondary,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              elevation: 0,
+                          child: Text(
+                            widget.electricityToken!,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.4,
+                              color: DP.ink,
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: _isSharing ? null : _shareReceipt,
-                            icon: Icon(
-                              _isSharing ? Icons.share : Icons.share_outlined,
-                              size: 16,
-                            ),
-                            label: Text(
-                              _isSharing ? 'Sharing...' : 'Share',
-                              style: GoogleFonts.inter(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _brandPrimary,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              elevation: 0,
-                            ),
-                          ),
-                        ),
+                        const Icon(DPIcons.copy, color: DP.amber, size: 18),
                       ],
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      child: TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          backgroundColor: Colors.grey.shade100,
-                        ),
-                        child: Text(
-                          'Close Receipt',
-                          style: GoogleFonts.inter(
-                            color: Colors.grey.shade700,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
                     ),
                   ],
                 ),
               ),
+            ),
+          ],
+          if (widget.isCommission) ...[
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              decoration: BoxDecoration(
+                color: DP.mint,
+                borderRadius: BorderRadius.circular(DP.rSm),
+              ),
+              child: Row(
+                children: [
+                  const Icon(DPIcons.sparkle, color: DP.green, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '$_formattedAmount added to your earnings',
+                      style: const TextStyle(color: DP.green, fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          if (widget.customMessage != null &&
+              widget.customMessage!.isNotEmpty &&
+              !widget.customMessage!.contains('VTpass')) ...[
+            const SizedBox(height: 10),
+            Text(
+              widget.customMessage!.replaceAll('✓ ', ''),
+              textAlign: TextAlign.center,
+              style: DP.caption,
+            ),
+          ],
+          if (showAdmin) ...[
+            const SizedBox(height: 10),
+            const Divider(),
+            if (widget.customerName != null &&
+                widget.customerName!.isNotEmpty &&
+                widget.customerName != 'Unknown User' &&
+                widget.customerName != 'N/A')
+              _buildDetailRow('User name', widget.customerName!, showCopyIcon: true),
+            if (widget.customerAddress != null &&
+                widget.customerAddress!.isNotEmpty &&
+                widget.customerAddress != 'No Email' &&
+                widget.customerAddress != 'N/A')
+              _buildDetailRow('User email', widget.customerAddress!, showCopyIcon: true),
+            if (widget.customerPhone != null &&
+                widget.customerPhone!.isNotEmpty &&
+                widget.customerPhone != 'No Phone' &&
+                widget.customerPhone != 'N/A')
+              _buildDetailRow('User phone', widget.customerPhone!, showCopyIcon: true),
+            if (widget.customerUserId != null &&
+                widget.customerUserId!.isNotEmpty &&
+                widget.customerUserId != 'No ID' &&
+                widget.customerUserId != 'N/A')
+              _buildDetailRow('User ID', widget.customerUserId!, showCopyIcon: true),
+            if (widget.isAdminTransaction) ...[
+              const SizedBox(height: 6),
+              DPBanner(
+                widget.adminNote ?? 'Admin transaction',
+                tone: DPTone.warning,
+                icon: DPIcons.admin,
+              ),
+              _buildAdminActionSection(),
             ],
-          ),
+          ],
+          const SizedBox(height: 12),
+          const DPWordmark(height: 20),
+        ],
+      ),
+    );
+
+    return Dialog(
+      backgroundColor: DP.bg,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(DP.rXl)),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 440, maxHeight: size.height * 0.92),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+              child: Row(
+                children: [
+                  IconButton(
+                    tooltip: 'Close',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(DPIcons.close, color: DP.ink),
+                  ),
+                  const Expanded(
+                    child: Text(
+                      'Payment receipt',
+                      textAlign: TextAlign.center,
+                      style: DP.bodyStrong,
+                    ),
+                  ),
+                  DPTextLink(
+                    label: 'Help',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/help');
+                    },
+                  ),
+                  const SizedBox(width: 6),
+                ],
+              ),
+            ),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(18, 4, 18, 8),
+                child: RepaintBoundary(
+                  key: _receiptKey,
+                  child: Container(
+                    color: DP.bg,
+                    padding: const EdgeInsets.only(top: 6, bottom: 4),
+                    child: Column(
+                      children: [
+                        _buildStatusBadge(),
+                        const SizedBox(height: 12),
+                        Text(_headline, style: DP.title.copyWith(fontSize: 21)),
+                        const SizedBox(height: 4),
+                        Text(
+                          _subline,
+                          textAlign: TextAlign.center,
+                          style: DP.body.copyWith(color: DP.muted, fontSize: 14),
+                        ),
+                        const SizedBox(height: 16),
+                        receiptCard,
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 8, 18, 16),
+              child: Column(
+                children: [
+                  if (widget.certificateUrl != null &&
+                      widget.certificateUrl!.isNotEmpty &&
+                      widget.transactionType.toLowerCase().contains('insurance')) ...[
+                    DPOutlineButton(
+                      label: _isDownloadingCertificate
+                          ? 'Loading…'
+                          : 'Download certificate',
+                      icon: DPIcons.download,
+                      onPressed:
+                          _isDownloadingCertificate ? null : _downloadCertificate,
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                  DPButton(
+                    label: 'Share receipt',
+                    icon: DPIcons.share,
+                    loading: _isSharing,
+                    onPressed: _isSharing ? null : _shareReceipt,
+                  ),
+                  const SizedBox(height: 10),
+                  DPOutlineButton(
+                    label: 'Done',
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Need help? Quote your payment reference.',
+                    style: DP.caption,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
