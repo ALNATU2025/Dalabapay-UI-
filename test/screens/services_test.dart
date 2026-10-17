@@ -9,6 +9,7 @@ import 'package:dalabapay/presentation/screens/electricity/electricity_screen.da
 import 'package:dalabapay/presentation/screens/cabletv/cabletv_screen.dart';
 import 'package:dalabapay/presentation/screens/international_airtime/international_airtime_screen.dart';
 import 'package:dalabapay/presentation/screens/education/education_screen.dart';
+import 'package:dalabapay/presentation/screens/insurance/insurance_screen.dart';
 import 'harness.dart';
 import 'home_test.dart' show demoPrefs;
 
@@ -35,4 +36,6 @@ void main() {
       IntlAirtimeScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 900));
   testWidgets('education', (t) async => shoot(t, '22_education',
       EducationScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 1000));
+  testWidgets('insurance', (t) async => shoot(t, '23_insurance',
+      InsuranceScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 1900));
 }
