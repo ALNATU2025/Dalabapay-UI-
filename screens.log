@@ -1,0 +1,518 @@
+
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/home_test.dart: home
+API SERVICE DEBUG: Failed to fetch fresh user: Exception: No userId or token
+📊 User approval status: approved (toggle: true)
+❌ NotificationService init error: [core/no-app] No Firebase App '[DEFAULT]' has been created - call Firebase.initializeApp()
+❌ NotificationService init error: [core/no-app] No Firebase App '[DEFAULT]' has been created - call Firebase.initializeApp()
+⚠️ Socket not connected, using API polling fallback
+API SERVICE DEBUG: Getting unread notification count
+API SERVICE DEBUG: 🔔 Getting notifications
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: Getting commission balance from new endpoint
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/commission/balance
+API SERVICE DEBUG: Referral code not found locally for user u1. Fetching from backend...
+API SERVICE DEBUG: Error fetching referral code from backend: type 'String' is not a subtype of type 'Uri' in type cast
+API SERVICE DEBUG: Generating referral code for user: u1
+API SERVICE DEBUG: Authenticated POST request to https://vtpass-backend.onrender.com/api/users/generate-referral-code
+API SERVICE DEBUG: Request body: {"userId":"u1"}
+API SERVICE DEBUG: ❌ No token in getTransactions
+🔐 ADMIN CHECK:
+   isAdmin (from backend): false
+API SERVICE DEBUG: Getting unread notification count
+API SERVICE DEBUG: 🔔 Getting notifications
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/commission/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ERROR: Authentication token not found.
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No token in getTransactions
+PAYMENT SERVICE: 🔍 Checking dedicated account for user: u1
+✅ SocketService initialized
+✅ Socket initialized successfully
+API SERVICE DEBUG: Getting unread notification count
+API SERVICE DEBUG: 🔔 Getting notifications
+API SERVICE DEBUG: 🔐 No token for getNotifications, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error getting commission balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Reporting error to backend: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error generating referral code: Exception: Authentication token not found. Please log in again.
+Error loading referral code: RangeError (end): Invalid value: Not in inclusive range 0..2: 8
+API SERVICE DEBUG: ❌ No token in getTransactions
+API SERVICE DEBUG: ⚠️ Auth failure already being handled, skipping duplicate
+API SERVICE DEBUG: 🔐 No token for getNotifications, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ ERROR in getNotifications: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ⚠️ Auth failure already being handled, skipping duplicate
+API SERVICE DEBUG: ⚠️ getTransactions attempt 2 error: Exception: Authentication required
+API SERVICE DEBUG: ⚠️ Auth failure already being handled, skipping duplicate
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ ERROR in getNotifications: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ⚠️ Auth failure already being handled, skipping duplicate
+API SERVICE DEBUG: 🔐 No token for getNotifications, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Unread notification count: 0
+📊 Initial unread notification count: 0
+API SERVICE DEBUG: ❌ Failed to get app version from backend: Null check operator used on a null value
+Error loading transactions: Exception: Authentication required
+PAYMENT SERVICE: ✅ Token retrieved successfully
+PAYMENT SERVICE: 📤 GET Request to: https://virtual-account-backend.onrender.com/api/cashwyre/reserve-account?userId=u1
+API SERVICE DEBUG: Unread notification count: 0
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ ERROR in getNotifications: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ⚠️ Auth failure already being handled, skipping duplicate
+API SERVICE DEBUG: ❌ Failed to get app version from PackageInfo: Null check operator used on a null value
+API SERVICE DEBUG: Unread notification count: 0
+📊 Initial unread notification count: 0
+API SERVICE DEBUG: Retrieved userId: u1
+PAYMENT SERVICE: 📥 Response status: 400
+PAYMENT SERVICE: 📥 Response body: 
+PAYMENT SERVICE: ❌ HTTP Error: 400
+📦 Dedicated account check result: {success: false, hasAccount: false, message: Server error: 400}
+ℹ️ No dedicated account found for user
+API SERVICE DEBUG: Error reporting response status: 400
+API SERVICE DEBUG: Failed to report error: 
+::endgroup::
+::group::✅ Passing tests
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/home_test.dart: pin login
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/activity_test.dart: activity
+📦 Loaded 6 transactions from cache
+📦 Loading 6 transactions from cache
+API SERVICE DEBUG: ❌ No token in getTransactions
+API SERVICE DEBUG: ❌ No token in getTransactions
+API SERVICE DEBUG: ❌ No token in getTransactions
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: ⚠️ getTransactions attempt 2 error: Exception: Authentication required
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+❌ Error fetching transactions: Exception: Authentication required
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+✅ Cached balance for user: ₦0.0
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/activity_test.dart: commission
+🔵 COMMISSION SCREEN INIT - widget.userId: u1
+🔍 LOADING REFERRAL CODE...
+API SERVICE DEBUG: Getting commission balance from new endpoint
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/commission/balance
+API SERVICE DEBUG: 🔍 Getting referral earnings summary
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/commission/referral-earnings
+API SERVICE DEBUG: Getting commission transactions
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/commission/transactions
+🔍 Calling ApiService.getStoredReferralCode with userId: u1
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/commission/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/commission/referral-earnings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/commission/transactions, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Referral code not found locally for user u1. Fetching from backend...
+API SERVICE DEBUG: Error fetching referral code from backend: type 'String' is not a subtype of type 'Uri' in type cast
+API SERVICE DEBUG: Generating referral code for user: u1
+API SERVICE DEBUG: Authenticated POST request to https://vtpass-backend.onrender.com/api/users/generate-referral-code
+API SERVICE DEBUG: Request body: {"userId":"u1"}
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error getting commission balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Reporting error to backend: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting referral earnings summary: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Reporting error to backend: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error getting commission transactions: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Reporting error to backend: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ERROR: Authentication token not found.
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error generating referral code: Exception: Authentication token not found. Please log in again.
+🔍 API Error: RangeError (end): Invalid value: Not in inclusive range 0..2: 8
+🔍 FINAL _referralCode: N/A
+API SERVICE DEBUG: ❌ Failed to get app version from backend: Null check operator used on a null value
+API SERVICE DEBUG: ❌ Failed to get app version from backend: Null check operator used on a null value
+API SERVICE DEBUG: ❌ Failed to get app version from backend: Null check operator used on a null value
+API SERVICE DEBUG: ❌ Failed to get app version from PackageInfo: Null check operator used on a null value
+API SERVICE DEBUG: ❌ Failed to get app version from PackageInfo: Null check operator used on a null value
+API SERVICE DEBUG: ❌ Failed to get app version from PackageInfo: Null check operator used on a null value
+API SERVICE DEBUG: Retrieved userId: u1
+API SERVICE DEBUG: Retrieved userId: u1
+API SERVICE DEBUG: Retrieved userId: u1
+API SERVICE DEBUG: Error reporting response status: 400
+API SERVICE DEBUG: Failed to report error: 
+API SERVICE DEBUG: Error reporting response status: 400
+API SERVICE DEBUG: Failed to report error: 
+API SERVICE DEBUG: Error reporting response status: 400
+API SERVICE DEBUG: Failed to report error: 
+Error fetching commission data: Exception: Failed to load referral earnings: Exception: Authentication required. Please log in again.
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/activity_test.dart: profile
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+Error loading security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+Error loading app settings: Exception: Authentication required. Please log in again.
+Biometric loaded for user null → enabled: false, available: false
+❌ Update check error: Null check operator used on a null value
+::endgroup::
+::group::✅ Passing tests
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/security_test.dart: change pin
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/security_test.dart: change password
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/security_test.dart: pin lock
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/security_test.dart: kyc
+PAYMENT SERVICE: ✅ Token retrieved successfully
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/activity_test.dart: notifications
+API SERVICE DEBUG: 🔔 Getting notifications
+API SERVICE DEBUG: 🔐 No token for getNotifications, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ ERROR in getNotifications: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/security_test.dart: disputes
+API SERVICE DEBUG: 🔐 Authenticated GET to: /api/disputes/my-disputes
+API SERVICE DEBUG: 👤 Getting user role
+API SERVICE DEBUG: Authenticated POST request to https://vtpass-backend.onrender.com/api/rbac
+API SERVICE DEBUG: Request body: {"operation":"get_user_role"}
+API SERVICE DEBUG: ERROR: Authentication token not found.
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting user role: Exception: Authentication token not found. Please log in again.
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/activity_test.dart: referral
+API SERVICE DEBUG: 🔍 Getting referral earnings summary
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/commission/referral-earnings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/commission/referral-earnings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Referral code not found locally for user u1. Fetching from backend...
+API SERVICE DEBUG: Error fetching referral code from backend: type 'String' is not a subtype of type 'Uri' in type cast
+API SERVICE DEBUG: Generating referral code for user: u1
+API SERVICE DEBUG: Authenticated POST request to https://vtpass-backend.onrender.com/api/users/generate-referral-code
+API SERVICE DEBUG: Request body: {"userId":"u1"}
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting referral earnings summary: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Reporting error to backend: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ERROR: Authentication token not found.
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error generating referral code: Exception: Authentication token not found. Please log in again.
+Error loading referral code: RangeError (end): Invalid value: Not in inclusive range 0..2: 8
+API SERVICE DEBUG: ❌ Failed to get app version from backend: Null check operator used on a null value
+API SERVICE DEBUG: ❌ Failed to get app version from PackageInfo: Null check operator used on a null value
+API SERVICE DEBUG: Retrieved userId: u1
+API SERVICE DEBUG: Error reporting response status: 400
+API SERVICE DEBUG: Failed to report error: 
+Error loading referral data: Exception: Failed to load referral earnings: Exception: Authentication required. Please log in again.
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/security_test.dart: validation
+API SERVICE DEBUG: 👤 Getting user role
+API SERVICE DEBUG: Authenticated POST request to https://vtpass-backend.onrender.com/api/rbac
+API SERVICE DEBUG: Request body: {"operation":"get_user_role"}
+API SERVICE DEBUG: ❌ No token in getTransactions
+API SERVICE DEBUG: ERROR: Authentication token not found.
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No token in getTransactions
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting user role: Exception: Authentication token not found. Please log in again.
+API SERVICE DEBUG: ❌ No token in getTransactions
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: ⚠️ getTransactions attempt 2 error: Exception: Authentication required
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+❌ Error loading recent transactions: Exception: Authentication required
+::endgroup::
+::group::✅ Passing tests
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/gallery_test.dart: component gallery
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/auth_test.dart: splash
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/auth_test.dart: onboarding
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: airtime
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Returning CACHED user data (fast)
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+Error fetching security settings: Exception: Authentication required. Please log in again.
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/auth_test.dart: login
+🔐 LOGIN SCREEN READY-STATE:
+   userId: null
+   hasPreservedToken: false
+   hasSecureSession: false
+   biometricEnabled: false
+   canQuickBio: false
+   pinSet (global): false
+   pinSet (userJson): false
+   pinAvailable: false
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: data
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Failed to fetch fresh user: Exception: No userId or token
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+Error fetching security settings: Exception: Authentication required. Please log in again.
+::endgroup::
+::group::✅ Passing tests
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/auth_test.dart: register
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: add money
+💰 WALLET: 🔄 INIT: WalletTopUpScreen initialized
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+💰 WALLET: 🔍 Checking dedicated account for user: u1
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+💰 WALLET: 🔐 Security: PIN Set=false, Biometric=false
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+PAYMENT SERVICE: 🔍 Checking dedicated account for user: u1
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+PAYMENT SERVICE: ✅ Token retrieved successfully
+PAYMENT SERVICE: 📤 GET Request to: https://virtual-account-backend.onrender.com/api/cashwyre/reserve-account?userId=u1
+PAYMENT SERVICE: 📥 Response status: 400
+PAYMENT SERVICE: 📥 Response body: 
+PAYMENT SERVICE: ❌ HTTP Error: 400
+💰 WALLET: 📦 Dedicated account check result: {success: false, hasAccount: false, message: Server error: 400}
+💰 WALLET: ℹ️ No dedicated account found for user
+💰 WALLET: 📋 Payment methods updated, hasDedicatedAccount: false
+API SERVICE DEBUG: Getting commission balance from new endpoint
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/commission/balance
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/commission/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error getting commission balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Reporting error to backend: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: ❌ Failed to get app version from backend: Null check operator used on a null value
+API SERVICE DEBUG: ❌ Failed to get app version from PackageInfo: Null check operator used on a null value
+API SERVICE DEBUG: Retrieved userId: u1
+API SERVICE DEBUG: Error reporting response status: 400
+API SERVICE DEBUG: Failed to report error: 
+💰 WALLET: 💰 Balance loaded: ₦0.0, Commission: ₦0.0
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: send money
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: 🔐 Authenticated GET to: /api/bank-transfer/config
+::endgroup::
+::group::✅ Passing tests
+✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: help
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: electricity
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Failed to fetch fresh user: Exception: No userId or token
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+Error fetching security settings: Exception: Authentication required. Please log in again.
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: cable
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Failed to fetch fresh user: Exception: No userId or token
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: intl
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: Failed to fetch fresh user: Exception: No userId or token
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+Error fetching security settings: Exception: Authentication required. Please log in again.
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: education
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Failed to fetch fresh user: Exception: No userId or token
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+::endgroup::
+::group::✅ /home/runner/work/Dalabapay_codes/Dalabapay_codes/test/screens/services_test.dart: insurance
+API SERVICE DEBUG: 💰 Getting balance for current user
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/balance
+API SERVICE DEBUG: 🚗 Fetching vehicle makes from VTpass API...
+API SERVICE DEBUG: VTpass GET request to https://vtpass.com/api/universal-insurance/options/color
+API SERVICE DEBUG: VTpass GET request to https://vtpass.com/api/universal-insurance/options/engine-capacity
+🛡️ INSURANCE: 📍 Loading states...
+API SERVICE DEBUG: 📍 Fetching states via backend...
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/insurance/states
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/balance, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/insurance/states, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: Failed to fetch fresh user: Exception: No userId or token
+API SERVICE DEBUG: Fetching mobile settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/settings
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error getting balance: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: 🔐 Handling auth failure: Session expired. Please login again.
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: ❌ Error fetching states via backend: Exception: Authentication required. Please log in again.
+🛡️ INSURANCE: 📦 States response: [{code: 1, name: Abia}, {code: 2, name: Adamawa}, {code: 3, name: Akwa Ibom}, {code: 4, name: Anambra}, {code: 5, name: Bauchi}, {code: 6, name: Bayelsa}, {code: 7, name: Benue}, {code: 8, name: Borno}, {code: 9, name: Cross River}, {code: 10, name: Delta}, {code: 11, name: Ebonyi}, {code: 12, name: Edo}, {code: 13, name: Ekiti}, {code: 14, name: Enugu}, {code: 15, name: FCT}, {code: 16, name: Gombe}, {code: 17, name: Imo}, {code: 18, name: Jigawa}, {code: 19, name: Kaduna}, {code: 20, name: Kano}, {code: 21, name: Katsina}, {code: 22, name: Kebbi}, {code: 23, name: Kogi}, {code: 24, name: Kwara}, {code: 25, name: Lagos}, {code: 26, name: Nasarawa}, {code: 27, name: Niger}, {code: 28, name: Ogun}, {code: 29, name: Ondo}, {code: 30, name: Osun}, {code: 31, name: Oyo}, {code: 32, name: Plateau}, {code: 33, name: Rivers}, {code: 34, name: Sokoto}, {code: 35, name: Taraba}, {code: 36, name: Yobe}, {code: 37, name: Zamfara}]
+🛡️ INSURANCE: ✅ Auto-selected state: Abia (code: 1)
+🛡️ INSURANCE: 📍 Loading LGAs for state code: 1
+API SERVICE DEBUG: 📍 Fetching LGAs for state code: 1
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: ❌ Error fetching LGAs: Exception: Authentication token not found
+API SERVICE DEBUG: 📍 Using fallback LGAs for state: 1
+🛡️ INSURANCE: 📦 Raw LGAs response: [{code: aba_north, name: Aba North, stateCode: 1}, {code: aba_south, name: Aba South, stateCode: 1}, {code: arochukwu, name: Arochukwu, stateCode: 1}, {code: bende, name: Bende, stateCode: 1}, {code: ikwuano, name: Ikwuano, stateCode: 1}, {code: isiala_ngwa_north, name: Isiala Ngwa North, stateCode: 1}, {code: isiala_ngwa_south, name: Isiala Ngwa South, stateCode: 1}, {code: isuikwuato, name: Isuikwuato, stateCode: 1}, {code: obi_ngwa, name: Obi Ngwa, stateCode: 1}, {code: ohafia, name: Ohafia, stateCode: 1}, {code: osisioma, name: Osisioma, stateCode: 1}, {code: ugwunagbo, name: Ugwunagbo, stateCode: 1}, {code: ukwa_east, name: Ukwa East, stateCode: 1}, {code: ukwa_west, name: Ukwa West, stateCode: 1}, {code: umuahia_north, name: Umuahia North, stateCode: 1}, {code: umuahia_south, name: Umuahia South, stateCode: 1}, {code: umu_nneochi, name: Umu Nneochi, stateCode: 1}]
+🛡️ INSURANCE:    📍 Processing: code=aba_north, name=Aba North
+🛡️ INSURANCE:    📍 Processing: code=aba_south, name=Aba South
+🛡️ INSURANCE:    📍 Processing: code=arochukwu, name=Arochukwu
+🛡️ INSURANCE:    📍 Processing: code=bende, name=Bende
+🛡️ INSURANCE:    📍 Processing: code=ikwuano, name=Ikwuano
+🛡️ INSURANCE:    📍 Processing: code=isiala_ngwa_north, name=Isiala Ngwa North
+🛡️ INSURANCE:    📍 Processing: code=isiala_ngwa_south, name=Isiala Ngwa South
+🛡️ INSURANCE:    📍 Processing: code=isuikwuato, name=Isuikwuato
+🛡️ INSURANCE:    📍 Processing: code=obi_ngwa, name=Obi Ngwa
+🛡️ INSURANCE:    📍 Processing: code=ohafia, name=Ohafia
+🛡️ INSURANCE:    📍 Processing: code=osisioma, name=Osisioma
+🛡️ INSURANCE:    📍 Processing: code=ugwunagbo, name=Ugwunagbo
+🛡️ INSURANCE:    📍 Processing: code=ukwa_east, name=Ukwa East
+🛡️ INSURANCE:    📍 Processing: code=ukwa_west, name=Ukwa West
+🛡️ INSURANCE:    📍 Processing: code=umuahia_north, name=Umuahia North
+🛡️ INSURANCE:    📍 Processing: code=umuahia_south, name=Umuahia South
+🛡️ INSURANCE:    📍 Processing: code=umu_nneochi, name=Umu Nneochi
+🛡️ INSURANCE: ✅ Processed 17 LGAs
+🛡️ INSURANCE: ✅ Auto-selected LGA: Aba North (code: aba_north)
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+API SERVICE DEBUG: Error fetching mobile settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error fetching global security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Getting security settings
+API SERVICE DEBUG: Authenticated GET request to https://vtpass-backend.onrender.com/api/users/security-settings
+API SERVICE DEBUG: 🔐 No token for GET https://vtpass-backend.onrender.com/api/users/security-settings, attempting recovery...
+API SERVICE DEBUG: 🔄 Attempting authentication recovery...
+API SERVICE DEBUG: 📦 Vehicle makes API Response status: 400
+API SERVICE DEBUG: ❌ Failed to fetch vehicle makes: 400
+API SERVICE DEBUG: 📨 Handling VTpass response - Status: 400
+API SERVICE DEBUG: 📨 Handling VTpass response - Status: 400
+API SERVICE DEBUG: ❌ No user data found - requiring full login
+Error fetching security settings: Exception: Authentication required. Please log in again.
+API SERVICE DEBUG: Error loading vehicle colors: Exception: Request failed with status: 400
+API SERVICE DEBUG: Error loading engine capacities: Exception: Request failed with status: 400
+::endgroup::
+
+🎉 28 tests passed.
+exit=0
