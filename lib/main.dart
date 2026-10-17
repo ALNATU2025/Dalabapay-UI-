@@ -53,13 +53,10 @@ import 'presentation/screens/electricity/electricity_screen.dart';
 import 'presentation/screens/cabletv/cabletv_screen.dart';
 import 'presentation/screens/education/education_screen.dart';
 import 'presentation/screens/international_airtime/international_airtime_screen.dart';
-import 'presentation/screens/ticket/ticket_screen.dart';
 import 'presentation/screens/commission/commission_screen.dart';
 import 'presentation/screens/referral/referral_screen.dart';
 import 'presentation/screens/internet/internet_screen.dart';
-import 'presentation/screens/betting/betting_screen.dart';
 import 'presentation/screens/insurance/insurance_screen.dart';
-import 'presentation/screens/donation/donation_screen.dart';
 import 'presentation/screens/transactions/transactions_screen.dart';
 import 'presentation/screens/wallet/wallet_screen.dart';
 import 'presentation/screens/settings/settings_screen.dart';
@@ -67,6 +64,8 @@ import 'presentation/screens/kyc/kyc_screen.dart';
 import 'presentation/screens/user_disputes_page.dart';
 import 'presentation/screens/transaction_validation_page.dart';
 import 'presentation/screens/notifications/notifications_screen.dart';
+import 'presentation/screens/help/help_screen.dart';
+import 'ui/ui.dart';
 
 // lib/main.dart - Add this at the top after imports
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -563,6 +562,8 @@ class _DalabaPayAppState extends State<DalabaPayApp>
               return MaterialPageRoute(
                 builder: (_) => const UserDisputesPage(),
               );
+            case '/help':
+              return MaterialPageRoute(builder: (_) => const HelpScreen());
             case '/transaction-validation':
               return MaterialPageRoute(
                 builder: (_) => const TransactionValidationPage(),
@@ -649,19 +650,6 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                   );
                 },
               );
-            case '/ticket':
-              return MaterialPageRoute(
-                builder: (_) {
-                  final args = settings.arguments as Map<String, dynamic>?;
-                  final userId = args?['userId'] ?? '';
-                  final onBalanceUpdate =
-                      args?['onBalanceUpdate'] as void Function(double)?;
-                  return TicketScreen(
-                    userId: userId,
-                    onBalanceUpdate: onBalanceUpdate ?? (_) {},
-                  );
-                },
-              );
             case '/commission':
               return MaterialPageRoute(
                 builder: (_) {
@@ -684,19 +672,6 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                   return ReferralEarningsPage(userId: userId);
                 },
               );
-            case '/betting':
-              return MaterialPageRoute(
-                builder: (_) {
-                  final args = settings.arguments as Map<String, dynamic>?;
-                  final userId = args?['userId'] ?? '';
-                  final onBalanceUpdate =
-                      args?['onBalanceUpdate'] as void Function(double)?;
-                  return BettingScreen(
-                    userId: userId,
-                    onBalanceUpdate: onBalanceUpdate ?? (_) {},
-                  );
-                },
-              );
             case '/insurance':
               return MaterialPageRoute(
                 builder: (_) {
@@ -705,19 +680,6 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                   final onBalanceUpdate =
                       args?['onBalanceUpdate'] as void Function(double)?;
                   return InsuranceScreen(
-                    userId: userId,
-                    onBalanceUpdate: onBalanceUpdate ?? (_) {},
-                  );
-                },
-              );
-            case '/donation':
-              return MaterialPageRoute(
-                builder: (_) {
-                  final args = settings.arguments as Map<String, dynamic>?;
-                  final userId = args?['userId'] ?? '';
-                  final onBalanceUpdate =
-                      args?['onBalanceUpdate'] as void Function(double)?;
-                  return DonationScreen(
                     userId: userId,
                     onBalanceUpdate: onBalanceUpdate ?? (_) {},
                   );
@@ -773,7 +735,7 @@ class RoleBasedDashboard extends StatelessWidget {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
+                valueColor: AlwaysStoppedAnimation<Color>(DP.green),
               ),
             ),
           );
