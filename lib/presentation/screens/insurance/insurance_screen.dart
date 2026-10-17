@@ -14,6 +14,8 @@ import '../../../core/services/api_service.dart';
 import '../../../core/services/biometric_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
+import '../../../ui/ui.dart';
+import '../../../core/services/commission_rates_service.dart';
 
 class InsuranceScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -1266,52 +1268,12 @@ class _InsuranceScreenState extends State<InsuranceScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  color: Colors.red.shade700,
-                  size: 24,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    color: Colors.red.shade700,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              message,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF168566),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: title,
+      message: message,
+      confirmLabel: 'OK',
+      tone: DPTone.error,
     );
   }
 
@@ -1603,692 +1565,112 @@ class _InsuranceScreenState extends State<InsuranceScreen>
   // ==================== PAYMENT SHEET OVERLAY ====================
 
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
+    final selectedType = _insuranceTypes.firstWhere(
+      (t) => t['code'] == _selectedInsuranceType,
+      orElse: () => _insuranceTypes[0],
+    );
+    final amount = ((selectedType['amount'] ?? 0) as num).toDouble();
+    final biometricOk = !kIsWeb &&
+        (Platform.isAndroid || Platform.isIOS) &&
+        _biometricEnabled &&
+        _biometricAllowed;
+    return Positioned.fill(
       child: AnimatedBuilder(
         animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/images/dalabapay2.png',
-                                      height: 38,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close_rounded,
-                                          size: 18,
-                                          color: Color(0xFF728078),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Confirm Insurance Purchase',
-                                style: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF14263D),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-                              Divider(color: Colors.grey.shade200, height: 1),
-                              const SizedBox(height: 20),
-
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.warning_amber_rounded,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+        builder: (context, child) => FractionalTranslation(
+          translation: Offset(0, 1 - _sheetAnimation.value),
+          child: child,
+        ),
+        child: AnimatedBuilder(
+          animation: _shakeAnimation,
+          builder: (context, child) => Transform.translate(
+            offset: Offset(_shakeAnimation.value, 0),
+            child: child,
+          ),
+          child: DPReviewPanel(
+            icon: DPIcons.shield,
+            title: (selectedType['name'] ?? 'Insurance').toString(),
+            amount: amount,
+            rows: [
+              if (_selectedPlan != null) DPReviewRow('Plan', _selectedPlan!),
+              DPReviewRow('Insured name', _insuredNameController.text.trim()),
+              DPReviewRow('Plate number', _plateController.text.trim()),
+              if (_selectedVehicleMake != null)
+                DPReviewRow(
+                  'Vehicle',
+                  '${_selectedVehicleMake ?? ''} ${_selectedVehicleModel ?? ''}'.trim(),
+                ),
+              DPReviewRow('Phone number', _phoneController.text.trim()),
+              DPReviewRow('Total to pay', DP.naira(amount), strong: true),
+            ],
+            walletBalance: _walletBalance,
+            totalDebit: amount,
+            commission: CommissionRatesService.estimate('insurance', amount),
+            pinController: _pinController,
+            pinFocusNode: _pinFocusNode,
+            pinRequired: _transactionPinSet && _pinRequired,
+            pinError: _pinValidationError,
+            processing: _isProcessingPayment,
+            onPay: _processPaymentWithPIN,
+            onClose: _closePaymentSheet,
+            biometricAvailable: biometricOk,
+            biometricLabel: _biometricName,
+            onBiometric: _processPaymentWithBiometric,
+            footnote: 'Check the plate number. Policies can\'t be reversed once issued.',
+          ),
+        ),
       ),
     );
   }
 
   // ==================== PAYMENT SHEET DETAILS ====================
 
-  Widget _buildPaymentSheetDetails() {
-    final selectedType = _insuranceTypes.firstWhere(
-      (t) => t['code'] == _selectedInsuranceType,
-      orElse: () => _insuranceTypes[0],
-    );
-    final amount = (selectedType['amount'] ?? 0).toDouble();
-    final plateNumber = _plateController.text.trim();
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          // Insurance Type
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF102C68).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedShield01,
-                      color: const Color(0xFF102C68),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Type',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  selectedType['name'] ?? 'N/A',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 12, color: Colors.grey.shade200),
-          // Plate Number
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF102C68).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedCar01,
-                      color: const Color(0xFF102C68),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Vehicle',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  plateNumber.isNotEmpty ? plateNumber : 'N/A',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 12, color: Colors.grey.shade200),
-          // Insured Name
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF102C68).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedUser,
-                      color: const Color(0xFF102C68),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Insured',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  _insuredNameController.text.trim().isNotEmpty
-                      ? _insuredNameController.text.trim()
-                      : 'N/A',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 12, color: Colors.grey.shade200),
-          // Amount
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF168566).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedMoney01,
-                      color: const Color(0xFF168566),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Amount',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                '₦${amount.toStringAsFixed(2)}',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF168566),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF168566).withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Available Balance',
-            style: GoogleFonts.inter(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF728078),
-            ),
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF168566),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== PIN OPTION WITH SHAKE ====================
 
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_shakeAnimation.value, 0),
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFDECEA)
-                    : (_useBiometric
-                        ? Colors.grey.shade50
-                        : const Color(0xFF102C68).withOpacity(0.04)),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  hasError
-                      ? const Color(0xFFC0392B)
-                      : (_useBiometric
-                          ? Colors.grey.shade300
-                          : const Color(0xFF102C68)),
-              width: hasError ? 2 : (_useBiometric ? 1 : 2),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  enabled: !_useBiometric,
-                  decoration: InputDecoration(
-                    hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.inter(
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B).withOpacity(0.7)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600),
-                      fontSize: 13,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock_outline_rounded,
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : const Color(0xFF102C68)),
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric
-                                ? Colors.grey.shade400
-                                : Colors.black),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFDECEA),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        color: Color(0xFFC0392B),
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFC0392B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment || _useBiometric
-                          ? null
-                          : _processPaymentWithPIN,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric
-                                ? Colors.transparent
-                                : const Color(0xFF168566)),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          hasError
-                              ? const BorderRadius.vertical(
-                                bottom: Radius.circular(12),
-                              )
-                              : BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.lock_outline_rounded,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                hasError
-                                    ? 'Retry'
-                                    : (_useBiometric
-                                        ? 'Switch to PIN'
-                                        : 'Pay with PIN'),
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
 
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported =
-        !kIsWeb && (Platform.isAndroid || Platform.isIOS);
-
-    if (!isBiometricSupported || !_biometricEnabled) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: GestureDetector(
-        onTap: _isProcessingPayment ? null : _processPaymentWithBiometric,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF102C68).withOpacity(0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF102C68), width: 1.5),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? const Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Color(0xFF102C68),
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.fingerprint_rounded,
-                        color: Color(0xFF102C68),
-                        size: 28,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Pay with $_biometricName',
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF102C68),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF168566),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== MAIN BUILD ====================
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
+    return PopScope(
+      canPop: !_showPaymentSheet,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showPaymentSheet && !_isProcessingPayment) {
+          _closePaymentSheet();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  DPTopBar(
+                    title: 'Insurance',
+                    actionLabel: 'History',
+                    onAction: () => Navigator.pushNamed(
+                      context,
+                      '/transactions',
+                      arguments: {'userId': widget.userId},
+                    ),
+                  ),
+                  Expanded(child: _buildBody()),
+                ],
+              ),
+            ),
+            if (_showPaymentSheet) _buildPaymentSheetOverlay(),
+          ],
+        ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      scrolledUnderElevation: 0.5,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Color(0xFF102C68),
-          size: 18,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Insurance',
-        style: GoogleFonts.inter(
-          color: const Color(0xFF102C68),
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      centerTitle: true,
-      actions: [_buildWalletBalanceBadge(), const SizedBox(width: 16)],
-    );
-  }
 
   Widget _buildWalletBalanceBadge() {
     return Container(
@@ -2380,23 +1762,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
   }
 
   Widget _buildCleanBanner() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-          image: AssetImage('assets/insurance_banner.png'),
-          fit: BoxFit.cover,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return const DPHeadline(
+      'Cover that keeps you moving.',
+      subtitle: 'Third-party motor insurance with your certificate on the receipt.',
+      bottom: 0,
     );
   }
 
@@ -2771,64 +2140,15 @@ class _InsuranceScreenState extends State<InsuranceScreen>
   }
 
   Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              !_isUserActive ? Icons.account_circle : Icons.security,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'Insurance service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF102C68),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: DPEmptyState(
+          icon: DPIcons.shield,
+          title: 'Insurance is unavailable right now',
+          message: 'Please try again in a little while.',
+          actionLabel: 'Go back',
+          onAction: () => Navigator.pop(context),
         ),
       ),
     );

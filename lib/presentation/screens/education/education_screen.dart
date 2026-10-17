@@ -13,6 +13,8 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
+import '../../../ui/ui.dart';
+import '../../../core/services/commission_rates_service.dart';
 
 class EducationScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -1449,808 +1451,90 @@ class _EducationScreenState extends State<EducationScreen>
   // ==================== PAYMENT SHEET OVERLAY ====================
 
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
+    final service = _services.firstWhere(
+      (s) => s['id'] == _selectedService,
+      orElse: () => _services.first,
+    );
+    final quantity = int.tryParse(_quantityController.text.trim()) ?? 1;
+    final plans = _servicePlans[_selectedService] ?? [];
+    final planDetails = plans.firstWhere(
+      (p) => p['name'] == _selectedPlan,
+      orElse: () => {'variation_amount': '0', 'name': 'N/A'},
+    );
+    final perUnit =
+        double.tryParse(planDetails['variation_amount']?.toString() ?? '0') ?? 0;
+    final total = perUnit * quantity;
+    final profileId = _profileIdController.text.trim();
+    final biometricOk = (Platform.isAndroid || Platform.isIOS) &&
+        _biometricEnabled &&
+        _biometricAllowed;
+    return Positioned.fill(
       child: AnimatedBuilder(
         animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Header: Logo centered, Close button top-right
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/images/dalabapay2.png',
-                                      height: 40,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: HugeIcon(
-                                          icon:
-                                              HugeIcons
-                                                  .strokeRoundedMultiplicationSign,
-                                          size: 18,
-                                          color: const Color(0xFF728078),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-
-                              Text(
-                                'Confirm Payment',
-                                style: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF14263D),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Transaction Details
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-
-                              // Balance
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-
-                              Divider(
-                                color: Colors.grey.shade200,
-                                thickness: 1,
-                              ),
-                              const SizedBox(height: 20),
-
-                              // Pay with PIN Option
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              // Pay with Biometric Option
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      HugeIcon(
-                                        icon: HugeIcons.strokeRoundedAlert02,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN in Settings to make payments.',
-                                          style: GoogleFonts.inter(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+        builder: (context, child) => FractionalTranslation(
+          translation: Offset(0, 1 - _sheetAnimation.value),
+          child: child,
+        ),
+        child: AnimatedBuilder(
+          animation: _shakeAnimation,
+          builder: (context, child) => Transform.translate(
+            offset: Offset(_shakeAnimation.value, 0),
+            child: child,
+          ),
+          child: DPReviewPanel(
+            icon: DPIcons.school,
+            title: (service['fullName'] ?? service['name'] ?? '').toString(),
+            amount: total,
+            rows: [
+              DPReviewRow('Plan', _selectedPlan ?? '—'),
+              if (profileId.isNotEmpty) DPReviewRow('Profile ID', profileId),
+              if (_customerName != null) DPReviewRow('Candidate', _customerName!),
+              DPReviewRow('Phone number', _phoneController.text.trim()),
+              if (quantity > 1) ...[
+                DPReviewRow('Price each', DP.naira(perUnit)),
+                DPReviewRow('Quantity', '$quantity'),
+              ],
+              DPReviewRow('Total to pay', DP.naira(total), strong: true),
+            ],
+            walletBalance: _walletBalance,
+            totalDebit: total,
+            commission: CommissionRatesService.estimate('education', total),
+            pinController: _pinController,
+            pinFocusNode: _pinFocusNode,
+            pinRequired: _transactionPinSet && !_useBiometric,
+            pinError: _pinValidationError,
+            processing: _isProcessingPayment,
+            onPay: () {
+              setState(() => _useBiometric = false);
+              _processPayment();
+            },
+            onClose: _closePaymentSheet,
+            biometricAvailable: biometricOk,
+            biometricLabel: 'biometrics',
+            onBiometric: () {
+              setState(() {
+                _useBiometric = true;
+                _pinValidationError = null;
+                _pinController.clear();
+              });
+              _processPayment();
+            },
+            footnote: 'Your PIN or token appears on the receipt after payment.',
+          ),
+        ),
       ),
     );
   }
 
   // ==================== PAYMENT SHEET DETAILS ====================
 
-  Widget _buildPaymentSheetDetails() {
-    final service = _services.firstWhere(
-      (s) => s['id'] == _selectedService,
-      orElse: () => _services.first,
-    );
-    final planName = _selectedPlan ?? 'N/A';
-    final phone = _phoneController.text.trim();
-    final quantity = int.tryParse(_quantityController.text.trim()) ?? 1;
-    final profileId = _profileIdController.text.trim();
-    final plans = _servicePlans[_selectedService] ?? [];
 
-    final planDetails = plans.firstWhere(
-      (p) => p['name'] == _selectedPlan,
-      orElse:
-          () => {
-            'variation_amount': '0',
-            'name': 'N/A',
-            'variation_code': 'N/A',
-          },
-    );
-    final perUnitAmount =
-        double.tryParse(planDetails['variation_amount']?.toString() ?? '0') ??
-        0;
-    final totalAmount = perUnitAmount * quantity;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          // Service Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: service['color'].withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: _buildServiceLogo(
-                      service['logo'],
-                      service['color'],
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Service',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  service['fullName'] ?? 'N/A',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Plan Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFA76B1D).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedTv01,
-                      color: const Color(0xFFA76B1D),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Plan',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  planName,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Phone Number Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: _primary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedSmartPhone01,
-                      color: _primary,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Phone',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                phone.isNotEmpty ? phone : 'N/A',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF14263D),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Profile ID Row (only for JAMB)
-          if (_showProfileIdField && profileId.isNotEmpty) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF173D88).withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedUser02,
-                        color: const Color(0xFF173D88),
-                        size: 18,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Profile ID',
-                      style: GoogleFonts.inter(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF728078),
-                      ),
-                    ),
-                  ],
-                ),
-                Text(
-                  profileId,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                ),
-              ],
-            ),
-            Divider(height: 14, color: Colors.grey.shade200),
-          ],
-
-          // Quantity Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF173D88).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedCalendar03,
-                      color: const Color(0xFF173D88),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Quantity',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                '$quantity',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF14263D),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Amount Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: _secondary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedMoney01,
-                      color: _secondary,
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Amount',
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '₦${totalAmount.toStringAsFixed(2)}',
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      color: _secondary,
-                    ),
-                  ),
-                  if (quantity > 1)
-                    Text(
-                      '₦${perUnitAmount.toStringAsFixed(2)} × $quantity',
-                      style: GoogleFonts.inter(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: _secondary.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondary.withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _secondary,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Available Balance',
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF728078),
-                ),
-              ),
-            ],
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: _secondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== PIN OPTION ====================
 
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_shakeAnimation.value, 0),
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFDECEA)
-                    : (_useBiometric
-                        ? Colors.grey.shade50
-                        : _primary.withOpacity(0.04)),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  hasError
-                      ? const Color(0xFFC0392B)
-                      : (_useBiometric ? Colors.grey.shade300 : _primary),
-              width: hasError ? 2 : (_useBiometric ? 1 : 2),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  enabled: !_useBiometric,
-                  decoration: InputDecoration(
-                    hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.inter(
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B).withOpacity(0.7)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedBiometricAccess,
-                      color:
-                          hasError
-                              ? const Color(0xFFC0392B)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : _primary),
-                      size: 18,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 0,
-                      vertical: 12,
-                    ),
-                    errorText: _pinValidationError,
-                  ),
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric
-                                ? Colors.grey.shade400
-                                : Colors.black),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFDECEA),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedAlert02,
-                        color: const Color(0xFFC0392B),
-                        size: 14,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFC0392B),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment || _useBiometric
-                          ? null
-                          : _processPayment,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError
-                            ? const Color(0xFFC0392B)
-                            : (_useBiometric ? Colors.transparent : _secondary),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          hasError
-                              ? const BorderRadius.vertical(
-                                bottom: Radius.circular(12),
-                              )
-                              : BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedBiometricAccess,
-                                color:
-                                    hasError
-                                        ? Colors.white
-                                        : (_useBiometric
-                                            ? Colors.grey.shade400
-                                            : Colors.white),
-                                size: 16,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                hasError
-                                    ? 'Retry'
-                                    : (_useBiometric
-                                        ? 'Switch to PIN'
-                                        : 'Pay with PIN'),
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color:
-                                      hasError
-                                          ? Colors.white
-                                          : (_useBiometric
-                                              ? Colors.grey.shade400
-                                              : Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
 
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
-
-    if (!isBiometricSupported) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap:
-            _isProcessingPayment
-                ? null
-                : () {
-                  setState(() {
-                    _useBiometric = true;
-                    _pinValidationError = null;
-                    _pinController.clear();
-                  });
-                  _processPayment();
-                },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-          decoration: BoxDecoration(
-            color: _useBiometric ? _primary.withOpacity(0.08) : Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: _useBiometric ? _primary : Colors.grey.shade300,
-              width: _useBiometric ? 2 : 1,
-            ),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: _primary,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.fingerprint,
-                        color: _useBiometric ? _primary : Colors.grey.shade600,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          _useBiometric
-                              ? '🔐 Tap to authenticate'
-                              : 'Pay with Biometric',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                _useBiometric ? _primary : Colors.grey.shade700,
-                          ),
-                        ),
-                      ),
-                      if (_useBiometric)
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: _secondary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-                            color: Colors.white,
-                            size: 12,
-                          ),
-                        ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== SUCCESS & ERROR DIALOGS ====================
 
@@ -2324,108 +1608,12 @@ class _EducationScreenState extends State<EducationScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    shape: BoxShape.circle,
-                  ),
-                  child: HugeIcon(
-                    icon: HugeIcons.strokeRoundedAlert02,
-                    color: Colors.red.shade700,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      color: Colors.red.shade700,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: Colors.grey.shade600,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'If this issue persists, please contact support.',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  backgroundColor: _primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: title,
+      message: message,
+      confirmLabel: 'OK',
+      tone: DPTone.error,
     );
   }
 
@@ -2433,76 +1621,40 @@ class _EducationScreenState extends State<EducationScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
+    return PopScope(
+      canPop: !_showPaymentSheet,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _showPaymentSheet && !_isProcessingPayment) {
+          _closePaymentSheet();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  DPTopBar(
+                    title: 'Education',
+                    actionLabel: 'History',
+                    onAction: () => Navigator.pushNamed(
+                      context,
+                      '/transactions',
+                      arguments: {'userId': widget.userId},
+                    ),
+                  ),
+                  Expanded(child: _buildBody()),
+                ],
+              ),
+            ),
+            if (_showPaymentSheet) _buildPaymentSheetOverlay(),
+          ],
+        ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedArrowLeft01,
-          color: _primary,
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Education',
-        style: GoogleFonts.inter(
-          color: _primary,
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: _primary.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _primary,
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap:
-                    () =>
-                        setState(() => _isBalanceVisible = !_isBalanceVisible),
-                child: Text(
-                  _isBalanceVisible
-                      ? '₦${_walletBalance.toStringAsFixed(2)}'
-                      : '••••',
-                  style: GoogleFonts.inter(
-                    color: _primary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildBody() {
     if (_isLoadingUserData) {
@@ -2917,99 +2069,23 @@ class _EducationScreenState extends State<EducationScreen>
   }
 
   Widget _buildBanner() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bannerHeight = screenWidth < 400 ? 100.0 : 128.0;
-
-    return Container(
-      width: double.infinity,
-      height: bannerHeight,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: const DecorationImage(
-          image: AssetImage('assets/education_banner.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              _primary.withOpacity(0.3),
-              _secondary.withOpacity(0.15),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.4, 0.7],
-          ),
-        ),
-      ),
+    return const DPHeadline(
+      'Exams, sorted.',
+      subtitle: 'Buy WAEC and JAMB PINs in a few taps.',
+      bottom: 0,
     );
   }
 
   Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            HugeIcon(
-              icon:
-                  !_isUserActive
-                      ? HugeIcons.strokeRoundedUser02
-                      : HugeIcons.strokeRoundedMortarboard02,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'Education service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: DPEmptyState(
+          icon: DPIcons.school,
+          title: 'Education payments are unavailable right now',
+          message: 'Please try again in a little while.',
+          actionLabel: 'Go back',
+          onAction: () => Navigator.pop(context),
         ),
       ),
     );
