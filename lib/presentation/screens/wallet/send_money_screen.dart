@@ -219,55 +219,65 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     final biometricOk =
         !kIsWeb && (Platform.isAndroid || Platform.isIOS) && _biometricEnabled;
 
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: DP.bg,
-          body: SafeArea(
-            child: Column(
-              children: [
-                const DPTopBar(title: 'Send money'),
-                Expanded(child: _form()),
-              ],
+    return PopScope(
+      canPop: !_reviewing,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && _reviewing && !_sending) {
+          setState(() => _reviewing = false);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: DP.bg,
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                children: [
+                  const DPTopBar(title: 'Send money'),
+                  Expanded(child: _form()),
+                ],
+              ),
             ),
-          ),
-          bottomNavigationBar: DPBottomAction(
-            child: DPButton(
-              label: 'Review transfer',
-              icon: DPIcons.forward,
-              onPressed: _canReview ? _openReview : null,
-            ),
-          ),
+            if (_reviewing)
+              Positioned.fill(
+                child: DPReviewPanel(
+                  icon: DPIcons.upRight,
+                  title: 'To ${_recipientName ?? _lookedUpEmail}',
+                  amount: _amount,
+                  rows: [
+                    DPReviewRow('Recipient', _recipientName ?? ''),
+                    DPReviewRow('Email', _lookedUpEmail),
+                    if (_noteController.text.trim().isNotEmpty)
+                      DPReviewRow('Note', _noteController.text.trim()),
+                    const DPReviewRow('Transfer fee', '₦0.00'),
+                    DPReviewRow('Total to pay', DP.naira(_amount), strong: true),
+                  ],
+                  walletBalance: _balance,
+                  totalDebit: _amount,
+                  pinController: _pinController,
+                  pinRequired: _pinSet,
+                  pinError: _pinError,
+                  processing: _sending,
+                  payLabel: 'Send ${DP.naira(_amount)}',
+                  onPay: () => _send(),
+                  onClose: () => setState(() => _reviewing = false),
+                  biometricAvailable: biometricOk,
+                  onBiometric: () => _send(biometric: true),
+                  footnote: 'Transfers to the wrong person may not be recoverable.',
+                ),
+              ),
+          ],
         ),
-        if (_reviewing)
-          Positioned.fill(
-            child: DPReviewPanel(
-              icon: DPIcons.upRight,
-              title: 'To ${_recipientName ?? _lookedUpEmail}',
-              amount: _amount,
-              rows: [
-                DPReviewRow('Recipient', _recipientName ?? ''),
-                DPReviewRow('Email', _lookedUpEmail),
-                if (_noteController.text.trim().isNotEmpty)
-                  DPReviewRow('Note', _noteController.text.trim()),
-                const DPReviewRow('Transfer fee', '₦0.00'),
-                DPReviewRow('Total to pay', DP.naira(_amount), strong: true),
-              ],
-              walletBalance: _balance,
-              totalDebit: _amount,
-              pinController: _pinController,
-              pinRequired: _pinSet,
-              pinError: _pinError,
-              processing: _sending,
-              payLabel: 'Send ${DP.naira(_amount)}',
-              onPay: () => _send(),
-              onClose: () => setState(() => _reviewing = false),
-              biometricAvailable: biometricOk,
-              onBiometric: () => _send(biometric: true),
-              footnote: 'Transfers to the wrong person may not be recoverable.',
-            ),
-          ),
-      ],
+        bottomNavigationBar: _reviewing
+            ? null
+            : DPBottomAction(
+                child: DPButton(
+                  label: 'Review transfer',
+                  icon: DPIcons.forward,
+                  onPressed: _canReview ? _openReview : null,
+                ),
+              ),
+      ),
     );
   }
 
