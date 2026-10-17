@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/services/biometric_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
+import '../../../ui/ui.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart'; // ✅ ADD THIS
 
 class InternetScreen extends StatefulWidget {
@@ -282,19 +283,7 @@ class _InternetScreenState extends State<InternetScreen>
     } catch (e) {
       debugPrint('Native contact picker unavailable: $e');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Please type phone number or select from contacts',
-              style: TextStyle(fontSize: 13),
-            ),
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        dpSnack(context, 'Please type phone number or select from contacts');
       }
     }
   }
@@ -603,96 +592,28 @@ class _InternetScreenState extends State<InternetScreen>
     }
   }
 
-  List<Map<String, dynamic>> _getMockDataPlans(String network) {
-    final mockPlans = {
-      'MTN': [
-        {
-          'name': '500MB - 1 Day',
-          'amount': '200',
-          'validity': '1 day',
-          'variation_code': 'mtn-500mb-200',
-        },
-        {
-          'name': '1GB - 7 Days',
-          'amount': '500',
-          'validity': '7 days',
-          'variation_code': 'mtn-1gb-500',
-        },
-        {
-          'name': '2GB - 30 Days',
-          'amount': '1000',
-          'validity': '30 days',
-          'variation_code': 'mtn-2gb-1000',
-        },
-        {
-          'name': '5GB - 30 Days',
-          'amount': '2000',
-          'validity': '30 days',
-          'variation_code': 'mtn-5gb-2000',
-        },
-        {
-          'name': '10GB - 30 Days',
-          'amount': '3500',
-          'validity': '30 days',
-          'variation_code': 'mtn-10gb-3500',
-        },
-      ],
-      'Airtel': [
-        {
-          'name': '500MB - 1 Day',
-          'amount': '200',
-          'validity': '1 day',
-          'variation_code': 'airtel-500mb-200',
-        },
-        {
-          'name': '1GB - 7 Days',
-          'amount': '500',
-          'validity': '7 days',
-          'variation_code': 'airtel-1gb-500',
-        },
-        {
-          'name': '2GB - 30 Days',
-          'amount': '1000',
-          'validity': '30 days',
-          'variation_code': 'airtel-2gb-1000',
-        },
-      ],
-      'Glo': [
-        {
-          'name': '500MB - 1 Day',
-          'amount': '200',
-          'validity': '1 day',
-          'variation_code': 'glo-500mb-200',
-        },
-        {
-          'name': '1GB - 7 Days',
-          'amount': '500',
-          'validity': '7 days',
-          'variation_code': 'glo-1gb-500',
-        },
-      ],
-      '9mobile': [
-        {
-          'name': '500MB - 1 Day',
-          'amount': '200',
-          'validity': '1 day',
-          'variation_code': 'etisalat-500mb-200',
-        },
-        {
-          'name': '1GB - 7 Days',
-          'amount': '500',
-          'validity': '7 days',
-          'variation_code': 'etisalat-1gb-500',
-        },
-      ],
-    };
-    final plans = mockPlans[network] ?? [];
-    plans.sort((a, b) {
-      final amountA = double.tryParse(a['amount']?.toString() ?? '0') ?? 0;
-      final amountB = double.tryParse(b['amount']?.toString() ?? '0') ?? 0;
-      return amountA.compareTo(amountB);
-    });
-    return plans;
+  // Plans could not be loaded. Made-up plans are no longer shown because
+  // their variation codes don't exist at VTpass; the UI offers a retry.
+  List<Map<String, dynamic>> _getMockDataPlans(String network) => [];
+
+  String _planFilter = 'All plans';
+
+  String _planBucket(Map<String, dynamic> plan) {
+    final v = '${plan['validity'] ?? ''} ${plan['name'] ?? ''}'.toLowerCase();
+    final m = RegExp(r'(\d+)\s*(day|days|hr|hrs|hour|hours)').firstMatch(v);
+    if (v.contains('daily') ||
+        v.contains('24') ||
+        (m != null && (m.group(2)!.startsWith('h') || int.parse(m.group(1)!) <= 3))) {
+      return 'Daily';
+    }
+    if (v.contains('week') || (m != null && int.parse(m.group(1)!) <= 14)) return 'Weekly';
+    return 'Monthly';
+  }
+
+  String _planSize(String name) {
+    final m = RegExp(r'(\d+(?:\.\d+)?)\s*(GB|MB|TB)', caseSensitive: false).firstMatch(name);
+    if (m == null) return name;
+    return '${m.group(1)} ${m.group(2)!.toUpperCase()}';
   }
 
   // ==================== FORM VALIDATION ====================
@@ -745,50 +666,10 @@ class _InternetScreenState extends State<InternetScreen>
     int? attemptsRemaining,
   }) {
     if (!mounted) return;
-
-    final displayMsg =
-        attemptsRemaining != null
-            ? '⚠️ $message ($attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining)'
-            : '⚠️ $message';
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: const BoxDecoration(
-                color: Colors.white24,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.lock_reset_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                displayMsg,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFFDC2626),
-        behavior: SnackBarBehavior.floating,
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
-        duration: const Duration(seconds: 4),
-      ),
-    );
+    final displayMsg = attemptsRemaining != null
+        ? '$message ($attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining)'
+        : message;
+    dpSnack(context, displayMsg, error: true);
   }
 
   // ==================== LIMIT INCREASE DIALOG ====================
@@ -1171,1329 +1052,352 @@ class _InternetScreenState extends State<InternetScreen>
   // ==================== BUILD METHOD ====================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bgCanvas,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
-      ),
-      bottomNavigationBar: _showPaymentSheet ? null : _buildStickyBottomCTA(),
+    final available = !_isLoadingUserData && _isUserActive && _internetServiceEnabled;
+    return Stack(
+      children: [
+        DPPage(
+          title: 'Buy data',
+          actionLabel: 'History',
+          onAction: () => Navigator.pushNamed(context, '/transactions'),
+          bottom: available ? _buildStickyBottomCTA() : null,
+          children: [_buildBody()],
+        ),
+        if (_showPaymentSheet) _buildPaymentSheetOverlay(),
+      ],
     );
   }
 
   // ==================== HEADER / APP BAR ====================
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      scrolledUnderElevation: 0.5,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: _primaryNavy,
-          size: 18,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Internet Data Top-Up',
-        style: TextStyle(
-          color: _primaryNavy,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      centerTitle: true,
-      actions: [_buildWalletBalanceBadge(), const SizedBox(width: 16)],
-    );
-  }
 
-  Widget _buildWalletBalanceBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: _primaryNavy.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _primaryNavy.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.account_balance_wallet_rounded,
-            color: _primaryNavy,
-            size: 15,
-          ),
-          const SizedBox(width: 6),
-          GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() => _isBalanceVisible = !_isBalanceVisible);
-            },
-            child: Text(
-              _isBalanceVisible
-                  ? '₦${_walletBalance.toStringAsFixed(2)}'
-                  : '••••••',
-              style: TextStyle(
-                color: _primaryNavy,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== BODY CONTENT ====================
   Widget _buildBody() {
     if (_isLoadingUserData) {
-      return const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(_primaryNavy),
-        ),
-      );
+      return const Padding(padding: EdgeInsets.only(top: 80), child: DPLoader());
     }
-
     if (!_isUserActive || !_internetServiceEnabled) {
       return _buildServiceUnavailable();
     }
-
+    final sel = _selectedPlanDetails;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 12,
-            bottom: 100,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCleanBanner(),
-              const SizedBox(height: 20),
-
-              // Dynamic Recent Recharges Section
-              _buildRecentRechargesSection(),
-              const SizedBox(height: 24),
-
-              // Phone Number Input Field
-              _buildPhoneNumberInput(),
-              const SizedBox(height: 24),
-
-              // Network Selection
-              _buildSectionTitle('Network Operator'),
-              const SizedBox(height: 12),
-              _buildNetworkSelector(),
-              const SizedBox(height: 24),
-
-              // Data Plans Section
-              if (_selectedNetwork != null)
-                _buildPlanSection()
-              else
-                _buildSelectNetworkPrompt(),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 18),
+              child: Text('More streaming, scrolling and staying close.', style: DPText.bodyMuted),
+            ),
+            _buildNetworkSelector(),
+            _buildPhoneNumberInput(),
+            _buildRecentRechargesSection(),
+            if (_selectedNetwork != null) _buildPlanSection() else _buildSelectNetworkPrompt(),
+            if (sel != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 12),
+                child: Row(
+                  children: [
+                    Text('Selected plan', style: DPText.bodyMuted),
+                    const Spacer(),
+                    Text(
+                      '${_planSize(sel['name'].toString())} · ${dpNaira(double.tryParse(sel['amount'].toString()) ?? 0)}',
+                      style: DPText.value,
+                    ),
+                  ],
+                ),
+              ),
+            Text(
+              'Plans activate on the number entered. Double-check before continuing.',
+              style: DPText.bodyMuted.copyWith(fontSize: 13.5),
+            ),
+          ],
         ),
       ),
     );
   }
 
   // ==================== CLEAN BANNER ====================
-  Widget _buildCleanBanner() {
-    return Container(
-      width: double.infinity,
-      height: 120,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-          image: AssetImage('assets/internet_banner.png'),
-          fit: BoxFit.cover,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== RECENT RECHARGES ====================
   Widget _buildRecentRechargesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle('Recent Recharges'),
-        const SizedBox(height: 10),
-        if (_recentRecharges.isEmpty)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.history_rounded,
-                  size: 18,
-                  color: Colors.grey.shade400,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'No recent data recharges yet',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: _textMuted,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          )
-        else
-          SizedBox(
-            height: 82,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              itemCount:
-                  _recentRecharges.length > 5 ? 5 : _recentRecharges.length,
-              itemBuilder: (context, index) {
-                final contact = _recentRecharges[index];
-                return _buildRecentContactAvatar(contact);
-              },
-            ),
-          ),
-      ],
+    if (_recentRecharges.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 0, bottom: 14),
+      child: SizedBox(
+        height: 36,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: _recentRecharges.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (_, i) => _buildRecentContactAvatar(_recentRecharges[i]),
+        ),
+      ),
     );
   }
 
   Widget _buildRecentContactAvatar(Map<String, String> contact) {
-    return GestureDetector(
+    final phone = contact['phone'] ?? '';
+    final net = contact['network'] ?? '';
+    return DPChip(
+      label: '$net · $phone',
+      selected: _phoneController.text == phone,
+      dense: true,
+      height: 36,
+      leading: const DPIcon(DPIcons.history, size: 14, color: DP.ink2),
       onTap: () => _selectRecentRecharge(contact),
-      child: Container(
-        margin: const EdgeInsets.only(right: 14),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: _primaryNavy.withValues(alpha: 0.08),
-                  child: Text(
-                    (contact['name'] ?? 'U')[0].toUpperCase(),
-                    style: TextStyle(
-                      color: _primaryNavy,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: CircleAvatar(
-                      radius: 8,
-                      backgroundColor: Colors.grey.shade200,
-                      child: Text(
-                        (contact['network'] ?? 'M')[0].toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                          color: _primaryNavy,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              contact['name'] ?? '',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: _textDark,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   // ==================== PHONE NUMBER INPUT ====================
   Widget _buildPhoneNumberInput() {
-    final selectedNetworkData = _networks.firstWhere(
-      (n) => n['name'] == _selectedNetwork,
-      orElse: () => {},
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionTitle('Phone Number'),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color:
-                  _phoneFocusNode.hasFocus
-                      ? _primaryNavy
-                      : Colors.grey.shade200,
-              width: _phoneFocusNode.hasFocus ? 1.5 : 1.0,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: TextField(
-            controller: _phoneController,
-            focusNode: _phoneFocusNode,
-            keyboardType: TextInputType.phone,
-            onChanged: (val) {
-              _autoDetectNetwork(val);
-              setState(() {});
-            },
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(11),
-            ],
-            decoration: InputDecoration(
-              hintText: 'Enter 11-digit phone number',
-              hintStyle: TextStyle(
-                color: Colors.grey.shade400,
-                fontSize: 14,
-              ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.all(12),
-                child:
-                    selectedNetworkData.isNotEmpty &&
-                            selectedNetworkData['image'] != null
-                        ? AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: ClipRRect(
-                            key: ValueKey(selectedNetworkData['name']),
-                            borderRadius: BorderRadius.circular(6),
-                            child: Image.asset(
-                              selectedNetworkData['image'],
-                              width: 26,
-                              height: 26,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        )
-                        : const Icon(
-                          Icons.phone_android_rounded,
-                          color: _primaryNavy,
-                          size: 22,
-                        ),
-              ),
-              suffixIcon: IconButton(
-                icon: const Icon(
-                  Icons.contacts_rounded,
-                  color: _primaryNavy,
-                  size: 22,
-                ),
-                onPressed: _pickContactFromDevice,
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
-              ),
-            ),
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: _textDark,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
+    return DPField(
+      label: 'Phone number',
+      controller: _phoneController,
+      focusNode: _phoneFocusNode,
+      keyboardType: TextInputType.phone,
+      hint: '0802 321 4567',
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(11),
       ],
+      onChanged: (val) {
+        _autoDetectNetwork(val);
+        setState(() {});
+      },
+      suffixIcon: DPIcons.contactRound,
+      onSuffixTap: _pickContactFromDevice,
+      margin: const EdgeInsets.only(bottom: 12),
     );
   }
 
   // ==================== NETWORK SELECTOR ====================
   Widget _buildNetworkSelector() {
-    return SizedBox(
-      height: 72,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: _networks.length,
-        itemBuilder: (context, index) {
-          final network = _networks[index];
-          final isSelected = _selectedNetwork == network['name'];
-          return GestureDetector(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() {
-                _selectedNetwork = network['name'];
-                _dataPlans = [];
-                _selectedPlan = null;
-                _selectedPlanDetails = null;
-                _amountController.text = '';
-              });
-              _fetchDataPlans(network['name']);
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeOutCubic,
-              width: 82,
-              margin: const EdgeInsets.only(right: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isSelected ? network['color'] : Colors.grey.shade200,
-                  width: isSelected ? 2.5 : 1.0,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        isSelected
-                            ? (network['color'] as Color).withValues(
-                              alpha: 0.25,
-                            )
-                            : Colors.black.withValues(alpha: 0.03),
-                    blurRadius: isSelected ? 8 : 4,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      network['image'],
-                      width: 32,
-                      height: 32,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    network['name'],
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight:
-                          isSelected ? FontWeight.w800 : FontWeight.w600,
-                      color: _textDark,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+    final names = _networks.map((n) => n['name'] as String).toList();
+    return DPChipGrid(
+      labels: names,
+      columns: 4,
+      selectedIndex: _selectedNetwork == null ? null : names.indexOf(_selectedNetwork!),
+      onSelected: (i) {
+        HapticFeedback.selectionClick();
+        setState(() {
+          _selectedNetwork = names[i];
+          _dataPlans = [];
+          _selectedPlan = null;
+          _selectedPlanDetails = null;
+          _amountController.text = '';
+        });
+        _fetchDataPlans(names[i]);
+      },
     );
   }
 
   // ==================== PROMPT TO SELECT NETWORK ====================
   Widget _buildSelectNetworkPrompt() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.wifi_rounded,
-            color: _primaryNavy.withValues(alpha: 0.4),
-            size: 44,
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Select a Network Operator',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: _textDark,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Choose your network provider above to view available data bundles.',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: _textMuted),
-          ),
-        ],
+    return const DPCard(
+      child: DPEmptyState(
+        icon: DPIcons.wifi,
+        title: 'Choose a network',
+        message: 'Pick a network above, or type the number and we’ll detect it.',
       ),
     );
   }
 
   // ==================== DATA PLANS SECTION ====================
   Widget _buildPlanSection() {
-    if (_isLoadingPlans) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSectionTitle('Select Data Bundle'),
-          const SizedBox(height: 12),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 36),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(_primaryNavy),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    if (_dataPlans.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          children: [
-            const Icon(Icons.wifi_off_rounded, color: Colors.orange, size: 40),
-            const SizedBox(height: 12),
-            Text(
-              'No data plans available',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: _textDark,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Please try selecting another network operator',
-              style: TextStyle(fontSize: 12, color: _textMuted),
-            ),
-          ],
-        ),
-      );
-    }
-
+    const filters = ['All plans', 'Daily', 'Weekly', 'Monthly'];
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildSectionTitle('Select Data Bundle'),
-        const SizedBox(height: 12),
-        Container(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.42,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey.shade200),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.02),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: ListView.separated(
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: _dataPlans.length,
-            separatorBuilder:
-                (context, index) =>
-                    Divider(height: 1, color: Colors.grey.shade100),
-            itemBuilder: (context, index) {
-              final plan = _dataPlans[index];
-              final planName = plan['name'] ?? 'Data Plan';
-              final isSelected = _selectedPlan == planName;
-              final amount = plan['amount'] ?? '0';
-              final validity = plan['validity'] ?? '';
-
-              return GestureDetector(
-                onTap: () => _selectPlan(planName, plan),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? _primaryNavy.withValues(alpha: 0.04)
-                            : Colors.transparent,
-                  ),
+        const DPSectionHeader('Find your perfect plan', padding: EdgeInsets.only(top: 6, bottom: 12)),
+        DPChipGrid(
+          labels: filters,
+          columns: 4,
+          height: 40,
+          selectedIndex: filters.indexOf(_planFilter),
+          onSelected: (i) => setState(() => _planFilter = filters[i]),
+        ),
+        if (_isLoadingPlans)
+          const DPLoader(message: 'Loading plans…')
+        else if (_dataPlans.isEmpty)
+          DPCard(
+            child: DPEmptyState(
+              icon: DPIcons.circleAlert,
+              title: 'Couldn’t load plans',
+              message: 'Check your connection and try again.',
+              actionLabel: 'Retry',
+              onAction: () => _fetchDataPlans(_selectedNetwork!),
+            ),
+          )
+        else
+          Builder(builder: (context) {
+            final shown = _planFilter == 'All plans'
+                ? _dataPlans
+                : _dataPlans.where((p) => _planBucket(p) == _planFilter).toList();
+            if (shown.isEmpty) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Text('No plans in this group.', textAlign: TextAlign.center, style: DPText.bodyMuted),
+              );
+            }
+            final rows = <Widget>[];
+            for (var i = 0; i < shown.length; i += 2) {
+              rows.add(Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: IntrinsicHeight(
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color:
-                              isSelected
-                                  ? _primaryNavy.withValues(alpha: 0.1)
-                                  : Colors.grey.shade100,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.wifi_rounded,
-                          color:
-                              isSelected ? _primaryNavy : Colors.grey.shade500,
-                          size: 20,
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              planName,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight:
-                                    isSelected
-                                        ? FontWeight.w700
-                                        : FontWeight.w600,
-                                color: isSelected ? _primaryNavy : _textDark,
-                              ),
-                            ),
-                            if (validity.isNotEmpty)
-                              Text(
-                                'Validity: $validity',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: _textMuted,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '₦$amount',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w800,
-                          color: _secondaryTeal,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color:
-                              isSelected ? _secondaryTeal : Colors.transparent,
-                          border: Border.all(
-                            color:
-                                isSelected
-                                    ? _secondaryTeal
-                                    : Colors.grey.shade300,
-                            width: 1.5,
-                          ),
-                        ),
-                        child:
-                            isSelected
-                                ? const Icon(
-                                  Icons.check_rounded,
-                                  color: Colors.white,
-                                  size: 13,
-                                )
-                                : null,
-                      ),
+                      Expanded(child: _buildPlanCard(shown[i])),
+                      const SizedBox(width: 12),
+                      Expanded(child: i + 1 < shown.length ? _buildPlanCard(shown[i + 1]) : const SizedBox()),
                     ],
                   ),
                 ),
-              );
-            },
+              ));
+            }
+            return Column(children: rows);
+          }),
+      ],
+    );
+  }
+
+  Widget _buildPlanCard(Map<String, dynamic> plan) {
+    final name = plan['name']?.toString() ?? '';
+    final isSelected = _selectedPlan == name &&
+        _selectedPlanDetails?['variation_code'] == plan['variation_code'];
+    final size = _planSize(name);
+    final price = double.tryParse(plan['amount']?.toString() ?? '0') ?? 0;
+    final validity = plan['validity']?.toString() ?? '';
+    return Material(
+      color: isSelected ? DP.greenSoft : DP.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DP.rLg - 2),
+        side: BorderSide(color: isSelected ? DP.green : DP.border, width: isSelected ? 1.4 : 1),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(DP.rLg - 2),
+        onTap: () => _selectPlan(name, plan),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 14, 12, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(size,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: DPText.title.copyWith(fontSize: size == name ? 14 : 20)),
+                  ),
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: DP.green, width: 1.5),
+                    ),
+                    alignment: Alignment.center,
+                    child: isSelected
+                        ? Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(color: DP.green, shape: BoxShape.circle),
+                          )
+                        : null,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                size == name ? validity : [if (validity.isNotEmpty) validity, name].join(' · '),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: DPText.small.copyWith(fontSize: 11.5),
+              ),
+              const SizedBox(height: 8),
+              Text(dpNaira(price, decimals: price % 1 != 0),
+                  style: DPText.value.copyWith(color: DP.green, fontWeight: FontWeight.w600)),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
   // ==================== STICKY BOTTOM CTA ====================
   Widget _buildStickyBottomCTA() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          height: 52,
-          child: Container(
-            decoration: BoxDecoration(
-              color: _secondaryTeal,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: _secondaryTeal.withValues(alpha: 0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: ElevatedButton(
-              onPressed:
-                  _isProcessingPayment || _isAuthenticating
-                      ? null
-                      : _openPaymentSheet,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child:
-                  _isProcessingPayment || _isAuthenticating
-                      ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2.5,
-                        ),
-                      )
-                      : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.bolt_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Proceed to Pay',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
-          ),
-        ),
-      ),
+    final sel = _selectedPlanDetails;
+    final busy = _isProcessingPayment || _isAuthenticating;
+    return DPButton(
+      label: sel != null ? 'Continue with ${_planSize(sel['name'].toString())}' : 'Continue',
+      icon: DPIcons.arrowRight,
+      loading: busy,
+      onPressed: busy ? null : _openPaymentSheet,
     );
   }
 
   // ==================== PAYMENT SHEET OVERLAY ====================
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
-      child: AnimatedBuilder(
-        animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withValues(
-                alpha: 0.4 * _sheetAnimation.value,
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/dalabapay2.png',
-                                      height: 38,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close_rounded,
-                                          size: 18,
-                                          color: _textMuted,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Confirm Payment',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: _textDark,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-                              Divider(color: Colors.grey.shade200, height: 1),
-                              const SizedBox(height: 20),
-
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+    final plan = _selectedPlanDetails;
+    final amount = double.tryParse(_amountController.text) ??
+        double.tryParse(plan?['amount']?.toString() ?? '0') ??
+        0;
+    final bool isBiometricSupported = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+    final canBiometric = isBiometricSupported && _biometricEnabled && _biometricAllowed;
+    return DPSheetOverlay(
+      animation: _sheetAnimation,
+      onDismiss: _isProcessingPayment ? null : _closePaymentSheet,
+      child: DPPaymentReview(
+        icon: DPIcons.wifi,
+        serviceLabel: '${_selectedNetwork ?? ''} data',
+        amount: amount,
+        rows: [
+          DPSummaryRow('Phone number', _phoneController.text.trim()),
+          DPSummaryRow('Network', '${_selectedNetwork ?? '—'} Nigeria'),
+          DPSummaryRow('Plan', plan?['name']?.toString() ?? '—'),
+          if ((plan?['validity'] ?? '').toString().isNotEmpty)
+            DPSummaryRow('Validity', plan!['validity'].toString()),
+          const DPSummaryRow('Service fee', '₦0.00'),
+          DPSummaryRow('Total to pay', dpNaira(amount), emphasize: true),
+        ],
+        walletBalance: _walletBalance,
+        showPin: _transactionPinSet,
+        pinController: _pinController,
+        pinFocusNode: _pinFocusNode,
+        pinError: _pinValidationError,
+        shake: _shakeAnimation,
+        onPinChanged: (_) {
+          if (_pinValidationError != null) setState(() => _pinValidationError = null);
         },
+        processing: _isProcessingPayment,
+        processingBiometric: _useBiometric,
+        onPayWithPin: _processPaymentWithPIN,
+        onPayWithBiometric: canBiometric ? _processPaymentWithBiometric : null,
+        biometricName: _biometricName,
+        onClose: _closePaymentSheet,
+        footnote: 'Plans activate on the number entered and can’t be reversed.',
       ),
     );
   }
 
-  Widget _buildPaymentSheetDetails() {
-    final network = _networks.firstWhere(
-      (n) => n['name'] == _selectedNetwork,
-      orElse: () => _networks.first,
-    );
-    final phone = _phoneController.text.trim();
-    final planName = _selectedPlan ?? 'N/A';
-    final amount = double.tryParse(_amountController.text) ?? 0;
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Network',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: _textMuted,
-                ),
-              ),
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Image.asset(
-                      network['image'],
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    _selectedNetwork ?? 'N/A',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: _textDark,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Phone Number',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: _textMuted,
-                ),
-              ),
-              Text(
-                phone.isNotEmpty ? phone : 'N/A',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: _textDark,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Data Bundle',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: _textMuted,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  planName,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: _textDark,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Amount',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: _textMuted,
-                ),
-              ),
-              Text(
-                '₦${amount.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: _secondaryTeal,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: _secondaryTeal.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondaryTeal.withValues(alpha: 0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Available Balance',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: _textMuted,
-            ),
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: _secondaryTeal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== PIN INPUT WITH SHAKE & ERROR UI ====================
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_shakeAnimation.value, 0),
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFEF2F2)
-                    : _primaryNavy.withValues(alpha: 0.04),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: hasError ? const Color(0xFFEF4444) : _primaryNavy,
-              width: hasError ? 2 : 1.5,
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    hintText: 'Enter transaction PIN',
-                    hintStyle: TextStyle(
-                      color:
-                          hasError
-                              ? const Color(0xFFEF4444).withValues(alpha: 0.7)
-                              : Colors.grey.shade600,
-                      fontSize: 13,
-                    ),
-                    prefixIcon: Icon(
-                      Icons.lock_outline_rounded,
-                      color: hasError ? const Color(0xFFEF4444) : _primaryNavy,
-                      size: 20,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: hasError ? const Color(0xFFDC2626) : Colors.black,
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFEE2E2),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        color: Color(0xFFDC2626),
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFDC2626),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment ? null : _processPaymentWithPIN,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError ? const Color(0xFFDC2626) : _secondaryTeal,
-                    foregroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        bottom: Radius.circular(12),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.lock_outline_rounded,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Pay with PIN',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported =
-        !kIsWeb && (Platform.isAndroid || Platform.isIOS);
-
-    if (!isBiometricSupported || !_biometricEnabled) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: GestureDetector(
-        onTap: _isProcessingPayment ? null : _processPaymentWithBiometric,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          decoration: BoxDecoration(
-            color: _primaryNavy.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _primaryNavy, width: 1.5),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? const Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: _primaryNavy,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.fingerprint_rounded,
-                        color: _primaryNavy,
-                        size: 28,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          'Pay with $_biometricName',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: _primaryNavy,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: _secondaryTeal,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.check_rounded,
-                          color: Colors.white,
-                          size: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== SECTION TITLE ====================
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-        color: _primaryNavy,
-      ),
-    );
-  }
+  Widget _buildSectionTitle(String title) => DPFieldLabel(title);
 
   Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.wifi_off_rounded, color: Colors.orange, size: 60),
-            const SizedBox(height: 16),
-            Text(
-              'Service Unavailable',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: _textDark,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Internet data service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: _textMuted),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _primaryNavy,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: TextStyle(fontWeight: FontWeight.w700),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return DPServiceUnavailable(
+      message: !_isUserActive
+          ? 'Your account has been deactivated. Please contact support.'
+          : 'Data purchase is currently unavailable. Please try again later.',
     );
   }
 
@@ -2537,52 +1441,6 @@ class _InternetScreenState extends State<InternetScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(
-                  Icons.error_outline_rounded,
-                  color: Colors.red.shade700,
-                  size: 24,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.red.shade700,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              message,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: TextStyle(
-                    color: _secondaryTeal,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-    );
+    showDPDialog(context, tone: DPDialogTone.error, title: title, message: message);
   }
 }

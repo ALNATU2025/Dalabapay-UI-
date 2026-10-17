@@ -2,7 +2,6 @@
 import 'dart:async';
 
 import 'package:dalabapay/core/services/auth_service.dart' show AuthService;
-import 'package:dalabapay/presentation/screens/auth/change_pin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode, kDebugMode, kIsWeb;
@@ -456,18 +455,6 @@ class _DalabaPayAppState extends State<DalabaPayApp>
               return MaterialPageRoute(builder: (_) => const PinLoginScreen());
             case '/pin-lock':
               return MaterialPageRoute(builder: (_) => const PinLockScreen());
-
-            // ==================== CHANGE PIN ROUTE ====================
-            case '/change-pin':
-              final args = settings.arguments as Map<String, dynamic>?;
-              return MaterialPageRoute(
-                builder:
-                    (_) => ChangePinScreen(
-                      userId: args?['userId'] ?? '',
-                      userEmail: args?['userEmail'] ?? '',
-                      fullName: args?['fullName'] ?? '',
-                    ),
-              );
 
             // ==================== MAIN DASHBOARD ====================
             case '/dashboard':

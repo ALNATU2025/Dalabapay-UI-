@@ -117,7 +117,6 @@ class _DashboardScreenState extends State<DashboardScreen>
     {'icon': DPIcons.wifi, 'name': 'Data', 'route': '/data'},
     {'icon': DPIcons.zap, 'name': 'Electricity', 'route': '/electricity'},
     {'icon': DPIcons.tv, 'name': 'TV', 'route': '/cable'},
-    {'icon': DPIcons.router, 'name': 'Internet', 'route': '/internet'},
     {'icon': DPIcons.globe, 'name': 'International', 'route': '/international-airtime'},
     {'icon': DPIcons.graduationCap, 'name': 'Education', 'route': '/education'},
   ];
