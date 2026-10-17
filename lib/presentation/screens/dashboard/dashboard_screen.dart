@@ -1689,6 +1689,10 @@ class _DashboardScreenState extends State<DashboardScreen>
       case 'profile':
         _onNavTap(3);
         break;
+      case 'send':
+        setState(() => _selectedIndex = 0);
+        _navigateToSendMoney();
+        break;
       default:
         setState(() => _selectedIndex = 0);
     }
@@ -2638,53 +2642,141 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
+  // Groups behind the three Essential Services tiles.
+  static const List<DPService> _payBillGroup = [
+    DPService('Electricity', DPIcons.bolt, '/electricity', DPAssets.svcElectricity, DP.green),
+    DPService('Airtime', DPIcons.smartphone, '/airtime', DPAssets.svcAirtime, DP.navyIcon),
+    DPService('Data', DPIcons.wifi, '/data', DPAssets.svcData, DP.navyIcon),
+  ];
+  static const List<DPService> _payTvGroup = [
+    DPService('DSTV', DPIcons.tv, '/cable', DPAssets.dstv, DP.navyIcon),
+    DPService('GOtv', DPIcons.tv, '/cable', DPAssets.gotv, DP.green),
+    DPService('StarTimes', DPIcons.tv, '/cable', DPAssets.startimes, DP.amber),
+  ];
+
+  /// "Essential Services": Pay Bill · Pay TV · International Airtime.
+  /// Everything else lives behind "More" / the Services tab.
   Widget _buildServicesGrid(
     List<Map<String, dynamic>> services,
     bool isSmallScreen,
   ) {
-    // Home shortcuts, as in the design (Betting / Flight / Bus / Train are
-    // left out until they have a working backend).
-    const home = <DPService>[
-      DPService('Airtime', DPIcons.smartphone, '/airtime', DPAssets.svcAirtime, DP.navyIcon),
-      DPService('Data', DPIcons.wifi, '/data', DPAssets.svcData, DP.navyIcon),
-      DPService('TV', DPIcons.tv, '/cable', DPAssets.svcTv, DP.navyIcon),
-      DPService('Electricity', DPIcons.bolt, '/electricity', DPAssets.svcElectricity, DP.green),
-      DPService('Bills', DPIcons.receipt, '/bills', DPAssets.svcBills, DP.navyIcon),
-      DPService('Insurance', DPIcons.shield, '/insurance', DPAssets.svcInsurance, DP.green),
-      DPService('Education', DPIcons.school, '/education', DPAssets.svcEducation, DP.navyIcon),
-      DPService('More', Icons.more_horiz_rounded, '/services', DPAssets.svcMore, DP.navyIcon),
-    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: DPServiceGrid(
-        tiles: [
-          for (final s in home)
-            DPServiceTile(
-              icon: s.icon,
-              label: s.name,
-              image: s.image,
-              color: s.color,
-              onTap: () => _openServiceRoute(s.route),
-            ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DPSectionHeader(
+            'Essential Services',
+            actionLabel: 'More',
+            onAction: () => _onNavTap(2),
+          ),
+          DPServiceGrid(
+            columns: 3,
+            tiles: [
+              DPServiceTile(
+                icon: DPIcons.receipt,
+                label: 'Pay Bill',
+                image: DPAssets.svcBills,
+                color: DP.green,
+                onTap: () => _showServiceGroup(
+                  'Pay Bill',
+                  'Electricity, airtime and data',
+                  _payBillGroup,
+                ),
+              ),
+              DPServiceTile(
+                icon: DPIcons.tv,
+                label: 'Pay TV',
+                image: DPAssets.svcTv,
+                color: DP.navyIcon,
+                onTap: () => _showServiceGroup(
+                  'Pay TV',
+                  'DSTV, GOtv and StarTimes',
+                  _payTvGroup,
+                ),
+              ),
+              DPServiceTile(
+                icon: DPIcons.globe,
+                label: 'International Airtime',
+                image: DPAssets.svcInternational,
+                color: DP.navyIcon,
+                onTap: () => _openServiceRoute('/international-airtime'),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildReferBanner(bool isSmallScreen) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: DPPromoBanner(
-        title: 'Refer a Friend',
-        subtitle: 'Earn rewards when your friends join with your code.',
-        image: DPAssets.bannerRefer,
-        icon: DPIcons.gift,
-        onTap: () => Navigator.pushNamed(
-          context,
-          '/referral',
-          arguments: {'userId': _userId ?? ''},
+  /// Bottom sheet listing the services behind an Essential Services tile.
+  void _showServiceGroup(
+    String title,
+    String subtitle,
+    List<DPService> group,
+  ) {
+    HapticFeedback.lightImpact();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: DP.bg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(DP.rXl)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const DPSheetHandle(),
+              const SizedBox(height: 8),
+              Text(title, style: DP.title),
+              const SizedBox(height: 4),
+              Text(subtitle, style: DP.caption),
+              const SizedBox(height: 18),
+              DPServiceGrid(
+                columns: 3,
+                tiles: [
+                  for (final s in group)
+                    DPServiceTile(
+                      icon: s.icon,
+                      label: s.name,
+                      image: s.image,
+                      color: s.color,
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _openServiceRoute(s.route);
+                      },
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  /// Sliding banners: International Airtime and Cable TV.
+  Widget _buildBanners(bool isSmallScreen) {
+    return _HomeBanners(
+      banners: [
+        _HomeBannerData(
+          title: 'International\nAirtime',
+          subtitle: 'Top up loved ones\' phones abroad in seconds.',
+          image: DPAssets.bannerInternational,
+          icon: DPIcons.globe,
+          onTap: () => _openServiceRoute('/international-airtime'),
+        ),
+        _HomeBannerData(
+          title: 'Never Miss\nYour Shows',
+          subtitle: 'Renew DSTV, GOtv & StarTimes instantly.',
+          image: DPAssets.bannerCable,
+          icon: DPIcons.tv,
+          onTap: () => _openServiceRoute('/cable'),
+        ),
+      ],
     );
   }
 
@@ -2729,30 +2821,70 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Widget _buildRecentTransactions(bool isSmallScreen) {
-    final list = _recentTransactions.take(3).toList();
-    if (_isLoadingTransactions || list.isEmpty) return const SizedBox.shrink();
+    final list = _recentTransactions.take(5).toList();
+    Widget content;
+    if (_isLoadingTransactions && list.isEmpty) {
+      content = Column(
+        children: List.generate(
+          3,
+          (i) => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Row(
+              children: [
+                DPSkeleton(width: 44, height: 44, radius: 22),
+                SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DPSkeleton(width: 140),
+                      SizedBox(height: 8),
+                      DPSkeleton(width: 90, height: 11),
+                    ],
+                  ),
+                ),
+                DPSkeleton(width: 64, height: 14),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else if (list.isEmpty) {
+      content = const DPEmptyState(
+        icon: DPIcons.receipt,
+        title: 'No transactions yet',
+        message: 'Your payments and top-ups will show up here.',
+      );
+    } else {
+      content = Column(
+        children: [
+          for (var i = 0; i < list.length; i++) ...[
+            if (i > 0) const Divider(height: 1, color: DP.borderSoft),
+            _buildTransactionItem(
+              Map<String, dynamic>.from(list[i] as Map),
+              isSmallScreen,
+            ),
+          ],
+        ],
+      );
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DPSectionHeader(
-            'Recent Transactions',
+            'Transaction History',
             actionLabel: 'See All',
             onAction: _navigateToTransactions,
           ),
           DPCard(
             padding: const EdgeInsets.symmetric(horizontal: 14),
-            child: Column(
-              children: [
-                for (var i = 0; i < list.length; i++) ...[
-                  if (i > 0) const Divider(height: 1, color: DP.borderSoft),
-                  _buildTransactionItem(
-                    Map<String, dynamic>.from(list[i] as Map),
-                    isSmallScreen,
-                  ),
-                ],
-              ],
+            child: AnimatedSize(
+              duration: DPMotion.base,
+              curve: DPMotion.curve,
+              alignment: Alignment.topCenter,
+              child: content,
             ),
           ),
         ],
@@ -2825,15 +2957,9 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget _buildCustomBottomNavBar(bool isSmallScreen) {
     return DPBottomNav(
       index: _selectedIndex,
-      items: const [
-        DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
-        DPNavItem(Icons.receipt_long_outlined, 'Transactions',
-            activeIcon: Icons.receipt_long_rounded),
-        DPNavItem(Icons.grid_view_outlined, 'Services',
-            activeIcon: Icons.grid_view_rounded),
-        DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
-      ],
+      items: kDPTabs,
       onTap: _onNavTap,
+      onCenter: _navigateToSendMoney,
     );
   }
 
@@ -3196,17 +3322,25 @@ class _DashboardScreenState extends State<DashboardScreen>
                                     child: _buildModernBalanceCard(isSmallScreen),
                                   ),
                                   const SizedBox(height: 20),
-                                  _buildServicesGrid(
-                                    _quickServices,
-                                    isSmallScreen,
-                                  ),
-                                  const SizedBox(height: 18),
                                   DPAppear(
-                                    delay: const Duration(milliseconds: 300),
-                                    child: _buildReferBanner(isSmallScreen),
+                                    delay: const Duration(milliseconds: 120),
+                                    child: _buildServicesGrid(
+                                      _quickServices,
+                                      isSmallScreen,
+                                    ),
                                   ),
-                                  const SizedBox(height: 18),
-                                  _buildRecentTransactions(isSmallScreen),
+                                  const SizedBox(height: 20),
+                                  DPAppear(
+                                    delay: const Duration(milliseconds: 260),
+                                    child: _buildBanners(isSmallScreen),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  DPAppear(
+                                    delay: const Duration(milliseconds: 360),
+                                    child: _buildRecentTransactions(
+                                      isSmallScreen,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -3223,3 +3357,99 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 }
 
+class _HomeBannerData {
+  final String title;
+  final String subtitle;
+  final String image;
+  final IconData icon;
+  final VoidCallback onTap;
+  const _HomeBannerData({
+    required this.title,
+    required this.subtitle,
+    required this.image,
+    required this.icon,
+    required this.onTap,
+  });
+}
+
+/// Auto-sliding promo banners with page dots.
+class _HomeBanners extends StatefulWidget {
+  final List<_HomeBannerData> banners;
+  const _HomeBanners({required this.banners});
+
+  @override
+  State<_HomeBanners> createState() => _HomeBannersState();
+}
+
+class _HomeBannersState extends State<_HomeBanners> {
+  final PageController _page = PageController(viewportFraction: 0.9);
+  Timer? _timer;
+  int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!mounted || !_page.hasClients || widget.banners.length < 2) return;
+      final next = (_index + 1) % widget.banners.length;
+      _page.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 550),
+        curve: Curves.easeInOutCubic,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _page.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 118,
+          child: PageView.builder(
+            controller: _page,
+            itemCount: widget.banners.length,
+            onPageChanged: (i) => setState(() => _index = i),
+            itemBuilder: (context, i) {
+              final b = widget.banners[i];
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: DPPromoBanner(
+                  title: b.title,
+                  subtitle: b.subtitle,
+                  image: b.image,
+                  icon: b.icon,
+                  onTap: b.onTap,
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(widget.banners.length, (i) {
+            final on = i == _index;
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              width: on ? 18 : 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: on ? DP.green : DP.border,
+                borderRadius: BorderRadius.circular(3),
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+}

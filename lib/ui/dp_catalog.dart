@@ -74,6 +74,8 @@ class DPPromoBanner extends StatelessWidget {
                       children: [
                         Text(
                           title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -84,6 +86,8 @@ class DPPromoBanner extends StatelessWidget {
                         const SizedBox(height: 6),
                         Text(
                           subtitle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.78),
                             fontSize: 12.5,

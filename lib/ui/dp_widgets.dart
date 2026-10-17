@@ -1970,71 +1970,246 @@ class DPNavItem {
   final IconData icon;
   final IconData? activeIcon;
   final String label;
-  const DPNavItem(this.icon, this.label, {this.activeIcon});
+
+  /// Optional 3D icon file (e.g. DPAssets.navHome); falls back to [icon].
+  final String? image;
+  const DPNavItem(this.icon, this.label, {this.activeIcon, this.image});
 }
 
+/// The app's four tabs (Home · Transactions · Services · Profile).
+const List<DPNavItem> kDPTabs = [
+  DPNavItem(DPIcons.home, 'Home',
+      activeIcon: DPIcons.homeFilled, image: DPAssets.navHome),
+  DPNavItem(Icons.receipt_long_outlined, 'Transactions',
+      activeIcon: Icons.receipt_long_rounded, image: DPAssets.navTransactions),
+  DPNavItem(Icons.grid_view_outlined, 'Services',
+      activeIcon: Icons.grid_view_rounded, image: DPAssets.navServices),
+  DPNavItem(DPIcons.user, 'Profile',
+      activeIcon: DPIcons.userFilled, image: DPAssets.navProfile),
+];
+
+/// Bottom menu. With [onCenter] set, a round green floating button sits in
+/// the middle (between the 2nd and 3rd items) — used for Send.
 class DPBottomNav extends StatelessWidget {
   final int index;
   final List<DPNavItem> items;
   final ValueChanged<int> onTap;
+  final VoidCallback? onCenter;
+  final String centerLabel;
+  final IconData centerIcon;
+  final String? centerImage;
+
   const DPBottomNav({
     super.key,
     required this.index,
     required this.items,
     required this.onTap,
+    this.onCenter,
+    this.centerLabel = 'Send',
+    this.centerIcon = Icons.send_rounded,
+    this.centerImage = DPAssets.navSend,
   });
+
+  Widget _item(BuildContext context, int i) {
+    final it = items[i];
+    final active = i == index;
+    final c = active ? DP.green : DP.muted;
+    final iconWidget = Icon(
+      active ? (it.activeIcon ?? it.icon) : it.icon,
+      color: c,
+      size: 24,
+    );
+    return Expanded(
+      child: InkWell(
+        onTap: () => onTap(i),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedScale(
+                scale: active ? 1.12 : 1,
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutBack,
+                child: SizedBox(
+                  width: 26,
+                  height: 26,
+                  child: it.image == null
+                      ? iconWidget
+                      : AnimatedOpacity(
+                          opacity: active ? 1 : 0.55,
+                          duration: const Duration(milliseconds: 200),
+                          child: DPImage(
+                            it.image!,
+                            width: 26,
+                            height: 26,
+                            fallback: iconWidget,
+                          ),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                it.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: c,
+                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final bottom = MediaQuery.of(context).padding.bottom;
+    final row = <Widget>[];
+    for (var i = 0; i < items.length; i++) {
+      if (onCenter != null && i == (items.length / 2).ceil()) {
+        row.add(const SizedBox(width: 76));
+      }
+      row.add(_item(context, i));
+    }
+    final bar = Container(
       decoration: const BoxDecoration(
         color: DP.surface,
         border: Border(top: BorderSide(color: DP.border)),
       ),
-      padding: EdgeInsets.only(
-        top: 8,
-        bottom: 6 + MediaQuery.of(context).padding.bottom,
-      ),
-      child: Row(
-        children: List.generate(items.length, (i) {
-          final it = items[i];
-          final active = i == index;
-          final c = active ? DP.green : DP.muted;
-          return Expanded(
-            child: InkWell(
-              onTap: () => onTap(i),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AnimatedScale(
-                      scale: active ? 1.1 : 1,
-                      duration: const Duration(milliseconds: 220),
-                      curve: Curves.easeOutBack,
-                      child: Icon(
-                        active ? (it.activeIcon ?? it.icon) : it.icon,
-                        color: c,
-                        size: 24,
+      padding: EdgeInsets.only(top: 8, bottom: 6 + bottom),
+      child: Row(children: row),
+    );
+    if (onCenter == null) return bar;
+    // The top 26px is transparent so the raised button stays tappable.
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        Padding(padding: const EdgeInsets.only(top: 26), child: bar),
+        Positioned(
+          top: 0,
+          child: _DPSendButton(
+            onTap: onCenter!,
+            label: centerLabel,
+            icon: centerIcon,
+            image: centerImage,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Round green floating button with a gentle bob and a breathing glow.
+class _DPSendButton extends StatefulWidget {
+  final VoidCallback onTap;
+  final String label;
+  final IconData icon;
+  final String? image;
+  const _DPSendButton({
+    required this.onTap,
+    required this.label,
+    required this.icon,
+    this.image,
+  });
+
+  @override
+  State<_DPSendButton> createState() => _DPSendButtonState();
+}
+
+class _DPSendButtonState extends State<_DPSendButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1800),
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (DPMotion.reduced(context)) {
+      _c.stop();
+    } else if (!_c.isAnimating) {
+      _c.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final icon = Icon(widget.icon, color: Colors.white, size: 26);
+    return Semantics(
+      button: true,
+      label: widget.label,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.mediumImpact();
+          widget.onTap();
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedBuilder(
+              animation: _c,
+              builder: (context, child) {
+                final t = Curves.easeInOut.transform(_c.value);
+                return Transform.translate(
+                  offset: Offset(0, -3 * t),
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [Color(0xFF1FC48B), DP.green, DP.greenDeep],
                       ),
+                      border: Border.all(color: DP.surface, width: 4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: DP.green.withValues(alpha: 0.25 + 0.2 * t),
+                          blurRadius: 12 + 10 * t,
+                          spreadRadius: 1 + 2 * t,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      it.label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        color: c,
-                        fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+                    child: child,
+                  ),
+                );
+              },
+              child: Center(
+                child: widget.image == null
+                    ? icon
+                    : DPImage(
+                        widget.image!,
+                        width: 30,
+                        height: 30,
+                        fallback: icon,
                       ),
-                    ),
-                  ],
-                ),
               ),
             ),
-          );
-        }),
+            const SizedBox(height: 2),
+            Text(
+              widget.label,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: DP.green,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

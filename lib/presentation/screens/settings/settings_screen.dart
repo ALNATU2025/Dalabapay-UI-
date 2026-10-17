@@ -1187,14 +1187,8 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
         ),
         bottomNavigationBar: DPBottomNav(
           index: 3,
-          items: const [
-            DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
-            DPNavItem(Icons.receipt_long_outlined, 'Transactions',
-                activeIcon: Icons.receipt_long_rounded),
-            DPNavItem(Icons.grid_view_outlined, 'Services',
-                activeIcon: Icons.grid_view_rounded),
-            DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
-          ],
+          items: kDPTabs,
+          onCenter: () => Navigator.of(context).maybePop('send'),
           // Home owns the tabs: tell it which one to show when we close.
           onTap: (i) {
             if (i == 3) {
