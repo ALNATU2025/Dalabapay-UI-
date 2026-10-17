@@ -5,6 +5,9 @@ import 'package:dalabapay/presentation/screens/data/data_screen.dart';
 import 'package:dalabapay/presentation/screens/wallet/wallet_screen.dart';
 import 'package:dalabapay/presentation/screens/send_money/send_money_screen.dart';
 import 'package:dalabapay/presentation/screens/support/help_support_screen.dart';
+import 'package:dalabapay/presentation/screens/electricity/electricity_screen.dart';
+import 'package:dalabapay/presentation/screens/cabletv/cabletv_screen.dart';
+import 'package:dalabapay/presentation/screens/international_airtime/international_airtime_screen.dart';
 import 'harness.dart';
 import 'home_test.dart' show demoPrefs;
 
@@ -23,4 +26,10 @@ void main() {
   testWidgets('send money', (t) async => shoot(t, '14_send_money',
       const SendMoneyScreen(userId: 'u1'), height: 1000));
   testWidgets('help', (t) async => shoot(t, '15_help', const HelpSupportScreen(), height: 1300));
+  testWidgets('electricity', (t) async => shoot(t, '16_electricity',
+      ElectricityScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 1300));
+  testWidgets('cable', (t) async => shoot(t, '17_cable',
+      CableTVScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 1200));
+  testWidgets('intl', (t) async => shoot(t, '18_intl',
+      IntlAirtimeScreen(userId: 'u1', onBalanceUpdate: (_) {}), height: 900));
 }
