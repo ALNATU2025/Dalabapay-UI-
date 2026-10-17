@@ -5,7 +5,8 @@ import 'package:dalabapay/core/services/auth_service.dart' show AuthService;
 import 'package:dalabapay/presentation/screens/auth/change_pin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart' show kReleaseMode, kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart'
+    show kReleaseMode, kDebugMode, kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as developer;
@@ -142,27 +143,36 @@ void _reportError(Object error, StackTrace? stack) {
 }
 
 // ==================== MAIN ====================
+/// Firebase push notifications are available on Android, iOS and web only.
+bool get _pushSupported =>
+    kIsWeb ||
+    defaultTargetPlatform == TargetPlatform.android ||
+    defaultTargetPlatform == TargetPlatform.iOS;
+
 Future<void> main() async {
   _setupErrorHandling();
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ Initialize Firebase with web options if on web
-  if (kIsWeb) {
-    await Firebase.initializeApp(options: _getWebFirebaseOptions());
-  } else {
-    await Firebase.initializeApp();
-  }
+  // ✅ Initialize Firebase with web options if on web.
+  // Push notifications only exist on Android, iOS and web; on Windows/macOS/
+  // Linux (used to preview the app) Firebase is skipped.
+  if (_pushSupported) {
+    if (kIsWeb) {
+      await Firebase.initializeApp(options: _getWebFirebaseOptions());
+    } else {
+      await Firebase.initializeApp();
+    }
 
-  // Register background handler
-  // Register background handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // Register background handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
 
   try {
     await ApiService.initializeSecurity();
     await AuthService.initialize();
 
     // ✅ Initialize NotificationService (handles foreground FCM internally)
-    await NotificationService().initialize();
+    if (_pushSupported) await NotificationService().initialize();
 
     final isLoggedIn = await SecureStorageService.isLoggedIn();
     debugPrint('🔐 Logged In: $isLoggedIn');
@@ -199,9 +209,11 @@ class _DalabaPayAppState extends State<DalabaPayApp>
     _updateActivity();
 
     // ✅ Flush any notification tap that arrived during cold-start
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationService().flushPendingNavigation();
-    });
+    if (_pushSupported) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        NotificationService().flushPendingNavigation();
+      });
+    }
   }
 
   @override
