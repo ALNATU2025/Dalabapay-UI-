@@ -4,7 +4,7 @@ import 'package:dalabapay/core/services/api_service.dart' show ApiService;
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:dalabapay/core/services/update_service.dart';
-import 'package:hugeicons/hugeicons.dart';
+import '../../ui/ui.dart';
 import 'drawer_item.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -35,52 +35,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
   bool _isDisposed = false;
 
   // Map drawer titles to Hugeicons
-  final Map<String, dynamic> _iconMap = {
-    'Admin Dashboard': HugeIcons.strokeRoundedDashboardSquare01,
-    'All Services': HugeIcons.strokeRoundedMenuSquare,
-    'Manage Users': HugeIcons.strokeRoundedUserGroup,
-    'Transactions': HugeIcons.strokeRoundedReceiptText,
-    'Status Update': HugeIcons.strokeRoundedShare06,
-    'Refund System': HugeIcons.strokeRoundedMoneyExchange01,
-    'Fund Wallet': HugeIcons.strokeRoundedWallet01,
-    'VTpass Settings': HugeIcons.strokeRoundedApi,
-    'Self Fund': HugeIcons.strokeRoundedMoneyAdd01,
-    'Verify Payments': HugeIcons.strokeRoundedAward05,
-    'Notifications': HugeIcons.strokeRoundedNotification01,
-    'Admin Control': HugeIcons.strokeRoundedSettings01,
-    'Service Commission': HugeIcons.strokeRoundedAnalyticsUp,
-    'App Update': HugeIcons.strokeRoundedSystemUpdate01,
-    'Transaction Validation': HugeIcons.strokeRoundedAward05,
-    'My Disputes': HugeIcons.strokeRoundedLegal01,
-    'App Settings': HugeIcons.strokeRoundedSetting06,
-    'Logout': HugeIcons.strokeRoundedLogout01,
-    // ✅ ADD TRANSACTION LIMITS
-    'Transaction Limits': HugeIcons.strokeRoundedDashboardSpeed01, // Changed to speedometer for limits
+  // Map drawer titles to design-system icons
+  final Map<String, DPIconData> _iconMap = {
+    'Admin Dashboard': DPIcons.layoutGrid,
+    'All Services': DPIcons.house,
+    'Manage Users': DPIcons.users,
+    'Transactions': DPIcons.receipt,
+    'Status Update': DPIcons.refreshCw,
+    'Refund System': DPIcons.rotateCcw,
+    'Fund Wallet': DPIcons.wallet,
+    'VTpass Settings': DPIcons.slidersHorizontal,
+    'Self Fund': DPIcons.handCoins,
+    'Verify Payments': DPIcons.badgeCheck,
+    'Notifications': DPIcons.bellRing,
+    'Admin Control': DPIcons.settings,
+    'Service Commission': DPIcons.chartColumn,
+    'App Update': DPIcons.download,
+    'Transaction Validation': DPIcons.shieldCheck,
+    'My Disputes': DPIcons.messagesSquare,
+    'App Settings': DPIcons.settings,
+    'Logout': DPIcons.logOut,
+    'Transaction Limits': DPIcons.slidersHorizontal,
   };
+;
 
   // Define vibrant colors for different icons
-  final Map<String, Color> _iconColors = {
-    'Admin Dashboard': const Color(0xFF4F46E5), // Indigo
-    'All Services': const Color(0xFF0891B2), // Cyan
-    'Manage Users': const Color(0xFF059669), // Emerald
-    'Transactions': const Color(0xFF2563EB), // Blue
-    'Status Update': const Color(0xFF7C3AED), // Purple
-    'Refund System': const Color(0xFFDC2626), // Red
-    'Fund Wallet': const Color(0xFF16A34A), // Green
-    'VTpass Settings': const Color(0xFFF59E0B), // Amber
-    'Self Fund': const Color(0xFFD97706), // Orange
-    'Verify Payments': const Color(0xFF0D9488), // Teal
-    'Notifications': const Color(0xFFEC4899), // Pink
-    'Admin Control': const Color(0xFF6366F1), // Indigo
-    'App Update': const Color(0xFF8B5CF6), // Violet
-    'Transaction Validation': const Color(0xFF0891B2), // Cyan
-    'My Disputes': const Color(0xFFEF4444), // Red
-    'App Settings': const Color(0xFF6B7280), // Gray
-    'Service Commission': const Color(0xFF7C3AED), // Purple
-    // ✅ ADD TRANSACTION LIMITS COLOR
-    'Transaction Limits': const Color(0xFFF59E0B), // Amber/Yellow for limits
-    'Logout': const Color(0xFFEF4444), // Red
-  };
+;
 
   @override
   void initState() {
@@ -176,199 +156,93 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   void _showUpdateDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            title: Row(
-              children: [
-                Icon(Icons.system_update_alt, color: Colors.orange.shade700),
-                const SizedBox(width: 8),
-                const Text('Update Available'),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'A new version ($_latestVersion) is available.',
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Current version: $_appVersion',
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  'Please update to get the latest features and improvements.',
-                  style: TextStyle(fontSize: 13),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                child: const Text('Later'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  Navigator.pop(ctx);
-                  await UpdateService.openPlayStore(
-                    'https://play.google.com/store/apps/details?id=com.dalabapay.official',
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange.shade700,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text('Update Now'),
-              ),
-            ],
-          ),
+    showDPDialog(
+      context,
+      tone: DPDialogTone.info,
+      icon: DPIcons.download,
+      title: 'Update available',
+      message: 'Version $_latestVersion is ready. You’re on $_appVersion. Update to get the latest improvements.',
+      primaryLabel: 'Update now',
+      onPrimary: () async {
+        Navigator.pop(context);
+        await UpdateService.openPlayStore(
+          'https://play.google.com/store/apps/details?id=com.dalabapay.official',
+        );
+      },
+      secondaryLabel: 'Later',
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 280,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(right: BorderSide(color: Colors.grey.shade200)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 16,
-            offset: const Offset(2, 0),
-          ),
-        ],
+    final visible = widget.items.where((item) {
+      if (item.isAdminOnly && !widget.isAdmin) return false;
+      if (item.isUserOnly && widget.isAdmin) return false;
+      return true;
+    }).toList();
+
+    return Drawer(
+      width: 300,
+      backgroundColor: DP.bg,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(DP.rXl)),
       ),
       child: Column(
         children: [
           widget.header,
+          const Divider(height: 1),
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.only(top: 12),
-              itemCount: widget.items.length,
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+              itemCount: visible.length,
               itemBuilder: (context, index) {
-                final item = widget.items[index];
+                final item = visible[index];
                 final isSelected = item.title == widget.selectedItem.title;
+                final isLogout = item.title == 'Logout';
+                final iconData = _iconMap[item.title] ?? DPIcons.circleUser;
+                final fg = isLogout ? DP.danger : (isSelected ? DP.green : DP.ink2);
 
-                if (item.isAdminOnly && !widget.isAdmin) {
-                  return const SizedBox.shrink();
-                }
-                if (item.isUserOnly && widget.isAdmin) {
-                  return const SizedBox.shrink();
-                }
-
-                final iconData =
-                    _iconMap[item.title] ?? HugeIcons.strokeRoundedCircle;
-                final iconColor =
-                    isSelected
-                        ? const Color(0xFF243889)
-                        : (_iconColors[item.title] ?? Colors.grey.shade600);
-
-                return MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => widget.onItemSelected(item),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 2,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            isSelected
-                                ? const Color(
-                                  0xFF243889,
-                                ).withValues(alpha: 0.08)
-                                : Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                        border:
-                            isSelected
-                                ? Border.all(
-                                  color: const Color(0xFF243889),
-                                  width: 1.5,
-                                )
-                                : null,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color:
-                                  isSelected
-                                      ? const Color(
-                                        0xFF243889,
-                                      ).withValues(alpha: 0.1)
-                                      : iconColor.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: HugeIcon(
-                              icon: iconData,
-                              color:
-                                  isSelected
-                                      ? const Color(0xFF243889)
-                                      : iconColor,
-                              size: 20,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              item.title,
-                              style: TextStyle(
-                                color:
-                                    isSelected
-                                        ? const Color(0xFF243889)
-                                        : Colors.grey.shade700,
-                                fontWeight:
-                                    isSelected
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                          if (item.badge != null && item.badge!.isNotEmpty)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    const Color(0xFF219C7E),
-                                    const Color(
-                                      0xFF219C7E,
-                                    ).withValues(alpha: 0.7),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: Material(
+                    color: isSelected ? DP.greenSoft : Colors.transparent,
+                    borderRadius: BorderRadius.circular(DP.rMd),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(DP.rMd),
+                      onTap: () => widget.onItemSelected(item),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        child: Row(
+                          children: [
+                            DPIcon(iconData, size: 20, color: fg),
+                            const SizedBox(width: 14),
+                            Expanded(
                               child: Text(
-                                item.badge!,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
+                                isLogout ? 'Log out' : item.title,
+                                style: DPText.body.copyWith(
+                                  color: isLogout ? DP.danger : (isSelected ? DP.green : DP.ink),
+                                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
                                 ),
                               ),
                             ),
-                        ],
+                            if (item.badge != null && item.badge!.isNotEmpty)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: DP.navy,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  item.badge!,
+                                  style: DPText.small.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -376,120 +250,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
               },
             ),
           ),
-          // Version Footer (same as before)
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: Colors.grey.shade200.withValues(alpha: 0.5),
-                ),
-              ),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      size: 14,
-                      color: Colors.grey.shade400,
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 14),
+              child: Row(
+                children: [
+                  Text('Dalabapay · Version $_appVersion', style: DPText.small),
+                  if (_isLoadingVersion) ...[
+                    const SizedBox(width: 8),
+                    const SizedBox(
+                      width: 12,
+                      height: 12,
+                      child: CircularProgressIndicator(strokeWidth: 1.5),
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Version $_appVersion',
-                      style: TextStyle(
-                        color: Colors.grey.shade400,
-                        fontSize: 12,
-                      ),
-                    ),
-                    if (_isLoadingVersion)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: SizedBox(
-                          width: 12,
-                          height: 12,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 1.5,
-                            color: const Color(0xFF243889),
-                          ),
-                        ),
-                      ),
-                    if (!_isLoadingVersion && _hasUpdate)
-                      GestureDetector(
-                        onTap: () => _showUpdateDialog(context),
-                        child: Container(
-                          margin: const EdgeInsets.only(left: 8),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.shade100,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.system_update_alt,
-                                size: 10,
-                                color: Colors.orange.shade700,
-                              ),
-                              const SizedBox(width: 2),
-                              Text(
-                                'v$_latestVersion',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.orange.shade700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                   ],
-                ),
-                if (_hasUpdate && !_isLoadingVersion)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: InkWell(
-                      onTap: () => _showUpdateDialog(context),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.orange.shade400,
-                              Colors.orange.shade600,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.download, size: 14, color: Colors.white),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Update Available',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+                  const Spacer(),
+                  if (!_isLoadingVersion && _hasUpdate)
+                    DPLinkButton(label: 'Update', onPressed: () => _showUpdateDialog(context)),
+                ],
+              ),
             ),
           ),
         ],

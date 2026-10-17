@@ -17,8 +17,8 @@ Future<void> loadFonts() async {
   await loader.load();
 }
 
-void mockPlatform() {
-  SharedPreferences.setMockInitialValues({});
+void mockPlatform([Map<String, Object> prefs = const {}]) {
+  SharedPreferences.setMockInitialValues(prefs);
   const channels = [
     'plugins.it_nomads.com/flutter_secure_storage',
     'plugins.flutter.io/local_auth',

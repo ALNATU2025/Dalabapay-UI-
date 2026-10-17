@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:dalabapay/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -21,10 +20,10 @@ import '../../../core/widgets/drawer_item.dart';
 import '../settings/settings_screen.dart';
 import '../user_disputes_page.dart';
 import '../transaction_validation_page.dart';
-import 'package:hugeicons/hugeicons.dart';
 import '../kyc/kyc_screen.dart';
 import '../../../core/services/socket_service.dart' hide debugPrint;
 import '../../../core/services/notification_service.dart';
+import '../../../ui/ui.dart';
 
 // Admin Pages
 import '../admin/admin_dashboard_screen.dart';
@@ -112,118 +111,23 @@ class _DashboardScreenState extends State<DashboardScreen>
   late AnimationController _animationController;
 
   // Quick Services
+  // Everyday essentials shown on Home (all backed by live backend endpoints)
   final List<Map<String, dynamic>> _quickServices = [
-    {
-      'icon': HugeIcons.strokeRoundedSmartPhone01,
-      'name': 'Airtime',
-      'route': '/airtime',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF4A90E2),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedWifi01,
-      'name': 'Data',
-      'route': '/data',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF9B59B6),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedBulb,
-      'name': 'Electricity',
-      'route': '/electricity',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFF39C12),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTv01,
-      'name': 'Cable TV',
-      'route': '/cable',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFE74C3C),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedMortarboard01,
-      'name': 'Education',
-      'route': '/education',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF2ECC71),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTelephone,
-      'name': 'Intl Airtime',
-      'route': '/international-airtime',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF9013FE),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTicket01,
-      'name': 'Tickets',
-      'route': '/ticket',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFE67E22),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedPercent,
-      'name': 'Commission',
-      'route': '/commission',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF219C7E),
-    },
+    {'icon': DPIcons.phone, 'name': 'Airtime', 'route': '/airtime'},
+    {'icon': DPIcons.wifi, 'name': 'Data', 'route': '/data'},
+    {'icon': DPIcons.zap, 'name': 'Electricity', 'route': '/electricity'},
+    {'icon': DPIcons.tv, 'name': 'TV', 'route': '/cable'},
+    {'icon': DPIcons.router, 'name': 'Internet', 'route': '/internet'},
+    {'icon': DPIcons.globe, 'name': 'International', 'route': '/international-airtime'},
+    {'icon': DPIcons.graduationCap, 'name': 'Education', 'route': '/education'},
   ];
 
   // Other Services
+  // Additional services listed in the Pay bills hub
   final List<Map<String, dynamic>> _otherServices = [
-    {
-      'icon': HugeIcons.strokeRoundedGlobe,
-      'name': 'Internet',
-      'route': '/internet',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF3498DB),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedDice,
-      'name': 'Betting',
-      'route': '/betting',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFE74C3C),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedShield01,
-      'name': 'Insurance',
-      'route': '/insurance',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF1ABC9C),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedGift,
-      'name': 'Donations',
-      'route': '/donation',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF417505),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedCash01,
-      'name': 'Airtime Cash',
-      'route': null,
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF4A90E2),
-      'comingSoon': true,
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTelegram,
-      'name': 'Wallet Transfer',
-      'route': null,
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFF39C12),
-      'comingSoon': true,
-    },
-    {
-      'icon': HugeIcons.strokeRoundedMore01,
-      'name': 'More',
-      'route': null,
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF7F8C8D),
-    },
+    {'icon': DPIcons.umbrella, 'name': 'Insurance', 'route': '/insurance'},
+    {'icon': DPIcons.badgePercent, 'name': 'Earnings', 'route': '/commission'},
+    {'icon': DPIcons.users, 'name': 'Referrals', 'route': '/referral'},
   ];
 
   @override
@@ -661,42 +565,11 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Widget _buildSkeletonTile() {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      margin: const EdgeInsets.symmetric(vertical: 6),
+      height: 48,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Container(
-              height: 16,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            width: 40,
-            height: 16,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-        ],
+        color: DP.surface,
+        borderRadius: BorderRadius.circular(DP.rMd),
       ),
     );
   }
@@ -704,170 +577,40 @@ class _DashboardScreenState extends State<DashboardScreen>
   // Add KYC Modal Widget
   Widget _buildKYCModal() {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      backgroundColor: Colors.white,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: 400,
-          minWidth: MediaQuery.of(context).size.width * 0.9,
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Success/Check Icon
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topRight,
-                    end: Alignment.bottomLeft,
-                    colors: [Color(0xFF92D394), Color(0xFF1E377E)],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.account_balance_wallet,
-                  color: Colors.white,
-                  size: 36,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Get Your Dedicated Account',
-                style: GoogleFonts.poppins(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: const Color(0xFF243889),
-                ),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 28, 24, 18),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const DPIconBadge(icon: DPIcons.landmark, bg: DP.greenSoft, fg: DP.green, size: 60, radius: 30),
+            const SizedBox(height: 16),
+            Text('Get your funding account',
                 textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'You don\'t have a dedicated account yet. '
-                'Complete your KYC to get your personal virtual account for seamless transactions.',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: const Color(0xFF64748B),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF243889).withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: const Color(0xFF243889).withValues(alpha: 0.1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.security,
-                      color: const Color(0xFF219C7E),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Your account details are secure and private.',
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: const Color(0xFF219C7E),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        if (Navigator.canPop(context)) {
-                          if (Navigator.canPop(context)) {
-                            Navigator.pop(context);
-                          } else {
-                            // Navigate to a fallback screen
-                            Navigator.pushReplacementNamed(context, '/home');
-                          }
-                        } else {
-                          // Navigate to a fallback screen
-                          Navigator.pushReplacementNamed(context, '/home');
-                        }
-                        _navigateToKYC();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Color(0xFF243889)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: Text(
-                        'Complete KYC',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF243889),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (Navigator.canPop(context)) {
-                          if (Navigator.canPop(context)) {
-                            Navigator.pop(context);
-                          } else {
-                            // Navigate to a fallback screen
-                            Navigator.pushReplacementNamed(context, '/home');
-                          }
-                        } else {
-                          // Navigate to a fallback screen
-                          Navigator.pushReplacementNamed(context, '/home');
-                        }
-                        _navigateToKYC();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF243889),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: Text(
-                        'Get Started',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'Remind Me Later',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF64748B),
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ],
-          ),
+                style: DPText.title.copyWith(fontWeight: FontWeight.w500)),
+            const SizedBox(height: 8),
+            Text(
+              'Verify your identity to get a personal account number. Any bank transfer to it tops up your wallet automatically.',
+              textAlign: TextAlign.center,
+              style: DPText.bodyMuted,
+            ),
+            const SizedBox(height: 16),
+            const DPNotice('Your details are secure and private.', margin: EdgeInsets.zero),
+            const SizedBox(height: 20),
+            DPButton(
+              label: 'Verify my identity',
+              onPressed: () {
+                Navigator.pop(context);
+                _navigateToKYC();
+              },
+            ),
+            const SizedBox(height: 6),
+            DPLinkButton(
+              label: 'Remind me later',
+              color: DP.muted,
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
         ),
       ),
     );
@@ -1455,125 +1198,41 @@ class _DashboardScreenState extends State<DashboardScreen>
     }
   }
 
-  /// Beautiful confirmation dialog styled to match DalabaPay branding
   Future<bool?> _showLogoutConfirmationDialog() {
     return showDialog<bool>(
       context: context,
       barrierDismissible: true,
-      builder: (BuildContext dialogContext) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
+      builder: (BuildContext dialogContext) => Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 28, 24, 22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const DPIconBadge(icon: DPIcons.logOut, bg: DP.dangerSoft, fg: DP.danger, size: 60, radius: 30),
+              const SizedBox(height: 16),
+              Text('Log out?', style: DPText.title.copyWith(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 8),
+              Text(
+                'You can log back in with your PIN or biometrics.',
+                textAlign: TextAlign.center,
+                style: DPText.bodyMuted,
+              ),
+              const SizedBox(height: 22),
+              DPButton(
+                label: 'Log out',
+                kind: DPButtonKind.danger,
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+              ),
+              const SizedBox(height: 10),
+              DPButton.secondary(
+                label: 'Cancel',
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+              ),
+            ],
           ),
-          backgroundColor: Colors.white,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Icon with gradient circle
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.red.shade400.withValues(alpha: 0.15),
-                        Colors.red.shade400.withValues(alpha: 0.05),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.logout_rounded,
-                    color: Colors.red.shade400,
-                    size: 34,
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                // Title
-                Text(
-                  'Logout?',
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // Message
-                Text(
-                  'Are you sure you want to logout?\nYou can log back in with your PIN or Biometric.',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: const Color(0xFF64748B),
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Buttons
-                Row(
-                  children: [
-                    // Cancel
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(false),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Colors.grey.shade300),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Text(
-                          'Cancel',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF64748B),
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-
-                    // Logout
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(true),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red.shade600,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          elevation: 0,
-                        ),
-                        child: Text(
-                          'Logout',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -1581,13 +1240,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   /// needed for PIN / Biometric re-login.
   Future<void> _performLogout() async {
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logging out...', style: GoogleFonts.poppins()),
-          duration: const Duration(seconds: 1),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      dpSnack(context, 'Logging out...');
     }
 
     try {
@@ -1601,16 +1254,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       _notificationTimer?.cancel();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Logged out successfully',
-              style: GoogleFonts.poppins(),
-            ),
-            backgroundColor: _successColor,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        dpSnack(context, 'Logged out successfully', success: true);
 
         // Small delay so the user sees the snackbar before we navigate
         await Future.delayed(const Duration(milliseconds: 350));
@@ -1629,13 +1273,7 @@ class _DashboardScreenState extends State<DashboardScreen>
       // ⚠️ IMPORTANT: DO NOT call prefs.clear() here.
       // That would wipe token/userId and break PIN/Biometric re-login.
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Logged out', style: GoogleFonts.poppins()),
-            backgroundColor: _warningColor,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
+        dpSnack(context, 'Logged out', error: true);
         Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
       }
     }
@@ -1838,8 +1476,6 @@ class _DashboardScreenState extends State<DashboardScreen>
         });
   }
 
-  /// Build the alert dialog widget
-  /// Build the alert dialog widget
   Widget _buildAlertDialog({
     required String title,
     required String message,
@@ -1853,166 +1489,53 @@ class _DashboardScreenState extends State<DashboardScreen>
     final typeLabel = _getAlertTypeLabel(type);
 
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      backgroundColor: Colors.white,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: IntrinsicWidth(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 400, minWidth: 280),
-          padding: const EdgeInsets.all(24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 26, 24, 18),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Icon with gradient background
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      iconColor.withOpacity(0.2),
-                      iconColor.withOpacity(0.05),
-                    ],
-                  ),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: HugeIcon(icon: iconData, color: iconColor, size: 32),
-                ),
+              DPIconBadge(
+                icon: iconData,
+                bg: iconColor.withValues(alpha: 0.12),
+                fg: iconColor,
+                size: 60,
+                radius: 30,
               ),
-              const SizedBox(height: 16),
-
-              // Type badge
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: iconColor.withOpacity(0.2)),
-                ),
-                child: Text(
-                  typeLabel,
-                  style: GoogleFonts.inter(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: iconColor,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ),
+              const SizedBox(height: 14),
+              DPStatusPill(typeLabel),
               const SizedBox(height: 12),
-
-              // Title
               Text(
                 title,
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1C2D5A),
-                ),
+                style: DPText.title.copyWith(fontWeight: FontWeight.w500),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 8),
-
-              // Message
-              Text(
-                message,
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  color: const Color(0xFF64748B),
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
+              Text(message, style: DPText.bodyMuted, textAlign: TextAlign.center),
+              const SizedBox(height: 22),
+              DPButton(
+                label: 'View',
+                onPressed: () {
+                  if (notificationId.isNotEmpty) {
+                    _markNotificationAsRead(notificationId);
+                  }
+                  Navigator.of(context, rootNavigator: true).pop();
+                  _navigateFromNotification(screen, data);
+                },
               ),
-              const SizedBox(height: 24),
-
-              // Divider
-              Divider(color: Colors.grey.shade100, thickness: 1),
-              const SizedBox(height: 16),
-
-              // Action buttons
-              Row(
-                children: [
-                  // Dismiss button
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        if (notificationId.isNotEmpty) {
-                          _markNotificationAsRead(notificationId);
-                        }
-                        // ✅ Use Navigator.of(context, rootNavigator: true)
-                        Navigator.of(context, rootNavigator: true).pop();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.grey.shade300),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: Text(
-                        'Dismiss',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF64748B),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-
-                  // View button
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (notificationId.isNotEmpty) {
-                          _markNotificationAsRead(notificationId);
-                        }
-                        // ✅ Use Navigator.of(context, rootNavigator: true)
-                        Navigator.of(context, rootNavigator: true).pop();
-                        _navigateFromNotification(screen, data);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF243889),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                      ),
-                      child: Text(
-                        'View',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              // ✅ Add a tap outside to dismiss (optional but helpful)
-              const SizedBox(height: 8),
-              TextButton(
+              const SizedBox(height: 10),
+              DPButton.secondary(
+                label: 'Dismiss',
                 onPressed: () {
                   if (notificationId.isNotEmpty) {
                     _markNotificationAsRead(notificationId);
                   }
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-                child: Text(
-                  'Tap outside to dismiss',
-                  style: GoogleFonts.inter(
-                    color: Colors.grey.shade400,
-                    fontSize: 11,
-                  ),
-                ),
               ),
             ],
           ),
@@ -2021,37 +1544,33 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  /// Get icon based on notification type
-  /// Get icon based on notification type
-  /// Get icon based on notification type
-  dynamic _getAlertIcon(String type) {
+  DPIconData _getAlertIcon(String type) {
     switch (type.toLowerCase()) {
       case 'transaction':
       case 'payment_success':
-        return HugeIcons.strokeRoundedCheckmarkCircle01;
+        return DPIcons.circleCheck;
       case 'payment_failed':
-        return HugeIcons.strokeRoundedCancelCircle;
+        return DPIcons.circleX;
       case 'commission_earned':
-        return HugeIcons.strokeRoundedMoney01;
+        return DPIcons.sparkles;
       case 'wallet_credit':
       case 'wallet_funded':
-        return HugeIcons.strokeRoundedWallet01;
+        return DPIcons.wallet;
       case 'transfer_sent':
-        return HugeIcons.strokeRoundedSent02;
+        return DPIcons.arrowUpRight;
       case 'transfer_received':
-        return HugeIcons.strokeRoundedDownload03;
+        return DPIcons.arrowDownLeft;
       case 'referral_bonus':
-        return HugeIcons.strokeRoundedUserAdd01;
+        return DPIcons.userPlus;
       case 'announcement':
-        return HugeIcons.strokeRoundedMegaphone01;
+        return DPIcons.bellRing;
       case 'alert':
-        return HugeIcons.strokeRoundedAlert02;
+        return DPIcons.triangleAlert;
       default:
-        return HugeIcons.strokeRoundedNotification01;
+        return DPIcons.bell;
     }
   }
 
-  /// Get color based on notification type
   Color _getAlertColor(String type) {
     switch (type.toLowerCase()) {
       case 'transaction':
@@ -2059,47 +1578,41 @@ class _DashboardScreenState extends State<DashboardScreen>
       case 'wallet_credit':
       case 'wallet_funded':
       case 'transfer_received':
-        return const Color(0xFF219C7E); // Green
-      case 'payment_failed':
-      case 'alert':
-        return Colors.red.shade600;
       case 'commission_earned':
       case 'referral_bonus':
-        return const Color(0xFFF59E0B); // Amber
-      case 'transfer_sent':
-        return const Color(0xFF3B82F6); // Blue
-      case 'announcement':
-        return const Color(0xFF8B5CF6); // Purple
+        return DP.green;
+      case 'payment_failed':
+      case 'alert':
+        return DP.danger;
       default:
-        return const Color(0xFF243889); // Primary
+        return DP.blue;
     }
   }
 
-  /// Get label for notification type
   String _getAlertTypeLabel(String type) {
     switch (type.toLowerCase()) {
       case 'transaction':
       case 'payment_success':
-        return 'SUCCESS';
+        return 'Successful';
       case 'payment_failed':
-        return '❌ FAILED';
+        return 'Failed';
       case 'commission_earned':
-        return '💰 COMMISSION';
+        return 'Commission';
       case 'wallet_credit':
       case 'wallet_funded':
-        return '💳 WALLET';
+        return 'Wallet';
       case 'transfer_sent':
-        return '📤 SENT';
+        return 'Sent';
       case 'transfer_received':
-        return '📥 RECEIVED';
+        return 'Received';
       case 'referral_bonus':
-        return '🎁 REFERRAL';
+        return 'Referral';
       case 'announcement':
-        return '📢 ANNOUNCEMENT';
+        return 'Announcement';
       case 'alert':
-        return '⚠️ ALERT';
+        return 'Alert';
       default:
-        return '📬 NOTIFICATION';
+        return 'Notification';
     }
   }
 
@@ -2151,138 +1664,29 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   // ✅ Updated Coming Soon dialog with better UI
   void _showComingSoon(String serviceName) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(
-                  Icons.construction_outlined,
-                  color: const Color(0xFF243889),
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Coming Soon',
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF243889),
-                    fontSize: 20,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$serviceName will be available soon!',
-                  style: GoogleFonts.inter(fontSize: 16, color: Colors.black87),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF219C7E).withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFF219C7E).withOpacity(0.15),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: const Color(0xFF219C7E),
-                        size: 18,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'We\'re working hard to bring you this feature. Stay tuned!',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: const Color(0xFF219C7E),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    showDPDialog(
+      context,
+      tone: DPDialogTone.info,
+      icon: DPIcons.hourglass,
+      title: 'Not available yet',
+      message: '$serviceName isn’t available right now. Please try again later.',
     );
   }
 
   void _showSuccessMessage(String message) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message, style: GoogleFonts.inter()),
-          backgroundColor: const Color(0xFF219C7E),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
+    if (mounted) dpSnack(context, message, success: true);
   }
 
   void _showPendingApprovalSnackBar() {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.hourglass_top_rounded, color: Colors.white, size: 20),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Your account is under approval. You will be notified once an admin approves your account.',
-                style: GoogleFonts.inter(color: Colors.white, fontSize: 13),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: _warningColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 4),
-        margin: const EdgeInsets.all(16),
-      ),
+    dpSnack(
+      context,
+      'Your account is awaiting approval. We’ll notify you as soon as it’s approved.',
     );
   }
 
   void _showErrorMessage(String message) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message, style: GoogleFonts.inter()),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
+    if (mounted) dpSnack(context, message, error: true);
   }
 
   String _formatDate(DateTime date) {
@@ -2306,76 +1710,24 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   // ==================== TRANSACTION ICON HELPERS ====================
 
-  dynamic _getTransactionIcon(String type) {
+  DPIconData _getTransactionIcon(String type) {
     final typeLower = type.toLowerCase();
-
-    // Airtime - matches dashboard "Airtime" service icon
-    if (typeLower.contains('airtime')) {
-      return HugeIcons.strokeRoundedSmartPhone01;
+    if (typeLower.contains('international')) return DPIcons.globe;
+    if (typeLower.contains('airtime')) return DPIcons.phone;
+    if (typeLower.contains('data')) return DPIcons.wifi;
+    if (typeLower.contains('electricity')) return DPIcons.zap;
+    if (typeLower.contains('cable') || typeLower.contains('tv')) return DPIcons.tv;
+    if (typeLower.contains('education')) return DPIcons.graduationCap;
+    if (typeLower.contains('insurance')) return DPIcons.umbrella;
+    if (typeLower.contains('internet')) return DPIcons.router;
+    if (typeLower.contains('transfer received')) return DPIcons.arrowDownLeft;
+    if (typeLower.contains('transfer')) return DPIcons.arrowUpRight;
+    if (typeLower.contains('commission')) return DPIcons.sparkles;
+    if (typeLower.contains('refund')) return DPIcons.rotateCcw;
+    if (typeLower.contains('fund') || typeLower.contains('wallet')) {
+      return DPIcons.arrowDownLeft;
     }
-    // Data - matches dashboard "Data" service icon
-    if (typeLower.contains('data')) {
-      return HugeIcons.strokeRoundedWifi01;
-    }
-    // Electricity - matches dashboard "Electricity" service icon
-    if (typeLower.contains('electricity')) {
-      return HugeIcons.strokeRoundedBulb;
-    }
-    // Cable TV - matches dashboard "Cable TV" service icon
-    if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return HugeIcons.strokeRoundedTv01;
-    }
-    // Education - matches dashboard "Education" service icon
-    if (typeLower.contains('education')) {
-      return HugeIcons.strokeRoundedMortarboard01;
-    }
-    // Insurance - matches dashboard "Insurance" service icon
-    if (typeLower.contains('insurance')) {
-      return HugeIcons.strokeRoundedShield01;
-    }
-    // Transfer - matches transactions screen
-    if (typeLower.contains('transfer sent')) {
-      return HugeIcons.strokeRoundedTelegram;
-    }
-    if (typeLower.contains('transfer received')) {
-      return HugeIcons.strokeRoundedDownload03;
-    }
-    if (typeLower.contains('transfer')) {
-      return HugeIcons.strokeRoundedSquareArrowDataTransferHorizontal;
-    }
-    // ✅ Fund Wallet - Use wallet/purse icon (same as transactions screen)
-    if (typeLower.contains('fund') ||
-        typeLower.contains('wallet') ||
-        typeLower.contains('wallet funding') ||
-        typeLower.contains('wallet top-up')) {
-      return HugeIcons.strokeRoundedWallet01;
-    }
-    // Commission - matches dashboard "Commission" service icon
-    if (typeLower.contains('commission')) {
-      return HugeIcons.strokeRoundedPercent;
-    }
-    // Refund
-    if (typeLower.contains('refund')) {
-      return HugeIcons.strokeRoundedCash01;
-    }
-    // Betting
-    if (typeLower.contains('betting')) {
-      return HugeIcons.strokeRoundedDice;
-    }
-    // Internet
-    if (typeLower.contains('internet')) {
-      return HugeIcons.strokeRoundedGlobe;
-    }
-    // Tickets
-    if (typeLower.contains('ticket')) {
-      return HugeIcons.strokeRoundedTicket01;
-    }
-    // Donations
-    if (typeLower.contains('donation')) {
-      return HugeIcons.strokeRoundedGift;
-    }
-    // Default - matches dashboard receipt icon
-    return HugeIcons.strokeRoundedReceiptText;
+    return DPIcons.receipt;
   }
 
   Color _getTransactionIconColor(String type) {
@@ -2541,7 +1893,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             isCommission: isCommission,
             commissionSource:
                 isCommission ? _getCommissionSource(description) : null,
-            primaryColor: const Color(0xFF243889),
+            primaryColor: DP.navy,
             showWatermark: true,
             customerName: customerName,
             customerAddress: customerEmail,
@@ -2615,914 +1967,204 @@ class _DashboardScreenState extends State<DashboardScreen>
   // ==================== BUILD METHODS ====================
 
   Widget _buildAppBar(bool isSmallScreen) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    final hour = DateTime.now().hour;
+    final greetingIcon = (hour >= 6 && hour < 18) ? DPIcons.sun : DPIcons.moonStar;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 10, DP.gutter, 6),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
+          InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () => _scaffoldKey.currentState?.openDrawer(),
+            child: const DPLogoMark(size: 46, tile: true),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    'Hello, ${_fullName.isNotEmpty ? _fullName : 'there'}',
+                    style: DPText.title.copyWith(fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                const SizedBox(width: 6),
+                DPIcon(greetingIcon, size: 18, color: DP.ink),
               ],
             ),
-            child: IconButton(
-              icon: Icon(Icons.menu, color: const Color(0xFF243889), size: 22),
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-              padding: EdgeInsets.zero,
-            ),
           ),
-          Image.asset('assets/dalabapay2.png', height: 40, fit: BoxFit.contain),
-          Row(
+          Stack(
+            clipBehavior: Clip.none,
             children: [
-              // ✅ Manual refresh button
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                    color: const Color(0xFF243889),
-                    size: 22,
-                  ),
-                  onPressed: () async {
-                    debugPrint('🔄 Manual refresh triggered');
-                    await _fetchUnreadNotificationCount();
-                    await _fetchAndShowNewNotifications();
-                  },
-                  padding: EdgeInsets.zero,
-                ),
+              IconButton(
+                onPressed: _navigateToNotifications,
+                icon: const DPIcon(DPIcons.bell, size: 22, color: DP.ink),
+                tooltip: 'Notifications',
               ),
-              const SizedBox(width: 8),
-              Stack(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.notifications_none,
-                        color: const Color(0xFF243889),
-                        size: 22,
-                      ),
-                      onPressed: _navigateToNotifications,
-                      padding: EdgeInsets.zero,
-                    ),
+              if (_unreadNotificationCount > 0)
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(color: DP.green, shape: BoxShape.circle),
                   ),
-                  if (_unreadNotificationCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF219C7E),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+                ),
             ],
           ),
+          DPLinkButton(label: 'Help', onPressed: () => Navigator.pushNamed(context, '/support')),
         ],
       ),
     );
   }
 
   Widget _buildSectionHeader(String title, bool isSmallScreen) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.poppins(
-              fontSize: isSmallScreen ? 14 : 16,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => _showAllServices(isSmallScreen),
-            child: Row(
-              children: [
-                Text(
-                  'See all',
-                  style: GoogleFonts.inter(
-                    fontSize: isSmallScreen ? 10 : 12,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: isSmallScreen ? 8 : 10,
-                  color: const Color(0xFF219C7E),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return DPSectionHeader(
+      title,
+      actionLabel: 'View all',
+      onAction: () => _showAllServices(isSmallScreen),
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 28, DP.gutter, 14),
     );
   }
 
   // ==================== APPROVAL STATUS BANNER ====================
 
   Widget _buildApprovalBanner(bool isSmallScreen) {
-    // Don't show banner for approved users
     if (_isApproved) return const SizedBox.shrink();
 
     final isPending = _isPending;
-    final bannerColor = isPending ? _warningColor : Colors.red;
-    final bgColor =
-        isPending
-            ? _warningColor.withValues(alpha: 0.10)
-            : Colors.red.withValues(alpha: 0.08);
-    final borderColor =
-        isPending
-            ? _warningColor.withValues(alpha: 0.30)
-            : Colors.red.withValues(alpha: 0.25);
+    final message = isPending
+        ? 'You can browse and add money, but payments are paused until your account is approved. This usually takes a few minutes.'
+        : (_rejectionReason?.isNotEmpty == true
+            ? _rejectionReason!
+            : 'Your account was not approved. Please contact support for more details.');
 
-    final icon = isPending ? Icons.hourglass_top_rounded : Icons.cancel_rounded;
-
-    final title = isPending ? 'Account Under Approval' : 'Account Rejected';
-
-    final message =
-        isPending
-            ? 'You can browse and add funds, but transactions are disabled until an admin approves your account. This usually takes a few minutes.'
-            : (_rejectionReason?.isNotEmpty == true
-                ? _rejectionReason!
-                : 'Your account has been rejected. Please contact support for more details.');
-
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: isSmallScreen ? 24 : 24,
-        vertical: 12,
-      ),
-      padding: EdgeInsets.all(isSmallScreen ? 14 : 16),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: 1.2),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: bannerColor.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: bannerColor, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    fontSize: isSmallScreen ? 14 : 15,
-                    fontWeight: FontWeight.w700,
-                    color: bannerColor,
-                  ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 8, DP.gutter, 6),
+      child: DPNotice(
+        message,
+        title: isPending ? 'Account awaiting approval' : 'Account not approved',
+        kind: isPending ? DPNoticeKind.warn : DPNoticeKind.danger,
+        icon: isPending ? DPIcons.hourglass : DPIcons.circleX,
+        margin: EdgeInsets.zero,
+        action: isPending
+            ? GestureDetector(
+                onTap: () async {
+                  if (mounted) _showSuccessMessage('Checking status…');
+                  await _refreshApprovalStatus();
+                  if (!mounted) return;
+                  if (!_approvalSystemEnabled) {
+                    _showSuccessMessage('You can make payments now.');
+                  } else if (_isApproved) {
+                    _showSuccessMessage('Your account has been approved!');
+                  } else if (_isPending) {
+                    _showErrorMessage('Still awaiting approval. Please check back in a few minutes.');
+                  } else if (_isRejected) {
+                    _showErrorMessage('Your account was not approved. Please contact support.');
+                  }
+                },
+                child: Text(
+                  'Check status',
+                  style: DPText.link.copyWith(color: DP.warn, decoration: TextDecoration.underline),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  message,
-                  style: GoogleFonts.inter(
-                    fontSize: isSmallScreen ? 12 : 13,
-                    color: const Color(0xFF1C2D5A),
-                    height: 1.4,
-                  ),
-                ),
-                if (isPending) ...[
-                  const SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: () async {
-                      debugPrint('🔄 [DASHBOARD] Checking approval status...');
-
-                      // Show quick loading toast
-                      if (mounted) {
-                        _showSuccessMessage('🔄 Checking status...');
-                      }
-
-                      // ✅ Re-fetch BOTH toggle and user status
-                      await _refreshApprovalStatus();
-
-                      if (!mounted) return;
-
-                      // Evaluate what changed
-                      if (!_approvalSystemEnabled) {
-                        _showSuccessMessage(
-                          '✅ Approval system is OFF — you can transact now.',
-                        );
-                      } else if (_isApproved) {
-                        _showSuccessMessage(
-                          '🎉 Your account has been approved!',
-                        );
-                      } else if (_isPending) {
-                        _showErrorMessage(
-                          '⏳ Still waiting for admin approval. Please check back in a few minutes.',
-                        );
-                      } else if (_isRejected) {
-                        _showErrorMessage(
-                          '❌ Your account has been rejected. Please contact support.',
-                        );
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: bannerColor.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.refresh_rounded,
-                            color: bannerColor,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Check Status',
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: bannerColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
+              )
+            : null,
       ),
     );
   }
 
-  Widget _buildBalanceCard(bool isSmallScreen) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
-          stops: [0.06, 0.41],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF219C7E).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Main Wallet',
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: isSmallScreen ? 10 : 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _silentBackgroundRefresh,
-                      child: Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                        size: isSmallScreen ? 16 : 18,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap:
-                          () => setState(
-                            () => _isBalanceVisible = !_isBalanceVisible,
-                          ),
-                      child: Icon(
-                        _isBalanceVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.white,
-                        size: isSmallScreen ? 16 : 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _isBalanceVisible
-                  ? '₦${_formatBalance(_walletBalance)}'
-                  : '••••••••',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Available Balance',
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: isSmallScreen ? 10 : 12,
-              ),
-            ),
-
-            // ============================================================
-            // ✅ DEDICATED ACCOUNT SECTION - FIXED RESPONSIVE
-            // ============================================================
-            const SizedBox(height: 16),
-
-            // ── Checking State ──────────────────────────────────────────
-            if (_isCheckingAccount) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.15),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Checking dedicated account...',
-                        style: GoogleFonts.inter(
-                          color: Colors.white70,
-                          fontSize: isSmallScreen ? 11 : 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            // ── Has Account ─────────────────────────────────────────────
-            if (_hasDedicatedAccount) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.15),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Row 1: Label + Actions
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Icon(
-                                Icons.account_balance,
-                                color: Colors.white,
-                                size: 14,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Dedicated Account',
-                              style: GoogleFonts.inter(
-                                color: Colors.white70,
-                                fontSize: isSmallScreen ? 9 : 10,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            // Copy button
-                            GestureDetector(
-                              onTap: () {
-                                Clipboard.setData(
-                                  ClipboardData(
-                                    text: _dedicatedAccountNumber ?? '',
-                                  ),
-                                );
-                                _showSuccessMessage('Account number copied!');
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.10),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Icon(
-                                  Icons.copy,
-                                  color: Colors.white70,
-                                  size: isSmallScreen ? 12 : 14,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            // Refresh button
-                            GestureDetector(
-                              onTap: _refreshDedicatedAccount,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.10),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Icon(
-                                  Icons.refresh,
-                                  color: Colors.white70,
-                                  size: isSmallScreen ? 12 : 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Row 2: Account Number (LEFT ALIGNED - NO CENTER)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          // ✅ Account Number - LEFT ALIGNED
-                          Expanded(
-                            child: SelectableText(
-                              _dedicatedAccountNumber ?? 'N/A',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: isSmallScreen ? 16 : 18,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
-                              ),
-                              textAlign: TextAlign.left, // ✅ LEFT ALIGNED
-                            ),
-                          ),
-                          // Status Badge - Right side of account number row
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withValues(alpha: 0.3),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  'Active',
-                                  style: GoogleFonts.inter(
-                                    color: Colors.white,
-                                    fontSize: isSmallScreen ? 8 : 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Row 3: Bank Name (Left aligned)
-                    if (_dedicatedBankName != null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          _dedicatedBankName!,
-                          style: GoogleFonts.inter(
-                            color: Colors.white70,
-                            fontSize: isSmallScreen ? 9 : 10,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                    // Row 4: Account Name (if available)
-                    if (_dedicatedAccountName != null &&
-                        _dedicatedAccountName!.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        child: Text(
-                          _dedicatedAccountName!,
-                          style: GoogleFonts.inter(
-                            color: Colors.white70,
-                            fontSize: isSmallScreen ? 10 : 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.left,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-            // ── No Account ──────────────────────────────────────────────
-            if (!_isCheckingAccount && !_hasDedicatedAccount) ...[
-              GestureDetector(
-                onTap: _navigateToKYC,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.20),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'Get Your Dedicated Account',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: isSmallScreen ? 11 : 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white70,
-                        size: isSmallScreen ? 12 : 14,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildActionButton(
-                    'Add Money',
-                    Icons.add,
-                    const Color(0xFF219C7E),
-                    Colors.white,
-                    _navigateToAddMoney,
-                    isSmallScreen,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildActionButton(
-                    'Commission',
-                    Icons.percent,
-                    Colors.white,
-                    Colors.white,
-                    _navigateToCommission,
-                    isSmallScreen,
-                    outlined: true,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildModernBalanceCard(bool isSmallScreen) {
     return RepaintBoundary(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 24),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF243889), Color(0xFF1E377E), Color(0xFF92D394)],
-            stops: [0.0, 0.5, 1.0],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(DP.gutter, 14, DP.gutter, 0),
+        child: Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: DP.navy,
+            borderRadius: BorderRadius.circular(DP.rXl),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF243889).withValues(alpha: 0.35),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
           child: Stack(
             children: [
-              // Decorative circles
               Positioned(
-                top: -40,
-                right: -40,
+                right: -70,
+                top: -50,
                 child: Container(
-                  width: 160,
-                  height: 160,
+                  width: 210,
+                  height: 210,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.06),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: -60,
-                left: -30,
-                child: Container(
-                  width: 180,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.04),
+                    border: Border.all(color: const Color(0xFF1E3D78), width: 26),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header row
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.account_balance_wallet,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Main Wallet',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: isSmallScreen ? 11 : 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          'Available wallet balance',
+                          style: DPText.body.copyWith(color: const Color(0xFFC4CFE6), fontSize: 14),
                         ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.lightImpact();
-                                _silentBackgroundRefresh();
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  Icons.refresh,
-                                  color: Colors.white,
-                                  size: isSmallScreen ? 14 : 16,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.lightImpact();
-                                setState(
-                                  () => _isBalanceVisible = !_isBalanceVisible,
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  _isBalanceVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Colors.white,
-                                  size: isSmallScreen ? 14 : 16,
-                                ),
-                              ),
-                            ),
-                          ],
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            setState(() => _isBalanceVisible = !_isBalanceVisible);
+                          },
+                          child: DPIcon(
+                            _isBalanceVisible ? DPIcons.eye : DPIcons.eyeOff,
+                            size: 18,
+                            color: const Color(0xFFC4CFE6),
+                          ),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            HapticFeedback.lightImpact();
+                            _silentBackgroundRefresh();
+                          },
+                          child: const DPIcon(DPIcons.refreshCw, size: 16, color: Color(0xFF8FA2C9)),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-
-                    // Balance — shows shimmer until we have a real value
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder:
-                          (child, animation) => FadeTransition(
-                            opacity: animation,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0, 0.2),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: child,
+                    const SizedBox(height: 14),
+                    _isBalanceReady
+                        ? FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _isBalanceVisible ? dpNaira(_walletBalance) : '₦ ••••••',
+                              style: DPText.amount.copyWith(color: Colors.white, fontSize: 34),
                             ),
-                          ),
-                      child:
-                          // ✅ While balance not yet ready → show animated shimmer pill
-                          !_isBalanceReady
-                              ? _buildBalanceLoadingPlaceholder(isSmallScreen)
-                              : Text(
-                                _isBalanceVisible
-                                    ? '₦${_formatBalance(_walletBalance)}'
-                                    : '••••••••',
-                                key: ValueKey(
-                                  'bal_${_isBalanceVisible}_$_walletBalance',
-                                ),
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: isSmallScreen ? 26 : 30,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Available Balance',
-                      style: GoogleFonts.inter(
-                        color: Colors.white.withValues(alpha: 0.7),
-                        fontSize: isSmallScreen ? 10 : 12,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Dedicated Account Section
-                    _buildDedicatedAccountSection(isSmallScreen),
-
-                    const SizedBox(height: 20),
-
-                    // Action buttons
+                          )
+                        : _buildBalanceLoadingPlaceholder(isSmallScreen),
+                    const SizedBox(height: 22),
                     Row(
                       children: [
                         Expanded(
-                          child: _buildModernActionButton(
-                            'Add Money',
-                            Icons.add_rounded,
-                            true,
-                            _navigateToAddMoney,
-                            isSmallScreen,
+                          child: DPButton(
+                            label: 'Add money',
+                            leadingIcon: DPIcons.plus,
+                            kind: DPButtonKind.soft,
+                            height: 48,
+                            onPressed: _navigateToAddMoney,
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: _buildModernActionButton(
-                            'Commission',
-                            Icons.percent_rounded,
-                            false,
-                            _navigateToCommission,
-                            isSmallScreen,
+                          child: DPButton(
+                            label: 'Send money',
+                            leadingIcon: DPIcons.arrowUpRight,
+                            kind: DPButtonKind.navy,
+                            height: 48,
+                            onPressed: _navigateToSendMoney,
                           ),
                         ),
                       ],
@@ -3537,596 +2179,148 @@ class _DashboardScreenState extends State<DashboardScreen>
     );
   }
 
-  /// Small animated shimmer pill shown while balance is loading.
-  /// Matches the text height so nothing jumps when the real number arrives.
-  Widget _buildBalanceLoadingPlaceholder(bool isSmallScreen) {
-    return Container(
-      height: isSmallScreen ? 34 : 40,
-      width: isSmallScreen ? 160 : 190,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.18),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(width: 12),
-          SizedBox(
-            width: isSmallScreen ? 16 : 18,
-            height: isSmallScreen ? 16 : 18,
-            child: const CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+  void _navigateToSendMoney() {
+    if (_isPending) {
+      _showPendingApprovalSnackBar();
+      return;
+    }
+    _startTransaction();
+    Navigator.pushNamed(
+      context,
+      '/wallet',
+      arguments: {
+        'userId': _userId ?? '',
+        'onBalanceUpdate': (double newBalance) {
+          setState(() => _walletBalance = newBalance);
+          _saveBalanceToStorage(newBalance);
+        },
+        'initialTab': 'transfer',
+      },
+    ).then((_) {
+      if (mounted) setState(() => _selectedIndex = 0);
+      _endTransaction();
+      _silentBackgroundRefresh();
+    });
+    _resetIdleTimer();
+  }
+
+  Widget _buildCommissionStrip() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 14, DP.gutter, 0),
+      child: Material(
+        color: DP.greenSoft,
+        borderRadius: BorderRadius.circular(DP.rLg + 2),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(DP.rLg + 2),
+          onTap: _navigateToCommission,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+            child: Row(
+              children: [
+                const DPIcon(DPIcons.sparkles, size: 24, color: DP.green),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Commission earned · separate from wallet',
+                          style: DPText.small.copyWith(color: DP.green, fontSize: 12.5)),
+                      const SizedBox(height: 4),
+                      Text(
+                        _isBalanceVisible ? dpNaira(_commissionBalance) : '₦ ••••',
+                        style: DPText.title.copyWith(color: DP.green, fontSize: 19),
+                      ),
+                    ],
+                  ),
+                ),
+                const DPIcon(DPIcons.arrowUpRight, size: 20, color: DP.green),
+              ],
             ),
           ),
-          const SizedBox(width: 10),
-          Text(
-            'Loading...',
-            style: GoogleFonts.inter(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: isSmallScreen ? 12 : 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildDedicatedAccountSection(bool isSmallScreen) {
-    if (_isCheckingAccount) {
-      return Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-        ),
+  Widget _buildFundingAccountPrompt() {
+    if (_isCheckingAccount || _hasDedicatedAccount) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 12, DP.gutter, 0),
+      child: DPCard(
+        margin: EdgeInsets.zero,
+        padding: const EdgeInsets.fromLTRB(16, 14, 14, 14),
+        onTap: _navigateToKYC,
         child: Row(
           children: [
-            SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white.withValues(alpha: 0.8),
-              ),
-            ),
+            const DPIconBadge(icon: DPIcons.landmark, size: 40, radius: 12),
             const SizedBox(width: 12),
-            Text(
-              'Checking account...',
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: isSmallScreen ? 11 : 13,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    if (_hasDedicatedAccount) {
-      return Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.account_balance,
-                        color: Colors.white,
-                        size: 13,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Dedicated Account',
-                      style: GoogleFonts.inter(
-                        color: Colors.white70,
-                        fontSize: isSmallScreen ? 9 : 10,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        Clipboard.setData(
-                          ClipboardData(text: _dedicatedAccountNumber ?? ''),
-                        );
-                        _showSuccessMessage('Account number copied!');
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.10),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.copy_rounded,
-                          color: Colors.white70,
-                          size: isSmallScreen ? 12 : 14,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        _refreshDedicatedAccount();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.10),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.refresh_rounded,
-                          color: Colors.white70,
-                          size: isSmallScreen ? 12 : 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // Account Number - LEFT ALIGNED
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: SelectableText(
-                      _dedicatedAccountNumber ?? 'N/A',
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: isSmallScreen ? 16 : 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 5,
-                          height: 5,
-                          decoration: const BoxDecoration(
-                            color: Colors.greenAccent,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Active',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: isSmallScreen ? 8 : 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  Text('Get your funding account',
+                      style: DPText.body.copyWith(fontWeight: FontWeight.w500)),
+                  Text('Verify your identity to receive bank transfers',
+                      style: DPText.small),
                 ],
               ),
             ),
-            const SizedBox(height: 6),
-            // Bank Name - LEFT ALIGNED
-            if (_dedicatedBankName != null)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                child: Text(
-                  _dedicatedBankName!,
-                  style: GoogleFonts.inter(
-                    color: Colors.white70,
-                    fontSize: isSmallScreen ? 10 : 11,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            // Account Name - LEFT ALIGNED
-            if (_dedicatedAccountName != null &&
-                _dedicatedAccountName!.isNotEmpty)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 2,
-                ),
-                child: Text(
-                  _dedicatedAccountName!,
-                  style: GoogleFonts.inter(
-                    color: Colors.white60,
-                    fontSize: isSmallScreen ? 10 : 11,
-                  ),
-                  textAlign: TextAlign.left,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-          ],
-        ),
-      );
-    }
-
-    // No account
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        _navigateToKYC();
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.20)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.add, color: Colors.white, size: 16),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Get Your Dedicated Account',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: isSmallScreen ? 11 : 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white70,
-              size: isSmallScreen ? 12 : 14,
-            ),
+            const DPIcon(DPIcons.chevronRight, size: 18, color: DP.muted),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildModernActionButton(
-    String title,
-    IconData icon,
-    bool isPrimary,
-    VoidCallback onTap,
-    bool isSmallScreen,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        onTap();
-      },
+  Widget _buildBalanceLoadingPlaceholder(bool isSmallScreen) {
+    return Shimmer.fromColors(
+      baseColor: const Color(0xFF223F7A),
+      highlightColor: const Color(0xFF34558F),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 11 : 13),
-        decoration: BoxDecoration(
-          color: isPrimary ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border:
-              isPrimary
-                  ? null
-                  : Border.all(color: Colors.white.withValues(alpha: 0.4)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isPrimary ? const Color(0xFF243889) : Colors.white,
-              size: isSmallScreen ? 15 : 17,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: isSmallScreen ? 11 : 13,
-                fontWeight: FontWeight.w600,
-                color: isPrimary ? const Color(0xFF243889) : Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(
-    String title,
-    IconData icon,
-    Color textColor,
-    Color borderColor,
-    VoidCallback onTap,
-    bool isSmallScreen, {
-    bool outlined = false,
-  }) {
-    if (outlined) {
-      return InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 10 : 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: borderColor, width: 1),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: borderColor, size: isSmallScreen ? 14 : 16),
-              const SizedBox(width: 6),
-              Text(
-                title,
-                style: GoogleFonts.inter(
-                  fontSize: isSmallScreen ? 10 : 12,
-                  fontWeight: FontWeight.w600,
-                  color: borderColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 10 : 12),
+        width: 210,
+        height: 38,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: textColor, size: isSmallScreen ? 14 : 16),
-            const SizedBox(width: 6),
-            Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: isSmallScreen ? 10 : 12,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
   }
+
+
+
 
   Widget _buildServicesGrid(
     List<Map<String, dynamic>> services,
-    bool isSmallScreen,
-  ) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    // Mobile-first responsive sizing
-    final double iconSize;
-    final double fontSize;
-    final int crossAxisCount;
-    final double childAspectRatio;
-    final double crossAxisSpacing;
-    final double mainAxisSpacing;
-    final double horizontalPadding;
-
-    if (screenWidth < 360) {
-      // Very small phones
-      iconSize = 26.0;
-      fontSize = 8.0;
-      crossAxisCount = 4;
-      childAspectRatio = 0.70;
-      crossAxisSpacing = 4.0;
-      mainAxisSpacing = 4.0;
-      horizontalPadding = 0.0;
-    } else if (screenWidth < 400) {
-      // Small phones
-      iconSize = 30.0;
-      fontSize = 9.0;
-      crossAxisCount = 4;
-      childAspectRatio = 0.75;
-      crossAxisSpacing = 6.0;
-      mainAxisSpacing = 6.0;
-      horizontalPadding = 0.0;
-    } else if (screenWidth < 600) {
-      // Medium phones
-      iconSize = 34.0;
-      fontSize = 10.0;
-      crossAxisCount = 4;
-      childAspectRatio = 0.80;
-      crossAxisSpacing = 8.0;
-      mainAxisSpacing = 8.0;
-      horizontalPadding = 0.0;
-    } else if (screenWidth < 900) {
-      // Tablets
-      iconSize = 40.0;
-      fontSize = 11.0;
-      crossAxisCount = 6;
-      childAspectRatio = 0.85;
-      crossAxisSpacing = 12.0;
-      mainAxisSpacing = 12.0;
-      horizontalPadding = 4.0;
-    } else {
-      // Large screens
-      iconSize = 44.0;
-      fontSize = 12.0;
-      crossAxisCount = 8;
-      childAspectRatio = 0.90;
-      crossAxisSpacing = 16.0;
-      mainAxisSpacing = 16.0;
-      horizontalPadding = 8.0;
-    }
-
+    bool isSmallScreen, {
+    bool withMore = true,
+  }) {
+    final shown = withMore && services.length > 7 ? services.take(7).toList() : services;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: childAspectRatio,
-        ),
-        itemCount: services.length,
-        itemBuilder: (context, index) {
-          final service = services[index];
-          final isHugeIcon = service['isHugeIcon'] ?? false;
-          final iconColor = service['iconColor'] ?? const Color(0xFF243889);
-          final isComingSoon = service['comingSoon'] ?? false;
-
-          return InkWell(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              if (isComingSoon) {
-                _showComingSoon(service['name']);
-                return;
-              }
-              if (service['route'] != null &&
-                  service['route'].toString().isNotEmpty) {
-                _navigateToService(service['route']);
-              } else {
-                _showComingSoon(service['name']);
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: isComingSoon ? Colors.grey.shade50 : Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: screenWidth < 400 ? 6 : 10,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(screenWidth < 400 ? 6 : 8),
-                    decoration: BoxDecoration(
-                      color:
-                          isComingSoon
-                              ? Colors.grey.shade200
-                              : iconColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child:
-                        isHugeIcon
-                            ? HugeIcon(
-                              icon: service['icon'],
-                              size: iconSize,
-                              color:
-                                  isComingSoon
-                                      ? Colors.grey.shade400
-                                      : iconColor,
-                            )
-                            : ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                service['iconUrl'],
-                                width: iconSize,
-                                height: iconSize,
-                                fit: BoxFit.contain,
-                                color:
-                                    isComingSoon ? Colors.grey.shade400 : null,
-                                errorBuilder:
-                                    (context, error, stackTrace) => Container(
-                                      width: iconSize,
-                                      height: iconSize,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        Icons.image_not_supported,
-                                        size: iconSize - 8,
-                                        color:
-                                            isComingSoon
-                                                ? Colors.grey.shade400
-                                                : Colors.grey[400],
-                                      ),
-                                    ),
-                              ),
-                            ),
-                  ),
-                  const SizedBox(height: 4),
-                  Flexible(
-                    child: Text(
-                      service['name'],
-                      style: GoogleFonts.inter(
-                        fontSize: fontSize,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            isComingSoon
-                                ? Colors.grey.shade500
-                                : const Color(0xFF243889),
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: DP.gutter - 4),
+      child: DPServiceGrid(
+        tiles: [
+          for (final service in shown)
+            DPServiceTile(
+              icon: service['icon'] as DPIconData,
+              label: service['name'] as String,
+              onTap: () {
+                HapticFeedback.lightImpact();
+                final route = service['route']?.toString() ?? '';
+                if (route.isNotEmpty) {
+                  _navigateToService(route);
+                } else {
+                  _showComingSoon(service['name']);
+                }
+              },
             ),
-          );
-        },
+          if (withMore)
+            DPServiceTile(
+              icon: DPIcons.layoutGrid,
+              label: 'More',
+              onTap: () => _showAllServices(isSmallScreen),
+            ),
+        ],
       ),
     );
   }
@@ -4135,62 +2329,24 @@ class _DashboardScreenState extends State<DashboardScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Recent Transactions',
-                style: GoogleFonts.poppins(
-                  fontSize: isSmallScreen ? 14 : 16,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
-                ),
-              ),
-              GestureDetector(
-                onTap: _navigateToTransactions,
-                child: Row(
-                  children: [
-                    Text(
-                      'View all',
-                      style: GoogleFonts.inter(
-                        fontSize: isSmallScreen ? 10 : 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF219C7E),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: isSmallScreen ? 8 : 10,
-                      color: const Color(0xFF219C7E),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        DPSectionHeader(
+          'Recent activity',
+          actionLabel: 'See all',
+          onAction: _navigateToTransactions,
+          padding: const EdgeInsets.fromLTRB(DP.gutter, 18, DP.gutter, 6),
         ),
-        const SizedBox(height: 4),
         if (_isLoadingTransactions)
           _buildShimmerTransactions(isSmallScreen)
         else if (_recentTransactions.isEmpty)
           _buildEmptyTransactions(isSmallScreen)
         else
-          RepaintBoundary(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount:
-                  _recentTransactions.length > 5
-                      ? 5
-                      : _recentTransactions.length,
-              itemBuilder:
-                  (context, index) => _buildTransactionItem(
-                    _recentTransactions[index],
-                    isSmallScreen,
-                  ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DP.gutter),
+            child: Column(
+              children: [
+                for (final t in _recentTransactions.take(5))
+                  _buildTransactionItem(t as Map<String, dynamic>, isSmallScreen),
+              ],
             ),
           ),
       ],
@@ -4203,154 +2359,71 @@ class _DashboardScreenState extends State<DashboardScreen>
   ) {
     final isCredit = _isCreditTransaction(transaction);
     final amount = (transaction['amount'] ?? 0.0).toDouble();
-    final status = transaction['status'] ?? 'completed';
-    final date =
-        transaction['createdAt'] != null
-            ? DateTime.parse(transaction['createdAt'].toString())
-            : DateTime.now();
-    final description = transaction['description'] ?? 'Transaction';
-    final type = transaction['type'] ?? 'Transaction';
-    final isCommission = transaction['isCommission'] == true;
+    final status = (transaction['status'] ?? 'completed').toString();
+    final date = transaction['createdAt'] != null
+        ? DateTime.tryParse(transaction['createdAt'].toString()) ?? DateTime.now()
+        : DateTime.now();
+    final description = (transaction['description'] ?? 'Transaction').toString();
+    final type = (transaction['type'] ?? 'Transaction').toString();
+    final failed = status.toLowerCase().contains('fail');
+    final statusLabel = failed
+        ? 'Failed'
+        : (status.toLowerCase().contains('pend') ? 'Pending' : 'Successful');
 
-    // ✅ Get the HugeIcon
-    final icon = _getTransactionIcon(type);
-    final iconColor = _getTransactionIconColor(type);
-    final amountColor = _getAmountColor(type, isCredit);
-
-    return GestureDetector(
+    return DPTransactionTile(
+      icon: _getTransactionIcon(type),
+      title: description,
+      subtitle: '${_activityDate(date)} · $statusLabel',
+      amount: '${isCredit ? '+' : '−'}${dpNaira(amount, decimals: amount % 1 != 0)}',
+      credit: isCredit,
+      failed: failed,
       onTap: () => _showTransactionReceipt(transaction),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // ✅ Use HugeIcon instead of Icon
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: HugeIcon(icon: icon, color: iconColor, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    description,
-                    style: GoogleFonts.inter(
-                      fontSize: isSmallScreen ? 13 : 14,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1C2D5A),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatDate(date),
-                    style: GoogleFonts.inter(
-                      fontSize: isSmallScreen ? 10 : 11,
-                      color: Colors.grey[500],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${isCredit ? '+' : '-'}₦${_formatBalance(amount)}',
-                  style: GoogleFonts.inter(
-                    fontSize: isSmallScreen ? 13 : 14,
-                    fontWeight: FontWeight.w700,
-                    color: amountColor,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                if (isCommission)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 1,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'COMMISSION',
-                      style: GoogleFonts.inter(
-                        fontSize: isSmallScreen ? 7 : 8,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF219C7E),
-                      ),
-                    ),
-                  )
-                else
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 1,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                          status == 'completed'
-                              ? const Color(0xFF219C7E).withValues(alpha: 0.1)
-                              : Colors.orange.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      status == 'completed' ? 'Success' : status,
-                      style: GoogleFonts.inter(
-                        fontSize: isSmallScreen ? 7 : 8,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            status == 'completed'
-                                ? const Color(0xFF219C7E)
-                                : Colors.orange,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
+  String _activityDate(DateTime date) {
+    final local = date.toLocal();
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final d = DateTime(local.year, local.month, local.day);
+    final time = DateFormat('h:mm a').format(local);
+    if (d == today) return 'Today, $time';
+    if (d == today.subtract(const Duration(days: 1))) return 'Yesterday, $time';
+    return DateFormat('d MMM, h:mm a').format(local);
+  }
+
   Widget _buildShimmerTransactions(bool isSmallScreen) {
-    return Column(
-      children: List.generate(
-        3,
-        (index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              height: isSmallScreen ? 60 : 72,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: DP.gutter),
+      child: Shimmer.fromColors(
+        baseColor: const Color(0xFFEDEFEA),
+        highlightColor: const Color(0xFFF8F9F5),
+        child: Column(
+          children: List.generate(
+            3,
+            (index) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                children: [
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Container(
+                      height: 14,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -4360,174 +2433,42 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Widget _buildEmptyTransactions(bool isSmallScreen) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: EdgeInsets.all(isSmallScreen ? 20 : 32),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.receipt_long,
-            size: isSmallScreen ? 36 : 48,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'No transactions yet',
-            style: GoogleFonts.inter(
-              fontSize: isSmallScreen ? 12 : 14,
-              color: Colors.grey[500],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Your transactions will appear here',
-            style: GoogleFonts.inter(
-              fontSize: isSmallScreen ? 10 : 12,
-              color: Colors.grey[400],
-            ),
-          ),
-        ],
-      ),
+    return const DPEmptyState(
+      icon: DPIcons.receipt,
+      title: 'No activity yet',
+      message: 'Your payments and top-ups will show up here.',
     );
   }
 
   Widget _buildCustomBottomNavBar(bool isSmallScreen) {
-    final List<Map<String, dynamic>> navItems = [
-      {
-        'icon': HugeIcons.strokeRoundedHome01,
-        'label': 'Home',
-        'index': 0,
-        'isHugeIcon': true,
+    return DPBottomNav(
+      currentIndex: _selectedIndex,
+      items: const [
+        DPNavItem(DPIcons.house, 'Home'),
+        DPNavItem(DPIcons.arrowLeftRight, 'Activity'),
+        DPNavItem(DPIcons.wallet, 'Wallet'),
+        DPNavItem(DPIcons.user, 'Profile'),
+      ],
+      onTap: (index) {
+        HapticFeedback.lightImpact();
+        if (_selectedIndex != index) {
+          setState(() => _selectedIndex = index);
+        }
+        switch (index) {
+          case 0:
+            break;
+          case 1:
+            _navigateToTransactions();
+            break;
+          case 2:
+            _navigateToAddMoney();
+            break;
+          case 3:
+            _navigateToSettings();
+            break;
+        }
+        _resetIdleTimer();
       },
-      {
-        'icon': HugeIcons.strokeRoundedReceiptText,
-        'label': 'Transactions',
-        'index': 1,
-        'isHugeIcon': true,
-      },
-      {
-        'icon': HugeIcons.strokeRoundedWallet01,
-        'label': 'Wallets',
-        'index': 2,
-        'isHugeIcon': true,
-      },
-      {
-        'icon': HugeIcons.strokeRoundedSettings01,
-        'label': 'Settings',
-        'index': 3,
-        'isHugeIcon': true,
-      },
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: EdgeInsets.only(
-        top: 10,
-        bottom: MediaQuery.of(context).padding.bottom + 10,
-        left: 12,
-        right: 12,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children:
-            navItems.map((item) {
-              final isSelected = _selectedIndex == item['index'];
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    // ✅ Haptic feedback
-                    HapticFeedback.lightImpact();
-
-                    // ✅ Fix double-click: update index immediately
-                    if (_selectedIndex != item['index']) {
-                      setState(() => _selectedIndex = item['index']);
-                    }
-
-                    // ✅ Navigate based on index
-                    switch (item['index']) {
-                      case 0:
-                        // Home - do nothing, already here
-                        break;
-                      case 1:
-                        _navigateToTransactions();
-                        break;
-                      case 2:
-                        _navigateToAddMoney();
-                        break;
-                      case 3:
-                        _navigateToSettings();
-                        break;
-                    }
-                    _resetIdleTimer();
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeInOutCubic,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      // ✅ Active pill background
-                      color:
-                          isSelected
-                              ? const Color(0xFF243889).withValues(alpha: 0.08)
-                              : Colors.transparent,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AnimatedScale(
-                          scale: isSelected ? 1.15 : 1.0,
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOutBack,
-                          child: HugeIcon(
-                            icon: item['icon'],
-                            size: 22,
-                            color:
-                                isSelected
-                                    ? const Color(0xFF243889)
-                                    : const Color(0xFF9AA0A6),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        AnimatedDefaultTextStyle(
-                          duration: const Duration(milliseconds: 250),
-                          style: TextStyle(
-                            color:
-                                isSelected
-                                    ? const Color(0xFF243889)
-                                    : const Color(0xFF9AA0A6),
-                            fontSize: 11,
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w500,
-                            fontFamily: GoogleFonts.inter().fontFamily,
-                          ),
-                          child: Text(item['label']),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-      ),
     );
   }
 
@@ -4538,233 +2479,53 @@ class _DashboardScreenState extends State<DashboardScreen>
     bool isLogout = false,
   }) {
     return ListTile(
-      leading: Icon(
-        icon,
-        color: isLogout ? Colors.red : const Color(0xFF243889),
-      ),
-      title: Text(
-        title,
-        style: GoogleFonts.inter(
-          color: isLogout ? Colors.red : const Color(0xFF243889),
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+      leading: Icon(icon, color: isLogout ? DP.danger : DP.ink2),
+      title: Text(title, style: DPText.body.copyWith(color: isLogout ? DP.danger : DP.ink)),
       onTap: onTap,
     );
   }
 
   void _showAllServices(bool isSmallScreen) {
-    final allServices = [..._quickServices, ..._otherServices];
-    final iconSize = 36.0;
+    final payAgain = <Map<String, dynamic>>[];
+    final seen = <String>{};
+    for (final raw in _recentTransactions) {
+      if (raw is! Map) continue;
+      final t = Map<String, dynamic>.from(raw);
+      final type = (t['type'] ?? '').toString().toLowerCase();
+      String? route;
+      if (type.contains('electricity')) {
+        route = '/electricity';
+      } else if (type.contains('cable') || type.contains('tv')) {
+        route = '/cable';
+      } else if (type.contains('data')) {
+        route = '/data';
+      } else if (type.contains('international')) {
+        route = '/international-airtime';
+      } else if (type.contains('airtime')) {
+        route = '/airtime';
+      }
+      if (route == null || seen.contains(route)) continue;
+      seen.add(route);
+      payAgain.add({
+        'route': route,
+        'icon': _getTransactionIcon(type),
+        'title': (t['description'] ?? 'Payment').toString(),
+        'subtitle': '${dpNaira((t['amount'] ?? 0).toDouble(), decimals: false)} · ${_formatDate(DateTime.tryParse(t['createdAt']?.toString() ?? '') ?? DateTime.now())}',
+      });
+      if (payAgain.length == 3) break;
+    }
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => _BillsHubPage(
+          services: [..._quickServices, ..._otherServices],
+          payAgain: payAgain,
+          onOpen: (route) {
+            Navigator.of(context).pop();
+            _navigateToService(route);
+          },
+        ),
       ),
-      builder:
-          (context) => DraggableScrollableSheet(
-            initialChildSize: 0.8,
-            maxChildSize: 0.9,
-            minChildSize: 0.5,
-            expand: false,
-            builder: (context, scrollController) {
-              return Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'All Services',
-                      style: GoogleFonts.poppins(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF243889),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: GridView.builder(
-                        controller: scrollController,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: isSmallScreen ? 8 : 12,
-                          mainAxisSpacing: isSmallScreen ? 8 : 12,
-                          childAspectRatio: 0.85,
-                        ),
-                        itemCount: allServices.length,
-                        itemBuilder: (context, index) {
-                          final service = allServices[index];
-                          final isHugeIcon = service['isHugeIcon'] ?? false;
-                          final iconColor =
-                              service['iconColor'] ?? const Color(0xFF243889);
-                          final isComingSoon = service['comingSoon'] ?? false;
-
-                          return InkWell(
-                            onTap: () {
-                              if (Navigator.canPop(context)) {
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                } else {
-                                  // Navigate to a fallback screen
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    '/home',
-                                  );
-                                }
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                              if (isComingSoon) {
-                                _showComingSoon(service['name']);
-                                return;
-                              }
-                              if (service['route'] != null &&
-                                  service['route'].toString().isNotEmpty) {
-                                _navigateToService(service['route']);
-                              } else {
-                                _showComingSoon(service['name']);
-                              }
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color:
-                                        isComingSoon
-                                            ? Colors.grey.shade50
-                                            : Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.03),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: isSmallScreen ? 10 : 12,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      isHugeIcon
-                                          ? HugeIcon(
-                                            icon: service['icon'],
-                                            size: iconSize,
-                                            color:
-                                                isComingSoon
-                                                    ? Colors.grey.shade400
-                                                    : iconColor,
-                                          )
-                                          : ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                            child: Image.network(
-                                              service['iconUrl'],
-                                              width: iconSize,
-                                              height: iconSize,
-                                              fit: BoxFit.contain,
-                                              color:
-                                                  isComingSoon
-                                                      ? Colors.grey.shade400
-                                                      : null,
-                                              errorBuilder:
-                                                  (
-                                                    context,
-                                                    error,
-                                                    stackTrace,
-                                                  ) => Container(
-                                                    width: iconSize,
-                                                    height: iconSize,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey[100],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            8,
-                                                          ),
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.image_not_supported,
-                                                      size: iconSize - 8,
-                                                      color:
-                                                          isComingSoon
-                                                              ? Colors
-                                                                  .grey
-                                                                  .shade400
-                                                              : Colors
-                                                                  .grey[400],
-                                                    ),
-                                                  ),
-                                            ),
-                                          ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        service['name'],
-                                        style: GoogleFonts.inter(
-                                          fontSize: isSmallScreen ? 9 : 10,
-                                          fontWeight: FontWeight.w600,
-                                          color:
-                                              isComingSoon
-                                                  ? Colors.grey.shade500
-                                                  : const Color(0xFF243889),
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (isComingSoon)
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF219C7E),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        'Soon',
-                                        style: GoogleFonts.inter(
-                                          fontSize: 8,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
     );
   }
 
@@ -4772,59 +2533,30 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Widget _buildDrawerHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            const Color(0xFF243889),
-            const Color(0xFF243889).withValues(alpha: 0.8),
-          ],
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.fromLTRB(20, 56, 20, 22),
+      color: DP.bg,
+      child: Row(
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.white,
-                child: Text(
-                  _fullName.isNotEmpty ? _fullName[0].toUpperCase() : 'U',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF243889),
-                  ),
+          DPAvatar(name: _fullName.isNotEmpty ? _fullName : 'User', size: 52),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _fullName.isNotEmpty ? _fullName : 'User',
+                  style: DPText.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _fullName.isNotEmpty ? _fullName : 'User',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      _email.isNotEmpty ? _email : 'user@example.com',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                Text(
+                  _email,
+                  style: DPText.small,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -5061,81 +2793,173 @@ class _DashboardScreenState extends State<DashboardScreen>
     return GestureDetector(
       onTap: _resetIdleTimer,
       behavior: HitTestBehavior.translucent,
-      child: Scaffold(
-        key: _scaffoldKey, // ✅ ADD THIS LINE
-        backgroundColor: Colors.white,
-        drawer:
-            _isLoading
-                ? Drawer(
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: DPTheme.overlay,
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: DP.bg,
+          drawer: _isLoading
+              ? Drawer(
+                  backgroundColor: DP.bg,
                   child: Column(
                     children: [
                       _buildDrawerHeader(),
-                      const SizedBox(height: 8),
                       Expanded(
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: ListView(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            children: [
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                            ],
-                          ),
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          children: List.generate(8, (_) => _buildSkeletonTile()),
                         ),
                       ),
                     ],
                   ),
                 )
-                : CustomDrawer(
+              : CustomDrawer(
                   header: _buildDrawerHeader(),
                   items: _getUserDrawerItems(),
                   selectedItem: _getSelectedDrawerItem(),
                   onItemSelected: _onDrawerItemSelected,
                   isAdmin: _isAdmin,
                 ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(isSmallScreen),
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ✅ NEW: Approval status banner (only shows for pending/rejected)
-                      _buildApprovalBanner(isSmallScreen),
-
-                      _buildModernBalanceCard(isSmallScreen),
-                      const SizedBox(height: 24),
-                      _buildSectionHeader('Quick Services', isSmallScreen),
-                      const SizedBox(height: 16),
-                      _buildServicesGrid(_quickServices, isSmallScreen),
-                      const SizedBox(height: 32),
-                      _buildSectionHeader('Other Services', isSmallScreen),
-                      const SizedBox(height: 16),
-                      _buildServicesGrid(_otherServices, isSmallScreen),
-                      const SizedBox(height: 32),
-                      _buildRecentTransactions(isSmallScreen),
-                      const SizedBox(height: 80),
-                    ],
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                _buildAppBar(isSmallScreen),
+                Expanded(
+                  child: RefreshIndicator(
+                    color: DP.green,
+                    onRefresh: () async {
+                      await _refreshAllData();
+                      await _refreshApprovalStatus();
+                    },
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                      padding: const EdgeInsets.only(bottom: 28),
+                      children: [
+                        _buildApprovalBanner(isSmallScreen),
+                        _buildModernBalanceCard(isSmallScreen),
+                        _buildCommissionStrip(),
+                        _buildFundingAccountPrompt(),
+                        _buildSectionHeader('Your everyday essentials', isSmallScreen),
+                        _buildServicesGrid(_quickServices, isSmallScreen),
+                        _buildRecentTransactions(isSmallScreen),
+                      ],
+                    ),
                   ),
                 ),
+              ],
+            ),
+          ),
+          bottomNavigationBar: _buildCustomBottomNavBar(isSmallScreen),
+        ),
+      ),
+    );
+  }
+}
+
+/// "Pay bills" hub — every service in one place, plus quick repeat payments.
+class _BillsHubPage extends StatefulWidget {
+  final List<Map<String, dynamic>> services;
+  final List<Map<String, dynamic>> payAgain;
+  final ValueChanged<String> onOpen;
+
+  const _BillsHubPage({
+    required this.services,
+    required this.payAgain,
+    required this.onOpen,
+  });
+
+  @override
+  State<_BillsHubPage> createState() => _BillsHubPageState();
+}
+
+class _BillsHubPageState extends State<_BillsHubPage> {
+  final _search = TextEditingController();
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final q = _search.text.trim().toLowerCase();
+    final filtered = q.isEmpty
+        ? widget.services
+        : widget.services
+            .where((s) => s['name'].toString().toLowerCase().contains(q))
+            .toList();
+    return DPPage(
+      title: 'Pay bills',
+      children: [
+        const DPHeadline('Life admin, sorted.',
+            subtitle: 'One place for your everyday payments.'),
+        DPField(
+          label: 'What would you like to pay?',
+          controller: _search,
+          hint: 'Search bills and services',
+          suffixIcon: DPIcons.search,
+          onChanged: (_) => setState(() {}),
+        ),
+        DPSectionHeader('Everyday payments', padding: const EdgeInsets.only(top: 6, bottom: 14)),
+        if (filtered.isEmpty)
+          const DPEmptyState(icon: DPIcons.search, title: 'No matching service')
+        else
+          DPServiceGrid(
+            tiles: [
+              for (final s in filtered)
+                DPServiceTile(
+                  icon: s['icon'] as DPIconData,
+                  label: s['name'] as String,
+                  onTap: () => widget.onOpen(s['route'].toString()),
+                ),
+            ],
+          ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.fromLTRB(20, 20, 18, 20),
+          decoration: BoxDecoration(
+            color: DP.navy,
+            borderRadius: BorderRadius.circular(DP.rLg + 2),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Your bills can give back.',
+                        style: DPText.title.copyWith(color: Colors.white, fontWeight: FontWeight.w500)),
+                    const SizedBox(height: 6),
+                    Text('See the commission on eligible payments before you pay.',
+                        style: DPText.small.copyWith(color: const Color(0xFFC4CFE6), fontSize: 13)),
+                  ],
+                ),
               ),
+              const SizedBox(width: 12),
+              const DPIcon(DPIcons.gift, size: 30, color: Colors.white, strokeWidth: 1.5),
             ],
           ),
         ),
-        bottomNavigationBar: _buildCustomBottomNavBar(isSmallScreen),
-      ),
+        if (widget.payAgain.isNotEmpty) ...[
+          const DPSectionHeader('Pay again'),
+          for (final p in widget.payAgain)
+            DPMenuRow(
+              icon: p['icon'] as DPIconData,
+              iconBg: DP.surface,
+              iconColor: DP.ink2,
+              title: p['title'].toString(),
+              subtitle: p['subtitle'].toString(),
+              onTap: () => widget.onOpen(p['route'].toString()),
+            ),
+        ],
+        const SizedBox(height: 22),
+        Center(
+          child: Text('Can’t find a service? Let us know in Help.',
+              style: DPText.small, textAlign: TextAlign.center),
+        ),
+      ],
     );
   }
 }
