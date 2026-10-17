@@ -11,6 +11,7 @@ import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 // ✅ Use the correct class from referral_screen.dart - ReferralEarningsPage
 import '../referral/referral_screen.dart';
+import '../../../ui/ui.dart';
 
 class CommissionScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -743,31 +744,11 @@ class _CommissionScreenState extends State<CommissionScreen>
   }
 
   void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
-        ),
-        backgroundColor: Colors.red.shade700,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
+    if (mounted) dpSnack(context, message, error: true);
   }
 
   void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.inter(fontSize: 13, color: Colors.white),
-        ),
-        backgroundColor: const Color(0xFF168566),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
+    if (mounted) dpSnack(context, message, success: true);
   }
 
   // ==================== HELPERS ====================
@@ -1041,121 +1022,129 @@ class _CommissionScreenState extends State<CommissionScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: RefreshIndicator(
-        onRefresh: _fetchCommissionData,
-        color: const Color(0xFF102C68),
-        backgroundColor: Colors.white,
-        child:
-            _isLoading && !_hasLoadedOnce ? _buildLoadingState() : _buildBody(),
+      backgroundColor: DP.bg,
+      body: SafeArea(
+        child: Column(
+          children: [
+            DPTopBar(
+              title: 'Commission & earnings',
+              actionLabel: 'How it works',
+              onAction: () => dpDialog(
+                context,
+                title: 'How earnings work',
+                message:
+                    'You earn a small commission on eligible payments like airtime, data, TV and electricity, plus referral bonuses. Earnings sit in a separate balance — move them to your wallet any time (minimum ₦500).',
+                confirmLabel: 'Got it',
+                tone: DPTone.info,
+              ),
+            ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _fetchCommissionData,
+                color: DP.green,
+                child: _isLoading && !_hasLoadedOnce
+                    ? _buildLoadingState()
+                    : _buildBody(),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Color(0xFF102C68),
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Dalaba',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
-              letterSpacing: 0.09,
-            ),
-          ),
-          Text(
-            'pay',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF168566),
-              letterSpacing: 0.09,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: const Color(0x05102C68),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.account_balance_wallet_outlined,
-                color: Color(0xFF102C68),
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap:
-                    () =>
-                        setState(() => _isBalanceVisible = !_isBalanceVisible),
-                child: Text(
-                  _isBalanceVisible
-                      ? '₦${_walletBalance.toStringAsFixed(2)}'
-                      : '••••',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF102C68),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+  bool _isCreditTx(Map<String, dynamic> t) {
+    final type = t['type']?.toString() ?? '';
+    final description = t['description']?.toString() ?? '';
+    return type.contains('Bonus') ||
+        type.contains('Credit') ||
+        description.contains('bonus') ||
+        t['isCommission'] == true ||
+        type.contains('+');
+  }
+
+  DateTime _txDate(Map<String, dynamic> t) =>
+      (DateTime.tryParse(t['createdAt']?.toString() ?? '') ?? DateTime.now())
+          .toLocal();
+
+  double _amountOf(Map<String, dynamic> t) =>
+      ((t['amount'] ?? 0) as num).toDouble();
+
+
+  Widget _buildLoadingState() {
+    return ListView(
+      children: const [
+        SizedBox(height: 160),
+        Center(child: CircularProgressIndicator()),
       ],
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
-      child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
-      ),
-    );
-  }
-
   Widget _buildBody() {
+    double lifetime = 0, moved = 0;
+    for (final t in _commissionTransactions) {
+      final a = _amountOf(t);
+      if (_isCreditTx(t)) {
+        lifetime += a;
+      } else {
+        final d = (t['description']?.toString() ?? '').toLowerCase();
+        if (d.contains('wallet') || d.contains('withdraw')) moved += a;
+      }
+    }
+    Widget stat(String label, double v) => Expanded(
+          child: DPCard(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: DP.caption.copyWith(fontSize: 12)),
+                const SizedBox(height: 6),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    DP.naira(v, decimals: v % 1 != 0),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: DP.ink,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildCommissionBalanceCard(),
-              const SizedBox(height: 24),
-              _buildReferralStatsSection(),
-              const SizedBox(height: 24),
-              _buildFilterSection(),
-              const SizedBox(height: 16),
-              _buildTransactionList(),
-              const SizedBox(height: 30),
-            ],
-          ),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildCommissionBalanceCard(),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                stat('Lifetime earned', lifetime),
+                const SizedBox(width: 12),
+                stat('Moved to wallet', moved),
+              ],
+            ),
+            const SizedBox(height: 24),
+            _buildFilterSection(),
+            const SizedBox(height: 22),
+            _buildReferralStatsSection(),
+            const SizedBox(height: 22),
+            const DPSectionHeader('Latest earnings'),
+            _buildTransactionList(),
+            const SizedBox(height: 16),
+            const Text(
+              'Commission is credited after an eligible payment succeeds. Rates are shown before you pay.',
+              style: DP.caption,
+            ),
+          ],
         ),
       ),
     );
@@ -1164,245 +1153,75 @@ class _CommissionScreenState extends State<CommissionScreen>
   // ==================== EXACT SAME GRADIENT AS DASHBOARD ====================
   Widget _buildCommissionBalanceCard() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 0),
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF168566).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+        color: DP.mint,
+        borderRadius: BorderRadius.circular(DP.rXl),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Commission Balance',
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _fetchCommissionData,
-                      child: const Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap:
-                          () => setState(
-                            () => _isCommissionVisible = !_isCommissionVisible,
-                          ),
-                      child: Icon(
-                        _isCommissionVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _isCommissionVisible
-                  ? '₦${_commissionBalance.toStringAsFixed(2)}'
-                  : '••••••••',
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Available Commission',
-              style: GoogleFonts.inter(color: Colors.white70, fontSize: 12),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child:
-                      _isWithdrawing
-                          ? Container(
-                            height: 44,
-                            alignment: Alignment.center,
-                            child: const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Colors.white,
-                              ),
-                            ),
-                          )
-                          : ElevatedButton(
-                            onPressed:
-                                _commissionBalance >= 500
-                                    ? _withdrawCommission
-                                    : null,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: const Color(0xFF102C68),
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              minimumSize: const Size(double.infinity, 44),
-                            ),
-                            child: Text(
-                              'Withdraw to Wallet',
-                              style: GoogleFonts.inter(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF102C68),
-                              ),
-                            ),
-                          ),
-                ),
-                if (_commissionBalance > 0) ...[
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _showCommissionUsageOptions,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF168566),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        minimumSize: const Size(double.infinity, 44),
-                      ),
-                      child: Text(
-                        'Use',
-                        style: GoogleFonts.inter(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF168566),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-            if (_commissionBalance < 500.0 && _commissionBalance > 0.0)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(DPIcons.sparkle, color: DP.green, size: 18),
+              const SizedBox(width: 8),
+              const Expanded(
                 child: Text(
-                  'Minimum withdrawal: ₦500',
-                  style: GoogleFonts.inter(
+                  'AVAILABLE EARNINGS',
+                  style: TextStyle(
+                    color: DP.green,
                     fontSize: 12,
-                    color: Colors.yellow[200],
+                    letterSpacing: 0.6,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    'Referral Code: ${_isCommissionVisible ? _referralCode : '****'}',
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 11),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              InkResponse(
+                radius: 18,
+                onTap: () => setState(
+                  () => _isCommissionVisible = !_isCommissionVisible,
                 ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _copyReferralCode,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.copy,
-                              color: Colors.white,
-                              size: 12,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Copy',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: _shareReferralCode,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.share,
-                              color: Colors.white,
-                              size: 12,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'Share',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                child: Icon(
+                  _isCommissionVisible ? DPIcons.eye : DPIcons.eyeOff,
+                  color: DP.green,
+                  size: 18,
                 ),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _isCommissionVisible ? DP.naira(_commissionBalance) : '₦ ••••',
+              style: const TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w500,
+                color: DP.green,
+                letterSpacing: -0.5,
+              ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Earned funds are separate from your wallet.',
+            style: TextStyle(color: DP.green, fontSize: 13.5),
+          ),
+          const SizedBox(height: 16),
+          DPButton(
+            label: 'Move to wallet',
+            icon: DPIcons.upRight,
+            loading: _isWithdrawing,
+            onPressed: _isWithdrawing ? null : _withdrawCommission,
+          ),
+          if (_commissionBalance < 500)
+            const DPHelper(
+              'You can move earnings once you have ₦500 or more.',
+              color: DP.green,
+            ),
+        ],
       ),
     );
   }
@@ -1421,429 +1240,166 @@ class _CommissionScreenState extends State<CommissionScreen>
   // ==================== REFERRAL STATS ====================
 
   Widget _buildReferralStatsSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final referrals = _referralStats['totalReferrals'] ?? 0;
+    final earned = ((_referralStats['totalEarned'] ?? 0) as num).toDouble();
+    return DPCard(
+      padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+      onTap: _navigateToReferralPage,
+      child: Row(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Referral Earnings',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF102C68),
-                ),
-              ),
-              TextButton(
-                onPressed: _navigateToReferralPage,
-                child: Text(
-                  'View Details',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF168566),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0x05102C68),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          const DPIconBadge.blue(DPIcons.referral, size: 44),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Earnings',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '₦${_referralStats['totalEarned']?.toStringAsFixed(2) ?? '0.00'}',
-                      style: GoogleFonts.inter(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF102C68),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF168566).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.emoji_events,
-                    color: Color(0xFF168566),
-                    size: 32,
-                  ),
+                const Text('Invite friends, earn more', style: DP.bodyStrong),
+                const SizedBox(height: 2),
+                Text(
+                  '$referrals referral${referrals == 1 ? '' : 's'} · ${DP.naira(earned)} earned · Code $_referralCode',
+                  style: DP.caption,
+                  maxLines: 2,
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatColumn(
-                'Referrals',
-                _referralStats['totalReferrals']?.toString() ?? '0',
-                Icons.people_outline,
-              ),
-              _buildStatColumn(
-                'Direct Bonus',
-                '₦${_referralStats['directBonusEarnings']?.toStringAsFixed(2) ?? '0.00'}',
-                Icons.person_add_alt_1,
-              ),
-              _buildStatColumn(
-                'Welcome Bonus',
-                '₦${_referralStats['welcomeBonusEarnings']?.toStringAsFixed(2) ?? '0.00'}',
-                Icons.card_giftcard,
-              ),
-            ],
-          ),
-          if ((_referralStats['directBonusEarnings'] ?? 0) > 0 ||
-              (_referralStats['indirectBonusEarnings'] ?? 0) > 0 ||
-              (_referralStats['welcomeBonusEarnings'] ?? 0) > 0)
-            Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  if ((_referralStats['directBonusEarnings'] ?? 0) > 0)
-                    _buildBonusChip(
-                      'Direct: ₦${_referralStats['directBonusEarnings']?.toStringAsFixed(2)}',
-                      const Color(0xFF102C68),
-                    ),
-                  if ((_referralStats['indirectBonusEarnings'] ?? 0) > 0)
-                    _buildBonusChip(
-                      'Indirect: ₦${_referralStats['indirectBonusEarnings']?.toStringAsFixed(2)}',
-                      const Color(0xFF168566),
-                    ),
-                  if ((_referralStats['welcomeBonusEarnings'] ?? 0) > 0)
-                    _buildBonusChip(
-                      'Welcome: ₦${_referralStats['welcomeBonusEarnings']?.toStringAsFixed(2)}',
-                      const Color(0xFFA76B1D),
-                    ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatColumn(String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(icon, color: const Color(0xFF102C68), size: 20),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF102C68),
-          ),
-        ),
-        Text(
-          label,
-          style: GoogleFonts.inter(fontSize: 10, color: Colors.grey.shade600),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBonusChip(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            text,
-            style: GoogleFonts.inter(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: color,
-            ),
+          IconButton(
+            tooltip: 'Copy code',
+            onPressed: _copyReferralCode,
+            icon: const Icon(DPIcons.copy, color: DP.muted, size: 20),
           ),
         ],
       ),
     );
   }
+
+
 
   // ==================== FILTERS ====================
 
+  /// "This week" — commission earned per day for the last 7 days.
   Widget _buildFilterSection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final days = List.generate(7, (i) => today.subtract(Duration(days: 6 - i)));
+    final totals = List<double>.filled(7, 0);
+    for (final t in _commissionTransactions) {
+      if (!_isCreditTx(t)) continue;
+      final d = _txDate(t);
+      final day = DateTime(d.year, d.month, d.day);
+      final idx = days.indexWhere((x) => x == day);
+      if (idx >= 0) totals[idx] += _amountOf(t);
+    }
+    final weekTotal = totals.fold<double>(0, (a, b) => a + b);
+    final maxV = totals.fold<double>(0, (a, b) => a > b ? a : b);
+    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildFilterDropdown(
-          value: _selectedTimeFilter,
-          items: _timeFilters,
-          onChanged: (value) {
-            if (value != null) {
-              setState(() => _selectedTimeFilter = value);
-              _fetchCommissionData();
-            }
-          },
+        Row(
+          children: [
+            const Expanded(child: Text('This week', style: DP.section)),
+            Text(
+              '${DP.naira(weekTotal, decimals: weekTotal % 1 != 0)} earned',
+              style: const TextStyle(
+                color: DP.green,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.5,
+              ),
+            ),
+          ],
         ),
-        _buildFilterDropdown(
-          value: _selectedTypeFilter,
-          items: _typeFilters,
-          onChanged: (value) {
-            if (value != null) {
-              setState(() => _selectedTypeFilter = value);
-              _fetchCommissionData();
-            }
-          },
+        const SizedBox(height: 14),
+        SizedBox(
+          height: 110,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: List.generate(7, (i) {
+              final v = totals[i];
+              final h = maxV <= 0 ? 10.0 : 10 + (v / maxV) * 70;
+              final isToday = i == 6;
+              return Expanded(
+                child: Tooltip(
+                  message: DP.naira(v),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        width: 22,
+                        height: h,
+                        decoration: BoxDecoration(
+                          color: isToday ? DP.green : DP.mint,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        labels[days[i].weekday - 1],
+                        style: DP.caption.copyWith(fontSize: 11.5),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildFilterDropdown({
-    required String value,
-    required List<String> items,
-    required void Function(String?) onChanged,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: DropdownButton<String>(
-        value: value,
-        underline: const SizedBox(),
-        style: GoogleFonts.inter(
-          fontSize: 12,
-          color: const Color(0xFF102C68),
-        ),
-        items:
-            items.map((String item) {
-              return DropdownMenuItem<String>(
-                value: item,
-                child: Text(item, style: GoogleFonts.inter(fontSize: 12)),
-              );
-            }).toList(),
-        onChanged: onChanged,
-        icon: Icon(Icons.arrow_drop_down, color: const Color(0xFF102C68)),
-      ),
-    );
-  }
 
   // ==================== TRANSACTION LIST ====================
 
   Widget _buildTransactionList() {
     if (_commissionTransactions.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(32),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          children: [
-            Icon(Icons.history, size: 48, color: Colors.grey.shade400),
-            const SizedBox(height: 12),
-            Text(
-              'No Commission Transactions Yet',
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade600,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Your commission history will appear here',
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ],
-        ),
+      return const DPEmptyState(
+        icon: DPIcons.sparkle,
+        title: 'No earnings yet',
+        message: 'Pay a bill to start earning commission.',
       );
     }
-
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: _commissionTransactions.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 8),
-      itemBuilder: (context, index) {
-        final transaction = _commissionTransactions[index];
-        return _buildTransactionItem(transaction);
-      },
+    final items = _commissionTransactions.take(20).toList();
+    return Column(
+      children: [for (final t in items) _buildTransactionItem(t)],
     );
   }
 
   Widget _buildTransactionItem(Map<String, dynamic> transaction) {
-    final amount = (transaction['amount'] ?? 0.0).toDouble();
-    final type = transaction['type']?.toString() ?? '';
+    final amount = _amountOf(transaction);
     final description = transaction['description']?.toString() ?? '';
-    final date =
-        DateTime.tryParse(transaction['createdAt']?.toString() ?? '') ??
-        DateTime.now();
-
-    final isCredit =
-        type.contains('Bonus') ||
-        type.contains('Credit') ||
-        description.contains('bonus') ||
-        transaction['isCommission'] == true ||
-        transaction['type']?.toString().contains('+') == true;
-
+    final date = _txDate(transaction);
+    final isCredit = _isCreditTx(transaction);
     final source = _getCommissionSource(transaction);
-
-    return GestureDetector(
+    final s = source.toLowerCase();
+    final IconData icon = s.contains('airtime')
+        ? DPIcons.phone
+        : s.contains('data')
+            ? DPIcons.wifi
+            : s.contains('electric')
+                ? DPIcons.bolt
+                : s.contains('cable') || s.contains('tv')
+                    ? DPIcons.tv
+                    : s.contains('referral') || s.contains('bonus')
+                        ? DPIcons.referral
+                        : (isCredit ? DPIcons.sparkle : DPIcons.upRight);
+    final ref = transaction['reference']?.toString();
+    return DPListRow(
       onTap: () => _showTransactionReceipt(transaction),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color:
-                    isCredit
-                        ? const Color(0xFF168566).withValues(alpha: 0.1)
-                        : Colors.red.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                isCredit ? Icons.arrow_downward : Icons.arrow_upward,
-                color: isCredit ? const Color(0xFF168566) : Colors.red,
-                size: 22,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    source,
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF14263D),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    description.isNotEmpty
-                        ? description
-                        : 'Commission transaction',
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      color: Colors.grey.shade500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatDate(date),
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${isCredit ? '+' : '-'}₦${amount.toStringAsFixed(2)}',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: isCredit ? const Color(0xFF168566) : Colors.red,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color:
-                        isCredit
-                            ? const Color(0xFF168566).withValues(alpha: 0.1)
-                            : Colors.red.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    isCredit ? 'CREDIT' : 'DEBIT',
-                    style: GoogleFonts.inter(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w700,
-                      color: isCredit ? const Color(0xFF168566) : Colors.red,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+      leading: isCredit
+          ? DPIconBadge(icon, size: 42, iconSize: 20)
+          : DPIconBadge.blue(icon, size: 42, iconSize: 20),
+      title: isCredit
+          ? (description.isNotEmpty ? description : '$source commission')
+          : (description.isNotEmpty ? description : 'Moved to wallet'),
+      subtitle:
+          '${DateFormat('d MMM').format(date)}${ref != null && ref.isNotEmpty ? ' · $ref' : ''}',
+      trailing: Text(
+        '${isCredit ? '+' : '−'}${DP.naira(amount, decimals: amount % 1 != 0)}',
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: isCredit ? DP.green : DP.ink,
         ),
       ),
     );
