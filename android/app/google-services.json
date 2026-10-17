@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "320938451256",
+    "project_id": "dalabapay-937de",
+    "storage_bucket": "dalabapay-937de.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320938451256:android:88e41242b6b115ded661cd",
+        "android_client_info": {
+          "package_name": "com.dalabapay.official"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDfEKPJKc9N59T2xKI1zkcJkSGo6onEAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
