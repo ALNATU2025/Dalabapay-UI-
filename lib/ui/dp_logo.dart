@@ -50,6 +50,15 @@ class DPAssets {
   // Promo banners (wide illustrations)
   static const String bannerRefer = '${_d}banner_refer.png';
   static const String bannerBills = '${_d}banner_bills.png';
+  static const String bannerInternational = '${_d}banner_international.png';
+  static const String bannerCable = '${_d}banner_cable.png';
+
+  // Bottom menu icons (3D style, square, transparent PNG)
+  static const String navHome = '${_d}svc_home.png';
+  static const String navTransactions = '${_d}svc_transactions.png';
+  static const String navServices = '${_d}svc_services.png';
+  static const String navProfile = '${_d}svc_profile.png';
+  static const String navSend = '${_d}svc_send.png';
 
   /// Logo for a network / provider name or VTpass service ID, if we have one.
   static String? providerFor(String nameOrId) {

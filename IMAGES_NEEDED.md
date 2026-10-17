@@ -54,14 +54,27 @@ Size **256 × 256 px**, square. Use the official logos.
 | `provider_startimes.png` | Pay Bills, Cable TV picker |
 | `provider_waec.png` | Pay Bills, All Services (WAEC PIN) |
 
-## 4. Promo banner art — 2 files
+## 4. Promo banner art — 3 files
 Size **420 × 360 px**, transparent background (sits on the navy banner).
 
 | File | Banner |
 |---|---|
-| `banner_refer.png` | Home → "Refer a Friend" (gift box) |
+| `banner_international.png` | Home → "International Airtime" slide (globe / phone with flags) |
+| `banner_cable.png` | Home → "Never Miss Your Shows" slide (TV with remote) |
 | `banner_bills.png` | Pay Bills → "Quick & Easy Bill Payments" (bill + lightning) |
 
-**Total: 25 new images** (3 + 12 + 8 + 2).
+## 5. Bottom menu icons (3D style) — 5 files
+Size **256 × 256 px**, icon centred with ~10% empty space.
+Inactive tabs show the same picture slightly faded.
+
+| File | Shows on |
+|---|---|
+| `svc_home.png` | Home tab |
+| `svc_transactions.png` | Transactions tab |
+| `svc_services.png` | Services tab |
+| `svc_profile.png` | Profile tab |
+| `svc_send.png` | Round green **Send** button in the middle (white icon looks best) |
+
+**Total: 31 new images** (3 + 12 + 8 + 3 + 5).
 
 After adding them: `flutter clean`, then run the app again.
