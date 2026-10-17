@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'dart:developer' as developer;
@@ -25,14 +24,14 @@ class AdminSelfFundPage extends StatefulWidget {
 class _AdminSelfFundPageState extends State<AdminSelfFundPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== CONTROLLERS ====================
   final TextEditingController _amountController = TextEditingController();
@@ -325,7 +324,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -357,7 +356,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -366,7 +365,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -385,7 +384,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -578,7 +577,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -617,7 +616,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
               Expanded(
                 child: Text(
                   'Admin / Self Fund',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -636,7 +635,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   ),
                   child: Text(
                     'SUPER ADMIN',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 8 : 10,
                       fontWeight: FontWeight.w700,
@@ -677,7 +676,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   children: [
                     Text(
                       'Self Fund',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -686,7 +685,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       'Fund your admin wallet instantly',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -771,14 +770,14 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                           children: [
                             Text(
                               'Admin Wallet',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color: Colors.white.withOpacity(0.8),
                                 fontSize: isMobile ? 12 : 13,
                               ),
                             ),
                             Text(
                               _adminName,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: isMobile ? 14 : 16,
                                 fontWeight: FontWeight.w600,
@@ -800,7 +799,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                         ),
                         child: Text(
                           'ADMIN',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: isMobile ? 8 : 10,
                             fontWeight: FontWeight.w700,
@@ -813,7 +812,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   SizedBox(height: isMobile ? 16 : 20),
                   Text(
                     _formatCurrency(_currentBalance),
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 32 : 40,
                       fontWeight: FontWeight.bold,
@@ -822,7 +821,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   SizedBox(height: isMobile ? 4 : 6),
                   Text(
                     'Available Balance',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white.withOpacity(0.7),
                       fontSize: isMobile ? 13 : 14,
                     ),
@@ -849,7 +848,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                           Expanded(
                             child: Text(
                               'Transaction PIN required. Set up in settings.',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color: warningColor,
                                 fontSize: isMobile ? 11 : 12,
                                 fontWeight: FontWeight.w500,
@@ -920,7 +919,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                           children: [
                             Text(
                               'Self-Funding',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 16 : 18,
                                 fontWeight: FontWeight.bold,
                                 color: textPrimary,
@@ -928,7 +927,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                             ),
                             Text(
                               'Add funds to your admin wallet instantly',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 12 : 13,
                                 color: textSecondary,
                               ),
@@ -943,7 +942,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   // Amount Input
                   Text(
                     'Amount to Fund',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 13 : 14,
                       fontWeight: FontWeight.w600,
                       color: textPrimary,
@@ -962,7 +961,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                     ],
                     decoration: InputDecoration(
                       hintText: 'Enter amount (e.g., 5000.00)',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: isMobile ? 13 : 14,
                         color: Colors.grey.shade500,
                       ),
@@ -970,7 +969,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                         padding: EdgeInsets.all(isMobile ? 12 : 14),
                         child: Text(
                           '₦',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 16 : 18,
                             fontWeight: FontWeight.w700,
                             color: textPrimary,
@@ -996,7 +995,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                         vertical: isMobile ? 14 : 16,
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 16 : 18,
                       fontWeight: FontWeight.w600,
                       color: textPrimary,
@@ -1007,7 +1006,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   // Quick Amounts
                   Text(
                     'Quick Amounts',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 13 : 14,
                       fontWeight: FontWeight.w600,
                       color: textSecondary,
@@ -1070,7 +1069,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                                     _hasTransactionPin
                                         ? 'Fund Wallet'
                                         : 'Set Up PIN First',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: isMobile ? 15 : 16,
                                     ),
@@ -1100,7 +1099,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                           Expanded(
                             child: Text(
                               _errorMessage!,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 12 : 13,
                                 color: errorColor,
                               ),
@@ -1136,7 +1135,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
       ),
       child: Text(
         '₦${amount.toStringAsFixed(0)}',
-        style: GoogleFonts.inter(
+        style: TextStyle(
           color: primaryColor,
           fontWeight: FontWeight.w700,
           fontSize: isMobile ? 14 : 16,
@@ -1193,7 +1192,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                       Expanded(
                         child: Text(
                           'Recent Self-Funding',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 15 : 17,
                             fontWeight: FontWeight.bold,
                             color: textPrimary,
@@ -1217,7 +1216,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                             SizedBox(width: isMobile ? 2 : 4),
                             Text(
                               'Refresh',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color: primaryColor,
                                 fontWeight: FontWeight.w600,
                                 fontSize: isMobile ? 12 : 13,
@@ -1294,7 +1293,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
               children: [
                 Text(
                   _formatCurrency(amount),
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 15,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -1302,7 +1301,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                 ),
                 Text(
                   description,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 11 : 12,
                     color: textSecondary,
                   ),
@@ -1311,7 +1310,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                 ),
                 Text(
                   _formatDate(date),
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 11,
                     color: textSecondary,
                   ),
@@ -1330,7 +1329,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             ),
             child: Text(
               isSuccess ? 'Success' : 'Failed',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 9 : 10,
                 fontWeight: FontWeight.w600,
                 color: isSuccess ? successColor : errorColor,
@@ -1360,7 +1359,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
           SizedBox(height: isMobile ? 12 : 16),
           Text(
             'No Self-Funding History',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 15 : 16,
               fontWeight: FontWeight.w600,
               color: textPrimary,
@@ -1369,7 +1368,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
           SizedBox(height: isMobile ? 4 : 6),
           Text(
             'Your self-funding transactions will appear here',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 12 : 13,
               color: textSecondary,
             ),
@@ -1396,7 +1395,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
           const SizedBox(height: 16),
           Text(
             'Loading...',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 14 : 16,
               fontWeight: FontWeight.w500,
               color: textSecondary,
@@ -1430,7 +1429,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -1439,7 +1438,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               _errorMessage!,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -1542,7 +1541,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             const SizedBox(height: 12),
             Text(
               'Enter Transaction PIN',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 18 : 20,
                 fontWeight: FontWeight.bold,
                 color: textPrimary,
@@ -1551,7 +1550,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             const SizedBox(height: 4),
             Text(
               'Please enter your 6-digit PIN to confirm',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 12 : 13,
                 color: textSecondary,
               ),
@@ -1559,7 +1558,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
             const SizedBox(height: 12),
             Text(
               _formatCurrency(amount),
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.bold,
                 color: successColor,
@@ -1585,7 +1584,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   const SizedBox(width: 8),
                   Text(
                     'Use Biometric Authentication',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 13 : 14,
                       color: primaryColor,
                     ),
@@ -1638,7 +1637,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                     ),
                     child: Text(
                       'Cancel',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 13 : 14,
                         color: textSecondary,
                       ),
@@ -1671,7 +1670,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                     ),
                     child: Text(
                       'Confirm',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 13 : 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -1784,7 +1783,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                                     )
                                     : Text(
                                       label,
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 20 : 24,
                                         fontWeight: FontWeight.w600,
                                         color: textPrimary,
@@ -1884,7 +1883,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   const SizedBox(height: 16),
                   Text(
                     'Funding Successful! ✅',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 18 : 20,
                       fontWeight: FontWeight.bold,
                       color: textPrimary,
@@ -1893,7 +1892,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   const SizedBox(height: 8),
                   Text(
                     _formatCurrency(amount),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 22 : 28,
                       fontWeight: FontWeight.bold,
                       color: successColor,
@@ -1902,7 +1901,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                   const SizedBox(height: 4),
                   Text(
                     'added to your wallet',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 13 : 14,
                       color: textSecondary,
                     ),
@@ -1946,7 +1945,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
                       ),
                       child: Text(
                         'Done',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 14 : 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -1967,7 +1966,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
         children: [
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               color: textSecondary,
               fontSize: isMobile ? 12 : 13,
             ),
@@ -1975,7 +1974,7 @@ class _AdminSelfFundPageState extends State<AdminSelfFundPage>
           const Spacer(),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: isMobile ? 12 : 13,
               color: textPrimary,

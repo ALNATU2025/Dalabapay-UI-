@@ -1,7 +1,6 @@
 // lib/core/widgets/notification_dialog.dart
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class NotificationDialog extends StatefulWidget {
@@ -88,7 +87,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        color: Color(0xFF243889),
+        color: Color(0xFF102C68),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Row(
@@ -114,7 +113,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
               children: [
                 Text(
                   'Notifications',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -123,7 +122,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                 if (widget.unreadCount > 0)
                   Text(
                     '${widget.unreadCount} unread',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: Colors.white.withAlpha(180),
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -150,7 +149,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
               ),
               child: Text(
                 'Mark all read',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   color: Colors.white,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -201,12 +200,12 @@ class _NotificationDialogState extends State<NotificationDialog> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
           ),
           const SizedBox(height: 16),
           Text(
             'Loading notifications...',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -226,7 +225,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
           const SizedBox(height: 16),
           Text(
             'No Notifications',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: Colors.grey.shade600,
@@ -235,7 +234,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
           const SizedBox(height: 8),
           Text(
             'You\'re all caught up!',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.grey.shade400,
@@ -258,13 +257,13 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      Color(0xFF243889),
+                      Color(0xFF102C68),
                     ),
                   ),
                 )
                 : Text(
                   'Loading more...',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: Colors.grey.shade500,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -306,12 +305,12 @@ class _NotificationDialogState extends State<NotificationDialog> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color:
-              isUnread ? const Color(0xFF243889).withAlpha(13) : Colors.white,
+              isUnread ? const Color(0xFF102C68).withAlpha(13) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color:
                 isUnread
-                    ? const Color(0xFF243889).withAlpha(25)
+                    ? const Color(0xFF102C68).withAlpha(25)
                     : Colors.grey.shade100,
             width: 1,
           ),
@@ -337,13 +336,13 @@ class _NotificationDialogState extends State<NotificationDialog> {
                       Expanded(
                         child: Text(
                           notification['title'] as String? ?? 'Notification',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight:
                                 isUnread ? FontWeight.w700 : FontWeight.w600,
                             color:
                                 isUnread
-                                    ? const Color(0xFF1C2D5A)
+                                    ? const Color(0xFF14263D)
                                     : Colors.grey.shade700,
                           ),
                         ),
@@ -353,7 +352,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                           width: 8,
                           height: 8,
                           decoration: const BoxDecoration(
-                            color: Color(0xFF219C7E),
+                            color: Color(0xFF168566),
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -362,7 +361,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                   const SizedBox(height: 4),
                   Text(
                     notification['message'] as String? ?? '',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: Colors.grey.shade600,
@@ -382,7 +381,7 @@ class _NotificationDialogState extends State<NotificationDialog> {
                       const SizedBox(width: 4),
                       Text(
                         timeAgo,
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                           color: Colors.grey.shade400,

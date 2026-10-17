@@ -57,10 +57,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     'Logout': DPIcons.logOut,
     'Transaction Limits': DPIcons.slidersHorizontal,
   };
-;
-
-  // Define vibrant colors for different icons
-;
 
   @override
   void initState() {

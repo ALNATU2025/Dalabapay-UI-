@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:image_picker/image_picker.dart';
@@ -77,14 +76,14 @@ class _SettingsScreenState extends State<SettingsScreen>
   late Animation<double> _fadeAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryColor = Color(0xFF243889);
-  static const Color _secondaryColor = Color(0xFF219C7E);
-  static const Color _successColor = Color(0xFF219C7E);
+  static const Color _primaryColor = Color(0xFF102C68);
+  static const Color _secondaryColor = Color(0xFF168566);
+  static const Color _successColor = Color(0xFF168566);
   static const Color _warningColor = Color(0xFFF59E0B);
   static const Color _errorColor = Color(0xFFEF4444);
-  static const Color _textPrimary = Color(0xFF1C2D5A);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _backgroundLight = Color(0xFFF8FAFC);
+  static const Color _textPrimary = Color(0xFF14263D);
+  static const Color _textSecondary = Color(0xFF728078);
+  static const Color _backgroundLight = Color(0xFFF8F9F5);
 
   @override
   void initState() {
@@ -349,22 +348,22 @@ class _SettingsScreenState extends State<SettingsScreen>
               ),
               title: Text(
                 'Disable Biometric?',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
               content: Text(
                 "You'll need to use PIN for all future logins.",
-                style: GoogleFonts.poppins(),
+                style: const TextStyle(),
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx, false),
-                  child: Text('Cancel', style: GoogleFonts.poppins()),
+                  child: Text('Cancel', style: const TextStyle()),
                 ),
                 TextButton(
                   onPressed: () => Navigator.pop(ctx, true),
                   child: Text(
                     'Disable',
-                    style: GoogleFonts.poppins(color: _errorColor),
+                    style: TextStyle(color: _errorColor),
                   ),
                 ),
               ],
@@ -497,18 +496,18 @@ class _SettingsScreenState extends State<SettingsScreen>
             icon: Icon(Icons.lock_outline, size: 48, color: _warningColor),
             title: Text(
               'Screen Lock Required',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             content: Text(
               "To use biometric login, you must first set up a screen lock (PIN, Pattern, or Password) on your device.\n\n"
               "Go to Settings → Security → Screen Lock",
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(),
+              style: const TextStyle(),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('Later', style: GoogleFonts.poppins()),
+                child: Text('Later', style: const TextStyle()),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
@@ -516,7 +515,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                   backgroundColor: _primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                child: Text('Open Settings', style: GoogleFonts.poppins()),
+                child: Text('Open Settings', style: const TextStyle()),
               ),
             ],
           ),
@@ -534,18 +533,18 @@ class _SettingsScreenState extends State<SettingsScreen>
             icon: Icon(Icons.fingerprint, size: 48, color: _primaryColor),
             title: Text(
               'Setup Biometric',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             content: Text(
               "No fingerprint or face ID is set up on this device.\n\n"
               "Go to Settings → Security → Fingerprint / Face Unlock",
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(),
+              style: const TextStyle(),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: Text('Later', style: GoogleFonts.poppins()),
+                child: Text('Later', style: const TextStyle()),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context),
@@ -553,7 +552,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                   backgroundColor: _primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                child: Text('Open Settings', style: GoogleFonts.poppins()),
+                child: Text('Open Settings', style: const TextStyle()),
               ),
             ],
           ),
@@ -591,7 +590,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                   const SizedBox(height: 16),
                   Text(
                     'Biometric Enabled!',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: _textPrimary,
@@ -600,7 +599,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                   const SizedBox(height: 8),
                   Text(
                     'You can now use fingerprint or face recognition',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       color: _textSecondary,
                     ),
@@ -622,7 +621,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                     ),
                     child: Text(
                       'Continue',
-                      style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ],
@@ -853,7 +852,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 const SizedBox(width: 12),
                 Text(
                   'Help Center',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                     color: _textPrimary,
@@ -867,7 +866,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               children: [
                 Text(
                   'Get in touch with our support team:',
-                  style: GoogleFonts.poppins(fontSize: 16, color: _textPrimary),
+                  style: TextStyle(fontSize: 16, color: _textPrimary),
                 ),
                 const SizedBox(height: 20),
                 _buildContactInfoRow(
@@ -884,7 +883,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 const SizedBox(height: 20),
                 Text(
                   'We\'re available 24/7 to assist you.',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     color: _textSecondary,
                     fontStyle: FontStyle.italic,
@@ -904,7 +903,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -930,7 +929,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 4),
                 GestureDetector(
@@ -943,7 +942,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                       Expanded(
                         child: Text(
                           value,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: _primaryColor,
@@ -976,7 +975,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 const SizedBox(width: 12),
                 Text(
                   'Language Settings',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                     color: _textPrimary,
@@ -990,7 +989,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               children: [
                 Text(
                   'App Language: English',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: _textPrimary,
@@ -1000,7 +999,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 Text(
                   'Currently, English is the only supported language. '
                   'We are working to add more languages in future updates.',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     color: _textSecondary,
                     height: 1.5,
@@ -1020,7 +1019,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -1042,7 +1041,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 const SizedBox(width: 12),
                 Text(
                   'Privacy Policy',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                     color: _textPrimary,
@@ -1057,7 +1056,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 children: [
                   Text(
                     'DalabaPay Privacy Policy',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: _textPrimary,
@@ -1067,7 +1066,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                   Text(
                     'Your privacy and financial security are our top priorities. '
                     'DalabaPay employs bank-level encryption and security measures to protect your data.',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       color: _textPrimary,
                       height: 1.5,
@@ -1080,7 +1079,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                     '• No sharing of personal data without consent\n'
                     '• Right to data access and deletion\n'
                     '• Regular security audits and compliance',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       color: _textPrimary,
                       height: 1.8,
@@ -1115,7 +1114,7 @@ Your privacy and financial security are our top priorities. We employ bank-level
                 ),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -1137,7 +1136,7 @@ Your privacy and financial security are our top priorities. We employ bank-level
                 const SizedBox(width: 12),
                 Text(
                   'Terms & Conditions',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                     color: _textPrimary,
@@ -1152,7 +1151,7 @@ Your privacy and financial security are our top priorities. We employ bank-level
                 children: [
                   Text(
                     'DalabaPay Terms of Service',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: _textPrimary,
@@ -1161,7 +1160,7 @@ Your privacy and financial security are our top priorities. We employ bank-level
                   const SizedBox(height: 12),
                   Text(
                     'By using DalabaPay, you agree to our terms governing financial transactions, bill payments, and account usage.',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       color: _textPrimary,
                       height: 1.5,
@@ -1175,7 +1174,7 @@ Your privacy and financial security are our top priorities. We employ bank-level
                     '• Account suspension for suspicious activity\n'
                     '• Instant bill payment processing\n'
                     '• User responsibility for account security',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       color: _textPrimary,
                       height: 1.8,
@@ -1211,7 +1210,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                 ),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -1236,7 +1235,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
         icon: Icon(Icons.content_copy, size: 18),
         label: Text(
           label,
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+          style: TextStyle(fontWeight: FontWeight.w500),
         ),
       ),
     );
@@ -1248,7 +1247,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
   if (mounted) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Logging out...', style: GoogleFonts.poppins()),
+        content: Text('Logging out...', style: const TextStyle()),
         duration: const Duration(seconds: 1),
       ),
     );
@@ -1262,7 +1261,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
         SnackBar(
           content: Text(
             'Logged out successfully',
-            style: GoogleFonts.poppins(),
+            style: const TextStyle(),
           ),
           backgroundColor: _successColor,
           behavior: SnackBarBehavior.floating,
@@ -1281,7 +1280,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Logged out', style: GoogleFonts.poppins()),
+          content: Text('Logged out', style: const TextStyle()),
           backgroundColor: _warningColor,
         ),
       );
@@ -1307,7 +1306,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                 const SizedBox(width: 12),
                 Text(
                   'Logout',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
@@ -1316,13 +1315,13 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
             ),
             content: Text(
               'Are you sure you want to logout from your account?',
-              style: GoogleFonts.poppins(fontSize: 16, color: _textPrimary),
+              style: TextStyle(fontSize: 16, color: _textPrimary),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 style: TextButton.styleFrom(foregroundColor: _textSecondary),
-                child: Text('Cancel', style: GoogleFonts.poppins()),
+                child: Text('Cancel', style: const TextStyle()),
               ),
                            TextButton(
                 onPressed: () {
@@ -1340,7 +1339,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                   _logout();
                 },
                 style: TextButton.styleFrom(foregroundColor: _errorColor),
-                child: Text('Logout', style: GoogleFonts.poppins()),
+                child: Text('Logout', style: const TextStyle()),
               ),
             ],
           ),
@@ -1353,7 +1352,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: GoogleFonts.poppins()),
+        content: Text(message, style: const TextStyle()),
         backgroundColor: color ?? _primaryColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1385,7 +1384,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
         children: [
           Text(
             'Dalaba',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: _primaryColor,
@@ -1394,7 +1393,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
           ),
           Text(
             'pay',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: _secondaryColor,
@@ -1431,7 +1430,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
             const SizedBox(height: 16),
             Text(
               'Loading settings...',
-              style: GoogleFonts.poppins(color: _textSecondary, fontSize: 14),
+              style: TextStyle(color: _textSecondary, fontSize: 14),
             ),
           ],
         ),
@@ -1647,7 +1646,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
               children: [
                 Text(
                   fullName.isNotEmpty ? fullName : 'User Name',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: _textPrimary,
@@ -1658,7 +1657,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                 const SizedBox(height: 4),
                 Text(
                   email.isNotEmpty ? email : 'user@example.com',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     color: _textSecondary,
                   ),
@@ -1668,7 +1667,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                 const SizedBox(height: 4),
                 Text(
                   'Phone: ${phone.isNotEmpty ? phone : 'Not set'}',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 13,
                     color: _textSecondary,
                   ),
@@ -1719,7 +1718,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                               const SizedBox(width: 4),
                               Text(
                                 'View',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: _primaryColor,
                                   fontWeight: FontWeight.w500,
@@ -1755,7 +1754,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                               const SizedBox(width: 4),
                               Text(
                                 'Change',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: _secondaryColor,
                                   fontWeight: FontWeight.w500,
@@ -1787,7 +1786,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                               const SizedBox(width: 4),
                               Text(
                                 'Add Photo',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: _primaryColor,
                                   fontWeight: FontWeight.w500,
@@ -1818,7 +1817,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
       ),
       child: Text(
         text,
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
           color: color,
@@ -1833,7 +1832,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Text(
         title,
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: _textPrimary,
@@ -1953,7 +1952,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
         ),
         title: Text(
           'Biometric Authentication',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: _textPrimary,
@@ -1961,7 +1960,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
         ),
         subtitle: Text(
           _isTogglingBiometric ? 'Processing...' : 'Checking...',
-          style: GoogleFonts.poppins(fontSize: 14, color: _textSecondary),
+          style: TextStyle(fontSize: 14, color: _textSecondary),
         ),
         trailing: const SizedBox(
           width: 20,
@@ -1984,7 +1983,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
       ),
       title: Text(
         'Biometric Authentication',
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: _textPrimary,
@@ -1996,7 +1995,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
             : biometricAvailable
             ? 'Enable fingerprint or face recognition'
             : 'Tap for setup instructions',
-        style: GoogleFonts.poppins(fontSize: 14, color: _textSecondary),
+        style: TextStyle(fontSize: 14, color: _textSecondary),
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -2136,7 +2135,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                     const SizedBox(width: 8),
                     Text(
                       'Logout',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: _errorColor,
@@ -2160,7 +2159,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text(
                 'Loading version...',
-                style: GoogleFonts.poppins(fontSize: 12, color: _textSecondary),
+                style: TextStyle(fontSize: 12, color: _textSecondary),
               );
             }
 
@@ -2172,7 +2171,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
               children: [
                 Text(
                   'Version $currentVersion',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     color: _textSecondary,
                   ),
@@ -2201,7 +2200,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                         const SizedBox(width: 4),
                         Text(
                           hasUpdate ? 'Update available!' : 'Check for updates',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 10,
                             color: hasUpdate ? _warningColor : _primaryColor,
                             fontWeight: FontWeight.w500,
@@ -2224,7 +2223,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                     ),
                     child: Text(
                       'v$latestVersion available',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 10,
                         color: _warningColor,
                         fontWeight: FontWeight.w600,
@@ -2406,7 +2405,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                 const SizedBox(width: 12),
                 Text(
                   'Update Available',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
                     color: _textPrimary,
@@ -2420,12 +2419,12 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
               children: [
                 Text(
                   'A new version ($newVersion) is available.',
-                  style: GoogleFonts.poppins(fontSize: 16, color: _textPrimary),
+                  style: TextStyle(fontSize: 16, color: _textPrimary),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Current version: $currentVersion',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     color: _textSecondary,
                   ),
@@ -2433,7 +2432,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                 const SizedBox(height: 12),
                 Text(
                   'Please update to get the latest features and improvements.',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     color: _textSecondary,
                   ),
@@ -2444,7 +2443,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
                 style: TextButton.styleFrom(foregroundColor: _textSecondary),
-                child: Text('Later', style: GoogleFonts.poppins()),
+                child: Text('Later', style: const TextStyle()),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -2462,7 +2461,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
                 ),
                 child: Text(
                   'Update Now',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -2485,7 +2484,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
           const SizedBox(height: 8),
           Text(
             'Failed to load image',
-            style: GoogleFonts.poppins(color: Colors.grey.shade600),
+            style: TextStyle(color: Colors.grey.shade600),
           ),
         ],
       ),
@@ -2516,7 +2515,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
       ),
       title: Text(
         title,
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: _textPrimary,
@@ -2526,7 +2525,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
           subtitle != null
               ? Text(
                 subtitle,
-                style: GoogleFonts.poppins(fontSize: 14, color: _textSecondary),
+                style: TextStyle(fontSize: 14, color: _textSecondary),
               )
               : null,
       trailing: Row(
@@ -2551,7 +2550,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
               ),
               child: Text(
                 status,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   color: statusColor ?? _primaryColor,
@@ -2586,7 +2585,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
       ),
       title: Text(
         title,
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: _textPrimary,
@@ -2594,7 +2593,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
       ),
       subtitle: Text(
         subtitle,
-        style: GoogleFonts.poppins(fontSize: 14, color: _textSecondary),
+        style: TextStyle(fontSize: 14, color: _textSecondary),
       ),
       trailing: Switch(
         value: value,

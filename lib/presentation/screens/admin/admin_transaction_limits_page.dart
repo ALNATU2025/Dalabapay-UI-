@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -26,15 +25,15 @@ class AdminTransactionLimitsPage extends StatefulWidget {
 class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE VARIABLES ====================
   bool _isLoading = true;
@@ -421,7 +420,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -430,7 +429,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -449,7 +448,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             ),
             child: Text(
               _isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -628,7 +627,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -667,7 +666,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
               Expanded(
                 child: Text(
                   'Admin / Transaction Limits',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -695,7 +694,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       const SizedBox(width: 4),
                       Text(
                         'SUPER ADMIN',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: isMobile ? 8 : 10,
                           fontWeight: FontWeight.w700,
@@ -738,7 +737,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                   children: [
                     Text(
                       'Transaction Limits',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -747,7 +746,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       'Manage user limits & service availability',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -808,7 +807,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                           isMobile
                               ? 'Search users...'
                               : 'Search by name, email, phone or ID...',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         color: primaryColor.withOpacity(0.4),
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -818,7 +817,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                         vertical: isMobile ? 10 : 14,
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontSize: isMobile ? 14 : 15,
                     ),
@@ -900,7 +899,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     children: [
                       Text(
                         'Maintenance Mode',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 15 : 17,
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -910,7 +909,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                         _maintenanceMode
                             ? '⚠️ All services are currently disabled'
                             : '✅ All services are active',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 12 : 13,
                           color: _maintenanceMode ? errorColor : successColor,
                         ),
@@ -942,7 +941,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                   children: [
                     Text(
                       'Maintenance Message',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 12 : 13,
                         fontWeight: FontWeight.w600,
                         color: textPrimary,
@@ -952,13 +951,13 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     TextField(
                       controller: _maintenanceMessageController,
                       maxLines: 2,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 13 : 14,
                         color: textPrimary,
                       ),
                       decoration: InputDecoration(
                         hintText: 'Enter maintenance message...',
-                        hintStyle: GoogleFonts.inter(
+                        hintStyle: TextStyle(
                           color: Colors.grey.shade400,
                           fontSize: isMobile ? 12 : 13,
                         ),
@@ -1019,7 +1018,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                           _isTogglingMaintenance
                               ? 'Saving...'
                               : 'Update Message',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: isMobile ? 13 : 14,
                           ),
@@ -1047,7 +1046,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     Expanded(
                       child: Text(
                         'Users can still login and view balances, but cannot perform any transactions.',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 11 : 12,
                           color: textSecondary,
                         ),
@@ -1108,7 +1107,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     children: [
                       Text(
                         'Service Controls',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 15 : 17,
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -1116,7 +1115,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       ),
                       Text(
                         'Enable or disable individual services',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 12 : 13,
                           color: textSecondary,
                         ),
@@ -1170,7 +1169,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                           Expanded(
                             child: Text(
                               label,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 11 : 12,
                                 fontWeight: FontWeight.w500,
                                 color: isEnabled ? successColor : errorColor,
@@ -1247,7 +1246,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     children: [
                       Text(
                         'Select a User',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 15 : 17,
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -1255,7 +1254,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       ),
                       Text(
                         'Click a user to manage their transaction limits',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 12 : 13,
                           color: textSecondary,
                         ),
@@ -1325,7 +1324,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
           child: Center(
             child: Text(
               userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: isMobile ? 16 : 18,
                 fontWeight: FontWeight.w700,
@@ -1335,7 +1334,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
         ),
         title: Text(
           userName,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 14 : 15,
             fontWeight: FontWeight.w600,
             color: textPrimary,
@@ -1343,7 +1342,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
         ),
         subtitle: Text(
           userEmail,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 11 : 12,
             color: textSecondary,
           ),
@@ -1362,7 +1361,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                 ),
                 child: Text(
                   'Admin',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 8 : 9,
                     color: primaryColor,
                     fontWeight: FontWeight.w600,
@@ -1379,7 +1378,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                 ),
                 child: Text(
                   'You',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 8 : 9,
                     color: infoColor,
                     fontWeight: FontWeight.w600,
@@ -1461,7 +1460,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                   child: Center(
                     child: Text(
                       userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 16 : 18,
                         fontWeight: FontWeight.w700,
@@ -1476,7 +1475,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     children: [
                       Text(
                         userName,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 14 : 16,
                           fontWeight: FontWeight.w700,
                           color: textPrimary,
@@ -1486,7 +1485,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       ),
                       Text(
                         userEmail,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 11 : 12,
                           color: textSecondary,
                         ),
@@ -1512,7 +1511,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             // Service limits
             Text(
               'Transaction Limits per Service',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -1521,7 +1520,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               'Set custom limits for this user. Leave empty to use default values.',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 11 : 12,
                 color: textSecondary,
               ),
@@ -1561,7 +1560,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     ),
                     child: Text(
                       'Cancel',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.grey.shade700,
                       ),
@@ -1584,7 +1583,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     ),
                     child: Text(
                       _isSavingLimits ? 'Saving...' : 'Save Limits',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -1635,7 +1634,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
               Expanded(
                 child: Text(
                   label,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 13 : 14,
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -1655,7 +1654,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                   ),
                   child: Text(
                     'System Default',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 8 : 9,
                       color: Colors.grey.shade600,
                       fontWeight: FontWeight.w600,
@@ -1667,7 +1666,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                 children: [
                   Text(
                     'Custom',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 10 : 11,
                       color: isCustom ? primaryColor : Colors.grey.shade500,
                     ),
@@ -1704,7 +1703,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       children: [
                         Text(
                           'Per Transaction (₦)',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 10 : 11,
                             color: textSecondary,
                           ),
@@ -1722,7 +1721,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                             ),
                             child: Text(
                               '₦${defaultPerTxn.toStringAsFixed(0)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 9,
                                 color: infoColor,
                                 fontWeight: FontWeight.w600,
@@ -1752,7 +1751,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                             RegExp(r'^\d+\.?\d{0,2}'),
                           ),
                         ],
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 13 : 14,
                           color: isCustom ? textPrimary : Colors.grey.shade400,
                         ),
@@ -1761,7 +1760,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                               isCustom
                                   ? 'Enter amount...'
                                   : 'Use system default',
-                          hintStyle: GoogleFonts.inter(
+                          hintStyle: TextStyle(
                             fontSize: isMobile ? 11 : 12,
                             color:
                                 isCustom
@@ -1777,7 +1776,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                             padding: const EdgeInsets.all(8),
                             child: Text(
                               '₦',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color:
                                     isCustom
                                         ? textPrimary
@@ -1805,7 +1804,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       children: [
                         Text(
                           'Daily Cap (₦)',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 10 : 11,
                             color: textSecondary,
                           ),
@@ -1823,7 +1822,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                             ),
                             child: Text(
                               '₦${defaultDaily.toStringAsFixed(0)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 9,
                                 color: infoColor,
                                 fontWeight: FontWeight.w600,
@@ -1853,7 +1852,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                             RegExp(r'^\d+\.?\d{0,2}'),
                           ),
                         ],
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 13 : 14,
                           color: isCustom ? textPrimary : Colors.grey.shade400,
                         ),
@@ -1862,7 +1861,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                               isCustom
                                   ? 'Enter amount...'
                                   : 'Use system default',
-                          hintStyle: GoogleFonts.inter(
+                          hintStyle: TextStyle(
                             fontSize: isMobile ? 11 : 12,
                             color:
                                 isCustom
@@ -1878,7 +1877,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                             padding: const EdgeInsets.all(8),
                             child: Text(
                               '₦',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color:
                                     isCustom
                                         ? textPrimary
@@ -1921,7 +1920,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     Expanded(
                       child: Text(
                         'Custom limits override system defaults for this user',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 10 : 11,
                           color: warningColor,
                           fontWeight: FontWeight.w500,
@@ -2243,7 +2242,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -2300,7 +2299,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             SizedBox(height: isMobile ? 12 : 16),
             Text(
               'No Users Found',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 16 : 18,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -2309,7 +2308,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             SizedBox(height: isMobile ? 4 : 6),
             Text(
               'Try adjusting your search criteria',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 12 : 14,
                 color: textSecondary,
               ),
@@ -2429,7 +2428,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                     children: [
                       Text(
                         'System Default Limits',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 15 : 17,
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -2437,7 +2436,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       ),
                       Text(
                         'These are the global fallback limits for all users',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 12 : 13,
                           color: textSecondary,
                         ),
@@ -2480,7 +2479,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       children: [
                         Text(
                           'Users without custom limits will be subject to these limits.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 11 : 12,
                             color: textPrimary,
                           ),
@@ -2488,7 +2487,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                         const SizedBox(height: 4),
                         Text(
                           '⚡ Enter 0 to make a limit UNLIMITED for that service.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 11 : 12,
                             fontWeight: FontWeight.w600,
                             color: warningColor,
@@ -2538,7 +2537,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                         ),
                 label: Text(
                   _isSavingDefaults ? 'Saving Defaults...' : 'Save Defaults',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: isMobile ? 13 : 14,
                     color: Colors.white,
@@ -2593,7 +2592,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
               Expanded(
                 child: Text(
                   label,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 12 : 13,
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -2637,7 +2636,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
       children: [
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 9 : 10,
             color: textSecondary,
           ),
@@ -2655,13 +2654,13 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
             ],
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 12 : 13,
               color: textPrimary,
             ),
             decoration: InputDecoration(
               hintText: '0 = unlimited',
-              hintStyle: GoogleFonts.inter(
+              hintStyle: TextStyle(
                 fontSize: isMobile ? 10 : 11,
                 color: Colors.grey.shade400,
               ),
@@ -2674,7 +2673,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                 padding: const EdgeInsets.only(left: 8, right: 2),
                 child: Text(
                   '₦',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textPrimary,
                     fontWeight: FontWeight.w600,
                     fontSize: isMobile ? 12 : 13,
@@ -2774,7 +2773,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
           const SizedBox(height: 16),
           Text(
             'Loading limits...',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 14 : 16,
               fontWeight: FontWeight.w500,
               color: textSecondary,
@@ -2810,7 +2809,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -2819,7 +2818,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               _errorMessage!,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -2845,7 +2844,7 @@ class _AdminTransactionLimitsPageState extends State<AdminTransactionLimitsPage>
                       SizedBox(width: isMobile ? 6 : 8),
                       Text(
                         'Try Again',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),

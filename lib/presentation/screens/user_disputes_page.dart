@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,15 +26,15 @@ class UserDisputesPage extends StatefulWidget {
 class _UserDisputesPageState extends State<UserDisputesPage>
     with TickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _disputes = [];
@@ -291,7 +290,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -413,7 +412,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             const SizedBox(height: 8),
             Text(
               'No image selected',
-              style: GoogleFonts.inter(fontSize: 12, color: Colors.grey[500]),
+              style: TextStyle(fontSize: 12, color: Colors.grey[500]),
             ),
           ],
         ),
@@ -439,7 +438,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 const SizedBox(height: 8),
                 Text(
                   'Failed to load image',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[500],
                   ),
@@ -505,7 +504,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
               const SizedBox(height: 4),
               Text(
                 'Error',
-                style: GoogleFonts.inter(fontSize: 10, color: Colors.grey[500]),
+                style: TextStyle(fontSize: 10, color: Colors.grey[500]),
               ),
             ],
           ),
@@ -543,7 +542,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             const SizedBox(height: 4),
             Text(
               'File',
-              style: GoogleFonts.inter(fontSize: 10, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 10, color: Colors.grey[600]),
             ),
           ],
         ),
@@ -596,7 +595,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                       gradient: const LinearGradient(
                         begin: Alignment.topRight,
                         end: Alignment.bottomLeft,
-                        colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                        colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                         stops: [0.06, 0.41],
                       ),
                       borderRadius: const BorderRadius.only(
@@ -611,7 +610,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         Expanded(
                           child: Text(
                             'Evidence (${evidence.length} file${evidence.length > 1 ? 's' : ''})',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
@@ -698,7 +697,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                                 const SizedBox(height: 8),
                                 Text(
                                   'File ${index + 1}',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey[600],
                                   ),
@@ -728,7 +727,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                       children: [
                         Text(
                           '${evidence.length} file${evidence.length > 1 ? 's' : ''}',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             color: textSecondary,
                           ),
@@ -740,7 +739,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                           ),
                           child: Text(
                             'Close',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -810,7 +809,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                       ),
                       child: Text(
                         'Tap to zoom • Drag to pan',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white70,
                           fontSize: 12,
                         ),
@@ -862,7 +861,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     const SizedBox(width: 12),
                     Text(
                       'File a Dispute',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
                         color: textPrimary,
@@ -889,7 +888,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                             children: [
                               Text(
                                 'Transaction Details',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 13,
                                   color: textSecondary,
@@ -898,7 +897,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                               const SizedBox(height: 8),
                               Text(
                                 'Ref: ${transaction['reference']}',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                   color: textPrimary,
@@ -907,7 +906,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                               const SizedBox(height: 4),
                               Text(
                                 'Amount: ₦${(transaction['amount'] as num?)?.toStringAsFixed(2) ?? '0.00'}',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                   color: textPrimary,
@@ -916,7 +915,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                               const SizedBox(height: 4),
                               Text(
                                 'Date: ${DateFormat('MMM dd, yyyy').format(DateTime.parse(transaction['createdAt'].toString()))}',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 12,
                                   color: textSecondary,
                                 ),
@@ -929,7 +928,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                           initialValue: selectedType,
                           decoration: InputDecoration(
                             labelText: 'Dispute Type',
-                            labelStyle: GoogleFonts.inter(color: textSecondary),
+                            labelStyle: TextStyle(color: textSecondary),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
@@ -948,7 +947,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                               vertical: 12,
                             ),
                           ),
-                          style: GoogleFonts.inter(color: textPrimary),
+                          style: TextStyle(color: textPrimary),
                           items: const [
                             DropdownMenuItem(
                               value: 'service_not_delivered',
@@ -982,11 +981,11 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         const SizedBox(height: 16),
                         TextField(
                           controller: reasonController,
-                          style: GoogleFonts.inter(color: textPrimary),
+                          style: TextStyle(color: textPrimary),
                           decoration: InputDecoration(
                             labelText: 'Reason *',
                             hintText: 'Brief explanation of the issue',
-                            hintStyle: GoogleFonts.inter(
+                            hintStyle: TextStyle(
                               color: Colors.grey.shade400,
                             ),
                             border: OutlineInputBorder(
@@ -1011,13 +1010,13 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         const SizedBox(height: 16),
                         TextField(
                           controller: descriptionController,
-                          style: GoogleFonts.inter(color: textPrimary),
+                          style: TextStyle(color: textPrimary),
                           maxLines: 3,
                           decoration: InputDecoration(
                             labelText: 'Detailed Description',
                             hintText:
                                 'Provide more details about what happened',
-                            hintStyle: GoogleFonts.inter(
+                            hintStyle: TextStyle(
                               color: Colors.grey.shade400,
                             ),
                             border: OutlineInputBorder(
@@ -1061,7 +1060,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                                     const SizedBox(width: 8),
                                     Text(
                                       'Upload Evidence (Optional)',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 14,
                                         color: textSecondary,
@@ -1098,7 +1097,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                                           Expanded(
                                             child: Text(
                                               'Image ready for upload (${(_imageBytes?.length ?? 0) ~/ 1024} KB)',
-                                              style: GoogleFonts.inter(
+                                              style: TextStyle(
                                                 fontSize: 12,
                                                 color: successColor,
                                               ),
@@ -1115,7 +1114,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                                             },
                                             child: Text(
                                               'Change',
-                                              style: GoogleFonts.inter(
+                                              style: TextStyle(
                                                 color: primaryColor,
                                                 fontWeight: FontWeight.w600,
                                               ),
@@ -1160,7 +1159,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                                             children: [
                                               Text(
                                                 'Click to upload screenshot',
-                                                style: GoogleFonts.inter(
+                                                style: TextStyle(
                                                   fontSize: 13,
                                                   fontWeight: FontWeight.w500,
                                                   color: textPrimary,
@@ -1168,7 +1167,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                                               ),
                                               Text(
                                                 'PNG, JPG, WEBP • Max 1MB',
-                                                style: GoogleFonts.inter(
+                                                style: TextStyle(
                                                   fontSize: 11,
                                                   color: textSecondary,
                                                 ),
@@ -1192,7 +1191,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         const SizedBox(height: 8),
                         Text(
                           'Supported formats: PNG, JPG, JPEG, WEBP',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 11,
                             color: textSecondary,
                             fontStyle: FontStyle.italic,
@@ -1214,7 +1213,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     },
                     child: Text(
                       'Cancel',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: textSecondary,
                       ),
@@ -1272,7 +1271,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                             )
                             : Text(
                               'Submit Dispute',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
@@ -1319,7 +1318,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 Expanded(
                   child: Text(
                     'Dispute Details',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                       color: textPrimary,
@@ -1362,7 +1361,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     const Divider(),
                     Text(
                       'Attached Evidence',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                         color: textPrimary,
@@ -1396,7 +1395,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         icon: const Icon(Icons.fullscreen, size: 18),
                         label: Text(
                           'View All Evidence (${evidence.length})',
-                          style: GoogleFonts.inter(color: primaryColor),
+                          style: TextStyle(color: primaryColor),
                         ),
                       ),
                     ),
@@ -1433,7 +1432,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: textSecondary,
                   ),
@@ -1454,7 +1453,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             width: 110,
             child: Text(
               '$label:',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
                 color: textSecondary,
@@ -1464,7 +1463,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 13,
                 color: color ?? textPrimary,
               ),
@@ -1513,7 +1512,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                   children: [
                     Text(
                       _currentUserName.isNotEmpty ? _currentUserName : 'User',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -1525,7 +1524,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                       _currentUserEmail.isNotEmpty
                           ? _currentUserEmail
                           : 'user@example.com',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white70,
                         fontSize: 12,
                       ),
@@ -1547,7 +1546,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             ),
             child: Text(
               _isSuperAdmin ? 'SUPER ADMIN' : (_isAdmin ? 'ADMIN' : 'USER'),
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -1720,7 +1719,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1759,7 +1758,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
               Expanded(
                 child: Text(
                   'My Disputes',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1800,7 +1799,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                   children: [
                     Text(
                       'Manage Disputes',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1809,7 +1808,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       'Track and manage your dispute cases',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -1974,7 +1973,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 14 : 18,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1984,7 +1983,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                   ),
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 8 : 10,
                       color: textSecondary,
                     ),
@@ -2023,11 +2022,11 @@ class _UserDisputesPageState extends State<UserDisputesPage>
         indicatorColor: primaryColor,
         indicatorWeight: 3,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: GoogleFonts.inter(
+        labelStyle: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: isMobile ? 12 : 14,
         ),
-        unselectedLabelStyle: GoogleFonts.inter(
+        unselectedLabelStyle: TextStyle(
           fontWeight: FontWeight.w500,
           fontSize: isMobile ? 12 : 14,
         ),
@@ -2069,12 +2068,12 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             const SizedBox(height: 16),
             Text(
               'No disputes filed',
-              style: GoogleFonts.inter(fontSize: 16, color: textSecondary),
+              style: TextStyle(fontSize: 16, color: textSecondary),
             ),
             const SizedBox(height: 8),
             Text(
               'Go to "New Dispute" tab to raise an issue',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 13,
                 color: Colors.grey.shade500,
               ),
@@ -2143,7 +2142,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                                   .replaceAll('_', ' ')
                                   .toUpperCase() ??
                               'Dispute',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                             color: textPrimary,
@@ -2152,7 +2151,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         if (transaction != null)
                           Text(
                             transaction['reference']?.toString() ?? 'N/A',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 12,
                               color: textSecondary,
                             ),
@@ -2174,7 +2173,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         ),
                         child: Text(
                           statusLabel,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
                             color: statusColor,
@@ -2186,7 +2185,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                           padding: const EdgeInsets.only(top: 6),
                           child: Text(
                             DateFormat('MMM dd, yyyy').format(date),
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey.shade500,
                             ),
@@ -2199,7 +2198,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
               const SizedBox(height: 10),
               Text(
                 dispute['reason']?.toString() ?? 'No reason provided',
-                style: GoogleFonts.inter(fontSize: 13, color: textSecondary),
+                style: TextStyle(fontSize: 13, color: textSecondary),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -2211,7 +2210,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     const SizedBox(width: 6),
                     Text(
                       '${evidence.length} attachment${evidence.length > 1 ? 's' : ''}',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 12,
                         color: infoColor,
                         fontWeight: FontWeight.w500,
@@ -2229,7 +2228,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                       ),
                       child: Text(
                         'VIEW',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           color: infoColor,
@@ -2267,7 +2266,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
                       '+${evidence.length - 3} more',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 11,
                         color: infoColor,
                         fontWeight: FontWeight.w500,
@@ -2294,12 +2293,12 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             const SizedBox(height: 16),
             Text(
               'No transactions available',
-              style: GoogleFonts.inter(fontSize: 16, color: textSecondary),
+              style: TextStyle(fontSize: 16, color: textSecondary),
             ),
             const SizedBox(height: 8),
             Text(
               'Complete a transaction to file a dispute',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 13,
                 color: Colors.grey.shade500,
               ),
@@ -2359,7 +2358,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 Expanded(
                   child: Text(
                     tx['type']?.toString() ?? 'Transaction',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                       color: textPrimary,
@@ -2368,7 +2367,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 ),
                 Text(
                   '₦${amount.toStringAsFixed(2)}',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     color: isSuccessful ? successColor : errorColor,
@@ -2379,7 +2378,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             const SizedBox(height: 6),
             Text(
               'Ref: ${tx['reference']?.toString() ?? 'N/A'}',
-              style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+              style: TextStyle(fontSize: 12, color: textSecondary),
             ),
             const SizedBox(height: 10),
             Row(
@@ -2396,7 +2395,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                   ),
                   child: Text(
                     tx['status']?.toString().toUpperCase() ?? 'UNKNOWN',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: getStatusColor(),
@@ -2406,7 +2405,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 if (date != null)
                   Text(
                     DateFormat('MMM dd, yyyy').format(date),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey.shade500,
                     ),
@@ -2422,7 +2421,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                   icon: Icon(Icons.gavel, size: 18),
                   label: Text(
                     'File Dispute',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
@@ -2450,7 +2449,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                     const SizedBox(width: 8),
                     Text(
                       'Transaction completed successfully. No dispute needed.',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 12,
                         color: successColor,
                       ),
@@ -2473,7 +2472,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
           const SizedBox(height: 16),
           Text(
             _errorMessage ?? 'Something went wrong',
-            style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+            style: TextStyle(fontSize: 14, color: textSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -2488,7 +2487,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
             ),
             child: Text(
               'Retry',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
               ),
@@ -2523,7 +2522,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
               const SizedBox(height: 16),
               Text(
                 'Loading your disputes...',
-                style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+                style: TextStyle(fontSize: 14, color: textSecondary),
               ),
             ],
           ),
@@ -2594,7 +2593,7 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                         const SizedBox(height: 12),
                         Text(
                           'Submitting dispute...',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: textPrimary,

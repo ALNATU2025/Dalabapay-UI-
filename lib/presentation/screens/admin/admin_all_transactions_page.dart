@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -33,14 +32,14 @@ class AdminAllTransactionsPage extends StatefulWidget {
 class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -281,7 +280,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                       Expanded(
                         child: Text(
                           message,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
@@ -732,7 +731,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -740,7 +739,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -758,7 +757,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -928,7 +927,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           const SizedBox(height: 16),
                           Text(
                             'No Transactions Found',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: isMobile ? 20 : 24,
                               fontWeight: FontWeight.w700,
                               color: textPrimary,
@@ -939,7 +938,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                             _hasActiveFilters()
                                 ? 'Try adjusting your filters or search'
                                 : 'No transactions available',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 14 : 16,
                               color: textSecondary,
                             ),
@@ -1078,7 +1077,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                       ),
                       child: Text(
                         'Export',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
@@ -1140,7 +1139,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                         ),
                         Text(
                           label,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 7 : 8,
                             fontWeight: FontWeight.w600,
                             color: color,
@@ -1170,7 +1169,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1209,7 +1208,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               Expanded(
                 child: Text(
                   'Admin / Transactions',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1265,7 +1264,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                               ),
                               child: Text(
                                 unread > 99 ? '99+' : '$unread',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 9,
                                   fontWeight: FontWeight.w800,
@@ -1290,7 +1289,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 ),
                 child: Text(
                   'ADMIN',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: isMobile ? 8 : 10,
                     fontWeight: FontWeight.w700,
@@ -1331,7 +1330,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                   children: [
                     Text(
                       'All Transactions',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1340,7 +1339,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                     const SizedBox(height: 4),
                     Text(
                       '${_filteredTransactions.length} of ${_pagination['total']} transactions',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -1406,7 +1405,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                                 isMobile
                                     ? 'Search...'
                                     : 'Search by name, email, ID, phone...',
-                            hintStyle: GoogleFonts.inter(
+                            hintStyle: TextStyle(
                               color: primaryColor.withValues(alpha: 0.4),
                               fontSize: isMobile ? 13 : 14,
                             ),
@@ -1416,7 +1415,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                               vertical: isMobile ? 10 : 14,
                             ),
                           ),
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             color: primaryColor,
                             fontSize: isMobile ? 14 : 15,
                           ),
@@ -1483,7 +1482,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                               const SizedBox(width: 6),
                               Text(
                                 'Search',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                   color: Colors.white,
@@ -1543,7 +1542,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                   children: [
                     Text(
                       'All Time Total',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                         fontWeight: FontWeight.w500,
@@ -1552,7 +1551,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                     const SizedBox(height: 4),
                     Text(
                       _formatCurrency(allTime['amount'] ?? 0.0),
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 22 : 30,
                         fontWeight: FontWeight.w700,
@@ -1561,7 +1560,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                     const SizedBox(height: 2),
                     Text(
                       '${_formatNumber(allTime['count'] ?? 0)} Transactions',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.6),
                         fontSize: isMobile ? 11 : 13,
                       ),
@@ -1674,7 +1673,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 const SizedBox(width: 4),
                 Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 12,
                     color: textSecondary,
                     fontWeight: FontWeight.w500,
@@ -1685,7 +1684,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
             const SizedBox(height: 4),
             Text(
               _formatCurrency(amount),
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 16 : 20,
                 fontWeight: FontWeight.w700,
                 color: color,
@@ -1694,7 +1693,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
             ),
             Text(
               '${_formatNumber(count)} transactions',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 10 : 12,
                 fontWeight: FontWeight.w500,
                 color: textSecondary,
@@ -1723,7 +1722,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
             children: [
               Text(
                 'Status Summary — $serviceLabel',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 12 : 14,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1750,7 +1749,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 ),
                 child: Text(
                   isFiltered ? '• Filtered View' : '• All Time',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     fontWeight: FontWeight.w500,
                     color: isFiltered ? primaryColor : textSecondary,
@@ -1826,7 +1825,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
         const SizedBox(width: 4),
         Text(
           _formatNumber(count),
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 12 : 14,
             fontWeight: FontWeight.w700,
             color: color,
@@ -1834,7 +1833,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
         ),
         Text(
           ' $label',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 10 : 11,
             color: textSecondary,
           ),
@@ -1884,7 +1883,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                   const SizedBox(width: 6),
                   Text(
                     'Filters',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 12 : 13,
                       fontWeight: FontWeight.w500,
                       color:
@@ -1901,7 +1900,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                       ),
                       child: Text(
                         '!',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 8,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
@@ -1928,7 +1927,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               ),
               child: Text(
                 'Clear All',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 11 : 12,
                   fontWeight: FontWeight.w600,
                   color: errorColor,
@@ -2095,7 +2094,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                   const SizedBox(width: 6),
                   Text(
                     'Apply Filters',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: isMobile ? 12 : 13,
                       color: Colors.white,
@@ -2122,7 +2121,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
       children: [
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
             color: textSecondary,
@@ -2166,7 +2165,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
       children: [
         Text(
           'Date Range',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
             color: textSecondary,
@@ -2203,7 +2202,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                     _isDateRangeSelected && _selectedDateRange != null
                         ? '${DateFormat('dd MMM yy').format(_selectedDateRange!.start)} - ${DateFormat('dd MMM yy').format(_selectedDateRange!.end)}'
                         : 'Select custom date range',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 11 : 12,
                       color: _isDateRangeSelected ? textPrimary : textSecondary,
                       fontWeight:
@@ -2254,7 +2253,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
       children: [
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
             color: textSecondary,
@@ -2275,7 +2274,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 padding: const EdgeInsets.all(8),
                 child: Text(
                   'NGN',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 12,
                     fontWeight: FontWeight.w600,
                     color: textSecondary,
@@ -2289,12 +2288,12 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 vertical: isMobile ? 6 : 8,
               ),
               hintText: '0.00',
-              hintStyle: GoogleFonts.inter(
+              hintStyle: TextStyle(
                 fontSize: isMobile ? 11 : 12,
                 color: Colors.grey.shade400,
               ),
             ),
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 12 : 13,
               color: textPrimary,
             ),
@@ -2366,7 +2365,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           children: [
                             Text(
                               type,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 13 : 14,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -2376,7 +2375,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                             ),
                             Text(
                               'Ref: ${ref.length > 20 ? ref.substring(0, 20) : ref}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 color: textSecondary,
                               ),
@@ -2391,7 +2390,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                         children: [
                           Text(
                             _formatCurrency(amount),
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 14 : 16,
                               fontWeight: FontWeight.w700,
                               color: isCredit ? successColor : textPrimary,
@@ -2410,7 +2409,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                             ),
                             child: Text(
                               status,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 10,
                                 fontWeight: FontWeight.w600,
                                 color: _getStatusColor(status),
@@ -2427,7 +2426,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                     children: [
                       Text(
                         userName,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 11 : 12,
                           color: textSecondary,
                         ),
@@ -2439,7 +2438,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           if (userEmail.isNotEmpty)
                             Text(
                               userEmail,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 color: textSecondary.withValues(alpha: 0.7),
                               ),
@@ -2449,7 +2448,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           const SizedBox(width: 8),
                           Text(
                             DateFormat('dd/MM/yy HH:mm').format(date),
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 10 : 11,
                               color: textSecondary,
                             ),
@@ -2660,7 +2659,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                           style: pw.TextStyle(
                             fontSize: 24,
                             fontWeight: pw.FontWeight.bold,
-                            color: PdfColor.fromInt(0xFF243889),
+                            color: PdfColor.fromInt(0xFF102C68),
                           ),
                         ),
                         pw.Text(
@@ -2684,7 +2683,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               pw.Container(
                 padding: const pw.EdgeInsets.all(12),
                 decoration: pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFFF8FAFC),
+                  color: PdfColor.fromInt(0xFFF8F9F5),
                   borderRadius: pw.BorderRadius.circular(8),
                 ),
                 child: pw.Row(
@@ -2719,7 +2718,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 children: [
                   pw.TableRow(
                     decoration: const pw.BoxDecoration(
-                      color: PdfColor.fromInt(0xFF243889),
+                      color: PdfColor.fromInt(0xFF102C68),
                     ),
                     children:
                         [
@@ -2826,7 +2825,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
               pw.Container(
                 padding: const pw.EdgeInsets.all(12),
                 decoration: pw.BoxDecoration(
-                  color: PdfColor.fromInt(0xFFF8FAFC),
+                  color: PdfColor.fromInt(0xFFF8F9F5),
                   borderRadius: pw.BorderRadius.circular(8),
                 ),
                 child: pw.Center(
@@ -2878,7 +2877,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
   PdfColor _getStatusColorPdf(String status) {
     final statusLower = status.toLowerCase();
     if (statusLower.contains('success') || statusLower.contains('completed')) {
-      return PdfColor.fromInt(0xFF219C7E);
+      return PdfColor.fromInt(0xFF168566);
     } else if (statusLower.contains('pending') ||
         statusLower.contains('processing')) {
       return PdfColor.fromInt(0xFFF59E0B);
@@ -2933,7 +2932,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 const SizedBox(height: 16),
                 Text(
                   'Export Options',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: isMobile ? 18 : 20,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2995,7 +2994,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                     ),
                     child: Text(
                       'Cancel',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: textSecondary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -3048,7 +3047,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 14 : 15,
                       fontWeight: FontWeight.w600,
                       color: textPrimary,
@@ -3056,7 +3055,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                   ),
                   Text(
                     subtitle,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 12 : 13,
                       color: textSecondary,
                     ),
@@ -3193,7 +3192,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 const SizedBox(height: 16),
                 Text(
                   'Something went wrong',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: isMobile ? 20 : 24,
                     fontWeight: FontWeight.w700,
                     color: errorColor,
@@ -3202,7 +3201,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                 const SizedBox(height: 8),
                 Text(
                   _errorMessage ?? 'Unknown error occurred',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     color: textSecondary,
                   ),
@@ -3233,7 +3232,7 @@ class _AdminAllTransactionsPageState extends State<AdminAllTransactionsPage>
                         const SizedBox(width: 8),
                         Text(
                           'Try Again',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),

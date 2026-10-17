@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -30,15 +29,15 @@ class AdminEditUserPage extends StatefulWidget {
 class _AdminEditUserPageState extends State<AdminEditUserPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== CONTROLLERS ====================
@@ -320,7 +319,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 SizedBox(width: 12),
                 Text(
                   'Access Restricted',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: isMobile ? 18 : 20,
                     color: textPrimary,
@@ -339,7 +338,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 SizedBox(height: 16),
                 Text(
                   'Only Super Administrators can edit user details.',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     color: textSecondary,
                     height: 1.5,
@@ -367,7 +366,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       Expanded(
                         child: Text(
                           'This page is in read-only mode for normal admins. Please contact the Super Administrator for edit access.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 12 : 13,
                             color: warningColor,
                             fontWeight: FontWeight.w500,
@@ -385,7 +384,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 style: TextButton.styleFrom(foregroundColor: primaryColor),
                 child: Text(
                   'Got it',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -523,7 +522,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -552,21 +551,21 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
             ),
             title: Text(
               title,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: primaryColor,
               ),
             ),
             content: Text(
               message,
-              style: GoogleFonts.inter(color: textSecondary),
+              style: TextStyle(color: textSecondary),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -582,7 +581,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 ),
                 child: Text(
                   confirmText,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -631,7 +630,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -640,7 +639,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -659,7 +658,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -856,7 +855,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -897,7 +896,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                   _isSuperAdmin
                       ? 'Admin / Users / Edit'
                       : 'Admin / Users / View',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -925,7 +924,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       const SizedBox(width: 4),
                       Text(
                         'SUPER ADMIN',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: isMobile ? 8 : 10,
                           fontWeight: FontWeight.w700,
@@ -958,7 +957,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 child: Center(
                   child: Text(
                     userName.isNotEmpty ? userName[0].toUpperCase() : '?',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: primaryColor,
                       fontSize: isMobile ? 24 : 30,
                       fontWeight: FontWeight.w700,
@@ -975,7 +974,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       _isSuperAdmin
                           ? 'Edit User Profile'
                           : 'User Profile (Read-Only)',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -984,7 +983,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       userName,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 14 : 16,
                         fontWeight: FontWeight.w500,
@@ -1019,7 +1018,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       SizedBox(width: 4),
                       Text(
                         'You',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: warningColor,
                           fontSize: isMobile ? 9 : 11,
                           fontWeight: FontWeight.w600,
@@ -1088,14 +1087,14 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
         SizedBox(height: isMobile ? 2 : 4),
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             color: Colors.white.withValues(alpha: 0.6),
             fontSize: isMobile ? 8 : 10,
           ),
         ),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             color: Colors.white,
             fontSize: isMobile ? 10 : 12,
             fontWeight: FontWeight.w600,
@@ -1143,7 +1142,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 children: [
                   Text(
                     'Super Admin Mode - Full Edit Access',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.amber.shade800,
                       fontSize: isMobile ? 14 : 16,
                       fontWeight: FontWeight.w700,
@@ -1151,7 +1150,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                   ),
                   Text(
                     'You have full edit permissions for this user',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.amber.shade700,
                       fontSize: isMobile ? 11 : 13,
                     ),
@@ -1170,7 +1169,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
               ),
               child: Text(
                 '✅ EDIT',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   color: Colors.amber.shade700,
                   fontSize: isMobile ? 8 : 10,
                   fontWeight: FontWeight.w700,
@@ -1217,7 +1216,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 children: [
                   Text(
                     'Read-Only Mode',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: warningColor,
                       fontSize: isMobile ? 14 : 16,
                       fontWeight: FontWeight.w700,
@@ -1225,7 +1224,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                   ),
                   Text(
                     'You are viewing this profile in read-only mode. Contact Super Admin to edit.',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: warningColor.withValues(alpha: 0.8),
                       fontSize: isMobile ? 11 : 13,
                     ),
@@ -1244,7 +1243,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
               ),
               child: Text(
                 '🔒 VIEW ONLY',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   color: warningColor,
                   fontSize: isMobile ? 8 : 10,
                   fontWeight: FontWeight.w700,
@@ -1317,7 +1316,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                     isEditable
                         ? 'User Information'
                         : 'User Information (Read-Only)',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 16 : 18,
                       fontWeight: FontWeight.w600,
                       color: isEditable ? textPrimary : Colors.grey.shade600,
@@ -1336,7 +1335,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       ),
                       child: Text(
                         '🔒 Locked',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 8 : 10,
                           color: Colors.grey.shade600,
                           fontWeight: FontWeight.w600,
@@ -1368,7 +1367,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       Expanded(
                         child: Text(
                           'This profile is in read-only mode. Contact the Super Administrator to make changes.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 12 : 14,
                             color: Colors.blue.shade700,
                             height: 1.4,
@@ -1478,7 +1477,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                         SizedBox(width: isMobile ? 8 : 10),
                         Text(
                           'Account Controls',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 14 : 16,
                             fontWeight: FontWeight.w600,
                             color:
@@ -1498,7 +1497,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                             ),
                             child: Text(
                               'LOCKED',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 10,
                                 color: Colors.grey.shade600,
                                 fontWeight: FontWeight.w700,
@@ -1596,7 +1595,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       icon: const Icon(Icons.close_rounded, size: 18),
                       label: Text(
                         'Close',
-                        style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(
@@ -1630,7 +1629,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                                 : const Icon(Icons.save_rounded, size: 18),
                         label: Text(
                           _isLoading ? 'Saving...' : 'Save Changes',
-                          style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: primaryColor,
@@ -1676,7 +1675,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
               SizedBox(width: isMobile ? 8 : 10),
               Text(
                 'PIN Management',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey.shade600,
@@ -1694,7 +1693,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 ),
                 child: Text(
                   '🔒 LOCKED',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 8 : 10,
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w700,
@@ -1721,7 +1720,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 Expanded(
                   child: Text(
                     'PIN management is locked in read-only mode. Contact Super Admin for PIN operations.',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 12 : 13,
                       color: Colors.grey.shade600,
                       height: 1.4,
@@ -1759,7 +1758,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
               SizedBox(width: isMobile ? 8 : 10),
               Text(
                 'PIN Management',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1783,7 +1782,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 ),
                 label: Text(
                   _showPinManagement ? 'Hide' : 'Manage PIN',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: primaryColor,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1820,7 +1819,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                       SizedBox(height: isMobile ? 8 : 12),
                       Text(
                         'No PIN data available',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: textSecondary,
                           fontSize: isMobile ? 13 : 14,
                         ),
@@ -1948,7 +1947,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
           SizedBox(height: isMobile ? 4 : 6),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 14 : 16,
               fontWeight: FontWeight.w700,
               color: color,
@@ -1956,7 +1955,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
           ),
           Text(
             title,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 9 : 11,
               color: textSecondary,
             ),
@@ -1978,7 +1977,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
       icon: Icon(icon, size: isMobile ? 16 : 18),
       label: Text(
         label,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 11 : 12,
           fontWeight: FontWeight.w600,
         ),
@@ -2018,7 +2017,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 14 : 15,
           color: readOnly ? Colors.grey.shade700 : textPrimary,
         ),
@@ -2027,11 +2026,11 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
         decoration: InputDecoration(
           labelText: label,
           hintText: readOnly ? '' : hint,
-          labelStyle: GoogleFonts.inter(
+          labelStyle: TextStyle(
             color: readOnly ? Colors.grey.shade500 : textSecondary,
             fontSize: isMobile ? 12 : 13,
           ),
-          hintStyle: GoogleFonts.inter(
+          hintStyle: TextStyle(
             color: Colors.grey.shade400,
             fontSize: isMobile ? 13 : 14,
           ),
@@ -2084,7 +2083,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                   children: [
                     Text(
                       title,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 13 : 14,
                         fontWeight: FontWeight.w600,
                         color: readOnly ? Colors.grey.shade600 : textPrimary,
@@ -2092,7 +2091,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                     ),
                     Text(
                       subtitle,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 11 : 12,
                         color: readOnly ? Colors.grey.shade500 : textSecondary,
                       ),
@@ -2133,7 +2132,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
             SizedBox(height: 16),
             Text(
               'Loading user data...',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: textPrimary,
@@ -2172,7 +2171,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
               SizedBox(height: isMobile ? 16 : 20),
               Text(
                 'Access Denied',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 20 : 24,
                   fontWeight: FontWeight.w700,
                   color: errorColor,
@@ -2183,7 +2182,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 _errorMessage ??
                     'You don\'t have permission to access this page.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   color: textSecondary,
                 ),
@@ -2194,7 +2193,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                 icon: const Icon(Icons.arrow_back_rounded, size: 18),
                 label: Text(
                   'Go Back',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
@@ -2283,7 +2282,7 @@ class _AdminEditUserPageState extends State<AdminEditUserPage>
                         SizedBox(height: 12),
                         Text(
                           'Updating user...',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: textPrimary,

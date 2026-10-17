@@ -1,6 +1,5 @@
 // lib/presentation/screens/admin/admin_user_transactions_page.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/services/api_service.dart';
 
@@ -61,7 +60,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF243889),
+        backgroundColor: const Color(0xFF102C68),
         foregroundColor: Colors.white,
         elevation: 0,
         title: Column(
@@ -69,14 +68,14 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
           children: [
             Text(
               'User Transactions',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
             Text(
               widget.userEmail,
-              style: GoogleFonts.inter(fontSize: 12, color: Colors.white70),
+              style: TextStyle(fontSize: 12, color: Colors.white70),
             ),
           ],
         ),
@@ -104,13 +103,13 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                     Text(
                       errorMessage!,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(color: Colors.grey.shade600),
+                      style: TextStyle(color: Colors.grey.shade600),
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: _loadTransactions,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF243889),
+                        backgroundColor: const Color(0xFF102C68),
                       ),
                       child: const Text('Retry'),
                     ),
@@ -130,7 +129,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                     const SizedBox(height: 16),
                     Text(
                       'No Transactions Found',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey.shade600,
@@ -139,7 +138,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                     const SizedBox(height: 8),
                     Text(
                       'This user has no transactions yet.',
-                      style: GoogleFonts.inter(color: Colors.grey.shade500),
+                      style: TextStyle(color: Colors.grey.shade500),
                     ),
                   ],
                 ),
@@ -180,10 +179,10 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                             color:
                                 (t['isCommission'] == true)
                                     ? const Color(
-                                      0xFF219C7E,
+                                      0xFF168566,
                                     ).withValues(alpha: 0.1)
                                     : const Color(
-                                      0xFF243889,
+                                      0xFF102C68,
                                     ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -196,8 +195,8 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 : Icons.receipt_rounded,
                             color:
                                 (t['isCommission'] == true)
-                                    ? const Color(0xFF219C7E)
-                                    : const Color(0xFF243889),
+                                    ? const Color(0xFF168566)
+                                    : const Color(0xFF102C68),
                             size: 20,
                           ),
                         ),
@@ -208,9 +207,9 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                             children: [
                               Text(
                                 type,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF243889),
+                                  color: const Color(0xFF102C68),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -218,7 +217,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                               const SizedBox(height: 2),
                               Text(
                                 '${date.day}/${date.month}/${date.year}',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey.shade500,
                                 ),
@@ -231,13 +230,13 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                           children: [
                             Text(
                               '₦${amount.toStringAsFixed(2)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color:
                                     (t['isCommission'] == true ||
                                             type.contains('Fund') ||
                                             type.contains('Wallet'))
-                                        ? const Color(0xFF219C7E)
+                                        ? const Color(0xFF168566)
                                         : Colors.red.shade700,
                               ),
                             ),
@@ -250,19 +249,19 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 color:
                                     status == 'completed'
                                         ? const Color(
-                                          0xFF219C7E,
+                                          0xFF168566,
                                         ).withValues(alpha: 0.1)
                                         : Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
                                 status == 'completed' ? 'Success' : status,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
                                   color:
                                       status == 'completed'
-                                          ? const Color(0xFF219C7E)
+                                          ? const Color(0xFF168566)
                                           : Colors.orange,
                                 ),
                               ),

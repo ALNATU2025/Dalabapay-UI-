@@ -3,12 +3,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
+import '../../../ui/ui.dart';
 
 class DataScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -246,132 +245,40 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
     return plans;
   }
 
+  // Plans could not be loaded from the server. We no longer show made-up
+  // plans (their codes don't exist at VTpass); the UI offers a retry instead.
   void _loadMockDataPlans(String networkName) {
-    final mockPlans = <Map<String, dynamic>>[];
-    switch (networkName) {
-      case 'MTN':
-        mockPlans.addAll([
-          {
-            'name': '500MB Daily',
-            'amount': '200',
-            'validity': '1 day',
-            'variation_code': 'mtn-500mb-200',
-          },
-          {
-            'name': '1GB Weekly',
-            'amount': '500',
-            'validity': '7 days',
-            'variation_code': 'mtn-1gb-500',
-          },
-          {
-            'name': '2GB Monthly',
-            'amount': '1000',
-            'validity': '30 days',
-            'variation_code': 'mtn-2gb-1000',
-          },
-          {
-            'name': '5GB Monthly',
-            'amount': '2000',
-            'validity': '30 days',
-            'variation_code': 'mtn-5gb-2000',
-          },
-          {
-            'name': '10GB Monthly',
-            'amount': '3000',
-            'validity': '30 days',
-            'variation_code': 'mtn-10gb-3000',
-          },
-          {
-            'name': '20GB Monthly',
-            'amount': '5000',
-            'validity': '30 days',
-            'variation_code': 'mtn-20gb-5000',
-          },
-        ]);
-        break;
-      case 'Airtel':
-        mockPlans.addAll([
-          {
-            'name': '500MB Daily',
-            'amount': '200',
-            'validity': '1 day',
-            'variation_code': 'airtel-500mb-200',
-          },
-          {
-            'name': '1GB Weekly',
-            'amount': '500',
-            'validity': '7 days',
-            'variation_code': 'airtel-1gb-500',
-          },
-          {
-            'name': '2GB Monthly',
-            'amount': '1000',
-            'validity': '30 days',
-            'variation_code': 'airtel-2gb-1000',
-          },
-          {
-            'name': '5GB Monthly',
-            'amount': '2000',
-            'validity': '30 days',
-            'variation_code': 'airtel-5gb-2000',
-          },
-        ]);
-        break;
-      case 'Glo':
-        mockPlans.addAll([
-          {
-            'name': '500MB Daily',
-            'amount': '200',
-            'validity': '1 day',
-            'variation_code': 'glo-500mb-200',
-          },
-          {
-            'name': '1GB Weekly',
-            'amount': '500',
-            'validity': '7 days',
-            'variation_code': 'glo-1gb-500',
-          },
-          {
-            'name': '2GB Monthly',
-            'amount': '1000',
-            'validity': '30 days',
-            'variation_code': 'glo-2gb-1000',
-          },
-          {
-            'name': '5GB Monthly',
-            'amount': '2000',
-            'validity': '30 days',
-            'variation_code': 'glo-5gb-2000',
-          },
-        ]);
-        break;
-      case '9mobile':
-        mockPlans.addAll([
-          {
-            'name': '500MB Daily',
-            'amount': '200',
-            'validity': '1 day',
-            'variation_code': 'etisalat-500mb-200',
-          },
-          {
-            'name': '1GB Weekly',
-            'amount': '500',
-            'validity': '7 days',
-            'variation_code': 'etisalat-1gb-500',
-          },
-          {
-            'name': '2GB Monthly',
-            'amount': '1000',
-            'validity': '30 days',
-            'variation_code': 'etisalat-2gb-1000',
-          },
-        ]);
-        break;
-    }
     setState(() {
-      _networkPlans[networkName] = mockPlans;
+      _networkPlans[networkName] = [];
       _selectedPlan = null;
     });
+  }
+
+  String _planFilter = 'All plans';
+
+  String _planBucket(Map<String, dynamic> plan) {
+    final v = '${plan['validity'] ?? ''} ${plan['name'] ?? ''}'.toLowerCase();
+    final m = RegExp(r'(\d+)\s*(day|days|hr|hrs|hour|hours)').firstMatch(v);
+    if (v.contains('daily') || v.contains('24') || (m != null && (m.group(2)!.startsWith('h') || int.parse(m.group(1)!) <= 3))) {
+      return 'Daily';
+    }
+    if (v.contains('week') || (m != null && int.parse(m.group(1)!) <= 14)) return 'Weekly';
+    return 'Monthly';
+  }
+
+  String _planSize(String name) {
+    final m = RegExp(r'(\d+(?:\.\d+)?)\s*(GB|MB|TB)', caseSensitive: false).firstMatch(name);
+    if (m == null) return name;
+    return '${m.group(1)} ${m.group(2)!.toUpperCase()}';
+  }
+
+  Map<String, dynamic>? get _selectedPlanDetails {
+    if (_selectedNetwork == null || _selectedPlan == null) return null;
+    final plans = _networkPlans[_selectedNetwork] ?? const [];
+    for (final p in plans) {
+      if (p['name'] == _selectedPlan) return p;
+    }
+    return null;
   }
 
   String? _validateForm() {
@@ -605,401 +512,96 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Color(0xFF243889),
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Buy Data',
-        style: GoogleFonts.poppins(
-          color: const Color(0xFF243889),
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: const Color(0x05243889),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              const Icon(
-                Icons.account_balance_wallet_outlined,
-                color: Color(0xFF243889),
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap:
-                    () =>
-                        setState(() => _isBalanceVisible = !_isBalanceVisible),
-                child: Text(
-                  _isBalanceVisible
-                      ? '₦${_walletBalance.toStringAsFixed(2)}'
-                      : '••••',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF243889),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
+    final sel = _selectedPlanDetails;
+    final busy = _isLoading || _isAuthenticating;
+    return Stack(
+      children: [
+        DPPage(
+          title: 'Buy data',
+          actionLabel: 'History',
+          onAction: () => Navigator.pushNamed(context, '/transactions'),
+          bottom: _isLoadingUserData || !_isUserActive || !_dataServiceEnabled
+              ? null
+              : DPButton(
+                  label: sel != null ? 'Continue with ${_planSize(sel['name'].toString())}' : 'Continue',
+                  icon: DPIcons.arrowRight,
+                  loading: busy,
+                  onPressed: busy ? null : _openPaymentSheet,
                 ),
-              ),
-            ],
-          ),
+          children: [_buildBody()],
         ),
+        if (_showPaymentSheet) _buildPaymentSheetOverlay(),
       ],
     );
   }
 
+
   Widget _buildBody() {
     if (_isLoadingUserData) {
-      return Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF243889)),
-        ),
-      );
+      return const Padding(padding: EdgeInsets.only(top: 80), child: DPLoader());
     }
-
     if (!_isUserActive || !_dataServiceEnabled) {
       return _buildServiceUnavailable();
     }
-
+    final names = _networks.map((n) => n['name'] as String).toList();
+    final sel = _selectedPlanDetails;
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildBanner(),
-              const SizedBox(height: 24),
-
-              // Network Selection
-              Text(
-                'Mobile Network',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 80,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _networks.length,
-                  itemBuilder: (context, index) {
-                    final network = _networks[index];
-                    return _buildNetworkCard(
-                      network,
-                      _selectedNetwork == network['name'],
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Phone Number
-              Text(
-                'Phone Number',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: TextField(
-                  controller: _phoneController,
-                  focusNode: _phoneFocusNode,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
-                  ],
-                  decoration: InputDecoration(
-                    hintText: 'Enter 11-digit phone number',
-                    hintStyle: GoogleFonts.poppins(
-                      color: Colors.grey.shade400,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(12),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedSmartPhone01,
-                        color: const Color(0xFF243889),
-                        size: 22,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 14,
-                    ),
-                  ),
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Data Plans Section
-              if (_selectedNetwork != null)
-                _buildPlanSection()
-              else
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        HugeIcon(
-                          icon: HugeIcons.strokeRoundedWifi01,
-                          color: Colors.grey.shade400,
-                          size: 40,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Select a network to view data plans',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: const Color.fromRGBO(117, 117, 117, 1),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 20),
-
-              // Quick Amounts
-              Text(
-                'Quick Amount',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children:
-                    _quickAmounts.map((amount) {
-                      final isSelected =
-                          _selectedPlan != null &&
-                          _networkPlans[_selectedNetwork]?.any(
-                                (plan) =>
-                                    double.tryParse(
-                                      plan['amount']?.toString() ?? '0',
-                                    ) ==
-                                    amount.toDouble(),
-                              ) ==
-                              true;
-                      return GestureDetector(
-                        onTap: () {
-                          final plans = _networkPlans[_selectedNetwork] ?? [];
-                          final matchingPlan =
-                              plans.isNotEmpty
-                                  ? plans.firstWhere(
-                                    (plan) =>
-                                        double.tryParse(
-                                          plan['amount']?.toString() ?? '0',
-                                        ) ==
-                                        amount.toDouble(),
-                                    orElse: () => plans.first,
-                                  )
-                                  : null;
-                          if (matchingPlan != null) {
-                            setState(() {
-                              _selectedPlan = matchingPlan['name'];
-                            });
-                          } else {
-                            _showErrorDialog(
-                              'No Plan Found',
-                              'No data plan available for ₦$amount. Please select a plan from the list.',
-                            );
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                isSelected
-                                    ? const Color(0xFF243889).withOpacity(0.1)
-                                    : Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color:
-                                  isSelected
-                                      ? const Color(0xFF243889)
-                                      : const Color(0x14243889),
-                              width: isSelected ? 2 : 1,
-                            ),
-                          ),
-                          child: Text(
-                            '₦$amount',
-                            style: GoogleFonts.poppins(
-                              fontSize: 13,
-                              fontWeight:
-                                  isSelected
-                                      ? FontWeight.w800
-                                      : FontWeight.w600,
-                              color:
-                                  isSelected
-                                      ? const Color(0xFF243889)
-                                      : const Color(
-                                        0xFF243889,
-                                      ).withOpacity(0.7),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-              ),
-              const SizedBox(height: 24),
-
-              // Info Card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0x05243889),
-                  borderRadius: BorderRadius.circular(13),
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 18),
+              child: Text('More streaming, scrolling and staying close.', style: DPText.bodyMuted),
+            ),
+            DPChipGrid(
+              labels: names,
+              columns: 4,
+              selectedIndex: _selectedNetwork == null ? null : names.indexOf(_selectedNetwork!),
+              onSelected: (i) {
+                setState(() {
+                  _selectedNetwork = names[i];
+                  _selectedPlan = null;
+                });
+                _fetchDataPlans(names[i]);
+              },
+            ),
+            DPField(
+              label: 'Phone number',
+              controller: _phoneController,
+              focusNode: _phoneFocusNode,
+              keyboardType: TextInputType.phone,
+              hint: '0802 321 4567',
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
+              suffixIcon: DPIcons.contactRound,
+            ),
+            _buildPlanSection(),
+            if (sel != null) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: 4, bottom: 12),
                 child: Row(
                   children: [
-                    Container(
-                      width: 23,
-                      height: 23,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF243889).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      child: const Icon(
-                        Icons.info_outline,
-                        color: Color(0xFF243889),
-                        size: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: Text(
-                        'Choose a data plan and stay connected.',
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF243889),
-                          height: 1.3,
-                        ),
-                      ),
+                    Text('Selected plan', style: DPText.bodyMuted),
+                    const Spacer(),
+                    Text(
+                      '${_planSize(sel['name'].toString())} · ${dpNaira(double.tryParse(sel['amount'].toString()) ?? 0)}',
+                      style: DPText.value,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-
-              // Continue Button
-              SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: ElevatedButton(
-                  onPressed:
-                      _isLoading || _isAuthenticating
-                          ? null
-                          : _openPaymentSheet,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF219C7E),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 0,
-                  ),
-                  child:
-                      _isLoading || _isAuthenticating
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedArrowUp01,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Continue',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-              const SizedBox(height: 30),
             ],
-          ),
+            const DPNotice(
+              'Plans activate on the number entered. Double-check before continuing.',
+              kind: DPNoticeKind.info,
+              margin: EdgeInsets.zero,
+            ),
+          ],
         ),
       ),
     );
@@ -1008,208 +610,136 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
   // ==================== DATA PLANS SECTION ====================
 
   Widget _buildPlanSection() {
+    if (_selectedNetwork == null) {
+      return const DPCard(
+        child: DPEmptyState(
+          icon: DPIcons.wifi,
+          title: 'Choose a network',
+          message: 'Pick a network above to see its data plans.',
+        ),
+      );
+    }
+
     final plans = _networkPlans[_selectedNetwork] ?? [];
-
-    if (_isLoadingPlans) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Data Plans',
-            style: GoogleFonts.poppins(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    if (plans.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          children: [
-            HugeIcon(
-              icon: HugeIcons.strokeRoundedAlert02,
-              color: Colors.orange.shade700,
-              size: 40,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'No data plans available',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Colors.grey.shade700,
-              ),
-            ),
-            Text(
-              'Please try another network',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    const filters = ['All plans', 'Daily', 'Weekly', 'Monthly'];
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Data Plans',
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
-          ),
+        const DPSectionHeader('Find your perfect plan', padding: EdgeInsets.only(top: 6, bottom: 12)),
+        DPChipGrid(
+          labels: filters,
+          columns: 4,
+          height: 40,
+          selectedIndex: filters.indexOf(_planFilter),
+          onSelected: (i) => setState(() => _planFilter = filters[i]),
         ),
-        const SizedBox(height: 12),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            childAspectRatio: 1.2,
-          ),
-          itemCount: plans.length,
-          itemBuilder: (context, index) {
-            final plan = plans[index];
-            final isSelected = _selectedPlan == plan['name'];
-            return _buildPlanCard(plan, isSelected);
-          },
-        ),
+        if (_isLoadingPlans)
+          const DPLoader(message: 'Loading plans…')
+        else if (plans.isEmpty)
+          DPCard(
+            child: DPEmptyState(
+              icon: DPIcons.circleAlert,
+              title: 'Couldn’t load plans',
+              message: 'Check your connection and try again.',
+              actionLabel: 'Retry',
+              onAction: () => _fetchDataPlans(_selectedNetwork!),
+            ),
+          )
+        else
+          Builder(builder: (context) {
+            final shown = _planFilter == 'All plans'
+                ? plans
+                : plans.where((p) => _planBucket(p) == _planFilter).toList();
+            if (shown.isEmpty) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Text('No plans in this group.', textAlign: TextAlign.center),
+              );
+            }
+            final rows = <Widget>[];
+            for (var i = 0; i < shown.length; i += 2) {
+              rows.add(Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(child: _buildPlanCard(shown[i], _selectedPlan == shown[i]['name'])),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: i + 1 < shown.length
+                            ? _buildPlanCard(shown[i + 1], _selectedPlan == shown[i + 1]['name'])
+                            : const SizedBox(),
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+            }
+            return Column(children: rows);
+          }),
       ],
     );
   }
 
   Widget _buildPlanCard(Map<String, dynamic> plan, bool isSelected) {
-    return GestureDetector(
-      onTap: () {
-        setState(() => _selectedPlan = plan['name']);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF243889) : Colors.white,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isSelected ? const Color(0xFF243889) : Colors.grey.shade200,
-            width: isSelected ? 2 : 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color:
-                  isSelected
-                      ? const Color(0xFF243889).withOpacity(0.2)
-                      : Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  plan['name'],
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: isSelected ? Colors.white : const Color(0xFF243889),
+    final name = plan['name']?.toString() ?? '';
+    final size = _planSize(name);
+    final price = double.tryParse(plan['amount']?.toString() ?? '0') ?? 0;
+    return Material(
+      color: isSelected ? DP.greenSoft : DP.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DP.rLg - 2),
+        side: BorderSide(color: isSelected ? DP.green : DP.border, width: isSelected ? 1.4 : 1),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(DP.rLg - 2),
+        onTap: () => setState(() => _selectedPlan = plan['name']),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 14, 12, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(size,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: DPText.title.copyWith(fontSize: size == name ? 14 : 20)),
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color:
-                        isSelected
-                            ? Colors.white.withOpacity(0.2)
-                            : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    plan['validity'],
-                    style: GoogleFonts.poppins(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w600,
-                      color:
-                          isSelected
-                              ? Colors.white.withOpacity(0.9)
-                              : Colors.grey.shade600,
+                  Container(
+                    width: 16,
+                    height: 16,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: DP.green, width: 1.5),
                     ),
+                    alignment: Alignment.center,
+                    child: isSelected
+                        ? Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(color: DP.green, shape: BoxShape.circle),
+                          )
+                        : null,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '₦${plan['amount']}',
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                    color: isSelected ? Colors.white : const Color(0xFF219C7E),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.white : Colors.grey.shade200,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    isSelected ? Icons.check : Icons.arrow_forward_ios,
-                    color:
-                        isSelected
-                            ? const Color(0xFF243889)
-                            : Colors.grey.shade400,
-                    size: 14,
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                size == name ? (plan['validity']?.toString() ?? '') : '${plan['validity'] ?? ''} · $name',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: DPText.small.copyWith(fontSize: 11.5),
+              ),
+              const SizedBox(height: 8),
+              Text(dpNaira(price, decimals: price % 1 != 0),
+                  style: DPText.value.copyWith(color: DP.green, fontWeight: FontWeight.w600)),
+            ],
+          ),
         ),
       ),
     );
@@ -1218,814 +748,77 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
   // ==================== PAYMENT SHEET OVERLAY ====================
 
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
-      child: AnimatedBuilder(
-        animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Header: Logo centered, Close button top-right
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/dalabapay2.png',
-                                      height: 40,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close,
-                                          size: 18,
-                                          color: Color(0xFF64748B),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-
-                              Text(
-                                'Confirm Payment',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Transaction Details
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-
-                              // Balance
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-
-                              Divider(
-                                color: Colors.grey.shade200,
-                                thickness: 1,
-                              ),
-                              const SizedBox(height: 20),
-
-                              // Pay with PIN Option
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              // Pay with Biometric Option
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.warning_amber,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+    final plan = _selectedPlanDetails;
+    final amount = double.tryParse(plan?['amount']?.toString() ?? '0') ?? 0;
+    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
+    final canBiometric = isBiometricSupported && _biometricEnabled && _biometricAllowed;
+    return DPSheetOverlay(
+      animation: _sheetAnimation,
+      onDismiss: _isProcessingPayment ? null : _closePaymentSheet,
+      child: DPPaymentReview(
+        icon: DPIcons.wifi,
+        serviceLabel: '${_selectedNetwork ?? ''} data',
+        amount: amount,
+        rows: [
+          DPSummaryRow('Phone number', _phoneController.text.trim()),
+          DPSummaryRow('Network', '${_selectedNetwork ?? '—'} Nigeria'),
+          DPSummaryRow('Plan', plan?['name']?.toString() ?? '—'),
+          if ((plan?['validity'] ?? '').toString().isNotEmpty)
+            DPSummaryRow('Validity', plan!['validity'].toString()),
+          const DPSummaryRow('Service fee', '₦0.00'),
+          DPSummaryRow('Total to pay', dpNaira(amount), emphasize: true),
+        ],
+        walletBalance: _walletBalance,
+        showPin: _transactionPinSet,
+        pinController: _pinController,
+        pinFocusNode: _pinFocusNode,
+        pinError: _pinValidationError,
+        onPinChanged: (_) => setState(() => _pinValidationError = null),
+        processing: _isProcessingPayment,
+        processingBiometric: _useBiometric,
+        onPayWithPin: () {
+          setState(() {
+            _useBiometric = false;
+            _pinValidationError = null;
+          });
+          _processPayment();
         },
+        onPayWithBiometric: canBiometric
+            ? () {
+                setState(() {
+                  _useBiometric = true;
+                  _pinValidationError = null;
+                  _pinController.clear();
+                });
+                _processPayment();
+              }
+            : null,
+        biometricName: 'biometrics',
+        onClose: _closePaymentSheet,
+        footnote: 'Plans activate on the number entered and can’t be reversed.',
       ),
     );
   }
 
   // ==================== PAYMENT SHEET DETAILS ====================
 
-  Widget _buildPaymentSheetDetails() {
-    final network = _networks.firstWhere(
-      (n) => n['name'] == _selectedNetwork,
-      orElse: () => _networks.first,
-    );
-    final phone = _phoneController.text.trim();
-    final planName = _selectedPlan ?? 'N/A';
-    final plans = _networkPlans[_selectedNetwork] ?? [];
 
-    // ✅ FIXED: orElse now returns a proper Map<String, dynamic>
-    final planDetails = plans.firstWhere(
-      (p) => p['name'] == _selectedPlan,
-      orElse:
-          () => {
-            'amount': '0',
-            'validity': 'N/A',
-            'name': 'N/A',
-            'variation_code': 'N/A',
-          },
-    );
-    final amount =
-        double.tryParse(planDetails['amount']?.toString() ?? '0') ?? 0;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          // Network Row
-          Row(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: network['color'].withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        network['image'],
-                        width: 28,
-                        height: 28,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Network',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                _selectedNetwork ?? 'N/A',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1C2D5A),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-
-          // Phone Number Row
-          Row(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedSmartPhone01,
-                      color: const Color(0xFF243889),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Phone Number',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                phone.isNotEmpty ? phone : 'N/A',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1C2D5A),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-
-          // Data Plan Row
-          Row(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF8B5CF6).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedWifi01,
-                      color: const Color(0xFF8B5CF6),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Data Plan',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    planName,
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w800,
-                      color: const Color(0xFF1C2D5A),
-                    ),
-                  ),
-                  Text(
-                    planDetails['validity'] ?? '',
-                    style: GoogleFonts.poppins(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF64748B),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Divider(height: 16, color: Colors.grey.shade200),
-
-          // Amount Row
-          Row(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedMoney01,
-                      color: const Color(0xFF219C7E),
-                      size: 18,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Amount',
-                    style: GoogleFonts.poppins(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                '₦${amount.toStringAsFixed(2)}',
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF219C7E),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: const Color(0xFF219C7E),
-                size: 18,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Available Balance',
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF64748B),
-                ),
-              ),
-            ],
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: const Color(0xFF219C7E),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // ==================== PIN OPTION ====================
 
-  Widget _buildPinOption() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Container(
-        decoration: BoxDecoration(
-          color:
-              _useBiometric
-                  ? Colors.grey.shade50
-                  : const Color(0xFF243889).withOpacity(0.04),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color:
-                _useBiometric ? Colors.grey.shade300 : const Color(0xFF243889),
-            width: _useBiometric ? 1 : 2,
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: _pinController,
-                focusNode: _pinFocusNode,
-                obscureText: true,
-                enabled: !_useBiometric,
-                decoration: InputDecoration(
-                  hintText: 'Enter 6-digit transaction PIN',
-                  hintStyle: GoogleFonts.poppins(
-                    color:
-                        _useBiometric
-                            ? Colors.grey.shade400
-                            : Colors.grey.shade600,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color:
-                        _useBiometric
-                            ? Colors.grey.shade400
-                            : const Color(0xFF243889),
-                    size: 20,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 0,
-                    vertical: 14,
-                  ),
-                  errorText: _pinValidationError,
-                ),
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: _useBiometric ? Colors.grey.shade400 : Colors.black,
-                ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(6),
-                ],
-                onChanged: (_) => setState(() => _pinValidationError = null),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed:
-                    _isProcessingPayment || _useBiometric
-                        ? null
-                        : () {
-                          setState(() {
-                            _useBiometric = false;
-                            _pinValidationError = null;
-                          });
-                          _processPayment();
-                        },
-                style: TextButton.styleFrom(
-                  backgroundColor:
-                      _useBiometric
-                          ? Colors.transparent
-                          : const Color(0xFF219C7E),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                child:
-                    _isProcessingPayment && !_useBiometric
-                        ? SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                        : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.lock_outline,
-                              color:
-                                  _useBiometric
-                                      ? Colors.grey.shade400
-                                      : Colors.white,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              _useBiometric ? 'Switch to PIN' : 'Pay with PIN',
-                              style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                color:
-                                    _useBiometric
-                                        ? Colors.grey.shade400
-                                        : Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
 
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
-
-    if (!isBiometricSupported) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: GestureDetector(
-        onTap:
-            _isProcessingPayment
-                ? null
-                : () {
-                  setState(() {
-                    _useBiometric = true;
-                    _pinValidationError = null;
-                    _pinController.clear();
-                  });
-                  _processPayment();
-                },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          decoration: BoxDecoration(
-            color:
-                _useBiometric
-                    ? const Color(0xFF243889).withOpacity(0.08)
-                    : Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  _useBiometric
-                      ? const Color(0xFF243889)
-                      : Colors.grey.shade300,
-              width: _useBiometric ? 2 : 1,
-            ),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: const Color(0xFF243889),
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.fingerprint,
-                        color:
-                            _useBiometric
-                                ? const Color(0xFF243889)
-                                : Colors.grey.shade600,
-                        size: 28,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          _useBiometric
-                              ? '🔐 Tap to authenticate with fingerprint'
-                              : 'Pay with Biometric',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                _useBiometric
-                                    ? const Color(0xFF243889)
-                                    : Colors.grey.shade700,
-                          ),
-                        ),
-                      ),
-                      if (_useBiometric)
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF219C7E),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 14,
-                          ),
-                        ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== NETWORK CARD ====================
 
-  Widget _buildNetworkCard(Map<String, dynamic> network, bool isSelected) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedNetwork = network['name'];
-          _selectedPlan = null;
-        });
-        _fetchDataPlans(network['name']);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        width: 80,
-        height: 80,
-        margin: const EdgeInsets.only(right: 8),
-        decoration: BoxDecoration(
-          color: isSelected ? network['color'] : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? network['color'] : Colors.grey.shade200,
-            width: isSelected ? 2 : 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color:
-                  isSelected
-                      ? network['color'].withOpacity(0.3)
-                      : Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              network['image'],
-              width: 40,
-              height: 40,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(height: 6),
-            Text(
-              network['name'],
-              style: GoogleFonts.poppins(
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
-                color: isSelected ? Colors.white : Colors.grey.shade800,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   // ==================== BANNER ====================
 
-  Widget _buildBanner() {
-    return Container(
-      width: double.infinity,
-      height: 128,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: const DecorationImage(
-          image: AssetImage('assets/data_banner.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF243889).withOpacity(0.3),
-              const Color(0xFF219C7E).withOpacity(0.15),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.4, 0.7],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              !_isUserActive ? Icons.account_circle : Icons.wifi_off,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'Data service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return const DPServiceUnavailable(
+      message: 'Data purchase is currently unavailable. Please try again later.',
     );
   }
 
@@ -2061,9 +854,9 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
               date: DateTime.now(),
               phoneNumber: phone,
               description: '$plan (${planDetails['validity']})',
-              customMessage: '✓ Verified by VTpass Payment Gateway',
+              customMessage: 'Verified by VTpass',
               mobileOperator: network,
-              primaryColor: const Color(0xFF243889),
+              primaryColor: DP.navy,
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -2074,48 +867,6 @@ class _DataScreenState extends State<DataScreen> with TickerProviderStateMixin {
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(Icons.error_outline, color: Colors.red.shade700, size: 24),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: GoogleFonts.poppins(
-                    color: Colors.red.shade700,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              message,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF219C7E),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
-          ),
-    );
+    showDPDialog(context, tone: DPDialogTone.error, title: title, message: message);
   }
 }

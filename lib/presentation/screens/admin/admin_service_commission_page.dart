@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -26,12 +25,12 @@ class AdminServiceCommissionPage extends StatefulWidget {
 class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
   static const Color cardShadow = Color(0x1A000000);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
@@ -598,7 +597,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -606,7 +605,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -624,7 +623,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             ),
             child: Text(
               _isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -796,7 +795,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                   children: [
                     Text(
                       'Admin / Service Commission',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.7),
                         fontSize: isMobile ? 11 : 13,
                         fontWeight: FontWeight.w500,
@@ -804,7 +803,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                     ),
                     Text(
                       'Revenue Tracker',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 18 : 24,
                         fontWeight: FontWeight.w700,
@@ -827,7 +826,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 child: Text(
                   _isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: isMobile ? 8 : 10,
                     fontWeight: FontWeight.w700,
@@ -866,7 +865,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                           const SizedBox(width: 6),
                           Text(
                             'Platform Revenue',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.7),
                               fontSize: isMobile ? 10 : 12,
                               fontWeight: FontWeight.w500,
@@ -877,7 +876,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const SizedBox(height: 4),
                       Text(
                         _formatCurrency(totalCommission),
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: isMobile ? 20 : 28,
                           fontWeight: FontWeight.w700,
@@ -886,7 +885,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const SizedBox(height: 2),
                       Text(
                         'from ${_formatNumber(totalTransactions)} transactions · ${avgRate.toStringAsFixed(2)}% avg rate',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.6),
                           fontSize: isMobile ? 9 : 11,
                         ),
@@ -912,7 +911,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                     children: [
                       Text(
                         'Avg per Txn',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.6),
                           fontSize: isMobile ? 9 : 11,
                           fontWeight: FontWeight.w500,
@@ -921,7 +920,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const SizedBox(height: 2),
                       Text(
                         _formatCurrency(avgCommission),
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: isMobile ? 16 : 22,
                           fontWeight: FontWeight.w700,
@@ -930,7 +929,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const SizedBox(height: 2),
                       Text(
                         '$totalTransactions txns',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.5),
                           fontSize: isMobile ? 8 : 10,
                         ),
@@ -966,7 +965,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                   child: Text(
                     'Revenue is calculated from service commissions. '
                     'Total volume: ${_formatCurrency(totalVolume)}',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.8),
                       fontSize: isMobile ? 9 : 11,
                     ),
@@ -1006,7 +1005,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 'Revenue Summary',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1024,7 +1023,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 child: Text(
                   '${avgRate.toStringAsFixed(2)}% avg rate',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     fontWeight: FontWeight.w600,
                     color: primaryColor,
@@ -1072,14 +1071,14 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
               children: [
                 Text(
                   'Total Transaction Volume',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 12,
                     color: textSecondary,
                   ),
                 ),
                 Text(
                   _formatCurrency(totalVolume),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -1135,7 +1134,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
               const SizedBox(width: 6),
               Text(
                 label,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 10 : 12,
                   color: textSecondary,
                   fontWeight: FontWeight.w500,
@@ -1146,7 +1145,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
           const SizedBox(height: 4),
           Text(
             value,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: isMobile ? 14 : 18,
               fontWeight: FontWeight.w700,
               color: color,
@@ -1155,7 +1154,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
           const SizedBox(height: 2),
           Text(
             subtitle,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 9 : 10,
               color: textSecondary,
               fontWeight: FontWeight.w500,
@@ -1180,7 +1179,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 'Filters',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1199,7 +1198,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                   ),
                   child: Text(
                     'Active',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 9 : 11,
                       fontWeight: FontWeight.w600,
                       color: primaryColor,
@@ -1221,7 +1220,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                   ),
                   child: Text(
                     'Clear All',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 11 : 12,
                       fontWeight: FontWeight.w600,
                       color: errorColor,
@@ -1289,7 +1288,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
       children: [
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 10 : 12,
             fontWeight: FontWeight.w600,
             color: textSecondary,
@@ -1312,7 +1311,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                     value: item['value'],
                     child: Text(
                       item['label'] ?? item['value'] ?? '',
-                      style: GoogleFonts.inter(fontSize: isMobile ? 12 : 13),
+                      style: TextStyle(fontSize: isMobile ? 12 : 13),
                     ),
                   );
                 }).toList(),
@@ -1365,7 +1364,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                     _isDateRangeSelected && _selectedDateRange != null
                         ? '${DateFormat('dd MMM yy').format(_selectedDateRange!.start)} - ${DateFormat('dd MMM yy').format(_selectedDateRange!.end)}'
                         : 'Select custom date range',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 11 : 12,
                       color: _isDateRangeSelected ? textPrimary : textSecondary,
                       fontWeight:
@@ -1469,7 +1468,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 'Revenue by Period',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1487,7 +1486,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 child: Text(
                   selectedServiceLabel,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     fontWeight: FontWeight.w600,
                     color: secondaryColor,
@@ -1497,7 +1496,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
               const Spacer(),
               Text(
                 'Volume: ${_formatCurrency(totalVolume)}',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 9 : 11,
                   color: textSecondary,
                 ),
@@ -1578,7 +1577,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                   Expanded(
                                     child: Text(
                                       period['label'] as String,
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 9 : 11,
                                         color:
                                             isAllTime
@@ -1603,7 +1602,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                       ),
                                       child: Text(
                                         'TOTAL',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontSize: isMobile ? 7 : 8,
                                           fontWeight: FontWeight.w700,
                                           color: color,
@@ -1620,7 +1619,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                   Expanded(
                                     child: Text(
                                       _formatCurrency(commission),
-                                      style: GoogleFonts.poppins(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 14 : 18,
                                         fontWeight: FontWeight.w700,
                                         color: color,
@@ -1631,7 +1630,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                   const SizedBox(width: 4),
                                   Text(
                                     '${_formatNumber(count)} txns',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 8 : 9,
                                       color: textSecondary,
                                     ),
@@ -1641,7 +1640,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                               if (amount > 0)
                                 Text(
                                   'Volume: ${_formatCurrency(amount)}',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 7 : 8,
                                     color: textSecondary,
                                   ),
@@ -1692,7 +1691,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 'Service Performance',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1710,7 +1709,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 child: Text(
                   'By Service & Period',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     fontWeight: FontWeight.w600,
                     color: secondaryColor,
@@ -1785,7 +1784,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const SizedBox(width: 8),
                       Text(
                         label,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 13 : 15,
                           fontWeight: FontWeight.w600,
                           color: textPrimary,
@@ -1794,7 +1793,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                       const Spacer(),
                       Text(
                         '${_formatNumber(entries.length)} services',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 9 : 11,
                           color: textSecondary,
                         ),
@@ -1864,7 +1863,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                     children: [
                                       Text(
                                         label,
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontSize: isMobile ? 12 : 13,
                                           fontWeight: FontWeight.w600,
                                           color:
@@ -1877,7 +1876,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                         children: [
                                           Text(
                                             '${_formatNumber(count)} txns',
-                                            style: GoogleFonts.inter(
+                                            style: TextStyle(
                                               fontSize: isMobile ? 9 : 10,
                                               color:
                                                   hasData
@@ -1889,7 +1888,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                             const SizedBox(width: 8),
                                             Text(
                                               '· ₦${(count > 0 ? (amount / count) : 0).toStringAsFixed(0)} avg',
-                                              style: GoogleFonts.inter(
+                                              style: TextStyle(
                                                 fontSize: isMobile ? 9 : 10,
                                                 color: textSecondary,
                                               ),
@@ -1905,7 +1904,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                   children: [
                                     Text(
                                       _formatCurrency(commission),
-                                      style: GoogleFonts.poppins(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 13 : 16,
                                         fontWeight: FontWeight.w700,
                                         color:
@@ -1917,7 +1916,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                     if (hasData)
                                       Text(
                                         '${(count > 0 ? (commission / amount * 100) : 0).toStringAsFixed(1)}%',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontSize: isMobile ? 8 : 10,
                                           color: textSecondary,
                                         ),
@@ -1971,7 +1970,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 '🏆 Best Performing Services',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1989,7 +1988,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 child: Text(
                   'By Commission',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     fontWeight: FontWeight.w600,
                     color: Colors.amber.shade700,
@@ -2074,7 +2073,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                       const SizedBox(width: 6),
                                       Text(
                                         label,
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontSize: isMobile ? 13 : 15,
                                           fontWeight: FontWeight.w600,
                                           color: textPrimary,
@@ -2094,7 +2093,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                         ),
                                         child: Text(
                                           rate,
-                                          style: GoogleFonts.inter(
+                                          style: TextStyle(
                                             fontSize: isMobile ? 8 : 10,
                                             fontWeight: FontWeight.w700,
                                             color: color,
@@ -2107,7 +2106,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                     children: [
                                       Text(
                                         '${_formatNumber(count)} txns',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontSize: isMobile ? 9 : 10,
                                           color: textSecondary,
                                         ),
@@ -2115,7 +2114,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                       const SizedBox(width: 12),
                                       Text(
                                         '₦${(volume).toStringAsFixed(0)} volume',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontSize: isMobile ? 9 : 10,
                                           color: textSecondary,
                                         ),
@@ -2149,7 +2148,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                               children: [
                                 Text(
                                   _formatCurrency(commission),
-                                  style: GoogleFonts.poppins(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 14 : 18,
                                     fontWeight: FontWeight.w700,
                                     color: color,
@@ -2157,7 +2156,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                                 ),
                                 Text(
                                   '${percentage.toStringAsFixed(0)}%',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 9 : 10,
                                     color: textSecondary,
                                   ),
@@ -2203,7 +2202,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
               const SizedBox(height: 8),
               Text(
                 'No transactions found',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w500,
                   color: textSecondary,
@@ -2212,7 +2211,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
               const SizedBox(height: 4),
               Text(
                 'Try adjusting your filters',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 12 : 14,
                   color: Colors.grey.shade400,
                 ),
@@ -2235,7 +2234,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 'Commission Transactions',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2253,7 +2252,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 child: Text(
                   '${transactions.length} shown',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     fontWeight: FontWeight.w600,
                     color: primaryColor,
@@ -2345,7 +2344,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                             children: [
                               Text(
                                 serviceLabel,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 13 : 15,
                                   fontWeight: FontWeight.w600,
                                   color: textPrimary,
@@ -2353,7 +2352,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                               ),
                               Text(
                                 type,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 9 : 11,
                                   color: textSecondary,
                                 ),
@@ -2366,7 +2365,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                           children: [
                             Text(
                               _formatCurrency(amount),
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: isMobile ? 13 : 15,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -2374,7 +2373,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                             ),
                             Text(
                               'Commission: ${_formatCurrency(commission)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 fontWeight: FontWeight.w600,
                                 color: serviceColor,
@@ -2398,7 +2397,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                           ),
                           child: Text(
                             'Rate: $rateDisplay',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 8 : 9,
                               color: serviceColor,
                               fontWeight: FontWeight.w600,
@@ -2420,7 +2419,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                           ),
                           child: Text(
                             status,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 8 : 9,
                               color: isSuccess ? successColor : errorColor,
                               fontWeight: FontWeight.w600,
@@ -2436,7 +2435,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                         const SizedBox(width: 4),
                         Text(
                           userName,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 9 : 10,
                             color: textSecondary,
                           ),
@@ -2450,7 +2449,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                         const SizedBox(width: 4),
                         Text(
                           DateFormat('dd/MM/yy HH:mm').format(date),
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 9 : 10,
                             color: textSecondary,
                           ),
@@ -2481,7 +2480,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                   else
                     Text(
                       'Page $_currentPage of ${_pagination['totalPages'] ?? 1}',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 12 : 14,
                         color: textSecondary,
                       ),
@@ -2602,7 +2601,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                             children: [
                               Text(
                                 serviceLabel,
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: isMobile ? 16 : 20,
                                   fontWeight: FontWeight.w700,
                                   color: textPrimary,
@@ -2610,7 +2609,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                               ),
                               Text(
                                 'Transaction Details',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 12 : 14,
                                   color: textSecondary,
                                 ),
@@ -2654,7 +2653,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                     const SizedBox(height: 4),
                     Text(
                       'User Information',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 12 : 13,
                         fontWeight: FontWeight.w600,
                         color: textPrimary,
@@ -2689,7 +2688,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                         ),
                         child: Text(
                           'Close',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
@@ -2721,7 +2720,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             width: isMobile ? 80 : 100,
             child: Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 11 : 12,
                 color: textSecondary,
                 fontWeight: FontWeight.w500,
@@ -2731,7 +2730,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: fontSize ?? (isMobile ? 12 : 13),
                 color: color ?? textPrimary,
                 fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
@@ -2765,7 +2764,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
             children: [
               Text(
                 'Commission Rates',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2783,7 +2782,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 ),
                 child: Text(
                   '${keys.length} Services',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     fontWeight: FontWeight.w600,
                     color: primaryColor,
@@ -2846,7 +2845,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                           const SizedBox(width: 4),
                           Text(
                             label,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 9 : 11,
                               fontWeight: FontWeight.w500,
                               color: textPrimary,
@@ -2864,7 +2863,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                             ),
                             child: Text(
                               displayRate,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 10,
                                 fontWeight: FontWeight.w700,
                                 color: color,
@@ -3019,7 +3018,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 const SizedBox(height: 16),
                 Text(
                   'Something went wrong',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: isMobile ? 20 : 24,
                     fontWeight: FontWeight.w700,
                     color: errorColor,
@@ -3028,7 +3027,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                 const SizedBox(height: 8),
                 Text(
                   _errorMessage ?? 'Unknown error occurred',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     color: textSecondary,
                   ),
@@ -3059,7 +3058,7 @@ class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
                         const SizedBox(width: 8),
                         Text(
                           'Try Again',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),

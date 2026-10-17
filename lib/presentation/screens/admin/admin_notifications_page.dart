@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -18,10 +17,10 @@ class AdminNotificationsPage extends StatefulWidget {
 }
 
 class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
 
   List<AdminNotificationModel> _notifications = [];
   bool _isLoading = true;
@@ -264,7 +263,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
           children: [
             Text(
               'Admin Alerts',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 18,
               ),
@@ -279,7 +278,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                 ),
                 child: Text(
                   '$_unreadCount',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: 12,
@@ -399,7 +398,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             color: active ? Colors.white : textSecondary,
             fontSize: 12,
             fontWeight: FontWeight.w600,
@@ -420,7 +419,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
             const SizedBox(height: 12),
             Text(
               _errorMessage ?? 'Error',
-              style: GoogleFonts.inter(color: textSecondary),
+              style: TextStyle(color: textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
@@ -450,7 +449,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
             const SizedBox(height: 12),
             Text(
               'No notifications yet',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -459,7 +458,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
             const SizedBox(height: 6),
             Text(
               'New activities will appear here',
-              style: GoogleFonts.inter(color: textSecondary),
+              style: TextStyle(color: textSecondary),
             ),
           ],
         ),
@@ -517,7 +516,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                           Expanded(
                             child: Text(
                               n.title,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: textPrimary,
@@ -540,7 +539,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                       const SizedBox(height: 4),
                       Text(
                         n.message,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12.5,
                           color: textSecondary,
                           height: 1.35,
@@ -562,7 +561,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                             ),
                             child: Text(
                               _humanizeType(n.type),
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: color,
@@ -572,7 +571,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                           const Spacer(),
                           Text(
                             _timeAgo(n.createdAt),
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 10.5,
                               color: textSecondary,
                             ),
@@ -583,7 +582,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                         const SizedBox(height: 6),
                         Text(
                           'NGN ${NumberFormat('#,##0.00').format(n.amount!)}',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: color,
@@ -646,7 +645,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                     Expanded(
                       child: Text(
                         n.title,
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: textPrimary,
@@ -658,7 +657,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                 const SizedBox(height: 14),
                 Text(
                   n.message,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 14,
                     color: textPrimary,
                     height: 1.4,
@@ -698,7 +697,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
                     ),
                     child: Text(
                       'Close',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                       ),
@@ -721,7 +720,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
             width: 100,
             child: Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 12,
                 color: textSecondary,
                 fontWeight: FontWeight.w600,
@@ -731,7 +730,7 @@ class _AdminNotificationsPageState extends State<AdminNotificationsPage> {
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+              style: TextStyle(fontSize: 13, color: textPrimary),
             ),
           ),
         ],

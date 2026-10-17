@@ -79,7 +79,7 @@ class ReceiptWidget extends StatefulWidget {
     this.isCommission = false,
     this.commissionSource,
     this.isService = false,
-    this.primaryColor = const Color(0xFF243889),
+    this.primaryColor = const Color(0xFF102C68),
     this.customMessage,
     this.vtpassResponse,
     this.showWatermark = true,

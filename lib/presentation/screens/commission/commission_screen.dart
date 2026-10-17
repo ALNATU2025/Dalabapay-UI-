@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -409,8 +408,8 @@ class _CommissionScreenState extends State<CommissionScreen>
               backgroundColor: Colors.white,
               title: Text(
                 'Withdraw Amount',
-                style: GoogleFonts.poppins(
-                  color: const Color(0xFF243889),
+                style: TextStyle(
+                  color: const Color(0xFF102C68),
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -421,7 +420,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                 children: [
                   Text(
                     'Enter amount to move to your main wallet',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey.shade600,
                     ),
@@ -438,20 +437,20 @@ class _CommissionScreenState extends State<CommissionScreen>
                         RegExp(r'^\d*\.?\d{0,2}'),
                       ),
                     ],
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                     ),
                     decoration: InputDecoration(
                       prefixText: '₦ ',
-                      prefixStyle: GoogleFonts.poppins(
+                      prefixStyle: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                       hintText: '500',
-                      hintStyle: GoogleFonts.poppins(
+                      hintStyle: TextStyle(
                         color: Colors.grey.shade400,
                       ),
                       errorText: errorText,
@@ -472,7 +471,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(
-                          color: Color(0xFF243889),
+                          color: Color(0xFF102C68),
                           width: 1.5,
                         ),
                       ),
@@ -489,7 +488,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                     children: [
                       Text(
                         'Available: ₦${_commissionBalance.toStringAsFixed(2)}',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey.shade600,
                         ),
@@ -510,10 +509,10 @@ class _CommissionScreenState extends State<CommissionScreen>
                         ),
                         child: Text(
                           'Withdraw All',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF219C7E),
+                            color: const Color(0xFF168566),
                           ),
                         ),
                       ),
@@ -521,7 +520,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   ),
                   Text(
                     'Minimum: ₦500',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey.shade500,
                     ),
@@ -533,7 +532,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   onPressed: () => Navigator.pop(context, null),
                   child: Text(
                     'Cancel',
-                    style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                    style: TextStyle(color: Colors.grey.shade600),
                   ),
                 ),
                 ElevatedButton(
@@ -565,7 +564,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                     Navigator.pop(context, value);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF219C7E),
+                    backgroundColor: const Color(0xFF168566),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -573,7 +572,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   ),
                   child: Text(
                     'Continue',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -602,8 +601,8 @@ class _CommissionScreenState extends State<CommissionScreen>
             backgroundColor: Colors.white,
             title: Text(
               'Withdraw Commission',
-              style: GoogleFonts.poppins(
-                color: const Color(0xFF243889),
+              style: TextStyle(
+                color: const Color(0xFF102C68),
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
@@ -618,23 +617,23 @@ class _CommissionScreenState extends State<CommissionScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0x05243889),
+                    color: const Color(0x05102C68),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
                       const Icon(
                         Icons.info_outline,
-                        color: Color(0xFF243889),
+                        color: Color(0xFF102C68),
                         size: 20,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'All commission will be transferred to your main wallet.',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: const Color(0xFF243889),
+                            color: const Color(0xFF102C68),
                           ),
                         ),
                       ),
@@ -648,13 +647,13 @@ class _CommissionScreenState extends State<CommissionScreen>
                 onPressed: () => Navigator.pop(context, false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                  style: TextStyle(color: Colors.grey.shade600),
                 ),
               ),
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF219C7E),
+                  backgroundColor: const Color(0xFF168566),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -662,7 +661,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                 ),
                 child: Text(
                   'Confirm',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -679,7 +678,7 @@ class _CommissionScreenState extends State<CommissionScreen>
             width: 80,
             child: Text(
               '$label:',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey.shade600,
               ),
@@ -688,10 +687,10 @@ class _CommissionScreenState extends State<CommissionScreen>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
           ),
@@ -733,7 +732,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               description: 'Commission transferred to main wallet',
               customMessage:
                   '✓ Withdrawal successful! Commission transferred to wallet.',
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -747,7 +746,7 @@ class _CommissionScreenState extends State<CommissionScreen>
       SnackBar(
         content: Text(
           message,
-          style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+          style: TextStyle(fontSize: 13, color: Colors.white),
         ),
         backgroundColor: Colors.red.shade700,
         behavior: SnackBarBehavior.floating,
@@ -761,9 +760,9 @@ class _CommissionScreenState extends State<CommissionScreen>
       SnackBar(
         content: Text(
           message,
-          style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+          style: TextStyle(fontSize: 13, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF219C7E),
+        backgroundColor: const Color(0xFF168566),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -862,10 +861,10 @@ class _CommissionScreenState extends State<CommissionScreen>
                     Center(
                       child: Text(
                         'Use Commission For',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF243889),
+                          color: const Color(0xFF102C68),
                         ),
                       ),
                     ),
@@ -917,7 +916,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                       ),
                       child: Text(
                         'Close',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -949,11 +948,11 @@ class _CommissionScreenState extends State<CommissionScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: const Color(0xFF243889), size: 28),
+              Icon(icon, color: const Color(0xFF102C68), size: 28),
               const SizedBox(height: 8),
               Text(
                 title,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey.shade700,
@@ -977,23 +976,23 @@ class _CommissionScreenState extends State<CommissionScreen>
             ),
             title: Text(
               'Coming Soon',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
             content: Text(
               '$service commission purchase will be available soon!',
-              style: GoogleFonts.poppins(fontSize: 14),
+              style: TextStyle(fontSize: 14),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
+                    color: const Color(0xFF168566),
                   ),
                 ),
               ),
@@ -1045,7 +1044,7 @@ class _CommissionScreenState extends State<CommissionScreen>
       appBar: _buildAppBar(),
       body: RefreshIndicator(
         onRefresh: _fetchCommissionData,
-        color: const Color(0xFF243889),
+        color: const Color(0xFF102C68),
         backgroundColor: Colors.white,
         child:
             _isLoading && !_hasLoadedOnce ? _buildLoadingState() : _buildBody(),
@@ -1060,7 +1059,7 @@ class _CommissionScreenState extends State<CommissionScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
@@ -1070,19 +1069,19 @@ class _CommissionScreenState extends State<CommissionScreen>
         children: [
           Text(
             'Dalaba',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
               letterSpacing: 0.09,
             ),
           ),
           Text(
             'pay',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF219C7E),
+              color: const Color(0xFF168566),
               letterSpacing: 0.09,
             ),
           ),
@@ -1094,14 +1093,14 @@ class _CommissionScreenState extends State<CommissionScreen>
           margin: const EdgeInsets.only(right: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0x05243889),
+            color: const Color(0x05102C68),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.account_balance_wallet_outlined,
-                color: Color(0xFF243889),
+                color: Color(0xFF102C68),
                 size: 16,
               ),
               const SizedBox(width: 4),
@@ -1113,8 +1112,8 @@ class _CommissionScreenState extends State<CommissionScreen>
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF243889),
+                  style: TextStyle(
+                    color: const Color(0xFF102C68),
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1130,7 +1129,7 @@ class _CommissionScreenState extends State<CommissionScreen>
   Widget _buildLoadingState() {
     return Center(
       child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF243889)),
+        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
       ),
     );
   }
@@ -1170,12 +1169,12 @@ class _CommissionScreenState extends State<CommissionScreen>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF219C7E).withValues(alpha: 0.3),
+            color: const Color(0xFF168566).withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -1191,7 +1190,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               children: [
                 Text(
                   'Commission Balance',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -1230,7 +1229,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               _isCommissionVisible
                   ? '₦${_commissionBalance.toStringAsFixed(2)}'
                   : '••••••••',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
@@ -1240,7 +1239,7 @@ class _CommissionScreenState extends State<CommissionScreen>
             const SizedBox(height: 4),
             Text(
               'Available Commission',
-              style: GoogleFonts.inter(color: Colors.white70, fontSize: 12),
+              style: TextStyle(color: Colors.white70, fontSize: 12),
             ),
             const SizedBox(height: 20),
             Row(
@@ -1267,7 +1266,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                                     : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
-                              foregroundColor: const Color(0xFF243889),
+                              foregroundColor: const Color(0xFF102C68),
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -1276,10 +1275,10 @@ class _CommissionScreenState extends State<CommissionScreen>
                             ),
                             child: Text(
                               'Withdraw to Wallet',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: const Color(0xFF243889),
+                                color: const Color(0xFF102C68),
                               ),
                             ),
                           ),
@@ -1291,7 +1290,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                       onPressed: _showCommissionUsageOptions,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
-                        foregroundColor: const Color(0xFF219C7E),
+                        foregroundColor: const Color(0xFF168566),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -1300,10 +1299,10 @@ class _CommissionScreenState extends State<CommissionScreen>
                       ),
                       child: Text(
                         'Use',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF219C7E),
+                          color: const Color(0xFF168566),
                         ),
                       ),
                     ),
@@ -1316,7 +1315,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   'Minimum withdrawal: ₦500',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     color: Colors.yellow[200],
                     fontWeight: FontWeight.w500,
@@ -1330,7 +1329,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                 Flexible(
                   child: Text(
                     'Referral Code: ${_isCommissionVisible ? _referralCode : '****'}',
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 11),
+                    style: TextStyle(color: Colors.white, fontSize: 11),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -1442,20 +1441,20 @@ class _CommissionScreenState extends State<CommissionScreen>
             children: [
               Text(
                 'Referral Earnings',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
               ),
               TextButton(
                 onPressed: _navigateToReferralPage,
                 child: Text(
                   'View Details',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
+                    color: const Color(0xFF168566),
                   ),
                 ),
               ),
@@ -1465,7 +1464,7 @@ class _CommissionScreenState extends State<CommissionScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0x05243889),
+              color: const Color(0x05102C68),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -1476,7 +1475,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   children: [
                     Text(
                       'Total Earnings',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey.shade600,
                       ),
@@ -1484,10 +1483,10 @@ class _CommissionScreenState extends State<CommissionScreen>
                     const SizedBox(height: 4),
                     Text(
                       '₦${_referralStats['totalEarned']?.toStringAsFixed(2) ?? '0.00'}',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                     ),
                   ],
@@ -1495,12 +1494,12 @@ class _CommissionScreenState extends State<CommissionScreen>
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF219C7E).withValues(alpha: 0.1),
+                    color: const Color(0xFF168566).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
                     Icons.emoji_events,
-                    color: Color(0xFF219C7E),
+                    color: Color(0xFF168566),
                     size: 32,
                   ),
                 ),
@@ -1540,12 +1539,12 @@ class _CommissionScreenState extends State<CommissionScreen>
                   if ((_referralStats['directBonusEarnings'] ?? 0) > 0)
                     _buildBonusChip(
                       'Direct: ₦${_referralStats['directBonusEarnings']?.toStringAsFixed(2)}',
-                      const Color(0xFF243889),
+                      const Color(0xFF102C68),
                     ),
                   if ((_referralStats['indirectBonusEarnings'] ?? 0) > 0)
                     _buildBonusChip(
                       'Indirect: ₦${_referralStats['indirectBonusEarnings']?.toStringAsFixed(2)}',
-                      const Color(0xFF219C7E),
+                      const Color(0xFF168566),
                     ),
                   if ((_referralStats['welcomeBonusEarnings'] ?? 0) > 0)
                     _buildBonusChip(
@@ -1563,19 +1562,19 @@ class _CommissionScreenState extends State<CommissionScreen>
   Widget _buildStatColumn(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: const Color(0xFF243889), size: 20),
+        Icon(icon, color: const Color(0xFF102C68), size: 20),
         const SizedBox(height: 4),
         Text(
           value,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         Text(
           label,
-          style: GoogleFonts.poppins(fontSize: 10, color: Colors.grey.shade600),
+          style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
           textAlign: TextAlign.center,
         ),
       ],
@@ -1601,7 +1600,7 @@ class _CommissionScreenState extends State<CommissionScreen>
           const SizedBox(width: 6),
           Text(
             text,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w500,
               color: color,
@@ -1657,19 +1656,19 @@ class _CommissionScreenState extends State<CommissionScreen>
       child: DropdownButton<String>(
         value: value,
         underline: const SizedBox(),
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 12,
-          color: const Color(0xFF243889),
+          color: const Color(0xFF102C68),
         ),
         items:
             items.map((String item) {
               return DropdownMenuItem<String>(
                 value: item,
-                child: Text(item, style: GoogleFonts.poppins(fontSize: 12)),
+                child: Text(item, style: TextStyle(fontSize: 12)),
               );
             }).toList(),
         onChanged: onChanged,
-        icon: Icon(Icons.arrow_drop_down, color: const Color(0xFF243889)),
+        icon: Icon(Icons.arrow_drop_down, color: const Color(0xFF102C68)),
       ),
     );
   }
@@ -1691,7 +1690,7 @@ class _CommissionScreenState extends State<CommissionScreen>
             const SizedBox(height: 12),
             Text(
               'No Commission Transactions Yet',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade600,
@@ -1700,7 +1699,7 @@ class _CommissionScreenState extends State<CommissionScreen>
             const SizedBox(height: 4),
             Text(
               'Your commission history will appear here',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey.shade500,
               ),
@@ -1762,13 +1761,13 @@ class _CommissionScreenState extends State<CommissionScreen>
               decoration: BoxDecoration(
                 color:
                     isCredit
-                        ? const Color(0xFF219C7E).withValues(alpha: 0.1)
+                        ? const Color(0xFF168566).withValues(alpha: 0.1)
                         : Colors.red.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 isCredit ? Icons.arrow_downward : Icons.arrow_upward,
-                color: isCredit ? const Color(0xFF219C7E) : Colors.red,
+                color: isCredit ? const Color(0xFF168566) : Colors.red,
                 size: 22,
               ),
             ),
@@ -1779,10 +1778,10 @@ class _CommissionScreenState extends State<CommissionScreen>
                 children: [
                   Text(
                     source,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1C2D5A),
+                      color: const Color(0xFF14263D),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -1790,7 +1789,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                     description.isNotEmpty
                         ? description
                         : 'Commission transaction',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 11,
                       color: Colors.grey.shade500,
                     ),
@@ -1800,7 +1799,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   const SizedBox(height: 2),
                   Text(
                     _formatDate(date),
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 10,
                       color: Colors.grey.shade400,
                     ),
@@ -1813,10 +1812,10 @@ class _CommissionScreenState extends State<CommissionScreen>
               children: [
                 Text(
                   '${isCredit ? '+' : '-'}₦${amount.toStringAsFixed(2)}',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: isCredit ? const Color(0xFF219C7E) : Colors.red,
+                    color: isCredit ? const Color(0xFF168566) : Colors.red,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1828,16 +1827,16 @@ class _CommissionScreenState extends State<CommissionScreen>
                   decoration: BoxDecoration(
                     color:
                         isCredit
-                            ? const Color(0xFF219C7E).withValues(alpha: 0.1)
+                            ? const Color(0xFF168566).withValues(alpha: 0.1)
                             : Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     isCredit ? 'CREDIT' : 'DEBIT',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 8,
                       fontWeight: FontWeight.w700,
-                      color: isCredit ? const Color(0xFF219C7E) : Colors.red,
+                      color: isCredit ? const Color(0xFF168566) : Colors.red,
                     ),
                   ),
                 ),
@@ -1889,7 +1888,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   isCredit
                       ? '✓ Commission credited to your account'
                       : '✓ Commission used for service',
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,

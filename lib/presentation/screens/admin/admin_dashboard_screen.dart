@@ -1,7 +1,6 @@
 // lib/presentation/screens/admin/admin_dashboard_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../../../core/widgets/custom_drawer.dart';
@@ -308,13 +307,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
         ),
         backgroundColor:
-            isError ? Colors.red.shade700 : const Color(0xFF219C7E),
+            isError ? Colors.red.shade700 : const Color(0xFF168566),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 3),
@@ -369,8 +368,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           colors: [
-            const Color(0xFF243889),
-            const Color(0xFF243889).withValues(alpha: 0.8),
+            const Color(0xFF102C68),
+            const Color(0xFF102C68).withValues(alpha: 0.8),
           ],
         ),
       ),
@@ -381,7 +380,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -390,10 +389,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                   letterSpacing: 0.09,
                 ),
               ),
@@ -403,18 +402,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
             decoration: BoxDecoration(
-              color: const Color(0xFF219C7E).withValues(alpha: 0.2),
+              color: const Color(0xFF168566).withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: const Color(0xFF219C7E).withValues(alpha: 0.3),
+                color: const Color(0xFF168566).withValues(alpha: 0.3),
               ),
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF219C7E),
+                color: const Color(0xFF168566),
                 letterSpacing: 0.5,
               ),
             ),
@@ -450,7 +449,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     final iconData = iconMap[item.title] ?? HugeIcons.strokeRoundedCircle;
     final iconColor =
         isSelected
-            ? const Color(0xFF243889)
+            ? const Color(0xFF102C68)
             : (_iconColors[item.title] ?? Colors.grey.shade600);
 
     return ListTile(
@@ -459,22 +458,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         decoration: BoxDecoration(
           color:
               isSelected
-                  ? const Color(0xFF243889).withValues(alpha: 0.1)
+                  ? const Color(0xFF102C68).withValues(alpha: 0.1)
                   : iconColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: HugeIcon(
           icon: iconData,
-          color: isSelected ? const Color(0xFF243889) : iconColor,
+          color: isSelected ? const Color(0xFF102C68) : iconColor,
           size: 22,
         ),
       ),
       title: Text(
         item.title,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-          color: isSelected ? const Color(0xFF243889) : Colors.grey.shade800,
+          color: isSelected ? const Color(0xFF102C68) : Colors.grey.shade800,
         ),
       ),
       trailing:
@@ -487,15 +486,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFF219C7E),
-                      const Color(0xFF219C7E).withValues(alpha: 0.7),
+                      const Color(0xFF168566),
+                      const Color(0xFF168566).withValues(alpha: 0.7),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
                   item.badge!,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
@@ -504,7 +503,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               )
               : null,
       selected: isSelected,
-      selectedTileColor: const Color(0xFF243889).withValues(alpha: 0.06),
+      selectedTileColor: const Color(0xFF102C68).withValues(alpha: 0.06),
       onTap: () => _onItemSelected(item),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     );
@@ -519,7 +518,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.menu, color: const Color(0xFF243889)),
+          icon: Icon(Icons.menu, color: const Color(0xFF102C68)),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
         title: Row(
@@ -527,19 +526,19 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           children: [
             Text(
               'Dalaba',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 letterSpacing: 0.09,
               ),
             ),
             Text(
               'pay',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF219C7E),
+                color: const Color(0xFF168566),
                 letterSpacing: 0.09,
               ),
             ),
@@ -548,7 +547,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh, color: Color(0xFF243889)),
+            icon: const Icon(Icons.refresh, color: Color(0xFF102C68)),
             onPressed: () {
               if (_currentPage is AdminDashboardHome) {
                 setState(() {

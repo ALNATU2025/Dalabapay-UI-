@@ -1,6 +1,5 @@
 // lib/presentation/screens/splash/simple_splash_screen.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
@@ -141,7 +140,7 @@ class _SimpleAnimatedSplashScreenState extends State<SimpleAnimatedSplashScreen>
                     style: TextStyle(
                       fontSize: 70,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF219C7E),
+                      color: Color(0xFF168566),
                     ),
                   ),
                 );
@@ -152,7 +151,7 @@ class _SimpleAnimatedSplashScreenState extends State<SimpleAnimatedSplashScreen>
         const SizedBox(height: 30),
         Text(
           'DALABAPAY',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -210,7 +209,7 @@ class _SimpleAnimatedSplashScreenState extends State<SimpleAnimatedSplashScreen>
             children: [
               TextSpan(
                 text: 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.secondaryColor,
@@ -218,7 +217,7 @@ class _SimpleAnimatedSplashScreenState extends State<SimpleAnimatedSplashScreen>
               ),
               TextSpan(
                 text: 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.primaryColor,
@@ -230,7 +229,7 @@ class _SimpleAnimatedSplashScreenState extends State<SimpleAnimatedSplashScreen>
         const SizedBox(height: 12),
         Text(
           'Secure • Fast • Reliable',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 14,
             color: Colors.grey[600],
           ),

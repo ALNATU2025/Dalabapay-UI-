@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/services/api_service.dart';
@@ -30,14 +29,14 @@ class AdminUserHistoryPage extends StatefulWidget {
 class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
 
   // ==================== STATE ====================
   late TabController _tabController;
@@ -345,7 +344,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: BorderRadius.only(
@@ -377,7 +376,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
               Expanded(
                 child: Text(
                   'User History',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.75),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -420,7 +419,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                     widget.userName.isNotEmpty
                         ? widget.userName[0].toUpperCase()
                         : '?',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: primaryColor,
                       fontSize: isMobile ? 20 : 24,
                       fontWeight: FontWeight.w700,
@@ -435,7 +434,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                   children: [
                     Text(
                       widget.userName,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 17 : 20,
                         fontWeight: FontWeight.w700,
@@ -445,7 +444,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                     ),
                     Text(
                       widget.userEmail,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 11 : 13,
                       ),
@@ -508,7 +507,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
           const SizedBox(width: 5),
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 9,
               fontWeight: FontWeight.w800,
@@ -561,7 +560,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                   children: [
                     Text(
                       'Current Wallet Balance',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 11 : 12,
                         color: textSecondary,
                         fontWeight: FontWeight.w500,
@@ -570,7 +569,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                     const SizedBox(height: 2),
                     Text(
                       '₦${_currentBalance.toStringAsFixed(2)}',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: isMobile ? 22 : 26,
                         color: primaryColor,
                         fontWeight: FontWeight.w800,
@@ -639,7 +638,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
             const SizedBox(width: 4),
             Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 10 : 11,
                 color: textSecondary,
               ),
@@ -649,7 +648,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
         const SizedBox(height: 4),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 12 : 14,
             color: primaryColor,
             fontWeight: FontWeight.w700,
@@ -680,11 +679,11 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
         dividerColor: Colors.transparent,
         labelColor: Colors.white,
         unselectedLabelColor: textSecondary,
-        labelStyle: GoogleFonts.inter(
+        labelStyle: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 13,
         ),
-        unselectedLabelStyle: GoogleFonts.inter(
+        unselectedLabelStyle: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 13,
         ),
@@ -803,7 +802,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                             _isLoadingAll
                                 ? 'Loading...'
                                 : 'Load All (${_transactions.length}/$_totalTxCount)',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -864,7 +863,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
               const SizedBox(height: 6),
               Text(
                 'All $_totalTxCount transactions loaded',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 12,
                   color: textSecondary,
                   fontWeight: FontWeight.w500,
@@ -901,7 +900,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
           icon: const Icon(Icons.expand_more_rounded, size: 18),
           label: Text(
             'Load More (${_transactions.length}/$_totalTxCount)',
-            style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
           style: OutlinedButton.styleFrom(
             foregroundColor: primaryColor,
@@ -958,7 +957,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
               const SizedBox(width: 5),
               Text(
                 displayLabel,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: isSelected ? Colors.white : textSecondary,
@@ -1038,7 +1037,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                     children: [
                       Text(
                         type,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 13 : 14,
                           fontWeight: FontWeight.w700,
                           color: primaryColor,
@@ -1050,7 +1049,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                         const SizedBox(height: 2),
                         Text(
                           desc,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 11,
                             color: textSecondary,
                           ),
@@ -1069,7 +1068,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                           const SizedBox(width: 3),
                           Text(
                             _formatDateTime(createdAt),
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 10,
                               color: textSecondary,
                             ),
@@ -1079,7 +1078,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                             Flexible(
                               child: Text(
                                 '• ${_shortReference(reference)}',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: textSecondary,
                                   fontStyle: FontStyle.italic,
@@ -1100,7 +1099,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                   children: [
                     Text(
                       '₦${amount.toStringAsFixed(2)}',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 13 : 14,
                         fontWeight: FontWeight.w800,
                         color: primaryColor,
@@ -1124,7 +1123,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                             : isPending
                             ? 'PENDING'
                             : status.toUpperCase(),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 8,
                           fontWeight: FontWeight.w800,
                           color: color,
@@ -1207,7 +1206,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
               Expanded(
                 child: Text(
                   _humanize(action),
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 13 : 14,
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
@@ -1216,7 +1215,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
               ),
               Text(
                 _formatDateTime(createdAt),
-                style: GoogleFonts.inter(fontSize: 10, color: textSecondary),
+                style: TextStyle(fontSize: 10, color: textSecondary),
               ),
             ],
           ),
@@ -1237,7 +1236,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                       const SizedBox(width: 4),
                       Text(
                         '₦${amount.toStringAsFixed(2)}',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
                           color: color,
@@ -1273,7 +1272,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                 Expanded(
                   child: Text(
                     reason,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
                       color: textSecondary,
                     ),
@@ -1295,7 +1294,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                 Expanded(
                   child: Text(
                     reference,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 10,
                       color: textSecondary,
                       fontStyle: FontStyle.italic,
@@ -1323,7 +1322,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                 const SizedBox(width: 6),
                 Text(
                   'By: $admin',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 10,
                     color: primaryColor,
                     fontWeight: FontWeight.w600,
@@ -1347,7 +1346,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
       ),
       child: Text(
         '$label: ₦${value.toStringAsFixed(2)}',
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: 10,
           color: textPrimary,
           fontWeight: FontWeight.w600,
@@ -1434,7 +1433,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                         children: [
                           Text(
                             'Transaction Receipt',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: isMobile ? 16 : 18,
                               fontWeight: FontWeight.w700,
                               color: primaryColor,
@@ -1442,7 +1441,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                           ),
                           Text(
                             type,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 12,
                               color: textSecondary,
                             ),
@@ -1490,7 +1489,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                           children: [
                             Text(
                               'Amount',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: 12,
                                 color: textSecondary,
                               ),
@@ -1498,7 +1497,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                             const SizedBox(height: 4),
                             Text(
                               '₦${amount.toStringAsFixed(2)}',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: isMobile ? 28 : 32,
                                 fontWeight: FontWeight.w800,
                                 color: primaryColor,
@@ -1518,7 +1517,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                                 (tx['status'] ?? 'Unknown')
                                     .toString()
                                     .toUpperCase(),
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w800,
@@ -1597,7 +1596,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                             SnackBar(
                               content: Text(
                                 'Receipt copied to clipboard',
-                                style: GoogleFonts.inter(color: Colors.white),
+                                style: TextStyle(color: Colors.white),
                               ),
                               backgroundColor: secondaryColor,
                               behavior: SnackBarBehavior.floating,
@@ -1610,7 +1609,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                         icon: const Icon(Icons.copy_rounded, size: 16),
                         label: Text(
                           'Copy',
-                          style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1636,7 +1635,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
                         ),
                         child: Text(
                           'Close',
-                          style: GoogleFonts.inter(fontWeight: FontWeight.w700),
+                          style: TextStyle(fontWeight: FontWeight.w700),
                         ),
                       ),
                     ),
@@ -1663,7 +1662,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
         children: [
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
               color: primaryColor,
@@ -1687,13 +1686,13 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
             width: 100,
             child: Text(
               label,
-              style: GoogleFonts.inter(fontSize: 11, color: textSecondary),
+              style: TextStyle(fontSize: 11, color: textSecondary),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: valueColor ?? textPrimary,
@@ -1759,7 +1758,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
           const SizedBox(height: 12),
           Text(
             message,
-            style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+            style: TextStyle(fontSize: 14, color: textSecondary),
           ),
         ],
       ),
@@ -1777,7 +1776,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
             const SizedBox(height: 12),
             Text(
               'Failed to load data',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: primaryColor,
@@ -1786,7 +1785,7 @@ class _AdminUserHistoryPageState extends State<AdminUserHistoryPage>
             const SizedBox(height: 6),
             Text(
               _error ?? '',
-              style: GoogleFonts.inter(fontSize: 13, color: textSecondary),
+              style: TextStyle(fontSize: 13, color: textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),

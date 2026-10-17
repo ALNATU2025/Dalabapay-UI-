@@ -2303,6 +2303,11 @@ class DPPaymentReview extends StatelessWidget {
               onPressed: processing ? null : onPayWithPin,
             ),
           ],
+          if (!showPin && onPayWithBiometric == null)
+            const DPNotice(
+              'Set up a transaction PIN in Settings to make payments.',
+              kind: DPNoticeKind.warn,
+            ),
           if (onPayWithBiometric != null) ...[
             const SizedBox(height: 10),
             DPButton(

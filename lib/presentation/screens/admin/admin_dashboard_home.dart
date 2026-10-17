@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:intl/intl.dart';
@@ -72,14 +71,14 @@ class AdminDashboardHome extends StatefulWidget {
 class _AdminDashboardHomeState extends State<AdminDashboardHome>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== STATE ====================
@@ -527,7 +526,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -553,7 +552,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   children: [
                     Text(
                       '👋 Welcome back, Admin!',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 18 : 24,
                         fontWeight: FontWeight.w700,
@@ -562,7 +561,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                     const SizedBox(height: 4),
                     Text(
                       'Here\'s what\'s happening with your platform',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -591,7 +590,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                       const SizedBox(width: 4),
                       Text(
                         'SUPER ADMIN',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: isMobile ? 8 : 10,
                           fontWeight: FontWeight.w700,
@@ -639,7 +638,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                         const SizedBox(width: 4),
                         Text(
                           'Refresh',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -652,7 +651,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 DateFormat('HH:mm').format(DateTime.now()),
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.6),
                   fontSize: isMobile ? 10 : 12,
                 ),
@@ -788,7 +787,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                     ),
                     child: Text(
                       title,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 8,
                         color: color,
                         fontWeight: FontWeight.w500,
@@ -803,7 +802,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                 if (!isMobile)
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
                       color: textSecondary,
                       fontWeight: FontWeight.w500,
@@ -811,7 +810,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   ),
                 Text(
                   value,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: isMobile ? 18 : 24,
                     fontWeight: FontWeight.w700,
                     color: textPrimary,
@@ -821,7 +820,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                 ),
                 Text(
                   subtitle,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     color: textSecondary,
                   ),
@@ -897,7 +896,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Period Performance',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -966,7 +965,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 9 : 11,
                     color: textSecondary,
                   ),
@@ -975,7 +974,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   children: [
                     Text(
                       '₦${_formatNumber(amount)}',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 11 : 13,
                         fontWeight: FontWeight.w700,
                         color: textPrimary,
@@ -984,7 +983,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                     const SizedBox(width: 4),
                     Text(
                       '($count)',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 8 : 10,
                         color: textSecondary,
                       ),
@@ -1045,7 +1044,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'User Growth (Last 7 Days)',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1060,7 +1059,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                 ),
                 child: Text(
                   '+$_totalUsers total',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 12,
                     fontWeight: FontWeight.w600,
                     color: successColor,
@@ -1074,14 +1073,14 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
             height: isMobile ? 180 : 220,
             child: SfCartesianChart(
               primaryXAxis: CategoryAxis(
-                labelStyle: GoogleFonts.inter(
+                labelStyle: TextStyle(
                   fontSize: isMobile ? 10 : 12,
                   color: textSecondary,
                 ),
                 majorGridLines: const MajorGridLines(width: 0),
               ),
               primaryYAxis: NumericAxis(
-                labelStyle: GoogleFonts.inter(
+                labelStyle: TextStyle(
                   fontSize: isMobile ? 10 : 12,
                   color: textSecondary,
                 ),
@@ -1140,7 +1139,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Revenue Trend (Last 7 Days)',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1155,7 +1154,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                 ),
                 child: Text(
                   '₦${_formatNumber(_totalRevenue)}',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 12,
                     fontWeight: FontWeight.w600,
                     color: successColor,
@@ -1169,14 +1168,14 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
             height: isMobile ? 180 : 220,
             child: SfCartesianChart(
               primaryXAxis: CategoryAxis(
-                labelStyle: GoogleFonts.inter(
+                labelStyle: TextStyle(
                   fontSize: isMobile ? 10 : 12,
                   color: textSecondary,
                 ),
                 majorGridLines: const MajorGridLines(width: 0),
               ),
               primaryYAxis: NumericAxis(
-                labelStyle: GoogleFonts.inter(
+                labelStyle: TextStyle(
                   fontSize: isMobile ? 10 : 12,
                   color: textSecondary,
                 ),
@@ -1241,7 +1240,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Transaction Status',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1261,7 +1260,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                       isVisible: true,
                       position: LegendPosition.bottom,
                       overflowMode: LegendItemOverflowMode.wrap,
-                      textStyle: GoogleFonts.inter(
+                      textStyle: TextStyle(
                         fontSize: isMobile ? 10 : 12,
                         color: textPrimary,
                       ),
@@ -1317,7 +1316,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                                   Expanded(
                                     child: Text(
                                       data.status,
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 13,
                                         color: textSecondary,
                                       ),
@@ -1325,7 +1324,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                                   ),
                                   Text(
                                     '${data.count}',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
                                       color: textPrimary,
@@ -1377,7 +1376,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               const SizedBox(width: 8),
               Text(
                 'Recent Transactions',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1396,7 +1395,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   ),
                   child: Text(
                     '${_recentTransactions.length}/$_totalItems',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 10 : 12,
                       fontWeight: FontWeight.w600,
                       color: primaryColor,
@@ -1420,7 +1419,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                     const SizedBox(height: 8),
                     Text(
                       'No recent transactions',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 13 : 14,
                         color: textSecondary,
                       ),
@@ -1498,7 +1497,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                 children: [
                   Text(
                     tx.type,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 13 : 14,
                       fontWeight: FontWeight.w600,
                       color: textPrimary,
@@ -1508,7 +1507,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   ),
                   Text(
                     tx.userName,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 10 : 11,
                       color: textSecondary,
                     ),
@@ -1523,7 +1522,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               children: [
                 Text(
                   '₦${_formatNumber(tx.amount)}',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 13 : 14,
                     fontWeight: FontWeight.w700,
                     color: isSuccess ? successColor : textPrimary,
@@ -1540,7 +1539,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                   ),
                   child: Text(
                     tx.status,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 8 : 9,
                       fontWeight: FontWeight.w600,
                       color: statusColor,
@@ -1598,7 +1597,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                     // Title
                     Text(
                       'Transaction Details',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: isMobile ? 18 : 20,
                         fontWeight: FontWeight.w700,
                         color: textPrimary,
@@ -1619,7 +1618,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                       ),
                       child: Text(
                         tx.status.toUpperCase(),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: _getStatusColor(tx.status),
@@ -1656,7 +1655,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
                         ),
                         child: Text(
                           'Close',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
@@ -1681,7 +1680,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
             width: isMobile ? 80 : 100,
             child: Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 13 : 14,
                 fontWeight: FontWeight.w600,
                 color: textSecondary,
@@ -1691,7 +1690,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 13 : 14,
                 color: textPrimary,
               ),
@@ -1767,7 +1766,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
             const SizedBox(height: 16),
             Text(
               'Failed to Load Dashboard',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -1776,7 +1775,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
             const SizedBox(height: 8),
             Text(
               _errorMessage ?? 'Please try again later',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -1788,7 +1787,7 @@ class _AdminDashboardHomeState extends State<AdminDashboardHome>
               icon: const Icon(Icons.refresh_rounded, size: 18),
               label: Text(
                 'Retry',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
                 ),

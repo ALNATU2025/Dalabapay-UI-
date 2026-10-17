@@ -6,7 +6,6 @@ import 'package:dalabapay/presentation/screens/auth/change_pin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode, kDebugMode, kIsWeb;
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as developer;
 import 'dart:ui';
@@ -17,6 +16,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'core/theme/app_theme.dart';
 import 'ui/ui.dart';
+import 'presentation/screens/send_money/send_money_screen.dart';
+import 'presentation/screens/support/help_support_screen.dart';
 import 'core/providers/auth_provider.dart';
 import 'core/providers/wallet_provider.dart';
 import 'core/providers/service_provider.dart';
@@ -54,13 +55,10 @@ import 'presentation/screens/electricity/electricity_screen.dart';
 import 'presentation/screens/cabletv/cabletv_screen.dart';
 import 'presentation/screens/education/education_screen.dart';
 import 'presentation/screens/international_airtime/international_airtime_screen.dart';
-import 'presentation/screens/ticket/ticket_screen.dart';
 import 'presentation/screens/commission/commission_screen.dart';
 import 'presentation/screens/referral/referral_screen.dart';
 import 'presentation/screens/internet/internet_screen.dart';
-import 'presentation/screens/betting/betting_screen.dart';
 import 'presentation/screens/insurance/insurance_screen.dart';
-import 'presentation/screens/donation/donation_screen.dart';
 import 'presentation/screens/transactions/transactions_screen.dart';
 import 'presentation/screens/wallet/wallet_screen.dart';
 import 'presentation/screens/settings/settings_screen.dart';
@@ -322,10 +320,10 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                     const SizedBox(height: 16),
                     Text(
                       'Something went wrong',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF1C2D5A),
+                        color: const Color(0xFF14263D),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -334,7 +332,7 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                           ? 'Please restart the app'
                           : 'An error occurred during build',
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey.shade600,
                       ),
@@ -349,7 +347,7 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                         ),
                         child: Text(
                           'Check the console for details',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 12,
                             color: Colors.red.shade700,
                           ),
@@ -650,19 +648,6 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                   );
                 },
               );
-            case '/ticket':
-              return MaterialPageRoute(
-                builder: (_) {
-                  final args = settings.arguments as Map<String, dynamic>?;
-                  final userId = args?['userId'] ?? '';
-                  final onBalanceUpdate =
-                      args?['onBalanceUpdate'] as void Function(double)?;
-                  return TicketScreen(
-                    userId: userId,
-                    onBalanceUpdate: onBalanceUpdate ?? (_) {},
-                  );
-                },
-              );
             case '/commission':
               return MaterialPageRoute(
                 builder: (_) {
@@ -685,19 +670,6 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                   return ReferralEarningsPage(userId: userId);
                 },
               );
-            case '/betting':
-              return MaterialPageRoute(
-                builder: (_) {
-                  final args = settings.arguments as Map<String, dynamic>?;
-                  final userId = args?['userId'] ?? '';
-                  final onBalanceUpdate =
-                      args?['onBalanceUpdate'] as void Function(double)?;
-                  return BettingScreen(
-                    userId: userId,
-                    onBalanceUpdate: onBalanceUpdate ?? (_) {},
-                  );
-                },
-              );
             case '/insurance':
               return MaterialPageRoute(
                 builder: (_) {
@@ -706,19 +678,6 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                   final onBalanceUpdate =
                       args?['onBalanceUpdate'] as void Function(double)?;
                   return InsuranceScreen(
-                    userId: userId,
-                    onBalanceUpdate: onBalanceUpdate ?? (_) {},
-                  );
-                },
-              );
-            case '/donation':
-              return MaterialPageRoute(
-                builder: (_) {
-                  final args = settings.arguments as Map<String, dynamic>?;
-                  final userId = args?['userId'] ?? '';
-                  final onBalanceUpdate =
-                      args?['onBalanceUpdate'] as void Function(double)?;
-                  return DonationScreen(
                     userId: userId,
                     onBalanceUpdate: onBalanceUpdate ?? (_) {},
                   );
@@ -739,6 +698,21 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                   );
                 },
               );
+
+            case '/send-money':
+              return MaterialPageRoute(
+                builder: (_) {
+                  final args = settings.arguments as Map<String, dynamic>?;
+                  return SendMoneyScreen(
+                    userId: (args?['userId'] ?? '').toString(),
+                    onBalanceUpdate: args?['onBalanceUpdate'] as void Function(double)?,
+                    startWithWallet: args?['wallet'] == true,
+                  );
+                },
+              );
+
+            case '/support':
+              return MaterialPageRoute(builder: (_) => const HelpSupportScreen());
 
             default:
               // ✅ Unknown route → go to role-based dashboard
@@ -774,7 +748,7 @@ class RoleBasedDashboard extends StatelessWidget {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
               ),
             ),
           );
@@ -813,16 +787,16 @@ class NotFoundScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   'Page Not Found',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'The page you are looking for does not exist.',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade600,
                   ),
@@ -834,7 +808,7 @@ class NotFoundScreen extends StatelessWidget {
                     Navigator.pushReplacementNamed(context, '/');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF219C7E),
+                    backgroundColor: const Color(0xFF168566),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
                       vertical: 12,

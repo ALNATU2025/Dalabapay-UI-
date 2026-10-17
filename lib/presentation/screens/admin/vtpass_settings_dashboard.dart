@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,15 +24,15 @@ class VtpassSettingsDashboard extends StatefulWidget {
 class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   bool _useSandbox = true;
@@ -412,7 +411,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     children: [
                       Text(
                         'Service Controls',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 15 : 17,
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -420,7 +419,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                       ),
                       Text(
                         'Enable or disable individual services',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 12 : 13,
                           color: textSecondary,
                         ),
@@ -475,7 +474,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                           Expanded(
                             child: Text(
                               label,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 12,
                                 fontWeight: FontWeight.w500,
                                 color: isEnabled ? successColor : errorColor,
@@ -813,7 +812,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -846,7 +845,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -855,7 +854,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -874,7 +873,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -1049,7 +1048,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1088,7 +1087,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
               Expanded(
                 child: Text(
                   'Admin / VTpass Settings',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1107,7 +1106,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                   ),
                   child: Text(
                     'SUPER ADMIN',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 8 : 10,
                       fontWeight: FontWeight.w700,
@@ -1148,7 +1147,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                   children: [
                     Text(
                       'VTpass Settings',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isSmall ? 16 : (isMobile ? 20 : 28),
                         fontWeight: FontWeight.w700,
@@ -1157,7 +1156,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       '${_useSandbox ? "Sandbox" : "Live"} Mode • ₦${_vtpassBalance.toStringAsFixed(2)} balance',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isSmall ? 10 : (isMobile ? 12 : 14),
                       ),
@@ -1225,7 +1224,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     children: [
                       Text(
                         _useSandbox ? 'Sandbox Mode' : 'Live Mode',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: primaryColor,
                           fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                           fontWeight: FontWeight.w600,
@@ -1235,7 +1234,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                         _useSandbox
                             ? 'Testing environment - No real transactions'
                             : 'Production environment - Real transactions',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: textSecondary,
                           fontSize: isSmall ? 8 : (isMobile ? 10 : 11),
                         ),
@@ -1407,7 +1406,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     children: [
                       Text(
                         'Maintenance Control',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 13 : (isMobile ? 15 : 17),
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -1417,7 +1416,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                         _maintenanceMode
                             ? '⚠️ System is in maintenance mode'
                             : '✅ All services are active',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                           color: _maintenanceMode ? errorColor : secondaryColor,
                         ),
@@ -1441,7 +1440,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                       ),
                       Text(
                         _maintenanceMode ? 'ON' : 'OFF',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 8 : (isMobile ? 9 : 10),
                           fontWeight: FontWeight.w700,
                           color: _maintenanceMode ? errorColor : textSecondary,
@@ -1478,7 +1477,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                         Expanded(
                           child: Text(
                             '🔴 SYSTEM IS IN MAINTENANCE MODE',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isSmall ? 9 : (isMobile ? 11 : 12),
                               color: errorColor,
                               fontWeight: FontWeight.w700,
@@ -1504,7 +1503,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                               Expanded(
                                 child: Text(
                                   '✅ View Balance & Transactions (Read-Only)',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize:
                                         isSmall ? 8 : (isMobile ? 10 : 11),
                                     color: secondaryColor,
@@ -1525,7 +1524,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                               Expanded(
                                 child: Text(
                                   '❌ New Transactions Disabled',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize:
                                         isSmall ? 8 : (isMobile ? 10 : 11),
                                     color: errorColor,
@@ -1555,7 +1554,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                   children: [
                     Text(
                       '📝 Maintenance Message:',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                         fontWeight: FontWeight.w600,
                         color: textPrimary,
@@ -1566,7 +1565,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                       _maintenanceMessage.isNotEmpty
                           ? _maintenanceMessage
                           : 'System is under maintenance. Transactions are disabled.',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isSmall ? 10 : (isMobile ? 11 : 12),
                         color: textSecondary,
                       ),
@@ -1590,7 +1589,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                         vertical: isSmall ? 8 : (isMobile ? 10 : 12),
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                       color: textPrimary,
                     ),
@@ -1628,7 +1627,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                               )
                               : Text(
                                 'Update',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                                 ),
@@ -1659,7 +1658,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                       _maintenanceMode
                           ? 'Admin: Full access. Users: Read-only.'
                           : 'Admin access is always available.',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isSmall ? 8 : (isMobile ? 10 : 11),
                         color: textSecondary,
                       ),
@@ -1700,7 +1699,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
         SizedBox(height: isSmall ? 1 : (isMobile ? 2 : 4)),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isSmall ? 11 : (isMobile ? 14 : 16),
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -1711,7 +1710,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
         SizedBox(height: isSmall ? 0 : (isMobile ? 1 : 2)),
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isSmall ? 7 : (isMobile ? 9 : 11),
             color: textSecondary,
             fontWeight: FontWeight.w500,
@@ -1772,7 +1771,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     children: [
                       Text(
                         'Server Health',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 13 : (isMobile ? 15 : 17),
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -1782,7 +1781,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                         isHealthy
                             ? '✅ Server is running normally'
                             : '⚠️ Server health check failed',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                           color: isHealthy ? successColor : errorColor,
                         ),
@@ -1802,7 +1801,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     ),
                     child: Text(
                       _formatUptime(_serverHealth['uptime'].toString()),
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isSmall ? 8 : (isMobile ? 10 : 11),
                         fontWeight: FontWeight.w600,
                         color: successColor,
@@ -1873,7 +1872,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                         ),
                 label: Text(
                   _isCheckingHealth ? 'Checking...' : 'Check Server Health',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                   ),
@@ -1931,7 +1930,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     children: [
                       Text(
                         'Credentials Test',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 13 : (isMobile ? 15 : 17),
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -1939,7 +1938,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                       ),
                       Text(
                         'Test VTpass API credentials',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                           color: textSecondary,
                         ),
@@ -1978,7 +1977,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     Expanded(
                       child: Text(
                         _credentialsTestResult['message'] ?? 'Test completed',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                           fontWeight: FontWeight.w500,
                           color: isSuccess ? successColor : errorColor,
@@ -2031,7 +2030,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                         ),
                 label: Text(
                   _isTestingCredentials ? 'Testing...' : 'Test Credentials',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                   ),
@@ -2088,7 +2087,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     children: [
                       Text(
                         'Documentation & Info',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 13 : (isMobile ? 15 : 17),
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -2096,7 +2095,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                       ),
                       Text(
                         'Access VTpass API documentation',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                           color: textSecondary,
                         ),
@@ -2119,7 +2118,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 children: [
                   Text(
                     '📌 Important Notes:',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -2165,7 +2164,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 ),
                 label: Text(
                   'Open Documentation',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                   ),
@@ -2234,7 +2233,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                     children: [
                       Text(
                         'VTpass Balance',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isSmall ? 13 : (isMobile ? 15 : 17),
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -2246,7 +2245,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                             _isFetchingBalance
                                 ? 'Fetching...'
                                 : '₦${_vtpassBalance.toStringAsFixed(2)}',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isSmall ? 16 : (isMobile ? 20 : 24),
                               fontWeight: FontWeight.bold,
                               color:
@@ -2261,7 +2260,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                             SizedBox(width: isMobile ? 8 : 12),
                             Text(
                               '• ${_formatTimeAgo(_balanceLastChecked!)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isSmall ? 8 : (isMobile ? 10 : 11),
                                 color: textSecondary,
                               ),
@@ -2287,7 +2286,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
               SizedBox(height: isMobile ? 12 : 16),
               Text(
                 'Low Balance Alerts',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2300,7 +2299,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                   onPressed: _showAllAlertsDialog,
                   child: Text(
                     'View all ${_alerts.length} alerts',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontWeight: FontWeight.w600,
                       fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
@@ -2322,7 +2321,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 ),
                 child: Text(
                   '⚠️ $_alertsError',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                     color: errorColor,
                   ),
@@ -2351,7 +2350,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 ),
                 label: Text(
                   'Add Funds to VTpass',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: isSmall ? 11 : (isMobile ? 13 : 14),
                   ),
@@ -2400,7 +2399,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
               children: [
                 Text(
                   alert['title'] ?? 'Low Balance Alert',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -2408,7 +2407,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 ),
                 Text(
                   alert['message'] ?? 'VTpass wallet balance is low',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isSmall ? 9 : (isMobile ? 11 : 12),
                     color: textSecondary,
                   ),
@@ -2425,7 +2424,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
               ),
               child: Text(
                 'NEW',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isSmall ? 7 : (isMobile ? 8 : 9),
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -2449,7 +2448,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
             ),
             title: Text(
               'All VTpass Alerts',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 18 : 20,
                 fontWeight: FontWeight.bold,
                 color: textPrimary,
@@ -2469,7 +2468,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -2494,7 +2493,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
             width: isSmall ? 60 : (isMobile ? 80 : 100),
             child: Text(
               '$label:',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                 fontWeight: FontWeight.w500,
                 color: textSecondary,
@@ -2504,7 +2503,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                 fontWeight: FontWeight.w600,
                 color: textPrimary,
@@ -2526,7 +2525,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
         children: [
           Text(
             '• ',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
               color: textSecondary,
             ),
@@ -2534,7 +2533,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isSmall ? 10 : (isMobile ? 12 : 13),
                 color: textSecondary,
               ),
@@ -2621,7 +2620,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 SizedBox(height: isMobile ? 16 : 24),
                 Text(
                   'Access Denied',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: isMobile ? 22 : 28,
                     fontWeight: FontWeight.w700,
                     color: errorColor,
@@ -2630,7 +2629,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 SizedBox(height: isMobile ? 8 : 12),
                 Text(
                   _errorMessage!,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     color: textSecondary,
                   ),
@@ -2658,7 +2657,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                           SizedBox(width: isMobile ? 6 : 8),
                           Text(
                             'Try Again',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
                             ),
@@ -2700,7 +2699,7 @@ class _VtpassSettingsDashboardState extends State<VtpassSettingsDashboard>
                 const SizedBox(height: 16),
                 Text(
                   'Loading VTpass Settings...',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     fontWeight: FontWeight.w500,
                     color: textSecondary,

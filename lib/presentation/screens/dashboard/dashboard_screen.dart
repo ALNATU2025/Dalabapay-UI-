@@ -97,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   bool get _isApproved => !_isPending && !_isRejected;
 
-  static const Color _successColor = Color(0xFF219C7E);
+  static const Color _successColor = Color(0xFF168566);
   static const Color _warningColor = Color(0xFFF39C12);
 
   // Transaction state management
@@ -1734,14 +1734,14 @@ class _DashboardScreenState extends State<DashboardScreen>
     final typeLower = type.toLowerCase();
 
     if (typeLower.contains('commission')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
     if (typeLower.contains('fund wallet') ||
         typeLower.contains('wallet funding')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
-    if (typeLower.contains('transfer received')) return const Color(0xFF219C7E);
-    if (typeLower.contains('refund')) return const Color(0xFF219C7E);
+    if (typeLower.contains('transfer received')) return const Color(0xFF168566);
+    if (typeLower.contains('refund')) return const Color(0xFF168566);
     if (typeLower.contains('airtime')) return const Color(0xFF4A90E2);
     if (typeLower.contains('data')) return const Color(0xFF9B59B6);
     if (typeLower.contains('electricity')) return const Color(0xFFF39C12);
@@ -1756,16 +1756,16 @@ class _DashboardScreenState extends State<DashboardScreen>
     if (typeLower.contains('transfer')) return Colors.orange;
     if (typeLower.contains('failed')) return Colors.red;
 
-    return const Color(0xFF243889);
+    return const Color(0xFF102C68);
   }
 
   Color _getAmountColor(String type, bool isCredit) {
-    if (isCredit) return const Color(0xFF219C7E);
+    if (isCredit) return const Color(0xFF168566);
 
     final typeLower = type.toLowerCase();
-    if (typeLower.contains('commission')) return const Color(0xFF219C7E);
+    if (typeLower.contains('commission')) return const Color(0xFF168566);
     if (typeLower.contains('fund') || typeLower.contains('wallet')) {
-      return const Color(0xFF219C7E);
+      return const Color(0xFF168566);
     }
     if (typeLower.contains('withdraw')) return Colors.red;
     if (typeLower.contains('transfer')) return Colors.red;
@@ -2187,14 +2187,13 @@ class _DashboardScreenState extends State<DashboardScreen>
     _startTransaction();
     Navigator.pushNamed(
       context,
-      '/wallet',
+      '/send-money',
       arguments: {
         'userId': _userId ?? '',
         'onBalanceUpdate': (double newBalance) {
           setState(() => _walletBalance = newBalance);
           _saveBalanceToStorage(newBalance);
         },
-        'initialTab': 'transfer',
       },
     ).then((_) {
       if (mounted) setState(() => _selectedIndex = 0);

@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -25,13 +24,13 @@ class AdminSendNotificationPage extends StatefulWidget {
 class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== CONTROLLERS ====================
   final TextEditingController _titleController = TextEditingController();
@@ -350,7 +349,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
       case 'alert':
         return const Color(0xFFEF4444);
       case 'transaction':
-        return const Color(0xFF219C7E);
+        return const Color(0xFF168566);
       case 'commission':
         return const Color(0xFF8B5CF6);
       case 'referral':
@@ -655,7 +654,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                 const SizedBox(height: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                     color: textPrimary,
@@ -669,7 +668,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
               children: [
                 Text(
                   message,
-                  style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+                  style: TextStyle(fontSize: 14, color: textSecondary),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
@@ -691,7 +690,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                       Expanded(
                         child: Text(
                           'Sent to: $recipient',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: textPrimary,
@@ -710,7 +709,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                           ),
                           child: Text(
                             '+$sentCount',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
                               color: primaryColor,
@@ -738,7 +737,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                         Expanded(
                           child: Text(
                             'Template: ${_getTemplateTypeLabel(templateType)}',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: color,
@@ -767,7 +766,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                       Expanded(
                         child: Text(
                           'Sent: ${DateFormat('MMM dd, yyyy HH:mm').format(DateTime.now())}',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: textPrimary,
@@ -793,7 +792,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   ),
                   child: Text(
                     'OK',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                       fontSize: 16,
@@ -847,7 +846,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -880,7 +879,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -889,7 +888,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -908,7 +907,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -1104,7 +1103,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1143,7 +1142,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
               Expanded(
                 child: Text(
                   'Admin / Notifications',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1162,7 +1161,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   ),
                   child: Text(
                     'SUPER ADMIN',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 8 : 10,
                       fontWeight: FontWeight.w700,
@@ -1203,7 +1202,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   children: [
                     Text(
                       'Send Notification',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1212,7 +1211,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       'Send messages to users',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -1337,7 +1336,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 16 : 20,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1347,7 +1346,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   ),
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 9 : 11,
                       color: textSecondary,
                     ),
@@ -1375,7 +1374,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
         children: [
           Text(
             '📋 Quick Templates',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 13 : 14,
               fontWeight: FontWeight.w600,
               color: textPrimary,
@@ -1431,7 +1430,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                         const SizedBox(height: 6),
                         Text(
                           template['name'],
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 8 : 10,
                             fontWeight:
                                 isSelected ? FontWeight.w700 : FontWeight.w500,
@@ -1447,7 +1446,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                             width: 16,
                             height: 16,
                             decoration: const BoxDecoration(
-                              color: Color(0xFF219C7E),
+                              color: Color(0xFF168566),
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
@@ -1504,7 +1503,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
             Expanded(
               child: Text(
                 label,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   color: selected ? primaryColor : textSecondary,
                   fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                   fontSize: isMobile ? 12 : 13,
@@ -1554,7 +1553,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   const SizedBox(width: 8),
                   Text(
                     '${_selectedUsers.length} user${_selectedUsers.length > 1 ? 's' : ''} selected',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 12 : 13,
                       fontWeight: FontWeight.w600,
                       color: primaryColor,
@@ -1581,7 +1580,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                         ),
                         child: Text(
                           'Clear All',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 10 : 11,
                             fontWeight: FontWeight.w600,
                             color: errorColor,
@@ -1626,7 +1625,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                           backgroundColor: primaryColor.withOpacity(0.1),
                           child: Text(
                             name.isNotEmpty ? name[0].toUpperCase() : '?',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               color: primaryColor,
                               fontSize: isMobile ? 8 : 10,
                               fontWeight: FontWeight.w700,
@@ -1639,7 +1638,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                           children: [
                             Text(
                               name,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -1650,7 +1649,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                             if (email.isNotEmpty)
                               Text(
                                 email,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 8 : 9,
                                   color: textSecondary,
                                 ),
@@ -1700,7 +1699,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                     controller: _searchController,
                     decoration: InputDecoration(
                       hintText: 'Search users...',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: isMobile ? 12 : 13,
                         color: Colors.grey.shade400,
                       ),
@@ -1723,7 +1722,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                         vertical: isMobile ? 8 : 10,
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 13 : 14,
                       color: textPrimary,
                     ),
@@ -1782,7 +1781,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                           const SizedBox(width: 4),
                           Text(
                             'Select All',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 10 : 11,
                               fontWeight: FontWeight.w600,
                               color: primaryColor,
@@ -1810,7 +1809,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                           _users.isEmpty
                               ? 'No users found'
                               : 'No matching users',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             color: textSecondary,
                             fontSize: isMobile ? 13 : 14,
                           ),
@@ -1836,7 +1835,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                               userName.isNotEmpty
                                   ? userName[0].toUpperCase()
                                   : '?',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color: primaryColor,
                                 fontSize: isMobile ? 12 : 14,
                                 fontWeight: FontWeight.w700,
@@ -1845,7 +1844,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                           ),
                           title: Text(
                             userName,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 13 : 14,
                               fontWeight: FontWeight.w500,
                               color: isSelected ? primaryColor : textPrimary,
@@ -1855,7 +1854,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                           ),
                           subtitle: Text(
                             userEmail,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 11 : 12,
                               color: textSecondary,
                             ),
@@ -1867,7 +1866,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                                   ? Container(
                                     padding: const EdgeInsets.all(4),
                                     decoration: const BoxDecoration(
-                                      color: Color(0xFF219C7E),
+                                      color: Color(0xFF168566),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
@@ -1898,7 +1897,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
       children: [
         Text(
           'Recipient',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 14 : 16,
             fontWeight: FontWeight.w600,
             color: textPrimary,
@@ -1907,7 +1906,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
         const SizedBox(height: 4),
         Text(
           'Select users to receive this notification',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 11 : 12,
             color: textSecondary,
           ),
@@ -1977,7 +1976,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
         controller: controller,
         keyboardType: keyboardType,
         maxLines: maxLines,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 14 : 15,
           color: textPrimary,
         ),
@@ -1985,11 +1984,11 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
-          labelStyle: GoogleFonts.inter(
+          labelStyle: TextStyle(
             color: textSecondary,
             fontSize: isMobile ? 12 : 13,
           ),
-          hintStyle: GoogleFonts.inter(
+          hintStyle: TextStyle(
             color: Colors.grey.shade400,
             fontSize: isMobile ? 13 : 14,
           ),
@@ -2062,7 +2061,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   SizedBox(width: isMobile ? 10 : 14),
                   Text(
                     'Compose Notification',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 16 : 18,
                       fontWeight: FontWeight.w600,
                       color: textPrimary,
@@ -2140,7 +2139,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                       Expanded(
                         child: Text(
                           '💡 [User] will be replaced with each user\'s name (${_selectedUsers.length} users)',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 10 : 11,
                             color: primaryColor,
                           ),
@@ -2158,7 +2157,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
                     '${_messageController.text.length} characters',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
                       color:
                           _messageController.text.length > 500
@@ -2205,7 +2204,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                               const SizedBox(width: 6),
                               Text(
                                 'Send Notification',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: isMobile ? 14 : 16,
                                   color: Colors.white,
@@ -2240,7 +2239,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
             const SizedBox(height: 16),
             Text(
               'Loading notification admin panel...',
-              style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+              style: TextStyle(fontSize: 14, color: textSecondary),
             ),
           ],
         ),
@@ -2275,7 +2274,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
               SizedBox(height: isMobile ? 16 : 20),
               Text(
                 'Access Denied',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 20 : 24,
                   fontWeight: FontWeight.w700,
                   color: errorColor,
@@ -2286,7 +2285,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                 _errorMessage ??
                     'You don\'t have permission to access this page.',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   color: textSecondary,
                 ),
@@ -2297,7 +2296,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                 icon: const Icon(Icons.arrow_back_rounded, size: 18),
                 label: Text(
                   'Go Back',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
@@ -2387,7 +2386,7 @@ class _AdminSendNotificationPageState extends State<AdminSendNotificationPage>
                         const SizedBox(height: 12),
                         Text(
                           'Sending notification...',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: textPrimary,

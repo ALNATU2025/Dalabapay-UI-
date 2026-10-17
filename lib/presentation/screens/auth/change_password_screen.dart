@@ -1,6 +1,5 @@
 // lib/presentation/screens/auth/change_password_screen.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/api_service.dart';
@@ -39,8 +38,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
-  static const Color _brand = Color(0xFF219C7E);
-  static const Color _brandDark = Color(0xFF1C2D5A);
+  static const Color _brand = Color(0xFF168566);
+  static const Color _brandDark = Color(0xFF14263D);
   static const Color _brandLight = Color(0xFFE8F7F3);
   static const Color _white = Colors.white;
 
@@ -202,7 +201,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(msg, style: GoogleFonts.inter()),
+        content: Text(msg, style: const TextStyle()),
         backgroundColor: Colors.redAccent,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -232,7 +231,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                    colors: [Color(0xFF27B48F), Color(0xFF1A8A68)],
+                    colors: [Color(0xFF168566), Color(0xFF0F6B51)],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -246,7 +245,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
               const SizedBox(height: 24),
               Text(
                 'Password Changed!',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
                   color: _brandDark,
@@ -257,7 +256,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
               const SizedBox(height: 12),
               Text(
                 message,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
                   height: 1.4,
@@ -287,7 +286,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                   ),
                   child: Text(
                     'DONE',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: Colors.white,
@@ -350,7 +349,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     // Slogan
                     Text(
                       'Smart Life, Fast Pay',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w700,
                         color: _brand,
@@ -363,7 +362,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     // Heading
                     Text(
                       'Change Password',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w800,
                         color: _brandDark,
@@ -376,7 +375,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     // Subtitle
                     Text(
                       'Enter your current password and choose a new one',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[500],
                         height: 1.4,
@@ -456,7 +455,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     return TextFormField(
       controller: _currentPasswordController,
       obscureText: _obscureCurrent,
-      style: GoogleFonts.inter(fontSize: 15, color: _brandDark),
+      style: TextStyle(fontSize: 15, color: _brandDark),
       onChanged: (_) => setState(() {}),
       decoration: _fieldDecoration(
         hint: 'Enter current password',
@@ -487,7 +486,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     return TextFormField(
       controller: _newPasswordController,
       obscureText: _obscureNew,
-      style: GoogleFonts.inter(fontSize: 15, color: _brandDark),
+      style: TextStyle(fontSize: 15, color: _brandDark),
       decoration: _fieldDecoration(
         hint: 'Enter new password',
         icon: Icons.lock_open_outlined,
@@ -515,7 +514,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     return TextFormField(
       controller: _confirmPasswordController,
       obscureText: _obscureConfirm,
-      style: GoogleFonts.inter(fontSize: 15, color: _brandDark),
+      style: TextStyle(fontSize: 15, color: _brandDark),
       decoration: _fieldDecoration(
         hint: 'Confirm new password',
         icon: Icons.lock_reset_outlined,
@@ -556,7 +555,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
         children: [
           Text(
             'Password requirements:',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: _brandDark,
@@ -588,7 +587,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
         const SizedBox(width: 6),
         Text(
           text,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 10,
             color: isValid ? _brand : Colors.grey[500],
             decoration: isValid ? TextDecoration.lineThrough : null,
@@ -607,7 +606,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
         borderRadius: BorderRadius.circular(13),
         gradient: _formValid
             ? const LinearGradient(
-                colors: [Color(0xFF27B48F), Color(0xFF1A8A68)],
+                colors: [Color(0xFF168566), Color(0xFF0F6B51)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               )
@@ -640,7 +639,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                   )
                 : Text(
                     'CHANGE PASSWORD',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
                       color:
@@ -691,9 +690,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   }) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: GoogleFonts.inter(color: Colors.grey[350], fontSize: 14),
+      hintStyle: TextStyle(color: Colors.grey[350], fontSize: 14),
       errorText: errorText,
-      errorStyle: GoogleFonts.inter(fontSize: 12, color: Colors.redAccent),
+      errorStyle: TextStyle(fontSize: 12, color: Colors.redAccent),
       prefixIcon: Icon(icon, color: _brand, size: 20),
       suffixIcon: suffix,
       filled: true,
@@ -731,10 +730,10 @@ class _FieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: GoogleFonts.inter(
+      style: TextStyle(
         fontSize: 12.5,
         fontWeight: FontWeight.w600,
-        color: const Color(0xFF1C2D5A),
+        color: const Color(0xFF14263D),
         letterSpacing: 0.3,
       ),
     );
@@ -751,14 +750,14 @@ class _TrustBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: const Color(0xFF219C7E)),
+        Icon(icon, size: 16, color: const Color(0xFF168566)),
         const SizedBox(width: 6),
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF1C2D5A),
+            color: const Color(0xFF14263D),
           ),
         ),
       ],

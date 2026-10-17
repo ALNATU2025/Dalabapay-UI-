@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -275,9 +274,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 const SizedBox(width: 12),
                 Text(
                   'Delete Notification',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                     fontSize: 18,
                   ),
                 ),
@@ -289,9 +288,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               children: [
                 Text(
                   'Are you sure you want to delete this notification?',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 15,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -313,7 +312,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       Expanded(
                         child: Text(
                           'This action cannot be undone.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             color: Colors.amber.shade700,
                           ),
@@ -336,9 +335,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                   ),
                 ),
               ),
@@ -359,7 +358,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
                 child: Text(
                   'Delete',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -552,7 +551,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       Expanded(
                         child: Text(
                           title,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight:
                                 isRead ? FontWeight.w500 : FontWeight.w700,
@@ -576,7 +575,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   const SizedBox(height: 4),
                   Text(
                     message,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 13,
                       color: textSecondary,
                       height: 1.3,
@@ -589,7 +588,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     children: [
                       Text(
                         _getTypeLabel(type),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
                           color: _getTypeColor(type),
@@ -607,7 +606,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       const SizedBox(width: 8),
                       Text(
                         DateFormat('MMM dd, HH:mm').format(createdAt),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 10,
                           color: Colors.grey.shade500,
                         ),
@@ -684,7 +683,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     children: [
                       Text(
                         title,
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: textPrimary,
@@ -694,7 +693,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       ),
                       Text(
                         DateFormat('MMM dd, yyyy HH:mm').format(createdAt),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12,
                           color: textSecondary,
                         ),
@@ -712,7 +711,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 const SizedBox(height: 8),
                 Text(
                   message,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 15,
                     color: textPrimary,
                     height: 1.6,
@@ -734,7 +733,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     ),
                     child: Text(
                       _getTypeLabel(type).toUpperCase(),
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         color: _getTypeColor(type),
@@ -749,7 +748,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -782,7 +781,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ),
                   child: Text(
                     'Mark as Read',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
@@ -864,7 +863,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             const SizedBox(height: 16),
             Text(
               'No notifications yet',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -873,7 +872,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             const SizedBox(height: 8),
             Text(
               'Your notifications will appear here',
-              style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+              style: TextStyle(fontSize: 14, color: textSecondary),
             ),
           ],
         ),
@@ -883,9 +882,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   // ==================== BUILD ====================
 
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
 
   @override
   Widget build(BuildContext context) {
@@ -904,7 +903,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ),
         title: Text(
           'Notifications',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             color: primaryColor,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -918,7 +917,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 onPressed: _markAllAsRead,
                 child: Text(
                   'Mark all read',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: primaryColor,
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
@@ -951,7 +950,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       const SizedBox(height: 16),
                       Text(
                         'Failed to load notifications',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: textPrimary,
@@ -960,7 +959,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       const SizedBox(height: 8),
                       Text(
                         _errorMessage!,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 14,
                           color: textSecondary,
                         ),

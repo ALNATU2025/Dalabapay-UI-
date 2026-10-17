@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:shimmer/shimmer.dart';
@@ -25,14 +24,14 @@ class AdminFundWalletPage extends StatefulWidget {
 class _AdminFundWalletPageState extends State<AdminFundWalletPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _users = [];
@@ -345,7 +344,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -378,7 +377,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -387,7 +386,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -406,7 +405,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -602,7 +601,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -641,7 +640,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
               Expanded(
                 child: Text(
                   'Admin / Fund Wallet',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -660,7 +659,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                   ),
                   child: Text(
                     'SUPER ADMIN',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 8 : 10,
                       fontWeight: FontWeight.w700,
@@ -703,7 +702,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                   children: [
                     Text(
                       'Fund Wallet',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -712,7 +711,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       '${_filteredUsers.length} of $_totalUsers users • $_activeUsers active',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -773,7 +772,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                           isMobile
                               ? 'Search users...'
                               : 'Search by name, email or phone...',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         color: primaryColor.withValues(alpha: 0.4),
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -783,7 +782,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                         vertical: isMobile ? 10 : 14,
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontSize: isMobile ? 14 : 15,
                     ),
@@ -930,7 +929,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
         SizedBox(height: isMobile ? 2 : 4),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 14 : 16,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -941,7 +940,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
         SizedBox(height: isMobile ? 1 : 2),
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 9 : 11,
             color: textSecondary,
             fontWeight: FontWeight.w500,
@@ -1018,7 +1017,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
         ),
         child: Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             color: isSelected ? Colors.white : textSecondary,
             fontSize: isMobile ? 12 : 13,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
@@ -1152,7 +1151,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                             userName.isNotEmpty
                                 ? userName[0].toUpperCase()
                                 : '?',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               color: Colors.white,
                               fontSize: isMobile ? 18 : 22,
                               fontWeight: FontWeight.w700,
@@ -1170,7 +1169,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                 Expanded(
                                   child: Text(
                                     userName,
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 15 : 17,
                                       fontWeight: FontWeight.w700,
                                       color: textPrimary,
@@ -1202,7 +1201,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                         SizedBox(width: 2),
                                         Text(
                                           'Admin',
-                                          style: GoogleFonts.inter(
+                                          style: TextStyle(
                                             color: secondaryColor,
                                             fontSize: isMobile ? 8 : 10,
                                             fontWeight: FontWeight.w600,
@@ -1216,7 +1215,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                             SizedBox(height: 2),
                             Text(
                               userEmail,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 12 : 13,
                                 color: Colors.grey.shade600,
                               ),
@@ -1233,7 +1232,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                 SizedBox(width: 4),
                                 Text(
                                   userPhone,
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 11 : 12,
                                     color: Colors.grey.shade500,
                                   ),
@@ -1259,7 +1258,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                   ),
                                   child: Text(
                                     isActive ? 'Active' : 'Inactive',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 9 : 10,
                                       fontWeight: FontWeight.w600,
                                       color:
@@ -1291,7 +1290,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                             children: [
                               Text(
                                 'Wallet',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 9 : 10,
                                   color: textSecondary,
                                 ),
@@ -1299,7 +1298,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                               SizedBox(height: 2),
                               Text(
                                 '₦${walletBalance.toStringAsFixed(2)}',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 13 : 15,
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
@@ -1320,7 +1319,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                             children: [
                               Text(
                                 'Commission',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 9 : 10,
                                   color: textSecondary,
                                 ),
@@ -1328,7 +1327,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                               SizedBox(height: 2),
                               Text(
                                 '₦${commissionBalance.toStringAsFixed(2)}',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 13 : 15,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.amber.shade700,
@@ -1350,7 +1349,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                               children: [
                                 Text(
                                   'Joined',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 9 : 10,
                                     color: textSecondary,
                                   ),
@@ -1358,7 +1357,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                 SizedBox(height: 2),
                                 Text(
                                   _formatDate(createdAt),
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 11 : 12,
                                     fontWeight: FontWeight.w500,
                                     color: textPrimary,
@@ -1399,7 +1398,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                       ),
                       label: Text(
                         'Fund Wallet',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: isMobile ? 13 : 14,
                         ),
@@ -1510,7 +1509,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                 userName.isNotEmpty
                                     ? userName[0].toUpperCase()
                                     : '?',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: isMobile ? 18 : 22,
                                   fontWeight: FontWeight.w700,
@@ -1525,7 +1524,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                               children: [
                                 Text(
                                   userName,
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 16 : 18,
                                     fontWeight: FontWeight.bold,
                                     color: textPrimary,
@@ -1535,7 +1534,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                 ),
                                 Text(
                                   userEmail,
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 12 : 13,
                                     color: textSecondary,
                                   ),
@@ -1591,14 +1590,14 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                 children: [
                                   Text(
                                     'Current Balance',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 11 : 12,
                                       color: textSecondary,
                                     ),
                                   ),
                                   Text(
                                     '₦${currentBalance.toStringAsFixed(2)}',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 22 : 28,
                                       fontWeight: FontWeight.bold,
                                       color: successColor,
@@ -1618,7 +1617,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                       // Funding Amount
                       Text(
                         'Funding Amount',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 15 : 16,
                           fontWeight: FontWeight.w600,
                           color: textPrimary,
@@ -1637,7 +1636,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                         ],
                         decoration: InputDecoration(
                           hintText: 'Enter amount (e.g., 1000.00)',
-                          hintStyle: GoogleFonts.inter(
+                          hintStyle: TextStyle(
                             fontSize: isMobile ? 13 : 14,
                             color: Colors.grey.shade500,
                           ),
@@ -1645,7 +1644,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                             padding: EdgeInsets.all(isMobile ? 12 : 16),
                             child: Text(
                               '₦',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 16 : 18,
                                 fontWeight: FontWeight.w700,
                                 color: textPrimary,
@@ -1674,7 +1673,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                             vertical: isMobile ? 12 : 16,
                           ),
                         ),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 16 : 18,
                           fontWeight: FontWeight.w600,
                           color: textPrimary,
@@ -1686,7 +1685,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                       // Quick Amounts
                       Text(
                         'Quick Amounts',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 14 : 15,
                           fontWeight: FontWeight.w600,
                           color: textSecondary,
@@ -1702,7 +1701,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                   (amount) => ActionChip(
                                     label: Text(
                                       '₦$amount',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 12 : 13,
                                         color: primaryColor,
                                       ),
@@ -1729,7 +1728,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                       // Note (Optional)
                       Text(
                         'Note (Optional)',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 15 : 16,
                           fontWeight: FontWeight.w600,
                           color: textPrimary,
@@ -1741,7 +1740,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                         maxLines: 2,
                         decoration: InputDecoration(
                           hintText: 'Add a note for this transaction...',
-                          hintStyle: GoogleFonts.inter(
+                          hintStyle: TextStyle(
                             fontSize: isMobile ? 13 : 14,
                             color: Colors.grey.shade500,
                           ),
@@ -1767,7 +1766,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                             vertical: isMobile ? 10 : 12,
                           ),
                         ),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 13 : 14,
                           color: textPrimary,
                         ),
@@ -1814,7 +1813,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                                       const SizedBox(width: 8),
                                       Text(
                                         'Confirm Funding',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: isMobile ? 15 : 16,
                                         ),
@@ -1908,21 +1907,21 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             ),
             title: Text(
               title,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: textPrimary,
               ),
             ),
             content: Text(
               message,
-              style: GoogleFonts.inter(color: Colors.grey.shade700),
+              style: TextStyle(color: Colors.grey.shade700),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1939,7 +1938,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                 ),
                 child: Text(
                   confirmText,
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -1974,7 +1973,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -1983,7 +1982,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               _errorMessage!,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -2009,7 +2008,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                       SizedBox(width: isMobile ? 6 : 8),
                       Text(
                         'Try Again',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -2049,7 +2048,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Users Found',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -2060,7 +2059,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
               _searchQuery.isNotEmpty || _selectedFilter != 'all'
                   ? 'Try adjusting your search or filters'
                   : 'No users have been registered yet',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -2079,7 +2078,7 @@ class _AdminFundWalletPageState extends State<AdminFundWalletPage>
                 icon: Icon(Icons.clear_all_rounded, size: isMobile ? 18 : 20),
                 label: Text(
                   'Clear Filters',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,

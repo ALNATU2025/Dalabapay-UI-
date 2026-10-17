@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -86,11 +85,11 @@ class _ElectricityScreenState extends State<ElectricityScreen>
   late Animation<double> _shakeAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryNavy = Color(0xFF243889);
-  static const Color _secondaryTeal = Color(0xFF219C7E);
-  static const Color _textDark = Color(0xFF1C2D5A);
-  static const Color _textMuted = Color(0xFF64748B);
-  static const Color _bgCanvas = Color(0xFFF8FAFC);
+  static const Color _primaryNavy = Color(0xFF102C68);
+  static const Color _secondaryTeal = Color(0xFF168566);
+  static const Color _textDark = Color(0xFF14263D);
+  static const Color _textMuted = Color(0xFF728078);
+  static const Color _bgCanvas = Color(0xFFF8F9F5);
 
   // Amount quick buttons
   final List<int> _quickAmounts = [2000, 3000, 5000, 10000, 20000];
@@ -497,7 +496,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             Expanded(
               child: Text(
                 displayMsg,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -685,7 +684,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             width: 120,
             child: Text(
               label,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: _textMuted,
@@ -695,7 +694,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: _textDark,
@@ -1284,7 +1283,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                     const SizedBox(height: 16),
                     Text(
                       'Meter Validated Successfully',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
                         color: _primaryNavy,
@@ -1302,7 +1301,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                       ),
                       child: Text(
                         'Verification Complete',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: _secondaryTeal,
@@ -1340,7 +1339,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                           Expanded(
                             child: Text(
                               'This meter has been verified and is ready for payment.',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: _primaryNavy,
@@ -1389,7 +1388,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                             ),
                             child: Text(
                               'Retry',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
                               ),
@@ -1432,7 +1431,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                             ),
                             child: Text(
                               'Proceed to Pay',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 14,
                               ),
@@ -1515,7 +1514,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: Colors.red.shade700,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -1525,7 +1524,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -1535,7 +1534,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: _secondaryTeal,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1578,7 +1577,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
       ),
       title: Text(
         'Electricity',
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           color: _primaryNavy,
           fontSize: 18,
           fontWeight: FontWeight.w700,
@@ -1615,7 +1614,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
               _isBalanceVisible
                   ? '₦${_walletBalance.toStringAsFixed(2)}'
                   : '••••••',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 color: _primaryNavy,
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -1794,7 +1793,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                   const SizedBox(height: 4),
                   Text(
                     provider['name'],
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 10,
                       fontWeight:
                           isSelected ? FontWeight.w800 : FontWeight.w600,
@@ -1860,7 +1859,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
               const SizedBox(width: 6),
               Text(
                 label,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: isSelected ? Colors.white : Colors.grey.shade600,
@@ -1913,7 +1912,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                   ],
                   decoration: InputDecoration(
                     hintText: 'Enter 11-13 digit meter number',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color: Colors.grey.shade400,
                       fontSize: 14,
                     ),
@@ -1931,7 +1930,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                       vertical: 14,
                     ),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: _textDark,
@@ -1971,7 +1970,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                         )
                         : Text(
                           'Validate',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 13,
                           ),
@@ -2012,7 +2011,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                     children: [
                       Text(
                         'Meter Validated',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                           color: _secondaryTeal,
@@ -2020,7 +2019,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                       ),
                       Text(
                         _customerName!,
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: _secondaryTeal,
@@ -2077,7 +2076,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             child: Center(
               child: Text(
                 '₦${NumberFormat('#,##0').format(amount)}',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                   color: isSelected ? Colors.white : _textDark,
@@ -2119,7 +2118,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: InputDecoration(
           hintText: 'Enter custom amount (min ₦2,000)',
-          hintStyle: GoogleFonts.poppins(
+          hintStyle: TextStyle(
             color: Colors.grey.shade400,
             fontSize: 13,
           ),
@@ -2134,7 +2133,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             vertical: 14,
           ),
         ),
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: _textDark,
@@ -2171,7 +2170,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
         ],
         decoration: InputDecoration(
           hintText: 'Enter 11-digit phone number',
-          hintStyle: GoogleFonts.poppins(
+          hintStyle: TextStyle(
             color: Colors.grey.shade400,
             fontSize: 14,
           ),
@@ -2189,7 +2188,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             vertical: 14,
           ),
         ),
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
           color: _textDark,
@@ -2226,7 +2225,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
           Expanded(
             child: Text(
               'Make sure you enter the correct meter number. Double-check before validating.',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: _textMuted,
@@ -2243,7 +2242,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: GoogleFonts.poppins(
+      style: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w700,
         color: _primaryNavy,
@@ -2314,7 +2313,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                           const SizedBox(width: 8),
                           Text(
                             'Proceed to Pay',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w700,
                               color: Colors.white,
@@ -2410,7 +2409,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                               const SizedBox(height: 4),
                               Text(
                                 'Confirm Payment',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
                                   color: _textDark,
@@ -2456,7 +2455,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -2566,7 +2565,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             const SizedBox(width: 10),
             Text(
               label,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: _textMuted,
@@ -2576,7 +2575,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
         ),
         Text(
           value,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: isAmount ? 16 : 14,
             fontWeight: isAmount ? FontWeight.w800 : FontWeight.w700,
             color: isAmount ? _secondaryTeal : _textDark,
@@ -2600,7 +2599,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
         children: [
           Text(
             'Available Balance',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
               color: _textMuted,
@@ -2608,7 +2607,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
           ),
           Text(
             '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
               color: _secondaryTeal,
@@ -2655,7 +2654,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color:
                           hasError
                               ? const Color(0xFFEF4444).withOpacity(0.7)
@@ -2670,7 +2669,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: hasError ? const Color(0xFFDC2626) : Colors.black,
@@ -2706,7 +2705,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                       Expanded(
                         child: Text(
                           _pinValidationError!,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xFFDC2626),
@@ -2753,7 +2752,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                               const SizedBox(width: 8),
                               Text(
                                 'Pay with PIN',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -2814,7 +2813,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                       Expanded(
                         child: Text(
                           'Pay with $_biometricName',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: _primaryNavy,
@@ -2857,7 +2856,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color:
@@ -2872,7 +2871,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Electricity service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -2893,7 +2892,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -167,7 +166,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       SnackBar(
         content: Text(
           message,
-          style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+          style: TextStyle(fontSize: 13, color: Colors.white),
         ),
         backgroundColor: Colors.red.shade700,
         behavior: SnackBarBehavior.floating,
@@ -181,9 +180,9 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       SnackBar(
         content: Text(
           message,
-          style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+          style: TextStyle(fontSize: 13, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFF219C7E),
+        backgroundColor: const Color(0xFF168566),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -237,11 +236,11 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
 
   Color _getBonusColor(String type) {
     final typeLower = type.toLowerCase();
-    if (typeLower.contains('direct')) return const Color(0xFF219C7E);
+    if (typeLower.contains('direct')) return const Color(0xFF168566);
     if (typeLower.contains('indirect')) return const Color(0xFFE67E22);
     if (typeLower.contains('welcome')) return const Color(0xFF9B59B6);
     if (typeLower.contains('deposit')) return const Color(0xFF8E44AD);
-    if (typeLower.contains('commission')) return const Color(0xFF243889);
+    if (typeLower.contains('commission')) return const Color(0xFF102C68);
     return const Color(0xFF3498DB);
   }
 
@@ -297,7 +296,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
               description:
                   description.isNotEmpty ? description : 'Bonus credited',
               customMessage: '✓ Bonus successfully credited to your account',
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -313,7 +312,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       appBar: _buildAppBar(),
       body: RefreshIndicator(
         onRefresh: _loadReferralData,
-        color: const Color(0xFF243889),
+        color: const Color(0xFF102C68),
         backgroundColor: Colors.white,
         child: _isLoading ? _buildLoadingState() : _buildBody(),
       ),
@@ -327,7 +326,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
@@ -337,19 +336,19 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
         children: [
           Text(
             'Dalaba',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
               letterSpacing: 0.09,
             ),
           ),
           Text(
             'pay',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF219C7E),
+              color: const Color(0xFF168566),
               letterSpacing: 0.09,
             ),
           ),
@@ -358,7 +357,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       centerTitle: true,
       actions: [
         IconButton(
-          icon: const Icon(Icons.refresh, color: Color(0xFF243889), size: 22),
+          icon: const Icon(Icons.refresh, color: Color(0xFF102C68), size: 22),
           onPressed: _loadReferralData,
           tooltip: 'Refresh',
         ),
@@ -370,7 +369,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
   Widget _buildLoadingState() {
     return Center(
       child: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF243889)),
+        valueColor: AlwaysStoppedAnimation<Color>(const Color(0xFF102C68)),
       ),
     );
   }
@@ -424,13 +423,13 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF219C7E).withValues(alpha: 0.3),
+            color: const Color(0xFF168566).withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -440,7 +439,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
         children: [
           Text(
             'Total Referral Earnings',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               color: Colors.white.withValues(alpha: 0.9),
             ),
@@ -450,7 +449,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
             _isBalanceVisible
                 ? '₦${totalEarned.toStringAsFixed(2)}'
                 : '••••••••',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 32,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -495,7 +494,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
         const SizedBox(height: 4),
         Text(
           value,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -503,7 +502,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
         ),
         Text(
           label,
-          style: GoogleFonts.poppins(fontSize: 10, color: Colors.white70),
+          style: TextStyle(fontSize: 10, color: Colors.white70),
         ),
       ],
     );
@@ -515,10 +514,10 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
       children: [
         Text(
           'Bonus Breakdown',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 12),
@@ -529,7 +528,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 'Direct Referral',
                 _referralData['formatted']?['directReferralEarnings'] ??
                     '₦0.00',
-                const Color(0xFF219C7E),
+                const Color(0xFF168566),
                 Icons.person_add_alt_1,
               ),
             ),
@@ -597,7 +596,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           const SizedBox(height: 8),
           Text(
             amount,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: color,
@@ -606,7 +605,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           Text(
             title,
             textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 10,
               color: Colors.grey.shade600,
             ),
@@ -637,7 +636,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
         children: [
           Text(
             'Your Referral Code',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.grey.shade700,
@@ -647,7 +646,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: const Color(0x05243889),
+              color: const Color(0x05102C68),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: const Color(0x0A243889)),
             ),
@@ -656,10 +655,10 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 Expanded(
                   child: Text(
                     _referralCode,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       letterSpacing: 2,
                     ),
                   ),
@@ -675,7 +674,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                     ),
                     child: const Icon(
                       Icons.copy,
-                      color: Color(0xFF243889),
+                      color: Color(0xFF102C68),
                       size: 20,
                     ),
                   ),
@@ -686,12 +685,12 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withValues(alpha: 0.1),
+                      color: const Color(0xFF168566).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Icon(
                       Icons.share,
-                      color: Color(0xFF219C7E),
+                      color: Color(0xFF168566),
                       size: 20,
                     ),
                   ),
@@ -702,7 +701,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           const SizedBox(height: 12),
           Text(
             'Share this code with friends. When they join and make their first deposit (₦5000+), you both earn ₦200!',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 12,
               color: Colors.grey.shade600,
             ),
@@ -721,10 +720,10 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           children: [
             Text(
               'Recent Bonus Transactions',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
             if (_referralTransactions.isNotEmpty)
@@ -735,10 +734,10 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 },
                 child: Text(
                   'See All',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF219C7E),
+                    color: const Color(0xFF168566),
                   ),
                 ),
               ),
@@ -772,7 +771,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           const SizedBox(height: 16),
           Text(
             'No referral bonuses yet',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: Colors.grey.shade600,
@@ -781,7 +780,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           const SizedBox(height: 8),
           Text(
             'Share your referral code to start earning!',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 13,
               color: Colors.grey.shade500,
             ),
@@ -836,17 +835,17 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                 children: [
                   Text(
                     type,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1C2D5A),
+                      color: const Color(0xFF14263D),
                     ),
                   ),
                   if (description.isNotEmpty) ...[
                     const SizedBox(height: 2),
                     Text(
                       description,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 11,
                         color: Colors.grey.shade500,
                       ),
@@ -857,7 +856,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                   const SizedBox(height: 2),
                   Text(
                     _formatDate(date),
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 10,
                       color: Colors.grey.shade400,
                     ),
@@ -870,7 +869,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
               children: [
                 Text(
                   '+₦${amount.toStringAsFixed(2)}',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     color: color,
@@ -888,7 +887,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
                   ),
                   child: Text(
                     'BONUS',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 8,
                       fontWeight: FontWeight.w700,
                       color: color,
@@ -924,16 +923,16 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
             children: [
               Icon(
                 Icons.info_outline,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 20,
               ),
               const SizedBox(width: 8),
               Text(
                 'How to Earn More',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
               ),
             ],
@@ -947,23 +946,23 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0x05243889),
+              color: const Color(0x05102C68),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.lightbulb_outline,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                   size: 16,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'All bonuses are credited to your commission balance and can be used for payments or withdrawn.',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 11,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -986,16 +985,16 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: const Color(0x05243889),
+              color: const Color(0x05102C68),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 number,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                 ),
               ),
             ),
@@ -1004,7 +1003,7 @@ class _ReferralEarningsPageState extends State<ReferralEarningsPage>
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 color: Colors.grey.shade700,
               ),

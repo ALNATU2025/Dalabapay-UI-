@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:hugeicons/hugeicons.dart';
 
@@ -28,15 +27,15 @@ class AdminUsersPage extends StatefulWidget {
 class _AdminUsersPageState extends State<AdminUsersPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== STATE VARIABLES ====================
@@ -742,7 +741,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -751,7 +750,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -770,7 +769,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
             ),
             child: Text(
               _isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -1023,7 +1022,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               children: [
                 Text(
                   'Pending Approval System',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 13 : 15,
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
@@ -1034,7 +1033,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                   isEnabled
                       ? 'New users start as pending. Admin must approve them.'
                       : 'New users are auto-approved. No approval needed.',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 12,
                     color: Colors.grey.shade600,
                     height: 1.3,
@@ -1055,7 +1054,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                   ),
                   child: Text(
                     isEnabled ? '● ENABLED' : '○ DISABLED',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 8 : 9,
                       fontWeight: FontWeight.w700,
                       color: isEnabled ? successColor : warningColor,
@@ -1118,7 +1117,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               SizedBox(width: 8),
               Text(
                 'Registration Statistics',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 16 : 20,
                   fontWeight: FontWeight.w600,
                   color: primaryColor,
@@ -1271,7 +1270,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               SizedBox(width: 4),
               Text(
                 count.toString(),
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 18 : 24,
                   fontWeight: FontWeight.w700,
                   color: color,
@@ -1282,7 +1281,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
           SizedBox(height: 2),
           Text(
             title,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 10 : 12,
               color: Colors.grey.shade600,
             ),
@@ -1306,7 +1305,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
         SizedBox(width: 4),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 14 : 18,
             fontWeight: FontWeight.w700,
             color: primaryColor,
@@ -1314,7 +1313,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
         ),
         Text(
           ' $label',
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 10 : 12,
             color: Colors.grey.shade600,
           ),
@@ -1335,7 +1334,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               SizedBox(width: 8),
               Text(
                 'Registration Statistics',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 16 : 20,
                   fontWeight: FontWeight.w600,
                   color: primaryColor,
@@ -1433,7 +1432,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                   child: FilterChip(
                     label: Text(
                       filter,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 12 : 14,
                         fontWeight:
                             isSelected ? FontWeight.w600 : FontWeight.w400,
@@ -1479,7 +1478,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1518,7 +1517,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               Expanded(
                 child: Text(
                   'Admin / Users',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1574,7 +1573,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                               ),
                               child: Text(
                                 unread > 99 ? '99+' : '$unread',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 9,
                                   fontWeight: FontWeight.w800,
@@ -1611,7 +1610,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                       const SizedBox(width: 4),
                       Text(
                         'SUPER ADMIN',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: isMobile ? 8 : 10,
                           fontWeight: FontWeight.w700,
@@ -1655,7 +1654,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                   children: [
                     Text(
                       'Manage Users',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1664,7 +1663,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       '${users.length} Total • ${users.where((u) => u['isActive'] == true).length} Active',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -1723,7 +1722,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                           isMobile
                               ? 'Search users...'
                               : 'Search by name, email, phone or ID...',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         color: primaryColor.withValues(alpha: 0.4),
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -1733,7 +1732,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                         vertical: isMobile ? 10 : 14,
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontSize: isMobile ? 14 : 15,
                     ),
@@ -1867,7 +1866,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                               userName.isNotEmpty
                                   ? userName[0].toUpperCase()
                                   : '?',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: isMobile ? 18 : 22,
                                 fontWeight: FontWeight.w700,
@@ -1885,7 +1884,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                   Expanded(
                                     child: Text(
                                       userName,
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 15 : 17,
                                         fontWeight: FontWeight.w700,
                                         color: primaryColor,
@@ -1918,7 +1917,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                           SizedBox(width: 2),
                                           Text(
                                             'Super Admin',
-                                            style: GoogleFonts.inter(
+                                            style: TextStyle(
                                               color: warningColor,
                                               fontSize: isMobile ? 7 : 9,
                                               fontWeight: FontWeight.w600,
@@ -1951,7 +1950,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                           SizedBox(width: 2),
                                           Text(
                                             'Admin',
-                                            style: GoogleFonts.inter(
+                                            style: TextStyle(
                                               color: primaryColor,
                                               fontSize: isMobile ? 7 : 9,
                                               fontWeight: FontWeight.w600,
@@ -1975,7 +1974,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                       ),
                                       child: Text(
                                         'You',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           color: infoColor,
                                           fontSize: isMobile ? 7 : 9,
                                           fontWeight: FontWeight.w600,
@@ -2014,7 +2013,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                           SizedBox(width: 3),
                                           Text(
                                             'Pending',
-                                            style: GoogleFonts.inter(
+                                            style: TextStyle(
                                               color: warningColor,
                                               fontSize: isMobile ? 7 : 9,
                                               fontWeight: FontWeight.w700,
@@ -2055,7 +2054,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                           SizedBox(width: 3),
                                           Text(
                                             'Rejected',
-                                            style: GoogleFonts.inter(
+                                            style: TextStyle(
                                               color: Colors.red.shade700,
                                               fontSize: isMobile ? 7 : 9,
                                               fontWeight: FontWeight.w700,
@@ -2069,7 +2068,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                               SizedBox(height: 2),
                               Text(
                                 userEmail,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 12 : 13,
                                   color: Colors.grey.shade600,
                                 ),
@@ -2086,7 +2085,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                   SizedBox(width: 4),
                                   Text(
                                     userPhone,
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 11 : 12,
                                       color: Colors.grey.shade500,
                                     ),
@@ -2177,7 +2176,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                   SizedBox(width: 6),
                                   Text(
                                     'Awaiting Approval',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 12 : 13,
                                       fontWeight: FontWeight.w700,
                                       color: warningColor,
@@ -2211,7 +2210,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                       ),
                                       label: Text(
                                         'Approve',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontSize: isMobile ? 12 : 14,
                                         ),
@@ -2244,7 +2243,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                                       ),
                                       label: Text(
                                         'Reject',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontWeight: FontWeight.w700,
                                           fontSize: isMobile ? 12 : 14,
                                         ),
@@ -2373,7 +2372,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                           ),
                           label: Text(
                             isActive ? 'Deactivate User' : 'Activate User',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: isMobile ? 12 : 14,
                             ),
@@ -2405,7 +2404,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
                             SizedBox(width: isMobile ? 6 : 8),
                             Text(
                               'Contact Super Admin for user management',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: isMobile ? 10 : 12,
                                 color: warningColor,
@@ -2441,7 +2440,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               SizedBox(width: 4),
               Text(
                 label,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 10 : 11,
                   color: Colors.grey.shade500,
                 ),
@@ -2451,7 +2450,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
           SizedBox(height: 4),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 13 : 15,
               fontWeight: FontWeight.w700,
               color: primaryColor,
@@ -2493,7 +2492,7 @@ class _AdminUsersPageState extends State<AdminUsersPage>
               SizedBox(height: isMobile ? 2 : 4),
               Text(
                 label,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   color: color,
                   fontSize: isMobile ? 8 : 10,
                   fontWeight: FontWeight.w600,
@@ -2561,7 +2560,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 SizedBox(width: 12),
                 Text(
                   'Access Restricted',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: isMobile ? 18 : 20,
                     color: textPrimary,
@@ -2580,7 +2579,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 SizedBox(height: 16),
                 Text(
                   'Only Super Administrators can perform this action.',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     color: textSecondary,
                     height: 1.5,
@@ -2608,7 +2607,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                       Expanded(
                         child: Text(
                           'Please contact the Super Administrator to request access to this feature.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 12 : 13,
                             color: warningColor,
                             fontWeight: FontWeight.w500,
@@ -2626,7 +2625,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 style: TextButton.styleFrom(foregroundColor: primaryColor),
                 child: Text(
                   'Got it',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -2787,7 +2786,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                             children: [
                               Text(
                                 'Wallet Adjustment',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: isMobile ? 16 : 18,
                                   fontWeight: FontWeight.w700,
                                   color: primaryColor,
@@ -2798,7 +2797,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                                   Flexible(
                                     child: Text(
                                       userName,
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 12,
                                         color: textSecondary,
                                         fontWeight: FontWeight.w500,
@@ -2821,7 +2820,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                                     ),
                                     child: Text(
                                       'Balance: ₦${currentBalance.toStringAsFixed(2)}',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 11,
                                         color: primaryColor,
                                         fontWeight: FontWeight.w700,
@@ -2885,7 +2884,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                                     const SizedBox(width: 6),
                                     Text(
                                       'Credit',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w700,
                                         color:
@@ -2932,7 +2931,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                                     const SizedBox(width: 6),
                                     Text(
                                       'Debit',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w700,
                                         color:
@@ -2974,7 +2973,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                         const SizedBox(width: 6),
                         Text(
                           'Quick Templates',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: textPrimary,
@@ -2984,7 +2983,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                         Expanded(
                           child: Text(
                             '— tap one to auto-fill the reason',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 10,
                               color: textSecondary,
                               fontStyle: FontStyle.italic,
@@ -3051,7 +3050,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                                         const SizedBox(width: 6),
                                         Text(
                                           t['label'] ?? '',
-                                          style: GoogleFonts.inter(
+                                          style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w600,
                                             color:
@@ -3235,7 +3234,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                                       operation == 'credit'
                                           ? 'Credit Wallet'
                                           : 'Debit Wallet',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 15,
                                       ),
@@ -3248,7 +3247,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                     Center(
                       child: Text(
                         'ℹ️ This action will be logged in the audit trail',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 11,
                           color: textSecondary,
                           fontStyle: FontStyle.italic,
@@ -3309,7 +3308,7 @@ void _openUserHistory(Map<String, dynamic> user) {
         return Center(
           child: Text(
             'No admin activity yet',
-            style: GoogleFonts.inter(color: textSecondary),
+            style: TextStyle(color: textSecondary),
           ),
         );
       }
@@ -3330,7 +3329,7 @@ void _openUserHistory(Map<String, dynamic> user) {
         return Center(
           child: Text(
             'No transactions found',
-            style: GoogleFonts.inter(color: textSecondary),
+            style: TextStyle(color: textSecondary),
           ),
         );
       }
@@ -3385,7 +3384,7 @@ void _openUserHistory(Map<String, dynamic> user) {
               Expanded(
                 child: Text(
                   _humanizeAction(action),
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
@@ -3395,7 +3394,7 @@ void _openUserHistory(Map<String, dynamic> user) {
               if (createdAt.isNotEmpty)
                 Text(
                   _formatDate(DateTime.tryParse(createdAt) ?? DateTime.now()),
-                  style: GoogleFonts.inter(fontSize: 10, color: textSecondary),
+                  style: TextStyle(fontSize: 10, color: textSecondary),
                 ),
             ],
           ),
@@ -3411,7 +3410,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 children: [
                   Text(
                     '₦${amount.toStringAsFixed(2)}',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                       color: color,
@@ -3421,7 +3420,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                   Expanded(
                     child: Text(
                       '₦${before.toStringAsFixed(2)} → ₦${after.toStringAsFixed(2)}',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 11,
                         color: textSecondary,
                       ),
@@ -3436,14 +3435,14 @@ void _openUserHistory(Map<String, dynamic> user) {
             const SizedBox(height: 6),
             Text(
               'Reason: $reason',
-              style: GoogleFonts.inter(fontSize: 11, color: textSecondary),
+              style: TextStyle(fontSize: 11, color: textSecondary),
             ),
           ],
           if (reference.isNotEmpty) ...[
             const SizedBox(height: 2),
             Text(
               'Ref: $reference',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 color: textSecondary,
                 fontStyle: FontStyle.italic,
@@ -3453,7 +3452,7 @@ void _openUserHistory(Map<String, dynamic> user) {
           const SizedBox(height: 6),
           Text(
             'By: $admin',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 10,
               color: primaryColor,
               fontWeight: FontWeight.w600,
@@ -3512,7 +3511,7 @@ void _openUserHistory(Map<String, dynamic> user) {
               children: [
                 Text(
                   type,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
@@ -3523,7 +3522,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 if (desc.isNotEmpty)
                   Text(
                     desc,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 11,
                       color: textSecondary,
                     ),
@@ -3533,7 +3532,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 if (createdAt.isNotEmpty)
                   Text(
                     _formatDate(DateTime.tryParse(createdAt) ?? DateTime.now()),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 10,
                       color: textSecondary,
                     ),
@@ -3543,7 +3542,7 @@ void _openUserHistory(Map<String, dynamic> user) {
           ),
           Text(
             '₦${amount.toStringAsFixed(2)}',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
               color: color,
@@ -3609,7 +3608,7 @@ void _openUserHistory(Map<String, dynamic> user) {
           padding: const EdgeInsets.only(left: 4, bottom: 6),
           child: Text(
             label,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: textPrimary,
@@ -3626,14 +3625,14 @@ void _openUserHistory(Map<String, dynamic> user) {
             controller: controller,
             keyboardType: keyboardType,
             maxLines: maxLines,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 14,
               color: textPrimary,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.inter(
+              hintStyle: TextStyle(
                 fontSize: 13,
                 color: Colors.grey.shade400,
               ),
@@ -3695,7 +3694,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                   SizedBox(height: isMobile ? 16 : 20),
                   Text(
                     'Fund Wallet',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 20 : 24,
                       fontWeight: FontWeight.w700,
                       color: primaryColor,
@@ -3704,7 +3703,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                   SizedBox(height: 8),
                   Text(
                     'Add funds to $userName\'s wallet',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 14 : 16,
                       color: Colors.grey.shade600,
                     ),
@@ -3725,21 +3724,21 @@ void _openUserHistory(Map<String, dynamic> user) {
                           RegExp(r'^\d+\.?\d{0,2}'),
                         ),
                       ],
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 18 : 20,
                         fontWeight: FontWeight.w600,
                         color: primaryColor,
                       ),
                       decoration: InputDecoration(
                         hintText: "0.00",
-                        hintStyle: GoogleFonts.inter(
+                        hintStyle: TextStyle(
                           color: Colors.grey.shade400,
                         ),
                         prefixIcon: Padding(
                           padding: EdgeInsets.all(isMobile ? 12 : 16),
                           child: Text(
                             '₦',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 18 : 20,
                               fontWeight: FontWeight.w700,
                               color: primaryColor,
@@ -3771,7 +3770,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                           ),
                           child: Text(
                             'Cancel',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.grey.shade700,
                             ),
@@ -3822,7 +3821,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                           ),
                           child: Text(
                             'Add Funds',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
                             ),
@@ -3874,7 +3873,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                         SizedBox(height: 16),
                         Text(
                           'PIN Management',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: primaryColor,
@@ -3891,7 +3890,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                             children: [
                               Text(
                                 userName,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                   color: primaryColor,
@@ -3899,7 +3898,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                               ),
                               Text(
                                 userEmail,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.grey.shade600,
                                 ),
@@ -4091,7 +4090,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                           onPressed: () => Navigator.pop(context),
                           child: Text(
                             'Close',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               color: Colors.grey.shade600,
                               fontWeight: FontWeight.w600,
                             ),
@@ -4128,7 +4127,7 @@ void _openUserHistory(Map<String, dynamic> user) {
         icon: Icon(icon, size: 20),
         label: Text(
           label,
-          style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
       ),
     );
@@ -4167,7 +4166,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                   SizedBox(height: 16),
                   Text(
                     'PIN Status Details',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 18 : 20,
                       fontWeight: FontWeight.w700,
                       color: primaryColor,
@@ -4184,7 +4183,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                       children: [
                         Text(
                           user['fullName'] ?? 'User',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: primaryColor,
@@ -4192,7 +4191,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                         ),
                         Text(
                           user['email'] ?? '',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             color: Colors.grey.shade600,
                           ),
@@ -4250,7 +4249,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                       ),
                       child: Text(
                         'Close',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
@@ -4287,14 +4286,14 @@ void _openUserHistory(Map<String, dynamic> user) {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
                   ),
                 ),
                 Text(
                   value,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: color,
@@ -4323,21 +4322,21 @@ void _openUserHistory(Map<String, dynamic> user) {
             ),
             title: Text(
               title,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: primaryColor,
               ),
             ),
             content: Text(
               message,
-              style: GoogleFonts.inter(color: Colors.grey.shade700),
+              style: TextStyle(color: Colors.grey.shade700),
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w600,
                   ),
@@ -4353,7 +4352,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 ),
                 child: Text(
                   confirmText,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -4476,7 +4475,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 const SizedBox(width: 10),
                 Text(
                   'Reject User?',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: primaryColor,
                   ),
@@ -4489,13 +4488,13 @@ void _openUserHistory(Map<String, dynamic> user) {
               children: [
                 Text(
                   'Reject $userName? They will not be able to perform transactions.',
-                  style: GoogleFonts.inter(color: Colors.grey.shade700),
+                  style: TextStyle(color: Colors.grey.shade700),
                 ),
                 const SizedBox(height: 12),
                 TextField(
                   controller: reasonController,
                   maxLines: 2,
-                  style: GoogleFonts.inter(fontSize: 14),
+                  style: TextStyle(fontSize: 14),
                   decoration: InputDecoration(
                     labelText: 'Reason (optional)',
                     hintText: 'e.g. Suspicious activity',
@@ -4511,7 +4510,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 onPressed: () => Navigator.pop(ctx, false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(color: Colors.grey),
+                  style: TextStyle(color: Colors.grey),
                 ),
               ),
               ElevatedButton(
@@ -4524,7 +4523,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                 ),
                 child: Text(
                   'Reject',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
@@ -4646,7 +4645,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -4699,7 +4698,7 @@ void _openUserHistory(Map<String, dynamic> user) {
           SizedBox(height: isMobile ? 16 : 20),
           Text(
             'Loading Users...',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: isMobile ? 16 : 18,
               fontWeight: FontWeight.w600,
               color: primaryColor,
@@ -4708,7 +4707,7 @@ void _openUserHistory(Map<String, dynamic> user) {
           SizedBox(height: isMobile ? 8 : 12),
           Text(
             'Please wait while we fetch user data',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 12 : 14,
               color: Colors.grey.shade600,
             ),
@@ -4744,7 +4743,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: Colors.red.shade700,
@@ -4753,7 +4752,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               displayMessage,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: Colors.grey.shade600,
               ),
@@ -4778,7 +4777,7 @@ void _openUserHistory(Map<String, dynamic> user) {
                     SizedBox(width: isMobile ? 6 : 8),
                     Text(
                       'Try Again',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -4817,7 +4816,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Users Found',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: primaryColor,
@@ -4826,7 +4825,7 @@ void _openUserHistory(Map<String, dynamic> user) {
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               'Try adjusting your search criteria',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: Colors.grey.shade600,
               ),

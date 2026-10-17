@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/payment_service.dart';
@@ -59,12 +58,12 @@ class _KYCScreenState extends State<KYCScreen>
   late Animation<Offset> _slideAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryColor = Color(0xFF243889);
-  static const Color _secondaryColor = Color(0xFF219C7E);
+  static const Color _primaryColor = Color(0xFF102C68);
+  static const Color _secondaryColor = Color(0xFF168566);
   static const Color _errorColor = Color(0xFFEF4444);
-  static const Color _textPrimary = Color(0xFF1C2D5A);
-  static const Color _textSecondary = Color(0xFF64748B);
-  static const Color _backgroundLight = Color(0xFFF8FAFC);
+  static const Color _textPrimary = Color(0xFF14263D);
+  static const Color _textSecondary = Color(0xFF728078);
+  static const Color _backgroundLight = Color(0xFFF8F9F5);
 
   @override
   void initState() {
@@ -322,7 +321,7 @@ class _KYCScreenState extends State<KYCScreen>
                   const SizedBox(height: 20),
                   Text(
                     'Creating Your Account...',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: _textPrimary,
@@ -331,7 +330,7 @@ class _KYCScreenState extends State<KYCScreen>
                   const SizedBox(height: 8),
                   Text(
                     'Please wait while we set up your dedicated account',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 14,
                       color: _textSecondary,
                     ),
@@ -406,7 +405,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 20),
                           Text(
                             '🎉 Account Created!',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: _textPrimary,
@@ -415,7 +414,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 8),
                           Text(
                             'Your dedicated account has been set up successfully',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 15,
                               color: _textSecondary,
                             ),
@@ -482,7 +481,7 @@ class _KYCScreenState extends State<KYCScreen>
                                 Expanded(
                                   child: Text(
                                     'Your account tier has been upgraded. You can now receive payments!',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: 13,
                                       color: _secondaryColor,
                                       fontWeight: FontWeight.w500,
@@ -540,7 +539,7 @@ class _KYCScreenState extends State<KYCScreen>
                                   const SizedBox(width: 10),
                                   Text(
                                     'Go to Dashboard',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -610,7 +609,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 18),
                           Text(
                             'Something Went Wrong',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: _textPrimary,
@@ -619,7 +618,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 8),
                           Text(
                             message,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               color: _textSecondary,
                             ),
@@ -663,7 +662,7 @@ class _KYCScreenState extends State<KYCScreen>
                                   ),
                                   child: Text(
                                     'Try Again',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                       color: _textPrimary,
@@ -721,7 +720,7 @@ class _KYCScreenState extends State<KYCScreen>
                                   ),
                                   child: Text(
                                     'Go Back',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
@@ -791,7 +790,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 18),
                           Text(
                             title,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: _textPrimary,
@@ -800,7 +799,7 @@ class _KYCScreenState extends State<KYCScreen>
                           const SizedBox(height: 8),
                           Text(
                             message,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               color: _textSecondary,
                             ),
@@ -822,7 +821,7 @@ class _KYCScreenState extends State<KYCScreen>
                               ),
                               child: Text(
                                 'Got It',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,
@@ -859,7 +858,7 @@ class _KYCScreenState extends State<KYCScreen>
             children: [
               Text(
                 label,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 11,
                   color: _textSecondary,
                   fontWeight: FontWeight.w500,
@@ -871,7 +870,7 @@ class _KYCScreenState extends State<KYCScreen>
                   Expanded(
                     child: Text(
                       value,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: _textPrimary,
@@ -978,7 +977,7 @@ class _KYCScreenState extends State<KYCScreen>
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: GoogleFonts.inter()),
+        content: Text(message, style: const TextStyle()),
         backgroundColor: _primaryColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -1008,7 +1007,7 @@ class _KYCScreenState extends State<KYCScreen>
               const SizedBox(height: 16),
               Text(
                 'Loading your information...',
-                style: GoogleFonts.inter(color: _textSecondary, fontSize: 14),
+                style: TextStyle(color: _textSecondary, fontSize: 14),
               ),
             ],
           ),
@@ -1036,7 +1035,7 @@ class _KYCScreenState extends State<KYCScreen>
         children: [
           Text(
             'Dalaba',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: _primaryColor,
@@ -1045,7 +1044,7 @@ class _KYCScreenState extends State<KYCScreen>
           ),
           Text(
             'pay',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: _secondaryColor,
@@ -1075,7 +1074,7 @@ class _KYCScreenState extends State<KYCScreen>
               // Header
               Text(
                 'Complete Your KYC',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: _textPrimary,
@@ -1084,7 +1083,7 @@ class _KYCScreenState extends State<KYCScreen>
               const SizedBox(height: 4),
               Text(
                 'Provide your identification details to create your dedicated account',
-                style: GoogleFonts.inter(fontSize: 14, color: _textSecondary),
+                style: TextStyle(fontSize: 14, color: _textSecondary),
               ),
               const SizedBox(height: 8),
               Container(
@@ -1110,7 +1109,7 @@ class _KYCScreenState extends State<KYCScreen>
                     Expanded(
                       child: Text(
                         'You only need to provide either BVN or NIN, not both.',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12,
                           color: Colors.amber.shade800,
                         ),
@@ -1153,7 +1152,7 @@ class _KYCScreenState extends State<KYCScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     child: Text(
                       'OR',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 12,
                         color: _textSecondary,
                         fontWeight: FontWeight.w600,
@@ -1192,7 +1191,7 @@ class _KYCScreenState extends State<KYCScreen>
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
                     'Please enter a valid BVN (11 digits) or NIN (11+ digits)',
-                    style: GoogleFonts.inter(fontSize: 12, color: _errorColor),
+                    style: TextStyle(fontSize: 12, color: _errorColor),
                   ),
                 )
               else if (_hasValidIdentification())
@@ -1208,7 +1207,7 @@ class _KYCScreenState extends State<KYCScreen>
                       const SizedBox(width: 8),
                       Text(
                         _isUsingBVN ? '✓ BVN verified' : '✓ NIN verified',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12,
                           color: _secondaryColor,
                           fontWeight: FontWeight.w600,
@@ -1295,14 +1294,14 @@ class _KYCScreenState extends State<KYCScreen>
                         children: [
                           TextSpan(
                             text: 'I agree to the ',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               color: _textSecondary,
                             ),
                           ),
                           TextSpan(
                             text: 'Terms of Service',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: _primaryColor,
@@ -1311,7 +1310,7 @@ class _KYCScreenState extends State<KYCScreen>
                           TextSpan(
                             text:
                                 ' and confirm that the information provided is accurate.',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               color: _textSecondary,
                             ),
@@ -1343,7 +1342,7 @@ class _KYCScreenState extends State<KYCScreen>
                       Expanded(
                         child: Text(
                           formError,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             color: _errorColor,
                           ),
@@ -1386,7 +1385,7 @@ class _KYCScreenState extends State<KYCScreen>
                             isValid
                                 ? 'Create Dedicated Account'
                                 : 'Fill Required Fields',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -1399,7 +1398,7 @@ class _KYCScreenState extends State<KYCScreen>
               Center(
                 child: Text(
                   'Your information is secure and encrypted',
-                  style: GoogleFonts.inter(fontSize: 12, color: _textSecondary),
+                  style: TextStyle(fontSize: 12, color: _textSecondary),
                 ),
               ),
               const SizedBox(height: 20),
@@ -1417,7 +1416,7 @@ class _KYCScreenState extends State<KYCScreen>
         color: _backgroundLight,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF243889).withValues(alpha: 0.08),
+          color: const Color(0xFF102C68).withValues(alpha: 0.08),
         ),
       ),
       child: Column(
@@ -1425,7 +1424,7 @@ class _KYCScreenState extends State<KYCScreen>
         children: [
           Text(
             'Your Information',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: _textSecondary,
@@ -1450,14 +1449,14 @@ class _KYCScreenState extends State<KYCScreen>
           flex: 2,
           child: Text(
             label,
-            style: GoogleFonts.inter(fontSize: 13, color: _textSecondary),
+            style: TextStyle(fontSize: 13, color: _textSecondary),
           ),
         ),
         Expanded(
           flex: 3,
           child: Text(
             value.isNotEmpty ? value : 'Not set',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
               color: _textPrimary,
@@ -1493,7 +1492,7 @@ class _KYCScreenState extends State<KYCScreen>
           children: [
             Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: _textPrimary,
@@ -1503,7 +1502,7 @@ class _KYCScreenState extends State<KYCScreen>
               const SizedBox(width: 4),
               Text(
                 '*',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 16,
                   color: _errorColor,
                   fontWeight: FontWeight.bold,
@@ -1520,7 +1519,7 @@ class _KYCScreenState extends State<KYCScreen>
                 ),
                 child: Text(
                   'Optional',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 10,
                     color: _textSecondary,
                     fontWeight: FontWeight.w500,
@@ -1545,14 +1544,14 @@ class _KYCScreenState extends State<KYCScreen>
           maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: GoogleFonts.inter(
+            hintStyle: TextStyle(
               fontSize: 14,
-              color: const Color(0xFF94A3B8),
+              color: const Color(0xFFA9B2AC),
             ),
             prefixIcon: Icon(icon, color: _primaryColor, size: 20),
             prefixIconConstraints: const BoxConstraints(minWidth: 48),
             errorText: errorText,
-            errorStyle: GoogleFonts.inter(fontSize: 12, color: _errorColor),
+            errorStyle: TextStyle(fontSize: 12, color: _errorColor),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
@@ -1580,7 +1579,7 @@ class _KYCScreenState extends State<KYCScreen>
               vertical: 14,
             ),
           ),
-          style: GoogleFonts.inter(fontSize: 14, color: _textPrimary),
+          style: TextStyle(fontSize: 14, color: _textPrimary),
         ),
       ],
     );
@@ -1620,13 +1619,13 @@ class _KYCScreenState extends State<KYCScreen>
           (context) => SimpleDialog(
             title: Text(
               'Select Gender',
-              style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
             children:
                 ['Male', 'Female', 'Other'].map((g) {
                   return SimpleDialogOption(
                     onPressed: () => Navigator.pop(context, g),
-                    child: Text(g, style: GoogleFonts.inter()),
+                    child: Text(g, style: const TextStyle()),
                   );
                 }).toList(),
           ),

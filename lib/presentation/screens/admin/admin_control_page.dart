@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../../../core/services/api_service.dart';
@@ -23,15 +22,15 @@ class AdminControlPage extends StatefulWidget {
 class _AdminControlPageState extends State<AdminControlPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== CONTROLLERS ====================
@@ -690,7 +689,7 @@ class _AdminControlPageState extends State<AdminControlPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -789,7 +788,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                 Expanded(
                   child: Text(
                     user['fullName']?.toString() ?? 'User Details',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -834,7 +833,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: textSecondary,
                   ),
@@ -881,7 +880,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                   const SizedBox(width: 8),
                                   Text(
                                     role['label'],
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontWeight:
                                           isSelected
                                               ? FontWeight.w600
@@ -944,7 +943,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                   ),
                   child: Text(
                     isActive ? 'Deactivate' : 'Activate',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 12,
                       color: Colors.white,
@@ -965,7 +964,7 @@ class _AdminControlPageState extends State<AdminControlPage>
           width: 80,
           child: Text(
             label,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 13,
               color: textSecondary,
@@ -975,7 +974,7 @@ class _AdminControlPageState extends State<AdminControlPage>
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.inter(fontSize: 13, color: textPrimary),
+            style: TextStyle(fontSize: 13, color: textPrimary),
           ),
         ),
       ],
@@ -1020,7 +1019,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                   children: [
                     Text(
                       _currentUserName.isNotEmpty ? _currentUserName : 'User',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -1032,7 +1031,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                       _currentUserEmail.isNotEmpty
                           ? _currentUserEmail
                           : 'user@example.com',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white70,
                         fontSize: 12,
                       ),
@@ -1054,7 +1053,7 @@ class _AdminControlPageState extends State<AdminControlPage>
             ),
             child: Text(
               _isSuperAdmin ? 'SUPER ADMIN' : (_isAdmin ? 'ADMIN' : 'USER'),
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -1250,7 +1249,7 @@ class _AdminControlPageState extends State<AdminControlPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1289,7 +1288,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               Expanded(
                 child: Text(
                   'Admin / Control',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1317,7 +1316,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                       const SizedBox(width: 4),
                       Text(
                         'SUPER ADMIN',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: isMobile ? 8 : 10,
                           fontWeight: FontWeight.w700,
@@ -1360,7 +1359,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                   children: [
                     Text(
                       'Admin Control',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1369,7 +1368,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       'RBAC - Manage roles & permissions',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -1514,7 +1513,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 16 : 20,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1524,7 +1523,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                   ),
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 9 : 11,
                       color: textSecondary,
                     ),
@@ -1565,7 +1564,7 @@ class _AdminControlPageState extends State<AdminControlPage>
             controller: _searchController,
             decoration: InputDecoration(
               hintText: 'Search users...',
-              hintStyle: GoogleFonts.inter(
+              hintStyle: TextStyle(
                 fontSize: isMobile ? 13 : 14,
                 color: Colors.grey.shade400,
               ),
@@ -1602,7 +1601,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                 vertical: isMobile ? 12 : 14,
               ),
             ),
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 14 : 15,
               color: textPrimary,
             ),
@@ -1616,7 +1615,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                   return FilterChip(
                     label: Text(
                       option,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 10 : 11,
                         fontWeight:
                             _selectedSearchBy == option
@@ -1731,7 +1730,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                         option == 'all'
                             ? 'All'
                             : option.replaceAll('_', ' ').toUpperCase(),
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 10 : 11,
                           fontWeight: FontWeight.w500,
                         ),
@@ -1751,7 +1750,7 @@ class _AdminControlPageState extends State<AdminControlPage>
     return FilterChip(
       label: Text(
         label,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 10 : 11,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
           color: isSelected ? Colors.white : textSecondary,
@@ -1807,7 +1806,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               const SizedBox(width: 8),
               Text(
                 'Admin Users (${_adminsList.length})',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1840,7 +1839,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                     const SizedBox(height: 8),
                     Text(
                       'No Admin Users',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: textSecondary,
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -1907,7 +1906,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                 children: [
                                   Text(
                                     admin['fullName']?.toString() ?? 'Unknown',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 11 : 12,
                                       fontWeight: FontWeight.w600,
                                       color: textPrimary,
@@ -1917,7 +1916,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                   ),
                                   Text(
                                     _getRoleLabel(role),
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 9 : 10,
                                       color: roleColor,
                                       fontWeight: FontWeight.w600,
@@ -1945,7 +1944,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                               ),
                               child: Text(
                                 isActive ? 'Active' : 'Inactive',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 8 : 9,
                                   color: isActive ? successColor : errorColor,
                                   fontWeight: FontWeight.w600,
@@ -1956,7 +1955,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                             Text(
                               admin['email']?.toString().split('@').first ??
                                   'No email',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 9,
                                 color: textSecondary,
                               ),
@@ -2007,7 +2006,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               const SizedBox(width: 8),
               Text(
                 'Add User as Admin',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2025,7 +2024,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                   children: [
                     Text(
                       'By Email Address',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 11 : 12,
                         fontWeight: FontWeight.w600,
                         color: textSecondary,
@@ -2036,7 +2035,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                       controller: _emailController,
                       decoration: InputDecoration(
                         hintText: 'Enter user email',
-                        hintStyle: GoogleFonts.inter(
+                        hintStyle: TextStyle(
                           fontSize: isMobile ? 13 : 14,
                           color: Colors.grey.shade400,
                         ),
@@ -2062,7 +2061,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                           vertical: isMobile ? 10 : 12,
                         ),
                       ),
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 14 : 15,
                         color: textPrimary,
                       ),
@@ -2138,7 +2137,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               const SizedBox(width: 8),
               Text(
                 'Users (${_filteredUsers.length})',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2171,7 +2170,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                     const SizedBox(height: 8),
                     Text(
                       _users.isEmpty ? 'No users found' : 'No matching users',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: textSecondary,
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -2235,7 +2234,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                   Expanded(
                                     child: Text(
                                       user['fullName']?.toString() ?? 'Unknown',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontSize: isMobile ? 13 : 14,
                                         color: textPrimary,
@@ -2256,7 +2255,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                       ),
                                       child: Text(
                                         'You',
-                                        style: GoogleFonts.inter(
+                                        style: TextStyle(
                                           fontSize: isMobile ? 8 : 9,
                                           fontWeight: FontWeight.w600,
                                           color: infoColor,
@@ -2267,7 +2266,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                               ),
                               Text(
                                 user['email']?.toString() ?? 'No email',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: isMobile ? 11 : 12,
                                   color: textSecondary,
                                 ),
@@ -2292,7 +2291,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                     ),
                                     child: Text(
                                       _getRoleLabel(userRole),
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 8 : 9,
                                         fontWeight: FontWeight.w600,
                                         color: roleColor,
@@ -2313,7 +2312,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                     ),
                                     child: Text(
                                       isActive ? 'Active' : 'Inactive',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 8 : 9,
                                         fontWeight: FontWeight.w600,
                                         color:
@@ -2379,7 +2378,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                                                 const SizedBox(width: 6),
                                                 Text(
                                                   role['label'],
-                                                  style: GoogleFonts.inter(
+                                                  style: TextStyle(
                                                     fontSize:
                                                         isMobile ? 10 : 11,
                                                     fontWeight:
@@ -2459,7 +2458,7 @@ class _AdminControlPageState extends State<AdminControlPage>
               const SizedBox(height: 16),
               Text(
                 'Loading admin control panel...',
-                style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+                style: TextStyle(fontSize: 14, color: textSecondary),
               ),
             ],
           ),
@@ -2525,7 +2524,7 @@ class _AdminControlPageState extends State<AdminControlPage>
                         const SizedBox(height: 12),
                         Text(
                           'Processing...',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: textPrimary,

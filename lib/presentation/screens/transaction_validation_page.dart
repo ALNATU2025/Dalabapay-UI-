@@ -6,7 +6,6 @@ import 'package:dalabapay/presentation/screens/dashboard/dashboard_screen.dart'
     show DashboardScreen;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -40,15 +39,15 @@ class TransactionValidationPage extends StatefulWidget {
 class _TransactionValidationPageState extends State<TransactionValidationPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== CONTROLLERS ====================
   final TextEditingController _referenceController = TextEditingController();
@@ -499,7 +498,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 Expanded(
                   child: Text(
                     'Transaction Verified ✅',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                       color: textPrimary,
@@ -539,7 +538,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                       Expanded(
                         child: Text(
                           'This transaction has been verified and credited to your wallet.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             color: textSecondary,
                           ),
@@ -563,7 +562,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 },
                 child: Text(
                   'Verify Another',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: primaryColor,
                   ),
@@ -587,7 +586,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 ),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -626,7 +625,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 Expanded(
                   child: Text(
                     'Transaction Pending',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                       color: textPrimary,
@@ -669,7 +668,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                           Expanded(
                             child: Text(
                               '⏳ Your payment is still processing.',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: 13,
                                 color: textSecondary,
                                 fontWeight: FontWeight.w500,
@@ -682,7 +681,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                       Text(
                         'No funds have been added to your wallet yet. '
                         'Please wait for the payment to complete.',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12,
                           color: textSecondary,
                         ),
@@ -710,7 +709,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 },
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: textSecondary,
                   ),
@@ -729,7 +728,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 ),
                 child: Text(
                   'Contact Support',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -768,7 +767,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 Expanded(
                   child: Text(
                     'Transaction Not Found',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 18,
                       color: textPrimary,
@@ -783,7 +782,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
               children: [
                 Text(
                   'We could not find this transaction in our system.',
-                  style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+                  style: TextStyle(fontSize: 14, color: textSecondary),
                 ),
                 const SizedBox(height: 16),
                 Container(
@@ -798,7 +797,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                     children: [
                       Text(
                         '💡 What to do:',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: textPrimary,
@@ -810,7 +809,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                         '• Make sure you completed the payment\n'
                         '• If you just made the payment, wait a few minutes\n'
                         '• Contact support with your transaction receipt',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12,
                           color: textSecondary,
                           height: 1.6,
@@ -826,7 +825,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: textSecondary,
                   ),
@@ -845,7 +844,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 ),
                 child: Text(
                   'Contact Support',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   ),
@@ -862,7 +861,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
       children: [
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
             color: textSecondary,
@@ -870,7 +869,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
         ),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: textPrimary,
@@ -915,7 +914,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -983,7 +982,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                   children: [
                     Text(
                       _currentUserName.isNotEmpty ? _currentUserName : 'User',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -995,7 +994,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                       _currentUserEmail.isNotEmpty
                           ? _currentUserEmail
                           : 'user@example.com',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white70,
                         fontSize: 12,
                       ),
@@ -1017,7 +1016,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
             ),
             child: Text(
               _isSuperAdmin ? 'SUPER ADMIN' : (_isAdmin ? 'ADMIN' : 'USER'),
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -1190,7 +1189,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
         gradient: const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
           stops: [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1229,7 +1228,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
               Expanded(
                 child: Text(
                   'Transaction Validation',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withOpacity(0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1248,7 +1247,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                   ),
                   child: Text(
                     'ADMIN',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 8 : 10,
                       fontWeight: FontWeight.w700,
@@ -1289,7 +1288,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                   children: [
                     Text(
                       'Verify Payment',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1298,7 +1297,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       'Check your transaction status instantly',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withOpacity(0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -1447,7 +1446,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 14 : 18,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1457,7 +1456,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                   ),
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 8 : 10,
                       color: textSecondary,
                     ),
@@ -1506,7 +1505,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 const SizedBox(width: 8),
                 Text(
                   'Transaction Reference',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: isMobile ? 14 : 16,
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -1542,7 +1541,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                             const SizedBox(width: 4),
                             Text(
                               _isCopied ? 'Copied!' : 'Copy',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
                                 color: _isCopied ? successColor : primaryColor,
@@ -1561,7 +1560,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
               validator: _validateReference,
               decoration: InputDecoration(
                 hintText: 'Enter transaction reference',
-                hintStyle: GoogleFonts.inter(
+                hintStyle: TextStyle(
                   fontSize: isMobile ? 13 : 14,
                   color: Colors.grey.shade400,
                 ),
@@ -1597,7 +1596,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                   vertical: isMobile ? 12 : 14,
                 ),
               ),
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 15,
                 color: textPrimary,
               ),
@@ -1624,7 +1623,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                       children: [
                         Text(
                           'Enter your transaction reference code',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 11 : 12,
                             color: textSecondary,
                             fontWeight: FontWeight.w500,
@@ -1633,7 +1632,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                         const SizedBox(height: 4),
                         Text(
                           'Examples: 17764011904836a721458 or MNFY|82|20260807224750|016416',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 10 : 11,
                             color: Colors.grey.shade500,
                           ),
@@ -1680,7 +1679,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                             const SizedBox(width: 8),
                             Text(
                               'Verify Transaction',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 14 : 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
@@ -1720,7 +1719,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
           const SizedBox(height: 16),
           Text(
             _currentStatus,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 14 : 16,
               fontWeight: FontWeight.w600,
               color: infoColor,
@@ -1729,7 +1728,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
           const SizedBox(height: 8),
           Text(
             'Checking database for transaction...',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 11 : 12,
               color: textSecondary,
             ),
@@ -1747,7 +1746,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
           const SizedBox(height: 8),
           Text(
             '${_verificationAttempts * 3}s elapsed',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 10 : 11,
               color: Colors.grey.shade500,
             ),
@@ -1788,7 +1787,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
               const SizedBox(width: 8),
               Text(
                 'Recent Transactions',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1804,7 +1803,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                   },
                   child: Text(
                     'View All',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 11 : 12,
                       fontWeight: FontWeight.w600,
                       color: primaryColor,
@@ -1835,7 +1834,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                     const SizedBox(height: 8),
                     Text(
                       'No recent transactions',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: textSecondary,
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -1883,7 +1882,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                           children: [
                             Text(
                               tx['type'] ?? 'Transaction',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: isMobile ? 13 : 14,
                                 color: textPrimary,
@@ -1893,7 +1892,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                             ),
                             Text(
                               tx['reference'] ?? 'N/A',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 color: textSecondary,
                               ),
@@ -1913,7 +1912,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                                   ),
                                   child: Text(
                                     tx['status'] ?? 'Unknown',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 8 : 9,
                                       fontWeight: FontWeight.w600,
                                       color: statusColor,
@@ -1925,7 +1924,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                                   DateFormat(
                                     'MMM dd, HH:mm',
                                   ).format(DateTime.parse(tx['createdAt'])),
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 8 : 9,
                                     color: Colors.grey.shade500,
                                   ),
@@ -1937,7 +1936,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                       ),
                       Text(
                         '₦${(tx['amount'] ?? 0).toStringAsFixed(2)}',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: isMobile ? 13 : 14,
                           color: isSuccess ? successColor : textPrimary,
@@ -1984,7 +1983,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
               const SizedBox(width: 8),
               Text(
                 'Need Help?',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1998,7 +1997,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
             '• Format: Alphanumeric (e.g., 17764011904836a721485)\n'
             '• Each transaction can only be verified once\n'
             '• For pending transactions, wait a few minutes or contact support',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 11 : 12,
               color: textSecondary,
               height: 1.6,
@@ -2024,7 +2023,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                   const SizedBox(width: 10),
                   Text(
                     'Contact Support',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 12 : 13,
                       fontWeight: FontWeight.w600,
                       color: primaryColor,
@@ -2109,7 +2108,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                         const SizedBox(height: 12),
                         Text(
                           'Processing...',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: textPrimary,

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../onboarding/onboarding_screen.dart';
 
@@ -58,10 +57,10 @@ class _SplashTwoScreenState extends State<SplashTwoScreen>
             const SizedBox(height: 30),
             Text(
               "Fast. Secure. Reliable.",
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xff243889),
+                color: const Color(0xFF102C68),
               ),
             ),
           ],

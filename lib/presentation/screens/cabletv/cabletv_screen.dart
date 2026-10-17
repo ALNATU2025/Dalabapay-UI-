@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -106,8 +105,8 @@ class _CableTVScreenState extends State<CableTVScreen>
   bool _isProcessingPayment = false;
 
   // Color Palette
-  static const Color _primary = Color(0xFF243889);
-  static const Color _secondary = Color(0xFF219C7E);
+  static const Color _primary = Color(0xFF102C68);
+  static const Color _secondary = Color(0xFF168566);
   static const Color _hintColor = Color(0xFFB6B6B6);
 
   // Provider list with logos
@@ -737,7 +736,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   const SizedBox(height: 16),
                   Text(
                     'Smart Card Validated!',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
                       color: _primary,
@@ -755,7 +754,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                     ),
                     child: Text(
                       'Verification Complete',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: _secondary,
@@ -802,7 +801,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                         Expanded(
                           child: Text(
                             'Smart card verified. You can now renew or change your package.',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: _primary,
@@ -854,7 +853,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                           ),
                           child: Text(
                             'Retry',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
@@ -891,7 +890,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                           ),
                           child: Text(
                             'Proceed',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
@@ -915,7 +914,7 @@ class _CableTVScreenState extends State<CableTVScreen>
           width: 130,
           child: Text(
             label,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 13,
               color: Colors.grey.shade600,
               fontWeight: FontWeight.w600,
@@ -925,7 +924,7 @@ class _CableTVScreenState extends State<CableTVScreen>
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
               color: Colors.grey.shade900,
@@ -955,7 +954,7 @@ class _CableTVScreenState extends State<CableTVScreen>
       children: [
         Text(
           'What do you want to do?',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
             color: _primary,
@@ -976,7 +975,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
                   'Select what to do',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: _hintColor,
@@ -991,7 +990,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   size: 18,
                 ),
               ),
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.grey.shade800,
@@ -1044,7 +1043,7 @@ class _CableTVScreenState extends State<CableTVScreen>
           children: [
             Text(
               'Amount',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
                 color: _primary,
@@ -1053,7 +1052,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             if (_selectedAction == 'renew')
               Text(
                 'Renewal Amount',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: _secondary,
@@ -1062,7 +1061,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             if (_selectedAction == 'change')
               Text(
                 'Fixed Price',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: Colors.orange.shade700,
@@ -1099,7 +1098,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   _selectedAction == 'renew'
                       ? 'Enter amount to pay'
                       : 'Amount is fixed for package change',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: TextStyle(
                 color:
                     _selectedAction == 'change'
                         ? Colors.grey.shade500
@@ -1132,7 +1131,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                         ),
                         child: Text(
                           'FIXED',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
                             color: Colors.orange.shade700,
@@ -1151,7 +1150,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 16,
               fontWeight:
                   _selectedAction == 'change'
@@ -1191,7 +1190,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 Expanded(
                   child: Text(
                     'You can adjust the amount. Total: ₦${(_calculatedTotal > 0 ? _calculatedTotal : double.tryParse(_amountController.text) ?? 0).toStringAsFixed(2)}',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Colors.blue.shade800,
@@ -1216,7 +1215,7 @@ class _CableTVScreenState extends State<CableTVScreen>
           children: [
             Text(
               'Months',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
                 color: _primary,
@@ -1224,7 +1223,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             ),
             Text(
               'Total: ₦${((double.tryParse(_amountController.text) ?? 0) * _quantity).toStringAsFixed(2)}',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 color: _secondary,
@@ -1260,7 +1259,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             const SizedBox(width: 16),
             Text(
               '$_quantity',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
                 color: _primary,
@@ -1302,7 +1301,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 ),
                 child: Text(
                   'Max 12 months',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: _secondary,
@@ -1332,7 +1331,7 @@ class _CableTVScreenState extends State<CableTVScreen>
         children: [
           Text(
             'Select New Package',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
               color: _primary,
@@ -1348,7 +1347,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             ),
             child: const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
               ),
             ),
           ),
@@ -1374,7 +1373,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             const SizedBox(height: 12),
             Text(
               'No plans available',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Colors.grey.shade700,
@@ -1382,7 +1381,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             ),
             Text(
               'Please try another provider',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey.shade500,
@@ -1398,7 +1397,7 @@ class _CableTVScreenState extends State<CableTVScreen>
       children: [
         Text(
           'Select New Package',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
             color: _primary,
@@ -1500,7 +1499,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                       ),
                       child: Text(
                         'CURRENT',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 8,
                           fontWeight: FontWeight.w800,
                           color: Colors.green.shade800,
@@ -1511,7 +1510,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   Expanded(
                     child: Text(
                       name,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: isSelected ? Colors.white : _primary,
@@ -1532,7 +1531,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               ),
               child: Text(
                 '₦${NumberFormat('#,##0').format(double.tryParse(amount) ?? 0)}',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   color: isSelected ? _primary : _secondary,
@@ -1578,7 +1577,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 const SizedBox(width: 12),
                 Text(
                   'Package Change',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: _primary,
                     fontWeight: FontWeight.w800,
                     fontSize: 18,
@@ -1592,7 +1591,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               children: [
                 Text(
                   'You are changing your subscription package:',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey.shade700,
@@ -1614,7 +1613,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                           children: [
                             Text(
                               'Current Package',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.grey.shade600,
@@ -1622,7 +1621,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                             ),
                             Text(
                               currentPackage,
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
                                 color: Colors.grey.shade800,
@@ -1643,7 +1642,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                           children: [
                             Text(
                               'New Package',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.grey.shade600,
@@ -1651,7 +1650,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                             ),
                             Text(
                               newPackage,
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
                                 color: _secondary,
@@ -1682,7 +1681,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                       Expanded(
                         child: Text(
                           'Package changes require the exact amount of ₦${totalAmount.toStringAsFixed(2)}.',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: Colors.blue.shade800,
@@ -1711,7 +1710,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                       Expanded(
                         child: Text(
                           'This action cannot be undone. Your subscription will be changed immediately.',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color: Colors.orange.shade800,
@@ -1728,7 +1727,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 onPressed: () => Navigator.pop(context, false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1745,7 +1744,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 ),
                 child: Text(
                   'Confirm Change',
-                  style: GoogleFonts.poppins(fontWeight: FontWeight.w700),
+                  style: TextStyle(fontWeight: FontWeight.w700),
                 ),
               ),
             ],
@@ -2201,7 +2200,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             Expanded(
               child: Text(
                 displayMsg,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -2361,7 +2360,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                                               HugeIcons
                                                   .strokeRoundedMultiplicationSign,
                                           size: 18,
-                                          color: const Color(0xFF64748B),
+                                          color: const Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -2372,10 +2371,10 @@ class _CableTVScreenState extends State<CableTVScreen>
 
                               Text(
                                 'Confirm Payment',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -2428,7 +2427,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -2507,10 +2506,10 @@ class _CableTVScreenState extends State<CableTVScreen>
                   const SizedBox(width: 8),
                   Text(
                     'Action',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -2529,7 +2528,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 ),
                 child: Text(
                   actionName,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color:
@@ -2565,10 +2564,10 @@ class _CableTVScreenState extends State<CableTVScreen>
                   const SizedBox(width: 8),
                   Text(
                     'Provider',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -2576,10 +2575,10 @@ class _CableTVScreenState extends State<CableTVScreen>
               Flexible(
                 child: Text(
                   provider['fullName'] ?? 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
@@ -2611,10 +2610,10 @@ class _CableTVScreenState extends State<CableTVScreen>
                   const SizedBox(width: 8),
                   Text(
                     'Customer',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -2622,10 +2621,10 @@ class _CableTVScreenState extends State<CableTVScreen>
               Flexible(
                 child: Text(
                   _customerName ?? 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
@@ -2659,10 +2658,10 @@ class _CableTVScreenState extends State<CableTVScreen>
                     const SizedBox(width: 8),
                     Text(
                       'From',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF64748B),
+                        color: const Color(0xFF728078),
                       ),
                     ),
                   ],
@@ -2670,7 +2669,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 Flexible(
                   child: Text(
                     _currentBouquet ?? 'N/A',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                       color: Colors.grey.shade600,
@@ -2707,10 +2706,10 @@ class _CableTVScreenState extends State<CableTVScreen>
                   const SizedBox(width: 8),
                   Text(
                     isPackageChange ? 'New' : 'Package',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -2720,10 +2719,10 @@ class _CableTVScreenState extends State<CableTVScreen>
                   isPackageChange
                       ? (_selectedPlan ?? 'N/A')
                       : (_currentBouquet ?? 'N/A'),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
@@ -2755,20 +2754,20 @@ class _CableTVScreenState extends State<CableTVScreen>
                   const SizedBox(width: 8),
                   Text(
                     'Months',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 '$_quantity',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
               ),
             ],
@@ -2796,10 +2795,10 @@ class _CableTVScreenState extends State<CableTVScreen>
                   const SizedBox(width: 8),
                   Text(
                     'Amount',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -2809,7 +2808,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 children: [
                   Text(
                     '₦${amount.toStringAsFixed(2)}',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
                       color: _secondary,
@@ -2818,7 +2817,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   if (_quantity > 1)
                     Text(
                       '₦${(amount / _quantity).toStringAsFixed(2)} × $_quantity',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey.shade600,
@@ -2855,17 +2854,17 @@ class _CableTVScreenState extends State<CableTVScreen>
               const SizedBox(width: 6),
               Text(
                 'Available Balance',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                 ),
               ),
             ],
           ),
           Text(
             '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
               color: _secondary,
@@ -2919,7 +2918,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   enabled: !_useBiometric,
                   decoration: InputDecoration(
                     hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color:
                           hasError
                               ? const Color(0xFFEF4444).withOpacity(0.7)
@@ -2946,7 +2945,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                     ),
                     errorText: _pinValidationError,
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color:
@@ -2987,7 +2986,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                       Expanded(
                         child: Text(
                           _pinValidationError!,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xFFDC2626),
@@ -3050,7 +3049,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                                     : (_useBiometric
                                         ? 'Switch to PIN'
                                         : 'Pay with PIN'),
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color:
@@ -3131,7 +3130,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                           _useBiometric
                               ? '🔐 Tap to authenticate'
                               : 'Pay with Biometric',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color:
@@ -3247,7 +3246,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 Expanded(
                   child: Text(
                     title,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: Colors.red.shade700,
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
@@ -3262,7 +3261,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               children: [
                 Text(
                   message,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey.shade800,
@@ -3287,7 +3286,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                       Expanded(
                         child: Text(
                           'If this issue persists, please contact support.',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey.shade600,
@@ -3315,7 +3314,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                 ),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
                   ),
@@ -3419,7 +3418,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               const SizedBox(width: 10),
               Text(
                 'Select Provider',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: _hintColor,
@@ -3432,7 +3431,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             color: Colors.grey,
             size: 18,
           ),
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: Colors.grey.shade800,
@@ -3452,7 +3451,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                       Expanded(
                         child: Text(
                           provider['fullName'],
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -3516,7 +3515,7 @@ class _CableTVScreenState extends State<CableTVScreen>
       ),
       title: Text(
         'Cable TV',
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           color: _primary,
           fontSize: 18,
           fontWeight: FontWeight.w800,
@@ -3547,7 +3546,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: _primary,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -3596,7 +3595,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               // Select Provider
               Text(
                 'Select Provider',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: _primary,
@@ -3609,7 +3608,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               // Smart Card Number
               Text(
                 'Smart Card Number',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: _primary,
@@ -3637,7 +3636,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                         ],
                         decoration: InputDecoration(
                           hintText: 'Enter 10-11 digit smart card number',
-                          hintStyle: GoogleFonts.poppins(
+                          hintStyle: TextStyle(
                             color: _hintColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -3661,7 +3660,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                             vertical: 14,
                           ),
                         ),
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
@@ -3698,7 +3697,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                               )
                               : Text(
                                 'Validate',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: 13,
                                 ),
@@ -3740,7 +3739,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                           children: [
                             Text(
                               'Smart Card Validated',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
                                 color: _secondary,
@@ -3748,7 +3747,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                             ),
                             Text(
                               _customerName!,
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: _secondary,
@@ -3758,7 +3757,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                                 _currentBouquet != 'N/A')
                               Text(
                                 'Current: $_currentBouquet',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
                                   color: _secondary.withOpacity(0.7),
@@ -3767,7 +3766,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                             if (_dueDate != null && _dueDate != 'N/A')
                               Text(
                                 'Due: ${_formatDate(_dueDate!)}',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
                                   color: _secondary.withOpacity(0.7),
@@ -3801,7 +3800,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               // Phone Number
               Text(
                 'Phone Number',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: _primary,
@@ -3824,7 +3823,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   ],
                   decoration: InputDecoration(
                     hintText: 'Enter 11-digit phone number',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color: _hintColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -3848,7 +3847,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                       vertical: 14,
                     ),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -3882,7 +3881,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                     Expanded(
                       child: Text(
                         'Please confirm the details above before proceeding.',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: _primary,
@@ -3933,7 +3932,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                               const SizedBox(width: 8),
                               Text(
                                 'Continue',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white,
@@ -4002,7 +4001,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color:
@@ -4017,7 +4016,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Cable TV service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -4038,7 +4037,7 @@ class _CableTVScreenState extends State<CableTVScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

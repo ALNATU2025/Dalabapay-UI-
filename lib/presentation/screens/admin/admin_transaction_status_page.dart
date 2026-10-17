@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:shimmer/shimmer.dart';
@@ -26,15 +25,15 @@ class AdminTransactionStatusPage extends StatefulWidget {
 class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
   // ignore: unused_field
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -129,7 +128,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Transaction Locked',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -143,7 +142,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               children: [
                 Text(
                   'This transaction is locked and cannot be updated until the following issues are resolved:',
-                  style: GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                  style: TextStyle(fontSize: 14, color: textPrimary),
                 ),
                 const SizedBox(height: 16),
 
@@ -179,7 +178,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           hasDispute
                               ? '⚠️ Active Dispute(s) Found - Must be resolved first'
                               : '✅ No active disputes',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             color: hasDispute ? errorColor : successColor,
                             fontWeight:
@@ -225,7 +224,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           hasPendingRefund
                               ? '⚠️ Pending Refund Request - Must be completed first'
                               : '✅ No pending refunds',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 13,
                             color: hasPendingRefund ? errorColor : successColor,
                             fontWeight:
@@ -256,7 +255,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     children: [
                       Text(
                         '📋 How to Unlock:',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: primaryColor,
@@ -271,12 +270,12 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             children: [
                               Text(
                                 '• ',
-                                style: GoogleFonts.inter(color: textSecondary),
+                                style: TextStyle(color: textSecondary),
                               ),
                               Expanded(
                                 child: Text(
                                   'Go to Refund System → Disputes → Resolve the dispute',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: 13,
                                     color: textSecondary,
                                   ),
@@ -293,12 +292,12 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             children: [
                               Text(
                                 '• ',
-                                style: GoogleFonts.inter(color: textSecondary),
+                                style: TextStyle(color: textSecondary),
                               ),
                               Expanded(
                                 child: Text(
                                   'Go to Refund System → Process/Complete the refund',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: 13,
                                     color: textSecondary,
                                   ),
@@ -315,12 +314,12 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             children: [
                               Text(
                                 '• ',
-                                style: GoogleFonts.inter(color: textSecondary),
+                                style: TextStyle(color: textSecondary),
                               ),
                               Expanded(
                                 child: Text(
                                   'No issues found. If still locked, contact backend support.',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: 13,
                                     color: textSecondary,
                                   ),
@@ -352,7 +351,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       const SizedBox(width: 6),
                       Text(
                         'TX: ${transaction['reference']?.toString() ?? 'N/A'}',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 12,
                           color: textSecondary,
                         ),
@@ -367,7 +366,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -389,7 +388,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   ),
                   child: Text(
                     'Go to Refund System',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
             ],
@@ -770,7 +769,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -803,7 +802,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -812,7 +811,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -831,7 +830,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -1027,7 +1026,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -1066,7 +1065,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               Expanded(
                 child: Text(
                   'Admin / Status Update',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -1084,7 +1083,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 ),
                 child: Text(
                   'ADMIN',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: isMobile ? 8 : 10,
                     fontWeight: FontWeight.w700,
@@ -1126,7 +1125,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   children: [
                     Text(
                       'Transaction Status',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -1135,7 +1134,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       '${_filteredTransactions.length} pending/failed • ${_pendingCount + _failedCount} total',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -1195,7 +1194,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           isMobile
                               ? 'Search transactions...'
                               : 'Search by reference, customer, type...',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         color: primaryColor.withValues(alpha: 0.4),
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -1205,7 +1204,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                         vertical: isMobile ? 10 : 14,
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontSize: isMobile ? 14 : 15,
                     ),
@@ -1354,7 +1353,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
         SizedBox(height: isMobile ? 4 : 6),
         Text(
           value,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 14 : 16,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -1363,7 +1362,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
         SizedBox(height: isMobile ? 2 : 4),
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 9 : 11,
             color: textSecondary,
             fontWeight: FontWeight.w500,
@@ -1394,7 +1393,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
     return FilterChip(
       label: Text(
         label,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 11 : 12,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
           color: isSelected ? primaryColor : textSecondary,
@@ -1562,7 +1561,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           children: [
                             Text(
                               transaction['type']?.toString() ?? 'Transaction',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 14 : 15,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -1574,7 +1573,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                               children: [
                                 Text(
                                   'Ref: ${reference.length > 16 ? '${reference.substring(0, 16)}...' : reference}',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: isMobile ? 10 : 11,
                                     color: textSecondary,
                                   ),
@@ -1594,7 +1593,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                     ),
                                     child: Text(
                                       'DISPUTE',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 8,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.orange,
@@ -1612,7 +1611,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                         children: [
                           Text(
                             '₦${amount.toStringAsFixed(2)}',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 14 : 16,
                               fontWeight: FontWeight.w700,
                               color:
@@ -1630,7 +1629,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             ),
                             child: Text(
                               _getStatusText(status),
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 10,
                                 fontWeight: FontWeight.w600,
                                 color: statusColor,
@@ -1654,7 +1653,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                         Expanded(
                           child: Text(
                             user['fullName']?.toString() ?? 'Unknown User',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 11 : 12,
                               color: textSecondary,
                             ),
@@ -1666,7 +1665,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           const SizedBox(width: 8),
                           Text(
                             _formatDate(createdAt),
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 10 : 11,
                               color: textSecondary,
                             ),
@@ -1711,7 +1710,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               const SizedBox(height: 16),
               Text(
                 'Select a Transaction',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1720,7 +1719,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               const SizedBox(height: 8),
               Text(
                 'Tap on a transaction to view details',
-                style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+                style: TextStyle(fontSize: 14, color: textSecondary),
               ),
             ],
           ),
@@ -1746,7 +1745,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               const SizedBox(height: 16),
               Text(
                 'Loading Details...',
-                style: GoogleFonts.inter(fontSize: 14, color: textSecondary),
+                style: TextStyle(fontSize: 14, color: textSecondary),
               ),
             ],
           ),
@@ -1816,7 +1815,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               children: [
                 Text(
                   'Transaction Details',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -1824,7 +1823,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 ),
                 Text(
                   _selectedTransaction?['reference']?.toString() ?? 'N/A',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 12,
                   ),
@@ -1849,7 +1848,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 SizedBox(width: 4),
                 Text(
                   _getStatusText(status),
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: statusColor,
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
@@ -1893,7 +1892,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Transaction Information',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -1942,7 +1941,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Customer Information',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -1993,7 +1992,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     Expanded(
                       child: Text(
                         '⚠️ This transaction has unresolved disputes. Status cannot be updated until disputes are resolved.',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: errorColor,
                           fontSize: 12,
                         ),
@@ -2031,7 +2030,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             hasDispute
                                 ? '🔒 Transaction Locked - Active Dispute'
                                 : '🔒 Transaction Locked - Pending Refund',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.orange,
@@ -2045,7 +2044,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       hasDispute
                           ? 'This transaction has unresolved disputes. Please resolve the dispute in the Refund System before updating status.'
                           : 'This transaction has a pending refund request. Complete or reject the refund before updating status.',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 13,
                         color: textSecondary,
                       ),
@@ -2080,7 +2079,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             ),
                             label: Text(
                               'View Unlock Instructions',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
                               ),
@@ -2109,7 +2108,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             ),
                             label: Text(
                               'Go to Refund System',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
                               ),
@@ -2139,7 +2138,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             width: 90,
             child: Text(
               '$label:',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: textSecondary,
                 fontSize: 13,
@@ -2149,7 +2148,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(color: textPrimary, fontSize: 13),
+              style: TextStyle(color: textPrimary, fontSize: 13),
             ),
           ),
         ],
@@ -2183,7 +2182,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Disputes',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2201,7 +2200,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   ),
                   child: Text(
                     '${_disputes.length}',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: primaryColor,
@@ -2278,7 +2277,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               Expanded(
                 child: Text(
                   dispute['type']?.toString() ?? 'Dispute',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -2293,7 +2292,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 ),
                 child: Text(
                   statusText,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: statusColor,
@@ -2305,14 +2304,14 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
           const SizedBox(height: 6),
           Text(
             'Reason: ${dispute['reason']?.toString() ?? 'N/A'}',
-            style: GoogleFonts.inter(fontSize: 12, color: textSecondary),
+            style: TextStyle(fontSize: 12, color: textSecondary),
           ),
           if (dispute['resolution'] != null &&
               dispute['resolution'].toString().isNotEmpty) ...[
             const SizedBox(height: 4),
             Text(
               'Resolution: ${dispute['resolution']}',
-              style: GoogleFonts.inter(fontSize: 12, color: successColor),
+              style: TextStyle(fontSize: 12, color: successColor),
             ),
           ],
         ],
@@ -2346,7 +2345,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Receipts',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2364,7 +2363,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   ),
                   child: Text(
                     '${_receipts.length}',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: primaryColor,
@@ -2413,7 +2412,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               children: [
                 Text(
                   receipt['type']?.toString() ?? 'Receipt',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 12 : 13,
                     fontWeight: FontWeight.w600,
                     color: textPrimary,
@@ -2421,7 +2420,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 ),
                 Text(
                   'ID: ${receipt['receiptId']?.toString() ?? 'N/A'}',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: isMobile ? 10 : 11,
                     color: textSecondary,
                   ),
@@ -2438,7 +2437,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             ),
             label: Text(
               'View',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 color: primaryColor,
                 fontSize: isMobile ? 11 : 12,
                 fontWeight: FontWeight.w600,
@@ -2496,7 +2495,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   Expanded(
                     child: Text(
                       'This transaction is already successful/completed.',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 14,
                         color: textPrimary,
                       ),
@@ -2525,7 +2524,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   ),
                   label: Text(
                     'Fund User Wallet',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
@@ -2566,7 +2565,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       const SizedBox(width: 8),
                       Text(
                         'Update Status',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -2579,7 +2578,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     initialValue: _selectedNewStatus,
                     decoration: InputDecoration(
                       labelText: 'New Status',
-                      labelStyle: GoogleFonts.inter(
+                      labelStyle: TextStyle(
                         fontSize: 13,
                         color: textSecondary,
                       ),
@@ -2625,7 +2624,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       labelText: 'Admin Note (Optional)',
                       hintText:
                           'Add a note explaining why status is being changed',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2643,7 +2642,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       ),
                     ),
                     maxLines: 2,
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
@@ -2661,7 +2660,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       ),
                       child: Text(
                         'Update Status',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
@@ -2695,7 +2694,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       const SizedBox(width: 8),
                       Text(
                         'Fund User Wallet',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                           color: textPrimary,
@@ -2710,7 +2709,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       labelText: 'Amount (₦)',
                       prefixText: '₦',
                       hintText: 'Enter amount to fund',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2728,7 +2727,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       ),
                     ),
                     keyboardType: TextInputType.number,
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -2736,7 +2735,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     decoration: InputDecoration(
                       labelText: 'Note (Optional)',
                       hintText: 'Reason for funding',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2753,7 +2752,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                         vertical: isMobile ? 8 : 12,
                       ),
                     ),
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
@@ -2776,7 +2775,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       ),
                       label: Text(
                         'Fund Wallet',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
@@ -2949,7 +2948,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                 const SizedBox(width: 10),
                                 Text(
                                   'Update Transaction Status',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                     color: textPrimary,
@@ -2974,7 +2973,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                 children: [
                                   Text(
                                     'Current: ',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: 12,
                                       color: textSecondary,
                                     ),
@@ -2992,7 +2991,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                     ),
                                     child: Text(
                                       tx['status']?.toString() ?? 'N/A',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
                                         color: _getStatusColor(
@@ -3009,7 +3008,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             // New status dropdown
                             Text(
                               'Change to:',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: textSecondary,
@@ -3085,11 +3084,11 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                               decoration: InputDecoration(
                                 labelText: 'Admin Note (Optional)',
                                 hintText: 'Reason for status change',
-                                hintStyle: GoogleFonts.inter(
+                                hintStyle: TextStyle(
                                   fontSize: 12,
                                   color: textSecondary.withValues(alpha: 0.6),
                                 ),
-                                labelStyle: GoogleFonts.inter(
+                                labelStyle: TextStyle(
                                   fontSize: 12,
                                   color: textSecondary,
                                 ),
@@ -3110,7 +3109,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                   ),
                                 ),
                               ),
-                              style: GoogleFonts.inter(fontSize: 13),
+                              style: TextStyle(fontSize: 13),
                             ),
                             const SizedBox(height: 16),
 
@@ -3139,7 +3138,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                     ),
                                     child: Text(
                                       'Close',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
                                         color: textSecondary,
@@ -3364,7 +3363,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                                 const SizedBox(width: 6),
                                                 Text(
                                                   'Update Status',
-                                                  style: GoogleFonts.inter(
+                                                  style: TextStyle(
                                                     fontSize: 13,
                                                     fontWeight: FontWeight.w600,
                                                   ),
@@ -3436,7 +3435,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 gradient: LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                  colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                   stops: [0.06, 0.41],
                 ),
                 borderRadius: BorderRadius.only(
@@ -3465,7 +3464,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       children: [
                         Text(
                           'Confirm Status Change',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: isMobile ? 16 : 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -3474,7 +3473,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                         const SizedBox(height: 2),
                         Text(
                           'This will update the user\'s transaction',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 11,
                             color: Colors.white.withValues(alpha: 0.85),
                           ),
@@ -3531,7 +3530,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             children: [
                               Text(
                                 'CURRENT',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.w700,
                                   color: textSecondary,
@@ -3541,7 +3540,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                               const SizedBox(height: 4),
                               Text(
                                 oldStatus,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: oldColor,
@@ -3578,7 +3577,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                             children: [
                               Text(
                                 'NEW',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 9,
                                   fontWeight: FontWeight.w700,
                                   color: textSecondary,
@@ -3588,7 +3587,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                               const SizedBox(height: 4),
                               Text(
                                 newStatus,
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: newColor,
@@ -3616,7 +3615,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                         children: [
                           Text(
                             'ADMIN NOTE',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 9,
                               fontWeight: FontWeight.w700,
                               color: primaryColor,
@@ -3626,7 +3625,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           const SizedBox(height: 4),
                           Text(
                             adminNote,
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 12,
                               color: textPrimary,
                             ),
@@ -3657,7 +3656,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                         Expanded(
                           child: Text(
                             'The user will see this change immediately.',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 12,
                               color: textSecondary,
                               height: 1.4,
@@ -3688,7 +3687,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       ),
                       child: Text(
                         'No, Cancel',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: textSecondary,
@@ -3717,7 +3716,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           const SizedBox(width: 8),
                           Text(
                             'Yes, Change Status',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -3745,7 +3744,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
           width: 70,
           child: Text(
             '$label:',
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: textSecondary,
@@ -3755,7 +3754,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               color: textPrimary,
@@ -3804,7 +3803,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Confirm Wallet Funding',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -3844,7 +3843,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       Expanded(
                         child: Text(
                           'This action will credit the user\'s wallet balance immediately.',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 12,
                             color: textSecondary,
                           ),
@@ -3860,7 +3859,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 onPressed: () => Navigator.pop(ctx, false),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -3877,7 +3876,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 ),
                 child: Text(
                   'Confirm Funding',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -3938,7 +3937,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     const SizedBox(width: 8),
                     Text(
                       'Funding Successful!',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: textPrimary,
@@ -3971,7 +3970,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     },
                     child: Text(
                       'Close',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: textSecondary,
                         fontWeight: FontWeight.w600,
                       ),
@@ -4110,7 +4109,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 const SizedBox(width: 8),
                 Text(
                   'Status Updated!',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -4124,14 +4123,14 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
               children: [
                 Text(
                   'Transaction status has been updated to $_selectedNewStatus.',
-                  style: GoogleFonts.inter(fontSize: 14, color: textPrimary),
+                  style: TextStyle(fontSize: 14, color: textPrimary),
                 ),
                 const SizedBox(height: 12),
                 if (receipt != null) ...[
                   const Divider(),
                   Text(
                     'Receipt Generated:',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                       color: textPrimary,
@@ -4161,7 +4160,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -4180,7 +4179,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   ),
                   label: Text(
                     'View Receipt',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontWeight: FontWeight.w600,
                     ),
@@ -4215,7 +4214,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                   const SizedBox(height: 12),
                   Text(
                     'Transaction Receipt',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 18 : 20,
                       fontWeight: FontWeight.bold,
                       color: textPrimary,
@@ -4268,7 +4267,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                       ),
                       child: Text(
                         'Close',
-                        style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -4289,7 +4288,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             width: 80,
             child: Text(
               '$label:',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
                 color: textSecondary,
@@ -4299,7 +4298,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(fontSize: 12, color: textPrimary),
+              style: TextStyle(fontSize: 12, color: textPrimary),
             ),
           ),
         ],
@@ -4334,7 +4333,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Error Loading Transactions',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -4343,7 +4342,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               _errorMessage!,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -4368,7 +4367,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                     SizedBox(width: isMobile ? 6 : 8),
                     Text(
                       'Try Again',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -4408,7 +4407,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Transactions Found',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -4417,7 +4416,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               'Try adjusting your filters or search',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -4497,7 +4496,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                               const SizedBox(width: 8),
                               Text(
                                 'Transaction Details',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: textPrimary,
@@ -4509,7 +4508,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                                   _selectedTransaction!['reference']
                                           ?.toString() ??
                                       'N/A',
-                                  style: GoogleFonts.inter(
+                                  style: TextStyle(
                                     fontSize: 12,
                                     color: textSecondary,
                                   ),
@@ -4591,7 +4590,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           const SizedBox(height: 16),
                           Text(
                             'Select a Transaction',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w600,
                               color: textPrimary,
@@ -4600,7 +4599,7 @@ class _AdminTransactionStatusPageState extends State<AdminTransactionStatusPage>
                           const SizedBox(height: 8),
                           Text(
                             'Click on a transaction to view details',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: 14,
                               color: textSecondary,
                             ),

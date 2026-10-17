@@ -1,7 +1,6 @@
 // lib/presentation/screens/splash/animated_splash_screen.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/theme/app_theme.dart';
@@ -199,7 +198,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                                     style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF219C7E),
+                                      color: Color(0xFF168566),
                                     ),
                                   ),
                                 ),
@@ -281,7 +280,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                                       style: TextStyle(
                                         fontSize: 80,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xFF219C7E),
+                                        color: Color(0xFF168566),
                                       ),
                                     ),
                                   ),
@@ -306,7 +305,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                                   children: [
                                     TextSpan(
                                       text: 'Dalaba',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 32,
                                         fontWeight: FontWeight.w700,
                                         color: AppTheme.secondaryColor,
@@ -314,7 +313,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                                     ),
                                     TextSpan(
                                       text: 'pay',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: 32,
                                         fontWeight: FontWeight.w700,
                                         color: AppTheme.primaryColor,
@@ -336,7 +335,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                             opacity: value,
                             child: Text(
                               'Secure • Fast • Reliable',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[500],
                                 letterSpacing: 1,
@@ -373,7 +372,7 @@ class _AnimatedSplashScreenState extends State<AnimatedSplashScreen>
                 opacity: value,
                 child: Text(
                   letter,
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: AppTheme.secondaryColor,

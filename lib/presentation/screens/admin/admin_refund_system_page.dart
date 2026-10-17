@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:shimmer/shimmer.dart';
@@ -24,14 +23,14 @@ class AdminRefundSystemPage extends StatefulWidget {
 class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -437,7 +436,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -470,7 +469,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -479,7 +478,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -498,7 +497,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -694,7 +693,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -733,7 +732,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               Expanded(
                 child: Text(
                   'Admin / Refund System',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -751,7 +750,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 ),
                 child: Text(
                   'ADMIN',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: isMobile ? 8 : 10,
                     fontWeight: FontWeight.w700,
@@ -794,7 +793,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                   children: [
                     Text(
                       'Refund & Dispute',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -803,7 +802,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       '${_transactions.length} pending/failed • $_pendingDisputes disputes • $_pendingRefunds refunds',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -864,7 +863,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           isMobile
                               ? 'Search...'
                               : 'Search transactions, disputes, or refunds...',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         color: primaryColor.withValues(alpha: 0.4),
                         fontSize: isMobile ? 13 : 14,
                       ),
@@ -874,7 +873,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         vertical: isMobile ? 10 : 14,
                       ),
                     ),
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontSize: isMobile ? 14 : 15,
                     ),
@@ -1068,7 +1067,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
         SizedBox(height: isMobile ? 4 : 6),
         Text(
           displayValue,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 14 : 16,
             fontWeight: FontWeight.w700,
             color: textPrimary,
@@ -1079,7 +1078,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
         SizedBox(height: isMobile ? 2 : 4),
         Text(
           label,
-          style: GoogleFonts.inter(
+          style: TextStyle(
             fontSize: isMobile ? 9 : 11,
             color: textSecondary,
             fontWeight: FontWeight.w500,
@@ -1110,7 +1109,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
     return FilterChip(
       label: Text(
         label,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 11 : 12,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
           color: isSelected ? primaryColor : textSecondary,
@@ -1220,7 +1219,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                   Flexible(
                     child: Text(
                       label,
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: isSelected ? Colors.white : textSecondary,
                         fontWeight:
                             isSelected ? FontWeight.w600 : FontWeight.w400,
@@ -1403,7 +1402,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                                   child: Text(
                                     transaction['type']?.toString() ??
                                         'Transaction',
-                                    style: GoogleFonts.inter(
+                                    style: TextStyle(
                                       fontSize: isMobile ? 14 : 15,
                                       fontWeight: FontWeight.w600,
                                       color: textPrimary,
@@ -1427,7 +1426,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                                     ),
                                     child: Text(
                                       'RESOLVED',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 8 : 10,
                                         fontWeight: FontWeight.bold,
                                         color: successColor,
@@ -1439,7 +1438,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                             ),
                             Text(
                               'Ref: ${reference.length > 16 ? '${reference.substring(0, 16)}...' : reference}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 color: textSecondary,
                               ),
@@ -1452,7 +1451,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         children: [
                           Text(
                             '₦${amount.toStringAsFixed(2)}',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 14 : 16,
                               fontWeight: FontWeight.w700,
                               color: isResolved ? successColor : errorColor,
@@ -1469,7 +1468,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                             ),
                             child: Text(
                               _getStatusText(status),
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 10,
                                 fontWeight: FontWeight.w600,
                                 color: statusColor,
@@ -1493,7 +1492,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         Expanded(
                           child: Text(
                             user['fullName']?.toString() ?? 'Unknown User',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 11 : 12,
                               color: textSecondary,
                             ),
@@ -1505,7 +1504,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           const SizedBox(width: 8),
                           Text(
                             _formatDate(createdAt),
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 10 : 11,
                               color: textSecondary,
                             ),
@@ -1530,7 +1529,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           ),
                           child: Text(
                             'DISPUTE',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 8 : 10,
                               fontWeight: FontWeight.bold,
                               color: Colors.orange,
@@ -1549,7 +1548,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           ),
                           child: Text(
                             'REFUND PENDING',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 8 : 10,
                               fontWeight: FontWeight.bold,
                               color: primaryColor,
@@ -1598,7 +1597,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               const SizedBox(height: 16),
               Text(
                 'No Disputes Found',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 18 : 20,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1607,7 +1606,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               const SizedBox(height: 8),
               Text(
                 'All disputes have been resolved',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 13 : 14,
                   color: textSecondary,
                 ),
@@ -1696,7 +1695,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           children: [
                             Text(
                               dispute['type']?.toString() ?? 'Dispute',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 14 : 15,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -1708,7 +1707,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                               reason.length > 40
                                   ? '${reason.substring(0, 40)}...'
                                   : reason,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 color: textSecondary,
                               ),
@@ -1721,7 +1720,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         children: [
                           Text(
                             '₦${amount.toStringAsFixed(2)}',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 14 : 16,
                               fontWeight: FontWeight.w700,
                               color: textPrimary,
@@ -1738,7 +1737,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                             ),
                             child: Text(
                               _getStatusText(status),
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 10,
                                 fontWeight: FontWeight.w600,
                                 color: statusColor,
@@ -1762,7 +1761,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         Expanded(
                           child: Text(
                             user['fullName']?.toString() ?? 'Unknown User',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 11 : 12,
                               color: textSecondary,
                             ),
@@ -1784,7 +1783,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         SizedBox(width: 4),
                         Text(
                           '${evidence.length} attachment${evidence.length > 1 ? 's' : ''}',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 10 : 11,
                             color: Colors.blue,
                             fontWeight: FontWeight.w500,
@@ -1802,7 +1801,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           ),
                           child: Text(
                             'HAS EVIDENCE',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 7 : 8,
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,
@@ -1852,7 +1851,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               const SizedBox(height: 16),
               Text(
                 'No Refunds Found',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: isMobile ? 18 : 20,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1861,7 +1860,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
               const SizedBox(height: 8),
               Text(
                 'All refunds have been processed',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 13 : 14,
                   color: textSecondary,
                 ),
@@ -1954,7 +1953,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           children: [
                             Text(
                               'Refund Request',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 14 : 15,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -1966,7 +1965,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                               reason.length > 40
                                   ? '${reason.substring(0, 40)}...'
                                   : reason,
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 10 : 11,
                                 color: textSecondary,
                               ),
@@ -1979,7 +1978,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         children: [
                           Text(
                             '₦${amount.toStringAsFixed(2)}',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 14 : 16,
                               fontWeight: FontWeight.w700,
                               color: primaryColor,
@@ -1996,7 +1995,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                             ),
                             child: Text(
                               _getStatusText(status),
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 8 : 10,
                                 fontWeight: FontWeight.w600,
                                 color: statusColor,
@@ -2020,7 +2019,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         Expanded(
                           child: Text(
                             user['fullName']?.toString() ?? 'Unknown User',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontSize: isMobile ? 11 : 12,
                               color: textSecondary,
                             ),
@@ -2045,14 +2044,14 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           children: [
                             Text(
                               'Previous Balance',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 9 : 10,
                                 color: textSecondary,
                               ),
                             ),
                             Text(
                               '₦${previousBalance.toStringAsFixed(2)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 12 : 13,
                                 fontWeight: FontWeight.w600,
                                 color: textPrimary,
@@ -2064,14 +2063,14 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           children: [
                             Text(
                               'Refund Amount',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 9 : 10,
                                 color: successColor,
                               ),
                             ),
                             Text(
                               '+₦${amount.toStringAsFixed(2)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 12 : 13,
                                 fontWeight: FontWeight.bold,
                                 color: successColor,
@@ -2084,14 +2083,14 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           children: [
                             Text(
                               'New Balance',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 9 : 10,
                                 color: textSecondary,
                               ),
                             ),
                             Text(
                               '₦${newBalance.toStringAsFixed(2)}',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 fontSize: isMobile ? 12 : 13,
                                 fontWeight: FontWeight.bold,
                                 color: successColor,
@@ -2215,7 +2214,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                             children: [
                               Text(
                                 'Transaction Details',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   color: Colors.white,
                                   fontSize: isMobile ? 16 : 18,
                                   fontWeight: FontWeight.bold,
@@ -2223,7 +2222,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                               ),
                               Text(
                                 transaction['reference']?.toString() ?? 'N/A',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.8),
                                   fontSize: isMobile ? 11 : 12,
                                 ),
@@ -2244,7 +2243,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                             ),
                             child: Text(
                               'RESOLVED',
-                              style: GoogleFonts.inter(
+                              style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
@@ -2282,7 +2281,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                                     const SizedBox(width: 8),
                                     Text(
                                       'Customer Information',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 13 : 14,
                                         fontWeight: FontWeight.w600,
                                         color: textPrimary,
@@ -2330,7 +2329,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                                     const SizedBox(width: 8),
                                     Text(
                                       'Transaction Information',
-                                      style: GoogleFonts.inter(
+                                      style: TextStyle(
                                         fontSize: isMobile ? 13 : 14,
                                         fontWeight: FontWeight.w600,
                                         color: textPrimary,
@@ -2384,7 +2383,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                           onPressed: () => Navigator.pop(ctx),
                           child: Text(
                             'Close',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               color: textSecondary,
                               fontWeight: FontWeight.w600,
                             ),
@@ -2405,7 +2404,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                               ),
                               label: Text(
                                 'Refund',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -2429,7 +2428,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                               ),
                               label: Text(
                                 'Dispute',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -2461,7 +2460,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             width: isMobile ? 80 : 100,
             child: Text(
               '$label:',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 12 : 13,
                 fontWeight: FontWeight.w600,
                 color: textSecondary,
@@ -2471,7 +2470,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
           Expanded(
             child: Text(
               value,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 12 : 13,
                 color: textPrimary,
               ),
@@ -2507,7 +2506,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Create Dispute',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2524,7 +2523,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     initialValue: selectedType,
                     decoration: InputDecoration(
                       labelText: 'Dispute Type',
-                      labelStyle: GoogleFonts.inter(color: textSecondary),
+                      labelStyle: TextStyle(color: textSecondary),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -2562,7 +2561,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     decoration: InputDecoration(
                       labelText: 'Reason',
                       hintText: 'Explain why this dispute is being created',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2572,7 +2571,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                       contentPadding: const EdgeInsets.all(12),
                     ),
                     maxLines: 2,
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -2580,7 +2579,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     decoration: InputDecoration(
                       labelText: 'Description',
                       hintText: 'Additional details (optional)',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2590,7 +2589,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                       contentPadding: const EdgeInsets.all(12),
                     ),
                     maxLines: 3,
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                 ],
               ),
@@ -2600,7 +2599,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -2646,7 +2645,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 ),
                 child: Text(
                   'Create Dispute',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -2679,7 +2678,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Resolve Dispute',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2720,7 +2719,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                             Expanded(
                               child: Text(
                                 '${evidence.length} attachment(s) available',
-                                style: GoogleFonts.inter(
+                                style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.blue,
                                 ),
@@ -2735,7 +2734,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     const SizedBox(height: 8),
                     Text(
                       'Resolution:',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                         color: textPrimary,
@@ -2746,7 +2745,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                       controller: resolutionController,
                       decoration: InputDecoration(
                         hintText: 'Enter resolution details',
-                        hintStyle: GoogleFonts.inter(
+                        hintStyle: TextStyle(
                           fontSize: 12,
                           color: textSecondary,
                         ),
@@ -2756,14 +2755,14 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                         contentPadding: const EdgeInsets.all(12),
                       ),
                       maxLines: 3,
-                      style: GoogleFonts.inter(fontSize: 13),
+                      style: TextStyle(fontSize: 13),
                     ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
                         Text(
                           'Approve Dispute:',
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: 14,
                             color: textPrimary,
                           ),
@@ -2785,7 +2784,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -2830,7 +2829,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 ),
                 child: Text(
                   'Resolve',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -2863,7 +2862,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Process Refund',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -2881,7 +2880,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     decoration: InputDecoration(
                       labelText: 'Refund Amount',
                       prefixText: '₦',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2891,7 +2890,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                       contentPadding: const EdgeInsets.all(12),
                     ),
                     keyboardType: TextInputType.number,
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -2899,7 +2898,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     decoration: InputDecoration(
                       labelText: 'Reason',
                       hintText: 'Why is this refund being processed?',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2909,7 +2908,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                       contentPadding: const EdgeInsets.all(12),
                     ),
                     maxLines: 2,
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -2917,7 +2916,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     decoration: InputDecoration(
                       labelText: 'Admin Note',
                       hintText: 'Additional notes (optional)',
-                      hintStyle: GoogleFonts.inter(
+                      hintStyle: TextStyle(
                         fontSize: 12,
                         color: textSecondary,
                       ),
@@ -2927,7 +2926,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                       contentPadding: const EdgeInsets.all(12),
                     ),
                     maxLines: 2,
-                    style: GoogleFonts.inter(fontSize: 13),
+                    style: TextStyle(fontSize: 13),
                   ),
                 ],
               ),
@@ -2937,7 +2936,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Cancel',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -2987,7 +2986,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 ),
                 child: Text(
                   'Process Refund',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w600),
                 ),
               ),
             ],
@@ -3016,7 +3015,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 const SizedBox(width: 8),
                 Text(
                   'Refund Details',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: textPrimary,
@@ -3059,7 +3058,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                 onPressed: () => Navigator.pop(ctx),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: textSecondary,
                     fontWeight: FontWeight.w600,
                   ),
@@ -3082,7 +3081,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                   ),
                   child: Text(
                     'Process Refund',
-                    style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
             ],
@@ -3117,7 +3116,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'Error Loading Data',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 22 : 28,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -3126,7 +3125,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               _errorMessage!,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -3151,7 +3150,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
                     SizedBox(width: isMobile ? 6 : 8),
                     Text(
                       'Try Again',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
@@ -3191,7 +3190,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             SizedBox(height: isMobile ? 16 : 24),
             Text(
               'No Items Found',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -3200,7 +3199,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
             SizedBox(height: isMobile ? 8 : 12),
             Text(
               'Try adjusting your filters or search',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),

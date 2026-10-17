@@ -1,31 +1,30 @@
 // lib/core/theme/app_theme.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primaryColor = Color(0xFF219C7E);
-  static const Color secondaryColor = Color(0xFF243889);
-  static const Color accentColor = Color(0xFF9CE2A3);
-  static const Color successColor = Color(0xFF1A7219);
+  static const Color primaryColor = Color(0xFF168566);
+  static const Color secondaryColor = Color(0xFF102C68);
+  static const Color accentColor = Color(0xFFDDF4E8);
+  static const Color successColor = Color(0xFF0F6B51);
   static const Color errorColor = Color(0xFFE53935);
   static const Color warningColor = Color(0xFFFFC107);
   
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF219C7E), Color(0xFF1A7219)],
+    colors: [Color(0xFF168566), Color(0xFF0F6B51)],
   );
   
   static const LinearGradient secondaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF243889), Color(0xFF1A2E6B)],
+    colors: [Color(0xFF102C68), Color(0xFF0C2152)],
   );
   
   static const LinearGradient cardGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF219C7E), Color(0xFF243889)],
+    colors: [Color(0xFF168566), Color(0xFF102C68)],
   );
   
   static ThemeData lightTheme = ThemeData(
@@ -39,7 +38,7 @@ class AppTheme {
       tertiary: accentColor,
       error: errorColor,
     ),
-    fontFamily: GoogleFonts.inter().fontFamily,
+    fontFamily: 'Inter',
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,
@@ -144,7 +143,7 @@ class AppTheme {
       tertiary: accentColor,
       error: errorColor,
     ),
-    fontFamily: GoogleFonts.inter().fontFamily,
+    fontFamily: 'Inter',
     appBarTheme: const AppBarTheme(
       elevation: 0,
       centerTitle: true,

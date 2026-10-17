@@ -5,7 +5,6 @@ import 'dart:convert' show jsonDecode;
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
@@ -340,7 +339,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             Expanded(
               child: Text(
                 displayMsg,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -1251,7 +1250,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               phoneNumber: _phoneController.text.trim(),
               description: '$plan Insurance - ${_plateController.text.trim()}',
               customMessage: '✓ Insurance policy activated successfully!',
-              primaryColor: const Color(0xFF243889),
+              primaryColor: const Color(0xFF102C68),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -1284,7 +1283,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                 const SizedBox(width: 12),
                 Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: Colors.red.shade700,
                     fontWeight: FontWeight.w800,
                     fontSize: 16,
@@ -1294,7 +1293,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             ),
             content: Text(
               message,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -1304,8 +1303,8 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF219C7E),
+                  style: TextStyle(
+                    color: const Color(0xFF168566),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -1379,7 +1378,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             const SizedBox(height: 6),
             Text(
               type['name'] as String,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                 color: isSelected ? Colors.white : Colors.grey.shade800,
@@ -1388,7 +1387,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             const SizedBox(height: 2),
             Text(
               '₦${type['amount']}',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
                 color:
@@ -1449,10 +1448,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1468,7 +1467,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             decoration: InputDecoration(
               prefixIcon: HugeIcon(
                 icon: icon,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: InputBorder.none,
@@ -1477,23 +1476,23 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                 vertical: 12,
               ),
               hintText: 'Select $label',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: TextStyle(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
             ),
             items: [
               DropdownMenuItem<String>(
                 value: null,
                 child: Text(
                   'Select $label',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: Colors.grey.shade400,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -1508,10 +1507,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   value: itemValue,
                   child: Text(
                     displayValue,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                     ),
                   ),
                 );
@@ -1521,7 +1520,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             dropdownColor: Colors.white,
             icon: HugeIcon(
               icon: HugeIcons.strokeRoundedArrowDown01,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
               size: 20,
             ),
           ),
@@ -1544,10 +1543,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1564,14 +1563,14 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             maxLength: maxLength,
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: TextStyle(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: icon,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -1586,7 +1585,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               ),
               counterText: '',
             ),
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -1672,7 +1671,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                                         child: const Icon(
                                           Icons.close_rounded,
                                           size: 18,
-                                          color: Color(0xFF64748B),
+                                          color: Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -1682,10 +1681,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                               const SizedBox(height: 4),
                               Text(
                                 'Confirm Insurance Purchase',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -1728,7 +1727,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -1784,22 +1783,22 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedShield01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Type',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1807,10 +1806,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               Flexible(
                 child: Text(
                   selectedType['name'] ?? 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1830,22 +1829,22 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedCar01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Vehicle',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1853,10 +1852,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               Flexible(
                 child: Text(
                   plateNumber.isNotEmpty ? plateNumber : 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1876,22 +1875,22 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF243889).withOpacity(0.08),
+                      color: const Color(0xFF102C68).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedUser,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Insured',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1901,10 +1900,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   _insuredNameController.text.trim().isNotEmpty
                       ? _insuredNameController.text.trim()
                       : 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   maxLines: 2,
@@ -1924,32 +1923,32 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF219C7E).withOpacity(0.08),
+                      color: const Color(0xFF168566).withOpacity(0.08),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: HugeIcon(
                       icon: HugeIcons.strokeRoundedMoney01,
-                      color: const Color(0xFF219C7E),
+                      color: const Color(0xFF168566),
                       size: 18,
                     ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Amount',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 '₦${amount.toStringAsFixed(2)}',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                 ),
               ),
             ],
@@ -1964,27 +1963,27 @@ class _InsuranceScreenState extends State<InsuranceScreen>
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.08),
+        color: const Color(0xFF168566).withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             'Available Balance',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF64748B),
+              color: const Color(0xFF728078),
             ),
           ),
           Text(
             '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF219C7E),
+              color: const Color(0xFF168566),
             ),
           ),
         ],
@@ -2014,7 +2013,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                     ? const Color(0xFFFEF2F2)
                     : (_useBiometric
                         ? Colors.grey.shade50
-                        : const Color(0xFF243889).withOpacity(0.04)),
+                        : const Color(0xFF102C68).withOpacity(0.04)),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color:
@@ -2022,7 +2021,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                       ? const Color(0xFFEF4444)
                       : (_useBiometric
                           ? Colors.grey.shade300
-                          : const Color(0xFF243889)),
+                          : const Color(0xFF102C68)),
               width: hasError ? 2 : (_useBiometric ? 1 : 2),
             ),
           ),
@@ -2037,7 +2036,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   enabled: !_useBiometric,
                   decoration: InputDecoration(
                     hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color:
                           hasError
                               ? const Color(0xFFEF4444).withOpacity(0.7)
@@ -2053,13 +2052,13 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                               ? const Color(0xFFEF4444)
                               : (_useBiometric
                                   ? Colors.grey.shade400
-                                  : const Color(0xFF243889)),
+                                  : const Color(0xFF102C68)),
                       size: 20,
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color:
@@ -2100,7 +2099,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                       Expanded(
                         child: Text(
                           _pinValidationError!,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xFFDC2626),
@@ -2123,7 +2122,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                             ? const Color(0xFFDC2626)
                             : (_useBiometric
                                 ? Colors.transparent
-                                : const Color(0xFF219C7E)),
+                                : const Color(0xFF168566)),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius:
@@ -2160,7 +2159,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                                     : (_useBiometric
                                         ? 'Switch to PIN'
                                         : 'Pay with PIN'),
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -2194,9 +2193,9 @@ class _InsuranceScreenState extends State<InsuranceScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF243889).withOpacity(0.08),
+            color: const Color(0xFF102C68).withOpacity(0.08),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF243889), width: 1.5),
+            border: Border.all(color: const Color(0xFF102C68), width: 1.5),
           ),
           child:
               _isProcessingPayment && _useBiometric
@@ -2205,7 +2204,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
-                        color: Color(0xFF243889),
+                        color: Color(0xFF102C68),
                         strokeWidth: 2.5,
                       ),
                     ),
@@ -2215,24 +2214,24 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                     children: [
                       const Icon(
                         Icons.fingerprint_rounded,
-                        color: Color(0xFF243889),
+                        color: Color(0xFF102C68),
                         size: 28,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'Pay with $_biometricName',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF243889),
+                            color: const Color(0xFF102C68),
                           ),
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: const BoxDecoration(
-                          color: Color(0xFF219C7E),
+                          color: Color(0xFF168566),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -2272,15 +2271,15 @@ class _InsuranceScreenState extends State<InsuranceScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios_new_rounded,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 18,
         ),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Insurance',
-        style: GoogleFonts.poppins(
-          color: const Color(0xFF243889),
+        style: TextStyle(
+          color: const Color(0xFF102C68),
           fontSize: 18,
           fontWeight: FontWeight.w700,
         ),
@@ -2294,16 +2293,16 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFF243889).withOpacity(0.06),
+        color: const Color(0xFF102C68).withOpacity(0.06),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFF243889).withOpacity(0.1)),
+        border: Border.all(color: const Color(0xFF102C68).withOpacity(0.1)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(
             Icons.account_balance_wallet_rounded,
-            color: Color(0xFF243889),
+            color: Color(0xFF102C68),
             size: 15,
           ),
           const SizedBox(width: 6),
@@ -2316,8 +2315,8 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               _isBalanceVisible
                   ? '₦${_walletBalance.toStringAsFixed(2)}'
                   : '••••••',
-              style: GoogleFonts.poppins(
-                color: const Color(0xFF243889),
+              style: TextStyle(
+                color: const Color(0xFF102C68),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
@@ -2332,7 +2331,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     if (_isLoadingData) {
       return const Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
         ),
       );
     }
@@ -2406,10 +2405,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
       children: [
         Text(
           'Select Insurance Type',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 12),
@@ -2442,34 +2441,34 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.1),
+        color: const Color(0xFF168566).withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.2)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.2)),
       ),
       child: Row(
         children: [
           HugeIcon(
             icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-            color: const Color(0xFF219C7E),
+            color: const Color(0xFF168566),
             size: 20,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               'Selected: $_selectedPlan',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
           ),
           Text(
             '₦${amount.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF219C7E),
+              color: const Color(0xFF168566),
             ),
           ),
         ],
@@ -2489,10 +2488,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
         children: [
           Text(
             'Vehicle Information',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
             ),
           ),
           const SizedBox(height: 16),
@@ -2595,10 +2594,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
         children: [
           Text(
             'Location Information',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
             ),
           ),
           const SizedBox(height: 16),
@@ -2649,10 +2648,10 @@ class _InsuranceScreenState extends State<InsuranceScreen>
         children: [
           Text(
             'Personal Information',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: const Color(0xFF243889),
+              color: const Color(0xFF102C68),
             ),
           ),
           const SizedBox(height: 16),
@@ -2692,25 +2691,25 @@ class _InsuranceScreenState extends State<InsuranceScreen>
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFF243889).withOpacity(0.04),
+        color: const Color(0xFF102C68).withOpacity(0.04),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF243889).withOpacity(0.08)),
+        border: Border.all(color: const Color(0xFF102C68).withOpacity(0.08)),
       ),
       child: Row(
         children: [
           const Icon(
             Icons.info_outline_rounded,
-            color: Color(0xFF243889),
+            color: Color(0xFF102C68),
             size: 20,
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               'T&C applies. Coverage details will be shared after payment.',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
           ),
@@ -2729,7 +2728,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                 ? null
                 : _openPaymentSheet,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF219C7E),
+          backgroundColor: const Color(0xFF168566),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -2758,7 +2757,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                     const SizedBox(width: 8),
                     Text(
                       'Proceed to Pay',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
@@ -2786,7 +2785,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color:
@@ -2801,7 +2800,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Insurance service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -2810,7 +2809,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
+                backgroundColor: const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -2822,7 +2821,7 @@ class _InsuranceScreenState extends State<InsuranceScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

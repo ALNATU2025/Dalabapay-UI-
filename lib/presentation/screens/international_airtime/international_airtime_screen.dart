@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:dalabapay/core/services/biometric_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
@@ -220,7 +219,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             Expanded(
               child: Text(
                 displayMsg,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -1650,7 +1649,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             gateway: 'Dalabapay App',
             recipientName: 'International Airtime',
             mobileOperator: data['operatorName'] ?? 'N/A',
-            primaryColor: const Color(0xFF243889),
+            primaryColor: const Color(0xFF102C68),
             customMessage:
                 exchangeRate > 0
                     ? '$currency ${foreignAmount.toStringAsFixed(2)} @ ₦${exchangeRate.toStringAsFixed(2)}/$currency = ₦${nairaAmount.toStringAsFixed(2)}'
@@ -1700,7 +1699,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 Expanded(
                   child: Text(
                     sanitizedTitle,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: Colors.red.shade700,
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
@@ -1711,7 +1710,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             ),
             content: Text(
               sanitizedMessage,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -1721,8 +1720,8 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 onPressed: () => Navigator.pop(context),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF219C7E),
+                  style: TextStyle(
+                    color: const Color(0xFF168566),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -1791,15 +1790,15 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       leading: IconButton(
         icon: const Icon(
           Icons.arrow_back_ios,
-          color: Color(0xFF243889),
+          color: Color(0xFF102C68),
           size: 20,
         ),
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
         'Intl Airtime',
-        style: GoogleFonts.poppins(
-          color: const Color(0xFF243889),
+        style: TextStyle(
+          color: const Color(0xFF102C68),
           fontSize: 18,
           fontWeight: FontWeight.w800,
         ),
@@ -1810,14 +1809,14 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
           margin: const EdgeInsets.only(right: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0x05243889),
+            color: const Color(0x05102C68),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             children: [
               const Icon(
                 Icons.account_balance_wallet_outlined,
-                color: Color(0xFF243889),
+                color: Color(0xFF102C68),
                 size: 16,
               ),
               const SizedBox(width: 4),
@@ -1829,8 +1828,8 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xFF243889),
+                  style: TextStyle(
+                    color: const Color(0xFF102C68),
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1910,10 +1909,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       children: [
         Text(
           label,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -1929,14 +1928,14 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
-                color: isOpen ? const Color(0xFF243889) : Colors.grey.shade200,
+                color: isOpen ? const Color(0xFF102C68) : Colors.grey.shade200,
                 width: isOpen ? 2 : 1,
               ),
               boxShadow:
                   isOpen
                       ? [
                         BoxShadow(
-                          color: const Color(0xFF243889).withOpacity(0.1),
+                          color: const Color(0xFF102C68).withOpacity(0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -1960,7 +1959,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       Text(
                         selectedValue ??
                             (isLoading ? 'Loading...' : 'Select...'),
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color:
@@ -1978,7 +1977,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                const Color(0xFF243889),
+                                const Color(0xFF102C68),
                               ),
                             ),
                           ),
@@ -1990,7 +1989,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   isOpen
                       ? Icons.keyboard_arrow_up_rounded
                       : Icons.keyboard_arrow_down_rounded,
-                  color: const Color(0xFF243889),
+                  color: const Color(0xFF102C68),
                   size: 24,
                 ),
               ],
@@ -2040,7 +2039,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                       height: 32,
                                       decoration: BoxDecoration(
                                         color: const Color(
-                                          0xFF243889,
+                                          0xFF102C68,
                                         ).withOpacity(0.08),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -2048,14 +2047,14 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                         item['product_type_id'] == 4
                                             ? Icons.wifi_rounded
                                             : Icons.smartphone_rounded,
-                                        color: const Color(0xFF243889),
+                                        color: const Color(0xFF102C68),
                                         size: 18,
                                       ),
                                     )
                                     : null,
                             title: Text(
                               item[itemNameKey] ?? 'Unknown',
-                              style: GoogleFonts.poppins(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight:
                                     isSelected
@@ -2063,7 +2062,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                         : FontWeight.w500,
                                 color:
                                     isSelected
-                                        ? const Color(0xFF243889)
+                                        ? const Color(0xFF102C68)
                                         : Colors.black87,
                               ),
                             ),
@@ -2072,7 +2071,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                     ? Container(
                                       padding: const EdgeInsets.all(4),
                                       decoration: const BoxDecoration(
-                                        color: Color(0xFF219C7E),
+                                        color: Color(0xFF168566),
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Icon(
@@ -2158,7 +2157,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      const Color(0xFF243889),
+                      const Color(0xFF102C68),
                     ),
                   ),
                 ),
@@ -2169,7 +2168,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
               return Icon(
                 Icons.business_center,
                 size: size * 0.7,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               );
             },
           ),
@@ -2182,13 +2181,13 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: const Color(0xFF243889).withOpacity(0.08),
+        color: const Color(0xFF102C68).withOpacity(0.08),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Icon(
         Icons.business_center,
         size: size * 0.7,
-        color: const Color(0xFF243889),
+        color: const Color(0xFF102C68),
       ),
     );
   }
@@ -2263,7 +2262,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                         child: const Icon(
                                           Icons.close,
                                           size: 18,
-                                          color: Color(0xFF64748B),
+                                          color: Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -2273,10 +2272,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                               const SizedBox(height: 4),
                               Text(
                                 'Confirm Payment',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -2319,7 +2318,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN or enable biometric in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -2398,7 +2397,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             icon: HugeIcons.strokeRoundedMoney01,
             label: 'Amount',
             value: '$currency ${amount.toStringAsFixed(2)}',
-            valueColor: const Color(0xFF243889),
+            valueColor: const Color(0xFF102C68),
           ),
           // ✅ Show Naira amount prominently
           if (nairaAmount > 0) ...[
@@ -2409,7 +2408,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 gradient: const LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                  colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -2427,7 +2426,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                     children: [
                       Text(
                         'You will pay',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                           color: Colors.white70,
@@ -2435,7 +2434,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       ),
                       Text(
                         '₦${nairaAmount.toStringAsFixed(2)}',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           color: Colors.white,
@@ -2467,22 +2466,22 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: const Color(0xFF243889).withOpacity(0.08),
+                color: const Color(0xFF102C68).withOpacity(0.08),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: HugeIcon(
                 icon: icon,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 18,
               ),
             ),
             const SizedBox(width: 8),
             Text(
               label,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF64748B),
+                color: const Color(0xFF728078),
               ),
             ),
           ],
@@ -2490,10 +2489,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
         Flexible(
           child: Text(
             value,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: valueColor ?? const Color(0xFF1C2D5A),
+              color: valueColor ?? const Color(0xFF14263D),
             ),
             textAlign: TextAlign.right,
             maxLines: 2,
@@ -2513,9 +2512,9 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       margin: const EdgeInsets.symmetric(horizontal: 24),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF219C7E).withOpacity(0.08),
+        color: const Color(0xFF168566).withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF219C7E).withOpacity(0.15)),
+        border: Border.all(color: const Color(0xFF168566).withOpacity(0.15)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2526,17 +2525,17 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
               children: [
                 HugeIcon(
                   icon: HugeIcons.strokeRoundedWallet01,
-                  color: const Color(0xFF219C7E),
+                  color: const Color(0xFF168566),
                   size: 16,
                 ),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     'Available Balance',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -2549,10 +2548,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
           Flexible(
             child: Text(
               '₦${_walletBalance.toStringAsFixed(2)}',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
-                color: const Color(0xFF219C7E),
+                color: const Color(0xFF168566),
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -2583,7 +2582,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                     ? const Color(0xFFFEF2F2)
                     : (_useBiometric
                         ? Colors.grey.shade50
-                        : const Color(0xFF243889).withOpacity(0.04)),
+                        : const Color(0xFF102C68).withOpacity(0.04)),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color:
@@ -2591,7 +2590,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       ? const Color(0xFFEF4444)
                       : (_useBiometric
                           ? Colors.grey.shade300
-                          : const Color(0xFF243889)),
+                          : const Color(0xFF102C68)),
               width: hasError ? 2 : (_useBiometric ? 1 : 2),
             ),
           ),
@@ -2606,7 +2605,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   enabled: !_useBiometric,
                   decoration: InputDecoration(
                     hintText: 'Enter transaction PIN',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color:
                           hasError
                               ? const Color(0xFFEF4444).withOpacity(0.7)
@@ -2622,13 +2621,13 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                               ? const Color(0xFFEF4444)
                               : (_useBiometric
                                   ? Colors.grey.shade400
-                                  : const Color(0xFF243889)),
+                                  : const Color(0xFF102C68)),
                       size: 20,
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color:
@@ -2669,7 +2668,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       Expanded(
                         child: Text(
                           _pinValidationError!,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xFFDC2626),
@@ -2692,7 +2691,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                             ? const Color(0xFFDC2626)
                             : (_useBiometric
                                 ? Colors.transparent
-                                : const Color(0xFF219C7E)),
+                                : const Color(0xFF168566)),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius:
@@ -2729,7 +2728,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                     : (_useBiometric
                                         ? 'Switch to PIN'
                                         : 'Pay with PIN'),
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.white,
@@ -2761,9 +2760,9 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF243889).withOpacity(0.08),
+            color: const Color(0xFF102C68).withOpacity(0.08),
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFF243889), width: 1.5),
+            border: Border.all(color: const Color(0xFF102C68), width: 1.5),
           ),
           child:
               _isProcessingPayment && _useBiometric
@@ -2772,7 +2771,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
-                        color: Color(0xFF243889),
+                        color: Color(0xFF102C68),
                         strokeWidth: 2.5,
                       ),
                     ),
@@ -2782,24 +2781,24 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                     children: [
                       const Icon(
                         Icons.fingerprint_rounded,
-                        color: Color(0xFF243889),
+                        color: Color(0xFF102C68),
                         size: 28,
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           'Pay with $_biometricName',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF243889),
+                            color: const Color(0xFF102C68),
                           ),
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: const BoxDecoration(
-                          color: Color(0xFF219C7E),
+                          color: Color(0xFF168566),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -2826,7 +2825,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             decoration: const BoxDecoration(shape: BoxShape.circle),
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(
-                const Color(0xFF243889),
+                const Color(0xFF102C68),
               ),
               strokeWidth: 3,
             ),
@@ -2834,8 +2833,8 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
           const SizedBox(height: 16),
           Text(
             _isLoadingCountries ? 'Loading countries...' : 'Loading...',
-            style: GoogleFonts.poppins(
-              color: const Color(0xFF243889),
+            style: TextStyle(
+              color: const Color(0xFF102C68),
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -2845,7 +2844,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             _isLoadingCountries
                 ? 'Please wait while we fetch available countries'
                 : 'Please wait...',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               color: Colors.grey.shade500,
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -2873,7 +2872,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 ? null
                 : _openPaymentSheet,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF219C7E),
+          backgroundColor: const Color(0xFF168566),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
@@ -2906,7 +2905,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                               ? 'Enter amount above'
                               : 'Continue')
                           : 'Select a Plan First',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
                         color: Colors.white,
@@ -2926,7 +2925,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF243889).withOpacity(0.3),
+            color: const Color(0xFF102C68).withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -2948,16 +2947,16 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Color(0xFF243889),
-                    Color(0xFF1E377E),
-                    Color(0xFF219C7E),
+                    Color(0xFF102C68),
+                    Color(0xFF102C68),
+                    Color(0xFF168566),
                   ],
                 ),
               ),
               child: Center(
                 child: Text(
                   'International Airtime',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
                     color: Colors.white,
@@ -2980,25 +2979,25 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
           children: [
             Text(
               'Select Country',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
               ),
             ),
             if (_countries.isNotEmpty)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF243889).withOpacity(0.08),
+                  color: const Color(0xFF102C68).withOpacity(0.08),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   '${_countries.length} countries',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF243889),
+                    color: const Color(0xFF102C68),
                   ),
                 ),
               ),
@@ -3019,20 +3018,20 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   onChanged: _filterCountries,
                   decoration: InputDecoration(
                     hintText: 'Search country...',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color: Colors.grey.shade400,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
                     prefixIcon: HugeIcon(
                       icon: HugeIcons.strokeRoundedSearch01,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                       size: 20,
                     ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                  style: GoogleFonts.poppins(fontSize: 14),
+                  style: TextStyle(fontSize: 14),
                 ),
               ),
               const Divider(height: 1),
@@ -3042,7 +3041,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                     child: Center(
                       child: Text(
                         'No countries found',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade600,
                           fontWeight: FontWeight.w600,
@@ -3070,7 +3069,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                           ),
                           title: Text(
                             countryName,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 13,
                               fontWeight:
                                   isSelected
@@ -3078,13 +3077,13 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                                       : FontWeight.w500,
                               color:
                                   isSelected
-                                      ? const Color(0xFF243889)
+                                      ? const Color(0xFF102C68)
                                       : Colors.black87,
                             ),
                           ),
                           subtitle: Text(
                             countryCode,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 11,
                               color: Colors.grey.shade600,
                               fontWeight: FontWeight.w500,
@@ -3094,7 +3093,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                               isSelected
                                   ? Icon(
                                     Icons.check_circle,
-                                    color: const Color(0xFF219C7E),
+                                    color: const Color(0xFF168566),
                                     size: 20,
                                   )
                                   : null,
@@ -3173,10 +3172,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       children: [
         Text(
           'Select Plan',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -3189,7 +3188,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    const Color(0xFF243889),
+                    const Color(0xFF102C68),
                   ),
                 ),
               ),
@@ -3205,7 +3204,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
               child: Center(
                 child: Text(
                   'No plans available for this operator',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 13,
                     color: Colors.grey.shade600,
                     fontWeight: FontWeight.w600,
@@ -3315,13 +3314,13 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   return ListTile(
                     title: Text(
                       variation['name'] ?? 'Unknown Plan',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight:
                             isSelected ? FontWeight.w700 : FontWeight.w500,
                         color:
                             isSelected
-                                ? const Color(0xFF243889)
+                                ? const Color(0xFF102C68)
                                 : Colors.black87,
                       ),
                       maxLines: 2,
@@ -3332,7 +3331,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       children: [
                         Text(
                           amountDisplay,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color:
@@ -3344,10 +3343,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                         if (nairaDisplay.isNotEmpty)
                           Text(
                             nairaDisplay,
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w700,
-                              color: const Color(0xFF219C7E),
+                              color: const Color(0xFF168566),
                             ),
                           ),
                       ],
@@ -3356,7 +3355,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                         isSelected
                             ? Icon(
                               Icons.check_circle,
-                              color: const Color(0xFF219C7E),
+                              color: const Color(0xFF168566),
                               size: 20,
                             )
                             : null,
@@ -3383,10 +3382,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       children: [
         Text(
           'Phone Number',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -3413,10 +3412,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   ),
                   child: Text(
                     prefixDisplay,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF243889),
+                      color: const Color(0xFF102C68),
                     ),
                   ),
                 ),
@@ -3428,7 +3427,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     hintText: 'Enter phone number',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color: Colors.grey.shade400,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -3447,7 +3446,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                         prefixDisplay.isEmpty
                             ? HugeIcon(
                               icon: HugeIcons.strokeRoundedSmartPhone01,
-                              color: const Color(0xFF243889),
+                              color: const Color(0xFF102C68),
                               size: 22,
                             )
                             : null,
@@ -3458,7 +3457,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       vertical: 14,
                     ),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -3515,10 +3514,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       children: [
         Text(
           isFixed ? 'Amount (Fixed)' : 'Amount',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -3536,7 +3535,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             enabled: !isFixed,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: TextStyle(
                 color: isFixed ? Colors.grey.shade500 : Colors.grey.shade400,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -3548,10 +3547,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   children: [
                     Text(
                       currency,
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF243889),
+                        color: const Color(0xFF102C68),
                       ),
                     ),
                   ],
@@ -3568,7 +3567,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -3596,12 +3595,12 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 gradient: const LinearGradient(
                   begin: Alignment.topRight,
                   end: Alignment.bottomLeft,
-                  colors: [Color(0xFF92D394), Color(0xFF1E377E)],
+                  colors: [Color(0xFF5BB592), Color(0xFF102C68)],
                 ),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF1E377E).withValues(alpha: 0.2),
+                    color: const Color(0xFF102C68).withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -3628,7 +3627,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       children: [
                         Text(
                           'You will pay',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
                             color: Colors.white70,
@@ -3636,7 +3635,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                         ),
                         Text(
                           _nairaEstimate,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
                             color: Colors.white,
@@ -3657,7 +3656,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       ),
                       child: Text(
                         '1 ${_selectedCountry?['currency'] ?? ''} = ₦${_nairaConversionRate.toStringAsFixed(2)}',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -3691,10 +3690,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         // Soft blue tint — matches the app's info-card style
-        color: const Color(0xFF243889).withOpacity(0.06),
+        color: const Color(0xFF102C68).withOpacity(0.06),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF243889).withOpacity(0.15),
+          color: const Color(0xFF102C68).withOpacity(0.15),
           width: 1,
         ),
       ),
@@ -3704,12 +3703,12 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
           Container(
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
-              color: const Color(0xFF243889).withOpacity(0.1),
+              color: const Color(0xFF102C68).withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
               Icons.tune_rounded,
-              color: Color(0xFF243889),
+              color: Color(0xFF102C68),
               size: 16,
             ),
           ),
@@ -3726,10 +3725,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                       : hasOnlyMin
                       ? 'Minimum amount'
                       : 'Maximum amount',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFF64748B),
+                    color: const Color(0xFF728078),
                     letterSpacing: 0.2,
                   ),
                 ),
@@ -3751,7 +3750,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                         child: Icon(
                           Icons.arrow_forward_rounded,
                           size: 14,
-                          color: const Color(0xFF64748B).withOpacity(0.6),
+                          color: const Color(0xFF728078).withOpacity(0.6),
                         ),
                       ),
                     ],
@@ -3777,7 +3776,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
     required bool isMin,
   }) {
     // Green for min (start), navy for max (ceiling)
-    final pillColor = isMin ? const Color(0xFF219C7E) : const Color(0xFF243889);
+    final pillColor = isMin ? const Color(0xFF168566) : const Color(0xFF102C68);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -3791,7 +3790,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
         children: [
           Text(
             '$label: ',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
               color: pillColor.withOpacity(0.7),
@@ -3799,7 +3798,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
           ),
           Text(
             value,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w800,
               color: pillColor,
@@ -3816,10 +3815,10 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
       children: [
         Text(
           'Email (Optional)',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF243889),
+            color: const Color(0xFF102C68),
           ),
         ),
         const SizedBox(height: 8),
@@ -3834,14 +3833,14 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: 'Enter email for receipt',
-              hintStyle: GoogleFonts.poppins(
+              hintStyle: TextStyle(
                 color: Colors.grey.shade400,
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
               prefixIcon: HugeIcon(
                 icon: HugeIcons.strokeRoundedMail01,
-                color: const Color(0xFF243889),
+                color: const Color(0xFF102C68),
                 size: 22,
               ),
               border: OutlineInputBorder(
@@ -3855,7 +3854,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                 vertical: 14,
               ),
             ),
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
@@ -3881,7 +3880,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color:
@@ -3896,7 +3895,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'International airtime service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -3905,7 +3904,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF243889),
+                backgroundColor: const Color(0xFF102C68),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -3917,7 +3916,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

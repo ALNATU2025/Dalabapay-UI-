@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -86,8 +85,8 @@ class _EducationScreenState extends State<EducationScreen>
   bool _isProcessingPayment = false;
 
   // Color Palette
-  static const Color _primary = Color(0xFF243889);
-  static const Color _secondary = Color(0xFF219C7E);
+  static const Color _primary = Color(0xFF102C68);
+  static const Color _secondary = Color(0xFF168566);
   static const Color _hintColor = Color(0xFFB6B6B6);
 
   // Service list with logos
@@ -358,7 +357,7 @@ class _EducationScreenState extends State<EducationScreen>
             Expanded(
               child: Text(
                 displayMsg,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -570,7 +569,7 @@ class _EducationScreenState extends State<EducationScreen>
                   const SizedBox(height: 16),
                   Text(
                     'Profile Validated!',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
                       color: _primary,
@@ -588,7 +587,7 @@ class _EducationScreenState extends State<EducationScreen>
                     ),
                     child: Text(
                       'Verification Complete',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: _secondary,
@@ -618,7 +617,7 @@ class _EducationScreenState extends State<EducationScreen>
                         Expanded(
                           child: Text(
                             'This profile has been verified and is ready for PIN purchase.',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: _primary,
@@ -663,7 +662,7 @@ class _EducationScreenState extends State<EducationScreen>
                           ),
                           child: Text(
                             'Retry',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
@@ -700,7 +699,7 @@ class _EducationScreenState extends State<EducationScreen>
                           ),
                           child: Text(
                             'Continue',
-                            style: GoogleFonts.poppins(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
@@ -724,7 +723,7 @@ class _EducationScreenState extends State<EducationScreen>
           width: 120,
           child: Text(
             label,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 13,
               color: Colors.grey.shade600,
               fontWeight: FontWeight.w600,
@@ -734,7 +733,7 @@ class _EducationScreenState extends State<EducationScreen>
         Expanded(
           child: Text(
             value,
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
               color: Colors.grey.shade900,
@@ -1206,7 +1205,7 @@ class _EducationScreenState extends State<EducationScreen>
               const SizedBox(width: 10),
               Text(
                 'Select Service',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: _hintColor,
@@ -1219,7 +1218,7 @@ class _EducationScreenState extends State<EducationScreen>
             color: Colors.grey,
             size: 18,
           ),
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: Colors.grey.shade800,
@@ -1239,7 +1238,7 @@ class _EducationScreenState extends State<EducationScreen>
                       Expanded(
                         child: Text(
                           service['fullName'],
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -1279,7 +1278,7 @@ class _EducationScreenState extends State<EducationScreen>
         children: [
           Text(
             'Select Plan',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
               color: _primary,
@@ -1295,7 +1294,7 @@ class _EducationScreenState extends State<EducationScreen>
             ),
             child: const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF243889)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
               ),
             ),
           ),
@@ -1321,7 +1320,7 @@ class _EducationScreenState extends State<EducationScreen>
             const SizedBox(height: 12),
             Text(
               'No plans available',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
                 color: Colors.grey.shade700,
@@ -1329,7 +1328,7 @@ class _EducationScreenState extends State<EducationScreen>
             ),
             Text(
               'Please try another service',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey.shade500,
@@ -1345,7 +1344,7 @@ class _EducationScreenState extends State<EducationScreen>
       children: [
         Text(
           'Select Plan',
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
             color: _primary,
@@ -1415,7 +1414,7 @@ class _EducationScreenState extends State<EducationScreen>
             Expanded(
               child: Text(
                 name,
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: isSelected ? Colors.white : _primary,
@@ -1433,7 +1432,7 @@ class _EducationScreenState extends State<EducationScreen>
               ),
               child: Text(
                 '₦${NumberFormat('#,##0').format(double.tryParse(amount) ?? 0)}',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   color: isSelected ? _primary : _secondary,
@@ -1522,7 +1521,7 @@ class _EducationScreenState extends State<EducationScreen>
                                               HugeIcons
                                                   .strokeRoundedMultiplicationSign,
                                           size: 18,
-                                          color: const Color(0xFF64748B),
+                                          color: const Color(0xFF728078),
                                         ),
                                       ),
                                     ),
@@ -1533,10 +1532,10 @@ class _EducationScreenState extends State<EducationScreen>
 
                               Text(
                                 'Confirm Payment',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF1C2D5A),
+                                  color: const Color(0xFF14263D),
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -1589,7 +1588,7 @@ class _EducationScreenState extends State<EducationScreen>
                                       Expanded(
                                         child: Text(
                                           'Set up a transaction PIN in Settings to make payments.',
-                                          style: GoogleFonts.poppins(
+                                          style: TextStyle(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.orange.shade800,
@@ -1674,10 +1673,10 @@ class _EducationScreenState extends State<EducationScreen>
                   const SizedBox(width: 10),
                   Text(
                     'Service',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1685,10 +1684,10 @@ class _EducationScreenState extends State<EducationScreen>
               Flexible(
                 child: Text(
                   service['fullName'] ?? 'N/A',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
@@ -1719,10 +1718,10 @@ class _EducationScreenState extends State<EducationScreen>
                   const SizedBox(width: 10),
                   Text(
                     'Plan',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1730,10 +1729,10 @@ class _EducationScreenState extends State<EducationScreen>
               Flexible(
                 child: Text(
                   planName,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                   textAlign: TextAlign.right,
                   overflow: TextOverflow.ellipsis,
@@ -1764,20 +1763,20 @@ class _EducationScreenState extends State<EducationScreen>
                   const SizedBox(width: 10),
                   Text(
                     'Phone',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 phone.isNotEmpty ? phone : 'N/A',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
               ),
             ],
@@ -1806,20 +1805,20 @@ class _EducationScreenState extends State<EducationScreen>
                     const SizedBox(width: 10),
                     Text(
                       'Profile ID',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF64748B),
+                        color: const Color(0xFF728078),
                       ),
                     ),
                   ],
                 ),
                 Text(
                   profileId,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: const Color(0xFF1C2D5A),
+                    color: const Color(0xFF14263D),
                   ),
                 ),
               ],
@@ -1848,20 +1847,20 @@ class _EducationScreenState extends State<EducationScreen>
                   const SizedBox(width: 10),
                   Text(
                     'Quantity',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
               ),
               Text(
                 '$quantity',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFF1C2D5A),
+                  color: const Color(0xFF14263D),
                 ),
               ),
             ],
@@ -1889,10 +1888,10 @@ class _EducationScreenState extends State<EducationScreen>
                   const SizedBox(width: 10),
                   Text(
                     'Amount',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF64748B),
+                      color: const Color(0xFF728078),
                     ),
                   ),
                 ],
@@ -1902,7 +1901,7 @@ class _EducationScreenState extends State<EducationScreen>
                 children: [
                   Text(
                     '₦${totalAmount.toStringAsFixed(2)}',
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
                       color: _secondary,
@@ -1911,7 +1910,7 @@ class _EducationScreenState extends State<EducationScreen>
                   if (quantity > 1)
                     Text(
                       '₦${perUnitAmount.toStringAsFixed(2)} × $quantity',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         color: Colors.grey.shade600,
@@ -1948,17 +1947,17 @@ class _EducationScreenState extends State<EducationScreen>
               const SizedBox(width: 6),
               Text(
                 'Available Balance',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFF64748B),
+                  color: const Color(0xFF728078),
                 ),
               ),
             ],
           ),
           Text(
             '₦${_walletBalance.toStringAsFixed(2)}',
-            style: GoogleFonts.poppins(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
               color: _secondary,
@@ -2012,7 +2011,7 @@ class _EducationScreenState extends State<EducationScreen>
                   enabled: !_useBiometric,
                   decoration: InputDecoration(
                     hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color:
                           hasError
                               ? const Color(0xFFEF4444).withOpacity(0.7)
@@ -2039,7 +2038,7 @@ class _EducationScreenState extends State<EducationScreen>
                     ),
                     errorText: _pinValidationError,
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color:
@@ -2080,7 +2079,7 @@ class _EducationScreenState extends State<EducationScreen>
                       Expanded(
                         child: Text(
                           _pinValidationError!,
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: const Color(0xFFDC2626),
@@ -2143,7 +2142,7 @@ class _EducationScreenState extends State<EducationScreen>
                                     : (_useBiometric
                                         ? 'Switch to PIN'
                                         : 'Pay with PIN'),
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                   color:
@@ -2224,7 +2223,7 @@ class _EducationScreenState extends State<EducationScreen>
                           _useBiometric
                               ? '🔐 Tap to authenticate'
                               : 'Pay with Biometric',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
                             color:
@@ -2350,7 +2349,7 @@ class _EducationScreenState extends State<EducationScreen>
                 Expanded(
                   child: Text(
                     title,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       color: Colors.red.shade700,
                       fontWeight: FontWeight.w800,
                       fontSize: 16,
@@ -2365,7 +2364,7 @@ class _EducationScreenState extends State<EducationScreen>
               children: [
                 Text(
                   message,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey.shade800,
@@ -2390,7 +2389,7 @@ class _EducationScreenState extends State<EducationScreen>
                       Expanded(
                         child: Text(
                           'If this issue persists, please contact support.',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey.shade600,
@@ -2418,7 +2417,7 @@ class _EducationScreenState extends State<EducationScreen>
                 ),
                 child: Text(
                   'OK',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
                   ),
@@ -2459,7 +2458,7 @@ class _EducationScreenState extends State<EducationScreen>
       ),
       title: Text(
         'Education',
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           color: _primary,
           fontSize: 18,
           fontWeight: FontWeight.w800,
@@ -2490,7 +2489,7 @@ class _EducationScreenState extends State<EducationScreen>
                   _isBalanceVisible
                       ? '₦${_walletBalance.toStringAsFixed(2)}'
                       : '••••',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     color: _primary,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -2532,7 +2531,7 @@ class _EducationScreenState extends State<EducationScreen>
               // Select Service
               Text(
                 'Select Service',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: _primary,
@@ -2550,7 +2549,7 @@ class _EducationScreenState extends State<EducationScreen>
               if (_showProfileIdField) ...[
                 Text(
                   'Profile ID',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: _primary,
@@ -2577,7 +2576,7 @@ class _EducationScreenState extends State<EducationScreen>
                           ],
                           decoration: InputDecoration(
                             hintText: 'Enter your Profile ID',
-                            hintStyle: GoogleFonts.poppins(
+                            hintStyle: TextStyle(
                               color: _hintColor,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -2601,7 +2600,7 @@ class _EducationScreenState extends State<EducationScreen>
                               vertical: 14,
                             ),
                           ),
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -2640,7 +2639,7 @@ class _EducationScreenState extends State<EducationScreen>
                                 )
                                 : Text(
                                   'Validate',
-                                  style: GoogleFonts.poppins(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 13,
                                   ),
@@ -2680,7 +2679,7 @@ class _EducationScreenState extends State<EducationScreen>
                             children: [
                               Text(
                                 'Profile Validated',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w800,
                                   color: _secondary,
@@ -2688,7 +2687,7 @@ class _EducationScreenState extends State<EducationScreen>
                               ),
                               Text(
                                 _customerName!,
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                   color: _secondary,
@@ -2706,7 +2705,7 @@ class _EducationScreenState extends State<EducationScreen>
               // Phone Number
               Text(
                 'Phone Number',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: _primary,
@@ -2729,7 +2728,7 @@ class _EducationScreenState extends State<EducationScreen>
                   ],
                   decoration: InputDecoration(
                     hintText: 'Enter 11-digit phone number',
-                    hintStyle: GoogleFonts.poppins(
+                    hintStyle: TextStyle(
                       color: _hintColor,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -2753,7 +2752,7 @@ class _EducationScreenState extends State<EducationScreen>
                       vertical: 14,
                     ),
                   ),
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -2769,7 +2768,7 @@ class _EducationScreenState extends State<EducationScreen>
                       true) ...[
                 Text(
                   'Quantity',
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: _primary,
@@ -2788,7 +2787,7 @@ class _EducationScreenState extends State<EducationScreen>
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       hintText: 'Enter quantity (min 1)',
-                      hintStyle: GoogleFonts.poppins(
+                      hintStyle: TextStyle(
                         color: _hintColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -2812,7 +2811,7 @@ class _EducationScreenState extends State<EducationScreen>
                         vertical: 14,
                       ),
                     ),
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -2847,7 +2846,7 @@ class _EducationScreenState extends State<EducationScreen>
                     Expanded(
                       child: Text(
                         'Confirm the details before proceeding.',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: _primary,
@@ -2898,7 +2897,7 @@ class _EducationScreenState extends State<EducationScreen>
                               const SizedBox(width: 8),
                               Text(
                                 'Continue',
-                                style: GoogleFonts.poppins(
+                                style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white,
@@ -2967,7 +2966,7 @@ class _EducationScreenState extends State<EducationScreen>
             const SizedBox(height: 16),
             Text(
               !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
                 color:
@@ -2982,7 +2981,7 @@ class _EducationScreenState extends State<EducationScreen>
                   ? 'Your account has been deactivated. Please contact support.'
                   : 'Education service is currently unavailable. Please try again later.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
@@ -3003,7 +3002,7 @@ class _EducationScreenState extends State<EducationScreen>
               ),
               child: Text(
                 'Go Back',
-                style: GoogleFonts.poppins(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
                 ),

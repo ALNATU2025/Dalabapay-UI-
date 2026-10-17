@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:http/http.dart' as http;
@@ -24,15 +23,15 @@ class AdminVerifyPaymentPage extends StatefulWidget {
 class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF243889);
-  static const Color secondaryColor = Color(0xFF219C7E);
-  static const Color successColor = Color(0xFF219C7E);
+  static const Color primaryColor = Color(0xFF102C68);
+  static const Color secondaryColor = Color(0xFF168566);
+  static const Color successColor = Color(0xFF168566);
   static const Color warningColor = Color(0xFFF59E0B);
   static const Color errorColor = Color(0xFFEF4444);
   static const Color infoColor = Color(0xFF3B82F6);
-  static const Color textPrimary = Color(0xFF1C2D5A);
-  static const Color textSecondary = Color(0xFF64748B);
-  static const Color backgroundLight = Color(0xFFF8FAFC);
+  static const Color textPrimary = Color(0xFF14263D);
+  static const Color textSecondary = Color(0xFF728078);
+  static const Color backgroundLight = Color(0xFFF8F9F5);
 
   // ==================== CONTROLLERS ====================
   final TextEditingController _transactionIdController =
@@ -505,7 +504,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             Expanded(
               child: Text(
                 message,
-                style: GoogleFonts.inter(color: Colors.white),
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -563,7 +562,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             children: [
               Text(
                 'Dalaba',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -572,7 +571,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               ),
               Text(
                 'pay',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                   color: secondaryColor,
@@ -591,7 +590,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             ),
             child: Text(
               'ADMIN PANEL',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 color: secondaryColor,
@@ -787,7 +786,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF92D394), const Color(0xFF1E377E)],
+          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(
@@ -827,7 +826,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               Expanded(
                 child: Text(
                   'Admin / Verify Payment',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: isMobile ? 12 : 14,
                     fontWeight: FontWeight.w500,
@@ -846,7 +845,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   ),
                   child: Text(
                     'SUPER ADMIN',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 8 : 10,
                       fontWeight: FontWeight.w700,
@@ -890,7 +889,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   children: [
                     Text(
                       'Verify Payment',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         color: Colors.white,
                         fontSize: isMobile ? 20 : 28,
                         fontWeight: FontWeight.w700,
@@ -899,7 +898,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                     SizedBox(height: isMobile ? 4 : 6),
                     Text(
                       'Verify and validate payment transactions',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: isMobile ? 12 : 14,
                       ),
@@ -931,7 +930,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                 Expanded(
                   child: Text(
                     'Welcome, $_adminName',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: isMobile ? 13 : 15,
                       fontWeight: FontWeight.w500,
@@ -958,7 +957,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                       SizedBox(width: 4),
                       Text(
                         'Active',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.8),
                           fontSize: isMobile ? 10 : 12,
                           fontWeight: FontWeight.w500,
@@ -1069,7 +1068,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                 children: [
                   Text(
                     value,
-                    style: GoogleFonts.poppins(
+                    style: TextStyle(
                       fontSize: isMobile ? 16 : 20,
                       fontWeight: FontWeight.w700,
                       color: textPrimary,
@@ -1079,7 +1078,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   ),
                   Text(
                     title,
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       fontSize: isMobile ? 9 : 11,
                       color: textSecondary,
                     ),
@@ -1137,7 +1136,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   children: [
                     Text(
                       'Transaction Verification',
-                      style: GoogleFonts.poppins(
+                      style: TextStyle(
                         fontSize: isMobile ? 16 : 18,
                         fontWeight: FontWeight.w600,
                         color: textPrimary,
@@ -1145,7 +1144,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                     ),
                     Text(
                       'Verify transaction using ID, reference, or manual entry',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: isMobile ? 12 : 13,
                         color: textSecondary,
                       ),
@@ -1177,7 +1176,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                       SizedBox(width: 4),
                       Text(
                         'Verified',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           color: successColor,
                           fontSize: isMobile ? 10 : 12,
                           fontWeight: FontWeight.w600,
@@ -1229,7 +1228,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   ),
                   label: Text(
                     _showAdvancedOptions ? 'Hide Advanced' : 'Advanced Options',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: primaryColor,
                       fontWeight: FontWeight.w500,
                       fontSize: isMobile ? 12 : 14,
@@ -1267,7 +1266,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                           ),
                   label: Text(
                     _isLoading ? 'Verifying...' : 'Verify',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: isMobile ? 12 : 14,
@@ -1310,18 +1309,18 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
       ),
       child: TextField(
         controller: controller,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 14 : 15,
           color: textPrimary,
         ),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
-          labelStyle: GoogleFonts.inter(
+          labelStyle: TextStyle(
             color: textSecondary,
             fontSize: isMobile ? 12 : 13,
           ),
-          hintStyle: GoogleFonts.inter(
+          hintStyle: TextStyle(
             color: Colors.grey.shade400,
             fontSize: isMobile ? 13 : 14,
           ),
@@ -1366,7 +1365,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               SizedBox(width: isMobile ? 8 : 10),
               Text(
                 'Manual Verification',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1422,7 +1421,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               ),
               label: Text(
                 'Manual Verify',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
                   fontSize: isMobile ? 13 : 14,
@@ -1461,18 +1460,18 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
         controller: controller,
         keyboardType: keyboardType,
         maxLines: maxLines,
-        style: GoogleFonts.inter(
+        style: TextStyle(
           fontSize: isMobile ? 14 : 15,
           color: textPrimary,
         ),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
-          labelStyle: GoogleFonts.inter(
+          labelStyle: TextStyle(
             color: textSecondary,
             fontSize: isMobile ? 12 : 13,
           ),
-          hintStyle: GoogleFonts.inter(
+          hintStyle: TextStyle(
             color: Colors.grey.shade400,
             fontSize: isMobile ? 13 : 14,
           ),
@@ -1521,7 +1520,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
           Expanded(
             child: Text(
               _currentStep,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 13 : 14,
                 fontWeight: FontWeight.w600,
                 color: infoColor,
@@ -1566,7 +1565,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               SizedBox(width: isMobile ? 8 : 10),
               Text(
                 'Verification Log',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: isMobile ? 14 : 16,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -1579,7 +1578,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                 },
                 child: Text(
                   'Clear',
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     color: errorColor,
                     fontSize: isMobile ? 11 : 12,
                     fontWeight: FontWeight.w600,
@@ -1627,7 +1626,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                       Expanded(
                         child: Text(
                           log,
-                          style: GoogleFonts.inter(
+                          style: TextStyle(
                             fontSize: isMobile ? 11 : 12,
                             color: textPrimary,
                             height: 1.4,
@@ -1738,7 +1737,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                         isSuccess
                             ? 'Transaction Verified!'
                             : 'Verification Failed',
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           fontSize: isMobile ? 16 : 18,
                           fontWeight: FontWeight.w700,
                           color: isSuccess ? successColor : errorColor,
@@ -1746,7 +1745,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                       ),
                       Text(
                         'ID: ${tx['_id']?.toString().substring(0, 8) ?? 'N/A'}',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(
                           fontSize: isMobile ? 11 : 12,
                           color: textSecondary,
                         ),
@@ -1774,7 +1773,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                   ),
                   child: Text(
                     isSuccess ? 'SUCCESS' : 'FAILED',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(
                       color: isSuccess ? successColor : errorColor,
                       fontSize: isMobile ? 9 : 10,
                       fontWeight: FontWeight.w700,
@@ -1850,7 +1849,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                     ),
                     label: Text(
                       'Details',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: primaryColor,
                         fontWeight: FontWeight.w500,
                       ),
@@ -1879,7 +1878,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                     ),
                     label: Text(
                       'Clear',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         color: textSecondary,
                         fontWeight: FontWeight.w500,
                       ),
@@ -1926,7 +1925,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
           SizedBox(height: isMobile ? 2 : 4),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 12 : 14,
               fontWeight: FontWeight.w600,
               color: textPrimary,
@@ -1936,7 +1935,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
           ),
           Text(
             label,
-            style: GoogleFonts.inter(
+            style: TextStyle(
               fontSize: isMobile ? 8 : 10,
               color: textSecondary,
             ),
@@ -1986,7 +1985,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                       Expanded(
                         child: Text(
                           'Transaction Details',
-                          style: GoogleFonts.poppins(
+                          style: TextStyle(
                             fontSize: isMobile ? 16 : 18,
                             fontWeight: FontWeight.w700,
                             color: textPrimary,
@@ -2042,7 +2041,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                           onPressed: () => Navigator.pop(context),
                           child: Text(
                             'Close',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               color: textSecondary,
                               fontWeight: FontWeight.w600,
                             ),
@@ -2057,7 +2056,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
                           icon: Icon(Icons.copy_rounded, size: 16),
                           label: Text(
                             'Copy ID',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -2088,7 +2087,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             width: 100,
             child: Text(
               '$label:',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 color: textSecondary,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -2098,7 +2097,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
           Expanded(
             child: Text(
               value?.toString() ?? 'N/A',
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 color: textPrimary,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -2135,7 +2134,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             SizedBox(height: isMobile ? 16 : 20),
             Text(
               'No Transaction Found',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 18 : 22,
                 fontWeight: FontWeight.w700,
                 color: textPrimary,
@@ -2145,7 +2144,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             Text(
               'Enter a transaction ID or reference to start verification.',
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 13 : 15,
                 color: textSecondary,
               ),
@@ -2181,7 +2180,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             SizedBox(height: isMobile ? 16 : 20),
             Text(
               'Access Denied',
-              style: GoogleFonts.poppins(
+              style: TextStyle(
                 fontSize: isMobile ? 20 : 24,
                 fontWeight: FontWeight.w700,
                 color: errorColor,
@@ -2191,7 +2190,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
             Text(
               _errorMessage,
               textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
+              style: TextStyle(
                 fontSize: isMobile ? 14 : 16,
                 color: textSecondary,
               ),
@@ -2202,7 +2201,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               icon: const Icon(Icons.arrow_back_rounded, size: 18),
               label: Text(
                 'Go Back',
-                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
@@ -2252,7 +2251,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               SizedBox(height: 12),
               Text(
                 'Verifying...',
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
@@ -2289,7 +2288,7 @@ class _AdminVerifyPaymentPageState extends State<AdminVerifyPaymentPage>
               SizedBox(height: 16),
               Text(
                 'Loading admin panel...',
-                style: GoogleFonts.inter(color: textSecondary, fontSize: 14),
+                style: TextStyle(color: textSecondary, fontSize: 14),
               ),
             ],
           ),
