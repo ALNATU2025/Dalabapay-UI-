@@ -1,9 +1,8 @@
 // lib/presentation/screens/onboarding/onboarding_screen.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/theme/app_theme.dart';
+import '../../../ui/ui.dart';
 import '../auth/login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -19,16 +18,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingData> _onboardingData = [
     OnboardingData(
-      image: 'assets/onboardImage1.png',
-      title: 'Simplify Your Everyday Payments',
+      image: 'assets/images/onboarding_bills.jpg',
+      eyebrow: 'LESS EFFORT. MORE LIVING.',
+      title: 'Your everyday bills, beautifully simple.',
       description:
-          'Buy airtime, data, pay bills, and handle your utility needs — all in one secure app.',
+          'Airtime, data, electricity and more. All the payments you need, in one calm place.',
     ),
     OnboardingData(
-      image: 'assets/onboardImage2.png',
-      title: 'Send, Receive & Manage Money',
+      image: 'assets/images/onboarding_earn.jpg',
+      eyebrow: 'SMALL PAYMENTS. EXTRA VALUE.',
+      title: 'A little more back, every time.',
       description:
-          'Fund your wallet, transfer to banks or other users, and track your spending with ease.',
+          'Earn commission on eligible payments. Track your earnings and move them to your wallet.',
     ),
   ];
 
@@ -38,23 +39,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.dispose();
   }
 
-  // ✅ Modern routing: Save state and navigate to Login
-  Future<void> _finishOnboarding() async {
+  Future<void> _markSeen() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasSeenOnboarding', true);
+  }
 
+  // ✅ Save state and navigate to Login
+  Future<void> _finishOnboarding() async {
+    await _markSeen();
     if (!mounted) return;
-
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 800),
+        transitionDuration: const Duration(milliseconds: 400),
         pageBuilder: (_, __, ___) => const LoginScreen(),
-        transitionsBuilder:
-            (_, animation, __, child) =>
-                FadeTransition(opacity: animation, child: child),
+        transitionsBuilder: (_, animation, __, child) =>
+            FadeTransition(opacity: animation, child: child),
       ),
     );
+  }
+
+  // Save state and go straight to sign-up
+  Future<void> _createAccount() async {
+    await _markSeen();
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, '/register');
   }
 
   void _goToNextPage() {
@@ -64,48 +73,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // ✅ Complete onboarding and navigate to Login
-      _finishOnboarding();
-    }
-  }
-
-  void _goToPreviousPage() {
-    if (_selectedIndex > 0) {
-      _pageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      _createAccount();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLast = _selectedIndex == _onboardingData.length - 1;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: DP.bg,
       body: SafeArea(
         child: Column(
           children: [
-            // Skip button (only show on first page)
-            if (_selectedIndex == 0)
-              Padding(
-                padding: const EdgeInsets.only(right: 20, top: 10),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: TextButton(
-                    onPressed: _finishOnboarding,
-                    child: Text(
-                      'Skip',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 16, 4),
+              child: Row(
+                children: [
+                  const DPWordmark(height: 30),
+                  const Spacer(),
+                  DPTextLink(
+                    label: isLast ? 'Log in' : 'Skip',
+                    onTap: _finishOnboarding,
                   ),
-                ),
+                ],
               ),
-
-            // PageView for onboarding content
+            ),
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
@@ -120,99 +112,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
             ),
-
-            // Animated Dots
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.fromLTRB(24, 4, 24, 20),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   _onboardingData.length,
                   (index) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.only(right: 6),
                     child: AnimatedDot(isActive: _selectedIndex == index),
                   ),
                 ),
               ),
             ),
-
-            // Navigation Buttons (Previous and Next/Get Started)
             Padding(
-              padding: const EdgeInsets.all(24),
-              child: Row(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: DPButton(
+                label: isLast ? 'Create an account' : 'Continue',
+                icon: DPIcons.forward,
+                onPressed: _goToNextPage,
+              ),
+            ),
+            const SizedBox(height: 18),
+            if (isLast)
+              const Text(
+                'Clear fees. Easy payments. Your pace.',
+                style: DP.caption,
+              )
+            else
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Previous Button (visible on second page)
-                  if (_selectedIndex == 1)
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _goToPreviousPage,
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppTheme.primaryColor,
-                          side: BorderSide(color: AppTheme.primaryColor),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.arrow_back, size: 18),
-                            const SizedBox(width: 8),
-                            Text(
-                              'BACK',
-                              style: GoogleFonts.inter(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                  if (_selectedIndex == 1) const SizedBox(width: 12),
-
-                  // Next/Get Started Button
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _goToNextPage,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        elevation: 2,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            _selectedIndex == _onboardingData.length - 1
-                                ? 'GET STARTED'
-                                : 'NEXT',
-                            style: GoogleFonts.inter(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                          if (_selectedIndex != _onboardingData.length - 1)
-                            const SizedBox(width: 8),
-                          if (_selectedIndex != _onboardingData.length - 1)
-                            const Icon(Icons.arrow_forward, size: 18),
-                        ],
+                  const Text('Already have an account? ', style: DP.caption),
+                  GestureDetector(
+                    onTap: _finishOnboarding,
+                    child: Text(
+                      'Log in',
+                      style: DP.caption.copyWith(
+                        color: DP.green,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-
-            const SizedBox(height: 20),
+            const SizedBox(height: 24),
           ],
         ),
       ),
@@ -223,11 +166,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 // Onboarding Data Model
 class OnboardingData {
   final String image;
+  final String eyebrow;
   final String title;
   final String description;
 
   OnboardingData({
     required this.image,
+    required this.eyebrow,
     required this.title,
     required this.description,
   });
@@ -242,83 +187,37 @@ class OnboardingContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Larger Image
-          Container(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.45,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Image.asset(
-              data.image,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.accentColor.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.image_outlined,
-                          size: 80,
-                          color: AppTheme.primaryColor.withOpacity(0.5),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          'Image not found',
-                          style: GoogleFonts.inter(
-                            fontSize: 12,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Title
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              data.title,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 26,
-                fontWeight: FontWeight.w800,
-                color: AppTheme.secondaryColor,
-                height: 1.3,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(DP.rXl),
+            child: AspectRatio(
+              aspectRatio: 708 / 660,
+              child: Image.asset(
+                data.image,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  color: DP.mint,
+                  alignment: Alignment.center,
+                  child: const DPLogoMark(size: 96),
+                ),
               ),
             ),
           ),
-
-          const SizedBox(height: 16),
-
-          // Description
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              data.description,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                color: const Color(0xFF71727A),
-                height: 1.5,
-              ),
-            ),
+          const SizedBox(height: 28),
+          Text(
+            data.eyebrow,
+            style: DP.tiny.copyWith(color: DP.green, fontSize: 12),
           ),
-
-          const SizedBox(height: 40),
+          const SizedBox(height: 10),
+          Text(data.title, style: DP.display.copyWith(fontSize: 30)),
+          const SizedBox(height: 12),
+          Text(
+            data.description,
+            style: DP.body.copyWith(color: DP.muted, height: 1.5),
+          ),
         ],
       ),
     );
@@ -335,11 +234,11 @@ class AnimatedDot extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      height: 8,
-      width: isActive ? 28 : 8,
+      height: 4,
+      width: isActive ? 24 : 6,
       decoration: BoxDecoration(
-        color: isActive ? AppTheme.primaryColor : const Color(0xFFD1D1D6),
-        borderRadius: BorderRadius.circular(12),
+        color: isActive ? DP.green : DP.border,
+        borderRadius: BorderRadius.circular(4),
       ),
     );
   }
