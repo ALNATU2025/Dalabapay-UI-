@@ -2,11 +2,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 import '../../../core/services/api_service.dart';
 import '../../../core/services/cache_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import '../../../ui/ui.dart';
 
 class TransactionsScreen extends StatefulWidget {
   final String userId;
@@ -45,8 +48,12 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   late AnimationController _fadeController;
 
   // Filters
-  final List<String> _filters = [
-    'All',
+  // Status chips shown at the top (design). The service filter lives in
+  // a separate picker so all the old type filters still work.
+  final List<String> _filters = ['All', 'Successful', 'Pending', 'Failed'];
+  String _typeFilter = 'All services';
+  final List<String> _typeFilters = const [
+    'All services',
     'Airtime Purchase',
     'Data Purchase',
     'Cable TV Purchase',
@@ -57,9 +64,8 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     'Fund Wallet',
     'Commission Credit',
     'Refund Credit',
-    'Pending',
-    'Failed',
   ];
+  bool _exporting = false;
 
   // Verification tracking
   final Map<String, bool> _verifyingTransactions = {};
@@ -266,87 +272,71 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
     // Date range filter
     if (_startDate != null || _endDate != null) {
-      filtered =
-          filtered.where((tx) {
-            final date = _parseDateTime(tx['createdAt']);
-            if (_startDate != null && date.isBefore(_startDate!)) return false;
-            if (_endDate != null) {
-              final endOfDay = DateTime(
-                _endDate!.year,
-                _endDate!.month,
-                _endDate!.day,
-                23,
-                59,
-                59,
-              );
-              if (date.isAfter(endOfDay)) return false;
-            }
-            return true;
-          }).toList();
+      filtered = filtered.where((tx) {
+        final date = _parseDateTime(tx['createdAt']);
+        if (_startDate != null && date.isBefore(_startDate!)) return false;
+        if (_endDate != null) {
+          final endOfDay = DateTime(_endDate!.year, _endDate!.month, _endDate!.day, 23, 59, 59);
+          if (date.isAfter(endOfDay)) return false;
+        }
+        return true;
+      }).toList();
     }
 
     // Search filter
     final searchTerm = _searchController.text.toLowerCase();
     if (searchTerm.isNotEmpty) {
-      filtered =
-          filtered.where((tx) {
-            final description =
-                (tx['description']?.toString().toLowerCase() ?? '');
-            final type = (tx['type']?.toString().toLowerCase() ?? '');
-            final status = (tx['status']?.toString().toLowerCase() ?? '');
-            final reference = (tx['reference']?.toString().toLowerCase() ?? '');
-            return description.contains(searchTerm) ||
-                type.contains(searchTerm) ||
-                status.contains(searchTerm) ||
-                reference.contains(searchTerm);
-          }).toList();
+      filtered = filtered.where((tx) {
+        final description = (tx['description']?.toString().toLowerCase() ?? '');
+        final type = (tx['type']?.toString().toLowerCase() ?? '');
+        final status = (tx['status']?.toString().toLowerCase() ?? '');
+        final reference = (tx['reference']?.toString().toLowerCase() ?? '');
+        return description.contains(searchTerm) ||
+            type.contains(searchTerm) ||
+            status.contains(searchTerm) ||
+            reference.contains(searchTerm);
+      }).toList();
     }
 
-    // Type filter
+    // Status filter
     if (_selectedFilter != 'All') {
-      filtered =
-          filtered.where((tx) {
-            if (_selectedFilter == 'Commission Credit') {
-              return tx['isCommission'] == true ||
-                  tx['type']?.toString() == 'Commission Credit';
-            } else if (_selectedFilter == 'Refund Credit') {
-              return tx['type']?.toString() == 'Refund Credit' ||
-                  tx['description']?.toString().contains('Refund') == true;
-            } else if (_selectedFilter == 'Pending') {
-              final status = (tx['status'] as String? ?? '').toLowerCase();
-              return status == 'pending' || status == 'processing';
-            } else if (_selectedFilter == 'Failed') {
-              final status = (tx['status'] as String? ?? '').toLowerCase();
-              return status == 'failed' ||
-                  status == 'cancelled' ||
-                  tx['isFailed'] == true ||
-                  tx['amountBelowMinimum'] == true;
-            } else {
-              return _getActualTransactionType(tx) == _selectedFilter;
-            }
-          }).toList();
+      filtered = filtered.where((tx) {
+        final s = _getStatusText(tx);
+        if (_selectedFilter == 'Successful') return s == 'Successful' || s == 'Resolved';
+        if (_selectedFilter == 'Pending') return s == 'Pending';
+        if (_selectedFilter == 'Failed') {
+          return s == 'Failed' || s == 'Refunded' || tx['amountBelowMinimum'] == true;
+        }
+        return true;
+      }).toList();
     }
 
-    // Sort by date (newest first)
-    // ✅ Sort by updatedAt first (so admin status changes bubble up),
-    // then fall back to completedAt/createdAt
+    // Service (type) filter
+    if (_typeFilter != 'All services') {
+      filtered = filtered.where((tx) {
+        if (_typeFilter == 'Commission Credit') {
+          return tx['isCommission'] == true || tx['type']?.toString() == 'Commission Credit';
+        } else if (_typeFilter == 'Refund Credit') {
+          return tx['type']?.toString() == 'Refund Credit' ||
+              tx['description']?.toString().contains('Refund') == true;
+        } else if (_typeFilter == 'Transfer') {
+          return _getActualTransactionType(tx).startsWith('Transfer');
+        }
+        return _getActualTransactionType(tx) == _typeFilter;
+      }).toList();
+    }
+
+    // Newest first: updatedAt first (so admin status changes bubble up),
+    // then completedAt/createdAt.
     filtered.sort((a, b) {
-      final dateA = _parseDateTime(
-        a['updatedAt'] ?? a['completedAt'] ?? a['createdAt'],
-      );
-      final dateB = _parseDateTime(
-        b['updatedAt'] ?? b['completedAt'] ?? b['createdAt'],
-      );
+      final dateA = _parseDateTime(a['updatedAt'] ?? a['completedAt'] ?? a['createdAt']);
+      final dateB = _parseDateTime(b['updatedAt'] ?? b['completedAt'] ?? b['createdAt']);
       return dateB.compareTo(dateA);
     });
 
     setState(() {
       _filteredTransactions = filtered;
     });
-
-    debugPrint(
-      '📊 Filter applied: ${_filteredTransactions.length} transactions (total: ${_allTransactions.length})',
-    );
   }
 
   // ==================== HELPERS ====================
@@ -426,135 +416,30 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     }
   }
 
-  String _formatDate(DateTime date) {
-    final now = DateTime.now();
-    final difference = now.difference(date);
 
-    if (difference.inDays == 0) {
-      if (difference.inHours == 0) {
-        if (difference.inMinutes == 0) return 'Just now';
-        return '${difference.inMinutes} min ago';
-      }
-      return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return DateFormat('dd/MM/yyyy').format(date);
-    }
-  }
-
-  Color _getStatusColor(String status, Map<String, dynamic> tx) {
-    // ✅ PRIORITY 1: Trust status string
-    switch (status.toLowerCase()) {
-      case 'completed':
-      case 'success':
-      case 'successful':
-      case 'resolved':
-        return const Color(0xFF168566);
-      case 'pending':
-      case 'processing':
-        return Colors.orange;
-      case 'failed':
-      case 'cancelled':
-        return Colors.red;
-      case 'refunded':
-        return const Color(0xFF8B5CF6);
-    }
-
-    // ✅ PRIORITY 2: Fall back to flags only if status was unknown
-    if (tx['isFailed'] == true ||
-        tx['shouldShowAsFailed'] == true ||
-        tx['amountBelowMinimum'] == true) {
-      return Colors.red;
-    }
-
-    return Colors.grey;
-  }
 
   // ✅ USING HUGICONS - Same as dashboard services
-  dynamic _getTransactionIcon(String type) {
+  DPIconData _getTransactionIcon(String type) {
     final typeLower = type.toLowerCase();
-
-    // Airtime - matches dashboard "Airtime" service icon
-    if (typeLower.contains('airtime')) {
-      return HugeIcons.strokeRoundedSmartPhone01;
+    if (typeLower.contains('international')) return DPIcons.globe;
+    if (typeLower.contains('airtime')) return DPIcons.phone;
+    if (typeLower.contains('data')) return DPIcons.wifi;
+    if (typeLower.contains('electricity')) return DPIcons.zap;
+    if (typeLower.contains('cable') || typeLower.contains('tv')) return DPIcons.tv;
+    if (typeLower.contains('education')) return DPIcons.graduationCap;
+    if (typeLower.contains('insurance')) return DPIcons.umbrella;
+    if (typeLower.contains('internet')) return DPIcons.router;
+    if (typeLower.contains('transfer received')) return DPIcons.arrowDownLeft;
+    if (typeLower.contains('transfer')) return DPIcons.arrowUpRight;
+    if (typeLower.contains('commission') || typeLower.contains('bonus')) return DPIcons.sparkles;
+    if (typeLower.contains('refund')) return DPIcons.rotateCcw;
+    if (typeLower.contains('fund wallet') || typeLower.contains('wallet funding')) {
+      return DPIcons.arrowDownLeft;
     }
-    // Data - matches dashboard "Data" service icon
-    if (typeLower.contains('data')) {
-      return HugeIcons.strokeRoundedWifi01;
-    }
-    // Electricity - matches dashboard "Electricity" service icon
-    if (typeLower.contains('electricity')) {
-      return HugeIcons.strokeRoundedBulb;
-    }
-    // Cable TV - matches dashboard "Cable TV" service icon
-    if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return HugeIcons.strokeRoundedTv01;
-    }
-    // Education - matches dashboard "Education" service icon
-    if (typeLower.contains('education')) {
-      return HugeIcons.strokeRoundedMortarboard01;
-    }
-    // Insurance - matches dashboard "Insurance" service icon
-    if (typeLower.contains('insurance')) {
-      return HugeIcons.strokeRoundedShield01;
-    }
-    // Transfer - matches dashboard "Wallet Transfer" service icon
-    if (typeLower.contains('transfer sent')) {
-      return HugeIcons.strokeRoundedTelegram;
-    }
-    if (typeLower.contains('transfer received')) {
-      return HugeIcons.strokeRoundedDownload03;
-    }
-    if (typeLower.contains('transfer')) {
-      return HugeIcons.strokeRoundedSquareArrowDataTransferHorizontal;
-    }
-    // Fund Wallet - matches dashboard wallet icon
-    if (typeLower.contains('fund wallet') ||
-        typeLower.contains('wallet funding')) {
-      return HugeIcons.strokeRoundedWallet01;
-    }
-    // Commission - matches dashboard "Commission" service icon
-    if (typeLower.contains('commission')) {
-      return HugeIcons.strokeRoundedPercent;
-    }
-    // Refund
-    if (typeLower.contains('refund')) {
-      return HugeIcons.strokeRoundedCash01;
-    }
-    // Default - matches dashboard receipt icon
-    return HugeIcons.strokeRoundedReceiptText;
+    return DPIcons.receipt;
   }
 
   // ✅ Color mapping - Same as dashboard
-  Color _getTransactionColor(String type) {
-    final typeLower = type.toLowerCase();
-
-    if (typeLower.contains('commission')) {
-      return const Color(0xFF168566);
-    }
-    if (typeLower.contains('fund wallet') ||
-        typeLower.contains('wallet funding')) {
-      return const Color(0xFF168566);
-    }
-    if (typeLower.contains('transfer received')) return const Color(0xFF168566);
-    if (typeLower.contains('refund')) return const Color(0xFF168566);
-    if (typeLower.contains('airtime')) return const Color(0xFF4A90E2);
-    if (typeLower.contains('data')) return const Color(0xFF9B59B6);
-    if (typeLower.contains('electricity')) return const Color(0xFFF39C12);
-    if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return const Color(0xFFE74C3C);
-    }
-    if (typeLower.contains('education')) return const Color(0xFF2ECC71);
-    if (typeLower.contains('insurance')) return const Color(0xFF1ABC9C);
-    if (typeLower.contains('transfer sent')) return Colors.orange;
-    if (typeLower.contains('transfer')) return Colors.orange;
-    if (typeLower.contains('failed')) return Colors.red;
-
-    return const Color(0xFF102C68);
-  }
 
   String _getCommissionSource(String description) {
     final descLower = description.toLowerCase();
@@ -751,579 +636,332 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Color(0xFF102C68),
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Dalaba',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
-              letterSpacing: 0.09,
-            ),
-          ),
-          Text(
-            'pay',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF168566),
-              letterSpacing: 0.09,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.refresh, color: Color(0xFF102C68), size: 22),
-          onPressed: _refreshData,
-        ),
-        const SizedBox(width: 8),
-      ],
-    );
-  }
-
-  Widget _buildBody() {
-    if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
-        ),
+    if (_isLoading && _allTransactions.isEmpty) {
+      return const DPPage(
+        title: 'Your activity',
+        children: [Padding(padding: EdgeInsets.only(top: 80), child: DPLoader(message: 'Loading your activity…'))],
       );
     }
 
+    return DPPage(
+      title: 'Your activity',
+      actionLabel: _exporting ? 'Exporting…' : 'Export',
+      onAction: _exporting || _filteredTransactions.isEmpty ? null : _exportCsv,
+      onRefresh: _refreshData,
+      controller: _scrollController,
+      children: [_buildBody()],
+    );
+  }
+
+
+  Widget _buildBody() {
     if (_errorMessage != null && _allTransactions.isEmpty) {
       return _buildErrorState();
     }
-
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildBalanceCard(),
         _buildSearchAndFilters(),
-        Expanded(child: _buildTransactionsList()),
+        _buildTransactionsList(),
       ],
     );
   }
 
+  /// Money in / money out for the current month (completed transactions only).
   Widget _buildBalanceCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF168566).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+    final now = DateTime.now();
+    double moneyIn = 0, moneyOut = 0;
+    for (final raw in _allTransactions) {
+      if (raw is! Map<String, dynamic>) continue;
+      final d = _parseDateTime(raw['createdAt']).toLocal();
+      if (d.year != now.year || d.month != now.month) continue;
+      final s = _getStatusText(raw);
+      if (s != 'Successful' && s != 'Resolved') continue;
+      final amt = (raw['amount'] as num?)?.toDouble() ?? 0;
+      if (_isCreditTransaction(raw)) {
+        moneyIn += amt;
+      } else {
+        moneyOut += amt;
+      }
+    }
+    Widget figure(String label, double v, Color c) => Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: DPText.bodyMuted.copyWith(fontSize: 13)),
+              const SizedBox(height: 6),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(dpNaira(v, decimals: v % 1 != 0),
+                    style: DPText.amount.copyWith(fontSize: 26, color: c)),
+              ),
+            ],
           ),
+        );
+    return DPCard(
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'THIS MONTH · ${DateFormat('MMMM yyyy').format(now).toUpperCase()}',
+                  style: DPText.overline,
+                ),
+              ),
+              if (!_isBalanceLoading && _currentBalance != null)
+                Text('Balance ${dpNaira(_currentBalance!)}', style: DPText.small),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(children: [
+            figure('Money in', moneyIn, DP.green),
+            const SizedBox(width: 12),
+            figure('Money out', moneyOut, DP.ink),
+          ]),
         ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Icon(
-                Icons.account_balance_wallet_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Available Balance',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  if (_isBalanceLoading)
-                    SizedBox(
-                      width: 120,
-                      height: 24,
-                      child: LinearProgressIndicator(
-                        backgroundColor: Colors.white24,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.white,
-                        ),
-                      ),
-                    )
-                  else
-                    Text(
-                      '₦${_currentBalance?.toStringAsFixed(2) ?? '0.00'}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.white, size: 20),
-              onPressed: _fetchBalance,
-            ),
-          ],
-        ),
       ),
     );
   }
 
   Widget _buildSearchAndFilters() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search transactions...',
-              hintStyle: TextStyle(
-                color: Colors.grey.shade400,
-                fontSize: 14,
+    final hasRange = _startDate != null && _endDate != null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DPField(
+          label: 'Find a transaction',
+          controller: _searchController,
+          hint: 'Search name or reference',
+          suffixIcon: _searchController.text.isNotEmpty ? DPIcons.x : DPIcons.search,
+          onSuffixTap: _searchController.text.isNotEmpty
+              ? () {
+                  _searchController.clear();
+                  _applyFilter();
+                }
+              : null,
+          onChanged: (_) => _applyFilter(),
+          margin: const EdgeInsets.only(bottom: 14),
+        ),
+        DPChipGrid(
+          labels: _filters,
+          columns: 4,
+          height: 40,
+          spacing: 8,
+          selectedIndex: _filters.indexOf(_selectedFilter),
+          onSelected: (i) {
+            _selectedFilter = _filters[i];
+            _applyFilter();
+          },
+          margin: const EdgeInsets.only(bottom: 10),
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: DPChip(
+                label: _typeFilter,
+                selected: _typeFilter != 'All services',
+                dense: true,
+                height: 38,
+                leading: const DPIcon(DPIcons.listFilter, size: 16, color: DP.ink2),
+                onTap: _pickTypeFilter,
               ),
-              prefixIcon: const Icon(
-                Icons.search,
-                color: Color(0xFF102C68),
-                size: 20,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
-              suffixIcon:
-                  _searchController.text.isNotEmpty
-                      ? IconButton(
-                        icon: const Icon(Icons.clear, size: 18),
-                        onPressed: () {
-                          _searchController.clear();
-                          _applyFilter();
-                        },
-                      )
-                      : null,
             ),
-            style: TextStyle(fontSize: 14),
-            onChanged: (_) => _applyFilter(),
-          ),
-          const SizedBox(height: 12),
-
-          Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: _selectDateRange,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          color: const Color(0xFF102C68),
-                          size: 16,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _startDate != null && _endDate != null
-                                ? '${DateFormat('MMM dd').format(_startDate!)} - ${DateFormat('MMM dd, yyyy').format(_endDate!)}'
-                                : 'Select Date Range',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color:
-                                  (_startDate != null && _endDate != null)
-                                      ? const Color(0xFF102C68)
-                                      : Colors.grey.shade400,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (_startDate != null && _endDate != null)
-                          IconButton(
-                            icon: const Icon(Icons.close, size: 16),
-                            onPressed: _clearDateFilter,
-                            padding: EdgeInsets.zero,
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DPChip(
+                label: hasRange
+                    ? '${DateFormat('d MMM').format(_startDate!)} – ${DateFormat('d MMM').format(_endDate!)}'
+                    : 'Any date',
+                selected: hasRange,
+                dense: true,
+                height: 38,
+                leading: const DPIcon(DPIcons.calendar, size: 16, color: DP.ink2),
+                onTap: hasRange ? _clearDateFilter : _selectDateRange,
               ),
-            ],
+            ),
+          ],
+        ),
+        if (hasRange)
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text('Tap the date again to clear it.', style: DPText.small),
           ),
-          const SizedBox(height: 12),
+      ],
+    );
+  }
 
-          SizedBox(
-            height: 38,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _filters.length,
-              itemBuilder: (context, index) {
-                final filter = _filters[index];
-                final isSelected = _selectedFilter == filter;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text(
-                      filter,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedFilter = selected ? filter : 'All';
-                        _applyFilter();
-                      });
-                    },
-                    backgroundColor: Colors.white,
-                    selectedColor: const Color(
-                      0xFF102C68,
-                    ).withValues(alpha: 0.1),
-                    checkmarkColor: const Color(0xFF102C68),
-                    labelStyle: TextStyle(
-                      color:
-                          isSelected
-                              ? const Color(0xFF102C68)
-                              : Colors.grey.shade600,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color:
-                            isSelected
-                                ? const Color(0xFF102C68)
-                                : Colors.grey.shade300,
-                      ),
-                    ),
-                    elevation: 0,
-                  ),
-                );
+  void _pickTypeFilter() {
+    showDPSheet(
+      context,
+      title: 'Filter by service',
+      builder: (ctx) => Column(
+        children: [
+          for (final t in _typeFilters)
+            DPOptionRow(
+              leading: DPIcon(t == 'All services' ? DPIcons.layoutGrid : _getTransactionIcon(t),
+                  size: 20, color: DP.blue),
+              title: t.replaceAll(' Purchase', '').replaceAll('Fund Wallet', 'Wallet top-up'),
+              selected: _typeFilter == t,
+              onTap: () {
+                Navigator.pop(ctx);
+                _typeFilter = t;
+                _applyFilter();
               },
             ),
-          ),
-          const SizedBox(height: 12),
         ],
       ),
     );
   }
 
+  String _dayLabel(DateTime d) {
+    final local = d.toLocal();
+    final today = DateTime.now();
+    final day = DateTime(local.year, local.month, local.day);
+    final t0 = DateTime(today.year, today.month, today.day);
+    final diff = t0.difference(day).inDays;
+    final base = DateFormat('d MMMM').format(local);
+    if (diff == 0) return 'Today, $base';
+    if (diff == 1) return 'Yesterday, $base';
+    if (local.year != today.year) return DateFormat('EEEE, d MMMM yyyy').format(local);
+    return DateFormat('EEEE, d MMMM').format(local);
+  }
+
+  String _displayTitle(Map<String, dynamic> tx, String type) {
+    final description = (tx['description'] ?? '').toString().trim();
+    if (description.isNotEmpty && description.length <= 42) return description;
+    switch (type) {
+      case 'Fund Wallet':
+        return 'Wallet top-up';
+      case 'Transfer Sent':
+        return 'Money sent';
+      case 'Transfer Received':
+        return 'Money received';
+      default:
+        return type.replaceAll(' Purchase', '');
+    }
+  }
+
+  Future<void> _exportCsv() async {
+    setState(() => _exporting = true);
+    try {
+      String esc(Object? v) => '"${(v ?? '').toString().replaceAll('"', '""')}"';
+      final b = StringBuffer('Date,Type,Description,Amount,Direction,Status,Reference\n');
+      for (final raw in _filteredTransactions) {
+        if (raw is! Map<String, dynamic>) continue;
+        final d = _parseDateTime(raw['createdAt']).toLocal();
+        b.writeln([
+          esc(DateFormat('yyyy-MM-dd HH:mm').format(d)),
+          esc(_getActualTransactionType(raw)),
+          esc(raw['description']),
+          esc((raw['amount'] as num?)?.toStringAsFixed(2) ?? '0.00'),
+          esc(_isCreditTransaction(raw) ? 'In' : 'Out'),
+          esc(_getStatusText(raw)),
+          esc(raw['reference']),
+        ].join(','));
+      }
+      final dir = await getTemporaryDirectory();
+      final file = File(
+          '${dir.path}/dalabapay-activity-${DateFormat('yyyyMMdd-HHmm').format(DateTime.now())}.csv');
+      await file.writeAsString(b.toString());
+      await Share.shareXFiles([XFile(file.path, mimeType: 'text/csv')],
+          subject: 'Dalabapay activity');
+    } catch (e) {
+      if (mounted) dpSnack(context, 'Could not export your activity. Please try again.', error: true);
+    } finally {
+      if (mounted) setState(() => _exporting = false);
+    }
+  }
+
   Widget _buildTransactionsList() {
-    if (_isRefreshing) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
-            strokeWidth: 2,
-          ),
-        ),
-      );
+    if (_isRefreshing && _filteredTransactions.isEmpty) {
+      return const Padding(padding: EdgeInsets.only(top: 40), child: DPLoader());
     }
+    if (_filteredTransactions.isEmpty) return _buildEmptyState();
 
-    if (_filteredTransactions.isEmpty) {
-      return _buildEmptyState();
+    final children = <Widget>[];
+    String? lastDay;
+    for (final raw in _filteredTransactions) {
+      if (raw is! Map<String, dynamic>) continue;
+      final date = _parseDateTime(raw['updatedAt'] ?? raw['completedAt'] ?? raw['createdAt']);
+      final label = _dayLabel(date);
+      if (label != lastDay) {
+        children.add(DPSectionHeader(label,
+            padding: EdgeInsets.only(top: lastDay == null ? 22 : 18, bottom: 6)));
+        lastDay = label;
+      }
+      children.add(_buildTransactionItem(raw));
     }
-
-    return RefreshIndicator(
-      onRefresh: _refreshData,
-      color: const Color(0xFF102C68),
-      backgroundColor: Colors.white,
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: const EdgeInsets.only(bottom: 16),
-        itemCount: _filteredTransactions.length,
-        itemBuilder: (context, index) {
-          final tx = _filteredTransactions[index];
-          return _buildTransactionItem(tx);
-        },
-      ),
-    );
+    children.add(Padding(
+      padding: const EdgeInsets.only(top: 18),
+      child: Text('Only completed payments affect your balance.',
+          style: DPText.small, textAlign: TextAlign.center),
+    ));
+    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children);
   }
 
   Widget _buildTransactionItem(Map<String, dynamic> tx) {
     final type = _getActualTransactionType(tx);
-    final amount = (tx['amount'] as num?)?.toStringAsFixed(2) ?? '0.00';
+    final amount = (tx['amount'] as num?)?.toDouble() ?? 0;
     final status = _getStatusText(tx);
-    final date = _parseDateTime(tx['createdAt']);
-    final description = tx['description'] ?? '';
+    final date = _parseDateTime(tx['createdAt']).toLocal();
     final isCredit = _isCreditTransaction(tx);
-    final isPending = status == 'Pending';
-    final isFailed = status == 'Failed';
-    final icon = _getTransactionIcon(type);
-    final iconColor = _getTransactionColor(type);
-    final statusColor = _getStatusColor(status, tx);
-
-    return GestureDetector(
+    final failed = status == 'Failed';
+    final refunded = status == 'Refunded';
+    final when = DateFormat('h:mm a').format(date);
+    String sub = '$when · $status';
+    if (failed || refunded) sub += ' · No debit';
+    if (type == 'Fund Wallet' && status == 'Successful') sub = '$when · Bank transfer';
+    final amountText = dpNaira(amount, decimals: amount % 1 != 0);
+    return DPTransactionTile(
+      icon: _getTransactionIcon(type),
+      title: _displayTitle(tx, type),
+      subtitle: sub,
+      amount: failed || refunded ? amountText : '${isCredit ? '+' : '−'}$amountText',
+      credit: isCredit && !failed,
+      failed: failed || refunded,
       onTap: () => _showTransactionDetails(tx),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // ✅ Using HugeIcon - Same as dashboard
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: HugeIcon(icon: icon, size: 24, color: iconColor),
-            ),
-            const SizedBox(width: 12),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    type,
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF14263D),
-                    ),
-                  ),
-                  if (description.isNotEmpty)
-                    Text(
-                      description.length > 40
-                          ? '${description.substring(0, 40)}...'
-                          : description,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatDate(date),
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${isCredit ? '+' : '-'}₦$amount',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: isCredit ? const Color(0xFF168566) : Colors.red,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (isPending)
-                        SizedBox(
-                          width: 8,
-                          height: 8,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              statusColor,
-                            ),
-                          ),
-                        )
-                      else if (isFailed)
-                        Icon(Icons.error_outline, color: statusColor, size: 10)
-                      else
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: statusColor,
-                          size: 10,
-                        ),
-                      const SizedBox(width: 4),
-                      Text(
-                        status,
-                        style: TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                          color: statusColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            HugeIcon(
-              icon: HugeIcons.strokeRoundedReceiptText,
-              size: 64,
-              color: Colors.grey.shade300,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No Transactions Yet',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF102C68),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Your transactions will appear here',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+    final filtered = _allTransactions.isNotEmpty;
+    return Padding(
+      padding: const EdgeInsets.only(top: 24),
+      child: DPEmptyState(
+        icon: filtered ? DPIcons.search : DPIcons.receipt,
+        title: filtered ? 'No matching transactions' : 'No transactions yet',
+        message: filtered
+            ? 'Try a different search, status or date.'
+            : 'Your payments, top-ups and transfers will appear here.',
+        actionLabel: filtered ? 'Clear filters' : null,
+        onAction: filtered
+            ? () {
+                _searchController.clear();
+                _selectedFilter = 'All';
+                _typeFilter = 'All services';
+                _startDate = null;
+                _endDate = null;
+                _applyFilter();
+              }
+            : null,
       ),
     );
   }
 
   Widget _buildErrorState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
-            const SizedBox(height: 16),
-            Text(
-              'Something went wrong',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF102C68),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _errorMessage ?? 'Unable to load transactions',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey.shade500,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _refreshData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF102C68),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                'Try Again',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: DPEmptyState(
+        icon: DPIcons.circleAlert,
+        title: 'Something went wrong',
+        message: _errorMessage ?? 'Unable to load transactions',
+        actionLabel: 'Try again',
+        onAction: _refreshData,
       ),
     );
   }
