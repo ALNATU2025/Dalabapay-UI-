@@ -1,13 +1,15 @@
 // lib/presentation/screens/transactions/transactions_screen.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:hugeicons/hugeicons.dart';
 
 import '../../../core/services/api_service.dart';
 import '../../../core/services/cache_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
+import 'dart:convert' show utf8;
+import 'dart:typed_data';
+import 'package:share_plus/share_plus.dart';
+import '../../../ui/ui.dart';
 
 class TransactionsScreen extends StatefulWidget {
   final String userId;
@@ -267,70 +269,66 @@ class _TransactionsScreenState extends State<TransactionsScreen>
 
     // Date range filter
     if (_startDate != null || _endDate != null) {
-      filtered =
-          filtered.where((tx) {
-            final date = _parseDateTime(tx['createdAt']);
-            if (_startDate != null && date.isBefore(_startDate!)) return false;
-            if (_endDate != null) {
-              final endOfDay = DateTime(
-                _endDate!.year,
-                _endDate!.month,
-                _endDate!.day,
-                23,
-                59,
-                59,
-              );
-              if (date.isAfter(endOfDay)) return false;
-            }
-            return true;
-          }).toList();
+      filtered = filtered.where((tx) {
+        final date = _parseDateTime(tx['createdAt']);
+        if (_startDate != null && date.isBefore(_startDate!)) return false;
+        if (_endDate != null) {
+          final endOfDay = DateTime(
+            _endDate!.year,
+            _endDate!.month,
+            _endDate!.day,
+            23,
+            59,
+            59,
+          );
+          if (date.isAfter(endOfDay)) return false;
+        }
+        return true;
+      }).toList();
     }
 
     // Search filter
     final searchTerm = _searchController.text.toLowerCase();
     if (searchTerm.isNotEmpty) {
-      filtered =
-          filtered.where((tx) {
-            final description =
-                (tx['description']?.toString().toLowerCase() ?? '');
-            final type = (tx['type']?.toString().toLowerCase() ?? '');
-            final status = (tx['status']?.toString().toLowerCase() ?? '');
-            final reference = (tx['reference']?.toString().toLowerCase() ?? '');
-            return description.contains(searchTerm) ||
-                type.contains(searchTerm) ||
-                status.contains(searchTerm) ||
-                reference.contains(searchTerm);
-          }).toList();
+      filtered = filtered.where((tx) {
+        final description = (tx['description']?.toString().toLowerCase() ?? '');
+        final type = (tx['type']?.toString().toLowerCase() ?? '');
+        final status = (tx['status']?.toString().toLowerCase() ?? '');
+        final reference = (tx['reference']?.toString().toLowerCase() ?? '');
+        return description.contains(searchTerm) ||
+            type.contains(searchTerm) ||
+            status.contains(searchTerm) ||
+            reference.contains(searchTerm);
+      }).toList();
     }
 
-    // Type filter
+    // Type / status filter
     if (_selectedFilter != 'All') {
-      filtered =
-          filtered.where((tx) {
-            if (_selectedFilter == 'Commission Credit') {
-              return tx['isCommission'] == true ||
-                  tx['type']?.toString() == 'Commission Credit';
-            } else if (_selectedFilter == 'Refund Credit') {
-              return tx['type']?.toString() == 'Refund Credit' ||
-                  tx['description']?.toString().contains('Refund') == true;
-            } else if (_selectedFilter == 'Pending') {
-              final status = (tx['status'] as String? ?? '').toLowerCase();
-              return status == 'pending' || status == 'processing';
-            } else if (_selectedFilter == 'Failed') {
-              final status = (tx['status'] as String? ?? '').toLowerCase();
-              return status == 'failed' ||
-                  status == 'cancelled' ||
-                  tx['isFailed'] == true ||
-                  tx['amountBelowMinimum'] == true;
-            } else {
-              return _getActualTransactionType(tx) == _selectedFilter;
-            }
-          }).toList();
+      filtered = filtered.where((tx) {
+        if (_selectedFilter == 'Successful') {
+          return _getStatusText(tx) == 'Successful';
+        } else if (_selectedFilter == 'Commission Credit') {
+          return tx['isCommission'] == true ||
+              tx['type']?.toString() == 'Commission Credit';
+        } else if (_selectedFilter == 'Refund Credit') {
+          return tx['type']?.toString() == 'Refund Credit' ||
+              tx['description']?.toString().contains('Refund') == true;
+        } else if (_selectedFilter == 'Pending') {
+          final status = (tx['status'] as String? ?? '').toLowerCase();
+          return status == 'pending' || status == 'processing';
+        } else if (_selectedFilter == 'Failed') {
+          final status = (tx['status'] as String? ?? '').toLowerCase();
+          return status == 'failed' ||
+              status == 'cancelled' ||
+              tx['isFailed'] == true ||
+              tx['amountBelowMinimum'] == true;
+        } else {
+          return _getActualTransactionType(tx) == _selectedFilter;
+        }
+      }).toList();
     }
 
-    // Sort by date (newest first)
-    // ✅ Sort by updatedAt first (so admin status changes bubble up),
-    // then fall back to completedAt/createdAt
+    // Newest first (updatedAt so admin status changes bubble up)
     filtered.sort((a, b) {
       final dateA = _parseDateTime(
         a['updatedAt'] ?? a['completedAt'] ?? a['createdAt'],
@@ -344,10 +342,6 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     setState(() {
       _filteredTransactions = filtered;
     });
-
-    debugPrint(
-      '📊 Filter applied: ${_filteredTransactions.length} transactions (total: ${_allTransactions.length})',
-    );
   }
 
   // ==================== HELPERS ====================
@@ -475,87 +469,26 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   }
 
   // ✅ USING HUGICONS - Same as dashboard services
-  dynamic _getTransactionIcon(String type) {
-    final typeLower = type.toLowerCase();
-
-    // Airtime - matches dashboard "Airtime" service icon
-    if (typeLower.contains('airtime')) {
-      return HugeIcons.strokeRoundedSmartPhone01;
+  IconData _getTransactionIcon(String type) {
+    final t = type.toLowerCase();
+    if (t.contains('international')) return DPIcons.globe;
+    if (t.contains('airtime')) return DPIcons.phone;
+    if (t.contains('data') || t.contains('internet')) return DPIcons.wifi;
+    if (t.contains('electric')) return DPIcons.bolt;
+    if (t.contains('cable') || t.contains('tv')) return DPIcons.tv;
+    if (t.contains('education')) return DPIcons.school;
+    if (t.contains('insurance')) return DPIcons.shield;
+    if (t.contains('transfer received')) return DPIcons.downLeft;
+    if (t.contains('transfer')) return DPIcons.upRight;
+    if (t.contains('fund wallet') || t.contains('wallet funding')) {
+      return DPIcons.downLeft;
     }
-    // Data - matches dashboard "Data" service icon
-    if (typeLower.contains('data')) {
-      return HugeIcons.strokeRoundedWifi01;
-    }
-    // Electricity - matches dashboard "Electricity" service icon
-    if (typeLower.contains('electricity')) {
-      return HugeIcons.strokeRoundedBulb;
-    }
-    // Cable TV - matches dashboard "Cable TV" service icon
-    if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return HugeIcons.strokeRoundedTv01;
-    }
-    // Education - matches dashboard "Education" service icon
-    if (typeLower.contains('education')) {
-      return HugeIcons.strokeRoundedMortarboard01;
-    }
-    // Insurance - matches dashboard "Insurance" service icon
-    if (typeLower.contains('insurance')) {
-      return HugeIcons.strokeRoundedShield01;
-    }
-    // Transfer - matches dashboard "Wallet Transfer" service icon
-    if (typeLower.contains('transfer sent')) {
-      return HugeIcons.strokeRoundedTelegram;
-    }
-    if (typeLower.contains('transfer received')) {
-      return HugeIcons.strokeRoundedDownload03;
-    }
-    if (typeLower.contains('transfer')) {
-      return HugeIcons.strokeRoundedSquareArrowDataTransferHorizontal;
-    }
-    // Fund Wallet - matches dashboard wallet icon
-    if (typeLower.contains('fund wallet') ||
-        typeLower.contains('wallet funding')) {
-      return HugeIcons.strokeRoundedWallet01;
-    }
-    // Commission - matches dashboard "Commission" service icon
-    if (typeLower.contains('commission')) {
-      return HugeIcons.strokeRoundedPercent;
-    }
-    // Refund
-    if (typeLower.contains('refund')) {
-      return HugeIcons.strokeRoundedCash01;
-    }
-    // Default - matches dashboard receipt icon
-    return HugeIcons.strokeRoundedReceiptText;
+    if (t.contains('commission') || t.contains('bonus')) return DPIcons.sparkle;
+    if (t.contains('refund')) return DPIcons.refresh;
+    return DPIcons.receipt;
   }
 
   // ✅ Color mapping - Same as dashboard
-  Color _getTransactionColor(String type) {
-    final typeLower = type.toLowerCase();
-
-    if (typeLower.contains('commission')) {
-      return const Color(0xFF168566);
-    }
-    if (typeLower.contains('fund wallet') ||
-        typeLower.contains('wallet funding')) {
-      return const Color(0xFF168566);
-    }
-    if (typeLower.contains('transfer received')) return const Color(0xFF168566);
-    if (typeLower.contains('refund')) return const Color(0xFF168566);
-    if (typeLower.contains('airtime')) return const Color(0xFF173D88);
-    if (typeLower.contains('data')) return const Color(0xFF173D88);
-    if (typeLower.contains('electricity')) return const Color(0xFFA76B1D);
-    if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return const Color(0xFFC0392B);
-    }
-    if (typeLower.contains('education')) return const Color(0xFF2ECC71);
-    if (typeLower.contains('insurance')) return const Color(0xFF1ABC9C);
-    if (typeLower.contains('transfer sent')) return Colors.orange;
-    if (typeLower.contains('transfer')) return Colors.orange;
-    if (typeLower.contains('failed')) return Colors.red;
-
-    return const Color(0xFF102C68);
-  }
 
   String _getCommissionSource(String description) {
     final descLower = description.toLowerCase();
@@ -753,486 +686,392 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     super.build(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+      backgroundColor: DP.bg,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            DPTopBar(
+              title: 'Your activity',
+              actionLabel: 'Export',
+              onAction: _exportCsv,
+            ),
+            Expanded(child: _buildBody()),
+          ],
+        ),
+      ),
+      bottomNavigationBar: DPBottomNav(
+        index: 1,
+        items: const [
+          DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
+          DPNavItem(DPIcons.activity, 'Activity'),
+          DPNavItem(DPIcons.earnings, 'Earnings'),
+          DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
+        ],
+        onTap: (i) {
+          switch (i) {
+            case 0:
+              Navigator.of(context).maybePop();
+              break;
+            case 2:
+              Navigator.pushReplacementNamed(
+                context,
+                '/commission',
+                arguments: {'userId': widget.userId},
+              );
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, '/settings');
+              break;
+          }
+        },
+      ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios,
-          color: Color(0xFF102C68),
-          size: 20,
+  Future<void> _exportCsv() async {
+    if (_filteredTransactions.isEmpty) {
+      dpSnack(context, 'There\'s nothing to export yet.');
+      return;
+    }
+    String esc(Object? v) {
+      final s = (v ?? '').toString().replaceAll('"', '""');
+      return '"$s"';
+    }
+
+    final buf = StringBuffer()
+      ..writeln('Date,Description,Type,Status,Amount (NGN),Reference');
+    for (final raw in _filteredTransactions) {
+      final tx = Map<String, dynamic>.from(raw as Map);
+      final date = _parseDateTime(tx['createdAt']).toLocal();
+      final credit = _isCreditTransaction(tx);
+      final amount = (tx['amount'] as num?)?.toDouble() ?? 0;
+      buf.writeln([
+        esc(DateFormat('yyyy-MM-dd HH:mm').format(date)),
+        esc(tx['description']),
+        esc(_getActualTransactionType(tx)),
+        esc(_getStatusText(tx)),
+        esc('${credit ? '' : '-'}${amount.toStringAsFixed(2)}'),
+        esc(tx['reference'] ?? tx['transactionId'] ?? ''),
+      ].join(','));
+    }
+    try {
+      final bytes = Uint8List.fromList(utf8.encode(buf.toString()));
+      await Share.shareXFiles([
+        XFile.fromData(
+          bytes,
+          mimeType: 'text/csv',
+          name: 'dalabapay_activity.csv',
         ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Dalaba',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
-              letterSpacing: 0.09,
-            ),
-          ),
-          Text(
-            'pay',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF168566),
-              letterSpacing: 0.09,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.refresh, color: Color(0xFF102C68), size: 22),
-          onPressed: _refreshData,
-        ),
-        const SizedBox(width: 8),
-      ],
-    );
+      ], text: 'Dalabapay activity');
+    } catch (e) {
+      if (mounted) dpSnack(context, 'Couldn\'t export. Please try again.', error: true);
+    }
   }
+
+  String _dayLabel(DateTime d) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final day = DateTime(d.year, d.month, d.day);
+    final pretty = DateFormat('d MMMM').format(d);
+    if (day == today) return 'Today, $pretty';
+    if (day == today.subtract(const Duration(days: 1))) {
+      return 'Yesterday, $pretty';
+    }
+    return DateFormat('EEEE, d MMMM').format(d);
+  }
+
 
   Widget _buildBody() {
-    if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
-        ),
-      );
+    if (_isLoading && _allTransactions.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (_errorMessage != null && _allTransactions.isEmpty) {
       return _buildErrorState();
     }
 
-    return Column(
-      children: [
-        _buildBalanceCard(),
-        _buildSearchAndFilters(),
-        Expanded(child: _buildTransactionsList()),
-      ],
-    );
-  }
-
-  Widget _buildBalanceCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF168566).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Icon(
-                Icons.account_balance_wallet_rounded,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
+    return RefreshIndicator(
+      color: DP.green,
+      onRefresh: _refreshData,
+      child: CustomScrollView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+            sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Available Balance',
-                    style: GoogleFonts.inter(
-                      color: Colors.white70,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  if (_isBalanceLoading)
-                    SizedBox(
-                      width: 120,
-                      height: 24,
-                      child: LinearProgressIndicator(
-                        backgroundColor: Colors.white24,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.white,
-                        ),
-                      ),
-                    )
-                  else
-                    Text(
-                      '₦${_currentBalance?.toStringAsFixed(2) ?? '0.00'}',
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
+                  _buildBalanceCard(),
+                  const SizedBox(height: 22),
+                  _buildSearchAndFilters(),
                 ],
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.refresh, color: Colors.white, size: 20),
-              onPressed: _fetchBalance,
+          ),
+          _buildTransactionsList(),
+          const SliverPadding(
+            padding: EdgeInsets.fromLTRB(24, 8, 24, 28),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Only completed payments affect your balance.',
+                textAlign: TextAlign.center,
+                style: DP.caption,
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSearchAndFilters() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: 'Search transactions...',
-              hintStyle: GoogleFonts.inter(
-                color: Colors.grey.shade400,
-                fontSize: 14,
-              ),
-              prefixIcon: const Icon(
-                Icons.search,
-                color: Color(0xFF102C68),
-                size: 20,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.grey.shade50,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 12,
-              ),
-              suffixIcon:
-                  _searchController.text.isNotEmpty
-                      ? IconButton(
-                        icon: const Icon(Icons.clear, size: 18),
-                        onPressed: () {
-                          _searchController.clear();
-                          _applyFilter();
-                        },
-                      )
-                      : null,
-            ),
-            style: GoogleFonts.inter(fontSize: 14),
-            onChanged: (_) => _applyFilter(),
-          ),
-          const SizedBox(height: 12),
-
-          Row(
+  /// "This month" money in / money out summary.
+  Widget _buildBalanceCard() {
+    final now = DateTime.now();
+    double moneyIn = 0, moneyOut = 0;
+    for (final raw in _allTransactions) {
+      if (raw is! Map) continue;
+      final tx = Map<String, dynamic>.from(raw);
+      final d = _parseDateTime(tx['createdAt']).toLocal();
+      if (d.year != now.year || d.month != now.month) continue;
+      if (_getStatusText(tx) != 'Successful') continue;
+      final amount = (tx['amount'] as num?)?.toDouble() ?? 0;
+      if (_isCreditTransaction(tx)) {
+        moneyIn += amount;
+      } else {
+        moneyOut += amount;
+      }
+    }
+    Widget col(String label, double v, Color c) => Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: _selectDateRange,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade200),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          color: const Color(0xFF102C68),
-                          size: 16,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            _startDate != null && _endDate != null
-                                ? '${DateFormat('MMM dd').format(_startDate!)} - ${DateFormat('MMM dd, yyyy').format(_endDate!)}'
-                                : 'Select Date Range',
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
-                              color:
-                                  (_startDate != null && _endDate != null)
-                                      ? const Color(0xFF102C68)
-                                      : Colors.grey.shade400,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (_startDate != null && _endDate != null)
-                          IconButton(
-                            icon: const Icon(Icons.close, size: 16),
-                            onPressed: _clearDateFilter,
-                            padding: EdgeInsets.zero,
-                          ),
-                      ],
-                    ),
+              Text(label, style: DP.caption),
+              const SizedBox(height: 6),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  DP.naira(v, decimals: v % 1 != 0),
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    color: c,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-
-          SizedBox(
-            height: 38,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _filters.length,
-              itemBuilder: (context, index) {
-                final filter = _filters[index];
-                final isSelected = _selectedFilter == filter;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text(
-                      filter,
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        _selectedFilter = selected ? filter : 'All';
-                        _applyFilter();
-                      });
-                    },
-                    backgroundColor: Colors.white,
-                    selectedColor: const Color(
-                      0xFF102C68,
-                    ).withValues(alpha: 0.1),
-                    checkmarkColor: const Color(0xFF102C68),
-                    labelStyle: TextStyle(
-                      color:
-                          isSelected
-                              ? const Color(0xFF102C68)
-                              : Colors.grey.shade600,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color:
-                            isSelected
-                                ? const Color(0xFF102C68)
-                                : Colors.grey.shade300,
-                      ),
-                    ),
-                    elevation: 0,
-                  ),
-                );
-              },
-            ),
+        );
+    return DPCard(
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'THIS MONTH · ${DateFormat('MMMM yyyy').format(now).toUpperCase()}',
+            style: DP.tiny,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              col('Money in', moneyIn, DP.green),
+              const SizedBox(width: 12),
+              col('Money out', moneyOut, DP.ink),
+            ],
+          ),
+          if (_currentBalance != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              'Wallet balance ${DP.naira(_currentBalance)}',
+              style: DP.caption,
+            ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildTransactionsList() {
-    if (_isRefreshing) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
-            strokeWidth: 2,
+  Widget _buildSearchAndFilters() {
+    const statusChips = ['All', 'Successful', 'Pending', 'Failed'];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const DPLabel('Find a transaction'),
+        TextField(
+          controller: _searchController,
+          onChanged: (_) => _applyFilter(),
+          textInputAction: TextInputAction.search,
+          decoration: DPField.decoration(
+            hint: 'Search name or reference',
+            suffix: _searchController.text.isEmpty
+                ? const Icon(DPIcons.search)
+                : IconButton(
+                    icon: const Icon(DPIcons.close),
+                    onPressed: () {
+                      _searchController.clear();
+                      _applyFilter();
+                    },
+                  ),
           ),
         ),
-      );
-    }
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: DPChipRow(
+                options: statusChips,
+                selected: statusChips.contains(_selectedFilter)
+                    ? _selectedFilter
+                    : null,
+                spacing: 8,
+                height: 40,
+                onSelect: (f) => setState(() {
+                  _selectedFilter = f;
+                  _applyFilter();
+                }),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: SizedBox(
+                height: 36,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    for (final f in _filters.where(
+                      (f) => !statusChips.contains(f),
+                    ))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: DPChip(
+                          label: f
+                              .replaceAll(' Purchase', '')
+                              .replaceAll(' Credit', ''),
+                          selected: _selectedFilter == f,
+                          height: 36,
+                          onTap: () => setState(() {
+                            _selectedFilter =
+                                _selectedFilter == f ? 'All' : f;
+                            _applyFilter();
+                          }),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            DPIconSquare(
+              icon: DPIcons.calendar,
+              size: 36,
+              color: _startDate != null ? DP.green : DP.ink,
+              semanticLabel: 'Filter by date',
+              onTap: _selectDateRange,
+            ),
+          ],
+        ),
+        if (_startDate != null) ...[
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${DateFormat('d MMM').format(_startDate!)} – ${DateFormat('d MMM yyyy').format(_endDate ?? _startDate!)}',
+                  style: DP.caption,
+                ),
+              ),
+              DPTextLink(label: 'Clear dates', onTap: _clearDateFilter),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
 
+  Widget _buildTransactionsList() {
     if (_filteredTransactions.isEmpty) {
-      return _buildEmptyState();
+      return SliverToBoxAdapter(child: _buildEmptyState());
     }
-
-    return RefreshIndicator(
-      onRefresh: _refreshData,
-      color: const Color(0xFF102C68),
-      backgroundColor: Colors.white,
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: const EdgeInsets.only(bottom: 16),
-        itemCount: _filteredTransactions.length,
-        itemBuilder: (context, index) {
-          final tx = _filteredTransactions[index];
-          return _buildTransactionItem(tx);
-        },
-      ),
+    // Group by calendar day
+    final groups = <String, List<Map<String, dynamic>>>{};
+    for (final raw in _filteredTransactions) {
+      final tx = Map<String, dynamic>.from(raw as Map);
+      final d = _parseDateTime(
+        tx['updatedAt'] ?? tx['completedAt'] ?? tx['createdAt'],
+      ).toLocal();
+      groups.putIfAbsent(_dayLabel(d), () => []).add(tx);
+    }
+    final children = <Widget>[];
+    groups.forEach((label, items) {
+      children.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 18, bottom: 6),
+          child: Text(label, style: DP.section),
+        ),
+      );
+      for (final tx in items) {
+        children.add(_buildTransactionItem(tx));
+      }
+    });
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      sliver: SliverList(delegate: SliverChildListDelegate(children)),
     );
   }
 
   Widget _buildTransactionItem(Map<String, dynamic> tx) {
     final type = _getActualTransactionType(tx);
-    final amount = (tx['amount'] as num?)?.toStringAsFixed(2) ?? '0.00';
-    final status = _getStatusText(tx);
-    final date = _parseDateTime(tx['createdAt']);
-    final description = tx['description'] ?? '';
     final isCredit = _isCreditTransaction(tx);
-    final isPending = status == 'Pending';
-    final isFailed = status == 'Failed';
-    final icon = _getTransactionIcon(type);
-    final iconColor = _getTransactionColor(type);
-    final statusColor = _getStatusColor(status, tx);
-
-    return GestureDetector(
-      onTap: () => _showTransactionDetails(tx),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
+    final amount = (tx['amount'] as num?)?.toDouble() ?? 0;
+    final status = _getStatusText(tx);
+    final date = _parseDateTime(tx['createdAt']).toLocal();
+    final description = (tx['description']?.toString().isNotEmpty == true)
+        ? tx['description'].toString()
+        : type;
+    final failed = status == 'Failed';
+    final highlighted = widget.highlightReference != null &&
+        widget.highlightReference == tx['reference']?.toString();
+    final statusColor = DPStatus.colorFor(status);
+    return Container(
+      decoration: highlighted
+          ? BoxDecoration(
+              color: DP.mint,
+              borderRadius: BorderRadius.circular(DP.rMd),
+            )
+          : null,
+      child: DPListRow(
+        onTap: () => _showTransactionDetails(tx),
+        leading: isCredit
+            ? DPIconBadge(_getTransactionIcon(type), size: 44, iconSize: 21)
+            : DPIconBadge.blue(_getTransactionIcon(type), size: 44, iconSize: 21),
+        title: description,
+        subtitle:
+            '${DateFormat('h:mm a').format(date)} · $status${failed ? ' · No debit' : ''}',
+        trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // ✅ Using HugeIcon - Same as dashboard
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: HugeIcon(icon: icon, size: 24, color: iconColor),
-            ),
-            const SizedBox(width: 12),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    type,
-                    style: GoogleFonts.inter(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF14263D),
-                    ),
-                  ),
-                  if (description.isNotEmpty)
-                    Text(
-                      description.length > 40
-                          ? '${description.substring(0, 40)}...'
-                          : description,
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        color: Colors.grey.shade500,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatDate(date),
-                    style: GoogleFonts.inter(
-                      fontSize: 10,
-                      color: Colors.grey.shade400,
-                    ),
-                  ),
-                ],
+            Text(
+              '${failed ? '' : (isCredit ? '+' : '−')}${DP.naira(amount, decimals: amount % 1 != 0)}',
+              style: TextStyle(
+                fontSize: 15.5,
+                fontWeight: FontWeight.w600,
+                color: failed ? DP.muted : (isCredit ? DP.green : DP.ink),
+                decoration: failed ? TextDecoration.lineThrough : null,
               ),
             ),
-
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  '${isCredit ? '+' : '-'}₦$amount',
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: isCredit ? const Color(0xFF168566) : Colors.red,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (isPending)
-                        SizedBox(
-                          width: 8,
-                          height: 8,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              statusColor,
-                            ),
-                          ),
-                        )
-                      else if (isFailed)
-                        Icon(Icons.error_outline, color: statusColor, size: 10)
-                      else
-                        Icon(
-                          Icons.check_circle_outline,
-                          color: statusColor,
-                          size: 10,
-                        ),
-                      const SizedBox(width: 4),
-                      Text(
-                        status,
-                        style: GoogleFonts.inter(
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                          color: statusColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            if (status != 'Successful')
+              Text(
+                status,
+                style: TextStyle(fontSize: 11.5, color: statusColor),
+              ),
           ],
         ),
       ),
@@ -1240,37 +1079,27 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            HugeIcon(
-              icon: HugeIcons.strokeRoundedReceiptText,
-              size: 64,
-              color: Colors.grey.shade300,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No Transactions Yet',
-              style: GoogleFonts.inter(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF102C68),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Your transactions will appear here',
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: Colors.grey.shade500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+    final filtering = _selectedFilter != 'All' ||
+        _searchController.text.isNotEmpty ||
+        _startDate != null;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: DPEmptyState(
+        icon: DPIcons.receipt,
+        title: filtering ? 'No matching transactions' : 'No activity yet',
+        message: filtering
+            ? 'Try a different search or filter.'
+            : 'Your payments and top-ups will show up here.',
+        actionLabel: filtering ? 'Clear filters' : null,
+        onAction: filtering
+            ? () => setState(() {
+                  _selectedFilter = 'All';
+                  _searchController.clear();
+                  _startDate = null;
+                  _endDate = null;
+                  _applyFilter();
+                })
+            : null,
       ),
     );
   }
@@ -1278,52 +1107,13 @@ class _TransactionsScreenState extends State<TransactionsScreen>
   Widget _buildErrorState() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
-            const SizedBox(height: 16),
-            Text(
-              'Something went wrong',
-              style: GoogleFonts.inter(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFF102C68),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _errorMessage ?? 'Unable to load transactions',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: Colors.grey.shade500,
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _refreshData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF102C68),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                'Try Again',
-                style: GoogleFonts.inter(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
+        padding: const EdgeInsets.all(24),
+        child: DPEmptyState(
+          icon: DPIcons.alert,
+          title: 'Couldn\'t load your activity',
+          message: _errorMessage ?? 'Please check your connection and try again.',
+          actionLabel: 'Try again',
+          onAction: _fetchTransactions,
         ),
       ),
     );
