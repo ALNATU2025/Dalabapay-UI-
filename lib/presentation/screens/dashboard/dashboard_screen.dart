@@ -41,6 +41,8 @@ import '../admin/admin_self_fund_page.dart';
 import '../admin/admin_service_commission_page.dart';
 // Add this import with the other admin imports (around line 30)
 import '../admin/admin_transaction_limits_page.dart';
+import '../../../ui/ui.dart';
+import '../bills/pay_bills_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -112,117 +114,34 @@ class _DashboardScreenState extends State<DashboardScreen>
   late AnimationController _animationController;
 
   // Quick Services
+  // Everyday essentials shown on Home (design: 4 x 2 grid, last tile = More)
   final List<Map<String, dynamic>> _quickServices = [
+    {'icon': DPIcons.phone, 'name': 'Airtime', 'route': '/airtime'},
+    {'icon': DPIcons.wifi, 'name': 'Data', 'route': '/data'},
+    {'icon': DPIcons.bolt, 'name': 'Electricity', 'route': '/electricity'},
+    {'icon': DPIcons.tv, 'name': 'TV', 'route': '/cable'},
+    {'icon': DPIcons.school, 'name': 'Education', 'route': '/education'},
+    {'icon': DPIcons.shield, 'name': 'Insurance', 'route': '/insurance'},
     {
-      'icon': HugeIcons.strokeRoundedSmartPhone01,
-      'name': 'Airtime',
-      'route': '/airtime',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF173D88),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedWifi01,
-      'name': 'Data',
-      'route': '/data',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF173D88),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedBulb,
-      'name': 'Electricity',
-      'route': '/electricity',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFA76B1D),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTv01,
-      'name': 'Cable TV',
-      'route': '/cable',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFC0392B),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedMortarboard01,
-      'name': 'Education',
-      'route': '/education',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF2ECC71),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTelephone,
-      'name': 'Intl Airtime',
+      'icon': DPIcons.globe,
+      'name': 'International',
       'route': '/international-airtime',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF9013FE),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTicket01,
-      'name': 'Tickets',
-      'route': '/ticket',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFA76B1D),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedPercent,
-      'name': 'Commission',
-      'route': '/commission',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF168566),
     },
   ];
 
   // Other Services
+  // Full catalogue used by the Pay bills hub
   final List<Map<String, dynamic>> _otherServices = [
+    {'icon': DPIcons.phone, 'name': 'Airtime', 'route': '/airtime'},
+    {'icon': DPIcons.wifi, 'name': 'Data', 'route': '/data'},
+    {'icon': DPIcons.bolt, 'name': 'Electricity', 'route': '/electricity'},
+    {'icon': DPIcons.tv, 'name': 'Cable TV', 'route': '/cable'},
+    {'icon': DPIcons.school, 'name': 'Education', 'route': '/education'},
+    {'icon': DPIcons.shield, 'name': 'Insurance', 'route': '/insurance'},
     {
-      'icon': HugeIcons.strokeRoundedGlobe,
-      'name': 'Internet',
-      'route': '/internet',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF173D88),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedDice,
-      'name': 'Betting',
-      'route': '/betting',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFC0392B),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedShield01,
-      'name': 'Insurance',
-      'route': '/insurance',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF1ABC9C),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedGift,
-      'name': 'Donations',
-      'route': '/donation',
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF417505),
-    },
-    {
-      'icon': HugeIcons.strokeRoundedCash01,
-      'name': 'Airtime Cash',
-      'route': null,
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF173D88),
-      'comingSoon': true,
-    },
-    {
-      'icon': HugeIcons.strokeRoundedTelegram,
-      'name': 'Wallet Transfer',
-      'route': null,
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFFA76B1D),
-      'comingSoon': true,
-    },
-    {
-      'icon': HugeIcons.strokeRoundedMore01,
-      'name': 'More',
-      'route': null,
-      'isHugeIcon': true,
-      'iconColor': const Color(0xFF7F8C8D),
+      'icon': DPIcons.globe,
+      'name': 'International',
+      'route': '/international-airtime',
     },
   ];
 
@@ -2151,138 +2070,30 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   // ✅ Updated Coming Soon dialog with better UI
   void _showComingSoon(String serviceName) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Icon(
-                  Icons.construction_outlined,
-                  color: const Color(0xFF102C68),
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Coming Soon',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF102C68),
-                    fontSize: 20,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '$serviceName will be available soon!',
-                  style: GoogleFonts.inter(fontSize: 16, color: Colors.black87),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF168566).withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: const Color(0xFF168566).withOpacity(0.15),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        color: const Color(0xFF168566),
-                        size: 18,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'We\'re working hard to bring you this feature. Stay tuned!',
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: const Color(0xFF168566),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF168566),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: 'Not available yet',
+      message:
+          '$serviceName isn\'t available right now. We\'ll let you know when it is.',
+      confirmLabel: 'OK',
+      tone: DPTone.info,
     );
   }
 
   void _showSuccessMessage(String message) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message, style: GoogleFonts.inter()),
-          backgroundColor: const Color(0xFF168566),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
+    if (mounted) dpSnack(context, message, success: true);
   }
 
   void _showPendingApprovalSnackBar() {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.hourglass_top_rounded, color: Colors.white, size: 20),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Your account is under approval. You will be notified once an admin approves your account.',
-                style: GoogleFonts.inter(color: Colors.white, fontSize: 13),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: _warningColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 4),
-        margin: const EdgeInsets.all(16),
-      ),
+    dpSnack(
+      context,
+      'Your account is being reviewed. We\'ll notify you once it\'s approved.',
     );
   }
 
   void _showErrorMessage(String message) {
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message, style: GoogleFonts.inter()),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
+    if (mounted) dpSnack(context, message, error: true);
   }
 
   String _formatDate(DateTime date) {
@@ -2306,120 +2117,26 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   // ==================== TRANSACTION ICON HELPERS ====================
 
-  dynamic _getTransactionIcon(String type) {
-    final typeLower = type.toLowerCase();
-
-    // Airtime - matches dashboard "Airtime" service icon
-    if (typeLower.contains('airtime')) {
-      return HugeIcons.strokeRoundedSmartPhone01;
+  IconData _getTransactionIcon(String type) {
+    final t = type.toLowerCase();
+    if (t.contains('international')) return DPIcons.globe;
+    if (t.contains('airtime')) return DPIcons.phone;
+    if (t.contains('data') || t.contains('internet')) return DPIcons.wifi;
+    if (t.contains('electric')) return DPIcons.bolt;
+    if (t.contains('cable') || t.contains('tv')) return DPIcons.tv;
+    if (t.contains('education')) return DPIcons.school;
+    if (t.contains('insurance')) return DPIcons.shield;
+    if (t.contains('transfer received')) return DPIcons.downLeft;
+    if (t.contains('transfer')) return DPIcons.upRight;
+    if (t.contains('commission') || t.contains('bonus')) return DPIcons.sparkle;
+    if (t.contains('refund')) return DPIcons.refresh;
+    if (t.contains('fund') || t.contains('wallet') || t.contains('deposit')) {
+      return DPIcons.downLeft;
     }
-    // Data - matches dashboard "Data" service icon
-    if (typeLower.contains('data')) {
-      return HugeIcons.strokeRoundedWifi01;
-    }
-    // Electricity - matches dashboard "Electricity" service icon
-    if (typeLower.contains('electricity')) {
-      return HugeIcons.strokeRoundedBulb;
-    }
-    // Cable TV - matches dashboard "Cable TV" service icon
-    if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return HugeIcons.strokeRoundedTv01;
-    }
-    // Education - matches dashboard "Education" service icon
-    if (typeLower.contains('education')) {
-      return HugeIcons.strokeRoundedMortarboard01;
-    }
-    // Insurance - matches dashboard "Insurance" service icon
-    if (typeLower.contains('insurance')) {
-      return HugeIcons.strokeRoundedShield01;
-    }
-    // Transfer - matches transactions screen
-    if (typeLower.contains('transfer sent')) {
-      return HugeIcons.strokeRoundedTelegram;
-    }
-    if (typeLower.contains('transfer received')) {
-      return HugeIcons.strokeRoundedDownload03;
-    }
-    if (typeLower.contains('transfer')) {
-      return HugeIcons.strokeRoundedSquareArrowDataTransferHorizontal;
-    }
-    // ✅ Fund Wallet - Use wallet/purse icon (same as transactions screen)
-    if (typeLower.contains('fund') ||
-        typeLower.contains('wallet') ||
-        typeLower.contains('wallet funding') ||
-        typeLower.contains('wallet top-up')) {
-      return HugeIcons.strokeRoundedWallet01;
-    }
-    // Commission - matches dashboard "Commission" service icon
-    if (typeLower.contains('commission')) {
-      return HugeIcons.strokeRoundedPercent;
-    }
-    // Refund
-    if (typeLower.contains('refund')) {
-      return HugeIcons.strokeRoundedCash01;
-    }
-    // Betting
-    if (typeLower.contains('betting')) {
-      return HugeIcons.strokeRoundedDice;
-    }
-    // Internet
-    if (typeLower.contains('internet')) {
-      return HugeIcons.strokeRoundedGlobe;
-    }
-    // Tickets
-    if (typeLower.contains('ticket')) {
-      return HugeIcons.strokeRoundedTicket01;
-    }
-    // Donations
-    if (typeLower.contains('donation')) {
-      return HugeIcons.strokeRoundedGift;
-    }
-    // Default - matches dashboard receipt icon
-    return HugeIcons.strokeRoundedReceiptText;
+    return DPIcons.receipt;
   }
 
-  Color _getTransactionIconColor(String type) {
-    final typeLower = type.toLowerCase();
 
-    if (typeLower.contains('commission')) {
-      return const Color(0xFF168566);
-    }
-    if (typeLower.contains('fund wallet') ||
-        typeLower.contains('wallet funding')) {
-      return const Color(0xFF168566);
-    }
-    if (typeLower.contains('transfer received')) return const Color(0xFF168566);
-    if (typeLower.contains('refund')) return const Color(0xFF168566);
-    if (typeLower.contains('airtime')) return const Color(0xFF173D88);
-    if (typeLower.contains('data')) return const Color(0xFF173D88);
-    if (typeLower.contains('electricity')) return const Color(0xFFA76B1D);
-    if (typeLower.contains('cable') || typeLower.contains('tv')) {
-      return const Color(0xFFC0392B);
-    }
-    if (typeLower.contains('education')) return const Color(0xFF2ECC71);
-    if (typeLower.contains('insurance')) return const Color(0xFF1ABC9C);
-    if (typeLower.contains('betting')) return const Color(0xFFC0392B);
-    if (typeLower.contains('internet')) return const Color(0xFF173D88);
-    if (typeLower.contains('transfer sent')) return Colors.orange;
-    if (typeLower.contains('transfer')) return Colors.orange;
-    if (typeLower.contains('failed')) return Colors.red;
-
-    return const Color(0xFF102C68);
-  }
-
-  Color _getAmountColor(String type, bool isCredit) {
-    if (isCredit) return const Color(0xFF168566);
-
-    final typeLower = type.toLowerCase();
-    if (typeLower.contains('commission')) return const Color(0xFF168566);
-    if (typeLower.contains('fund') || typeLower.contains('wallet')) {
-      return const Color(0xFF168566);
-    }
-    if (typeLower.contains('withdraw')) return Colors.red;
-    if (typeLower.contains('transfer')) return Colors.red;
-
-    return Colors.red;
-  }
 
   bool _isCreditTransaction(Map<String, dynamic> transaction) {
     final type = transaction['type']?.toString().toLowerCase() ?? '';
@@ -2451,7 +2168,65 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   String _formatBalance(double balance) {
-    return balance.toStringAsFixed(2);
+    return DP.naira(balance).substring(1);
+  }
+
+  void _navigateToSendMoney() {
+    if (_isPending) {
+      _showPendingApprovalSnackBar();
+      return;
+    }
+    _startTransaction();
+    Navigator.pushNamed(
+      context,
+      '/wallet',
+      arguments: {
+        'userId': _userId ?? '',
+        'onBalanceUpdate': (double newBalance) {
+          setState(() => _walletBalance = newBalance);
+          _saveBalanceToStorage(newBalance);
+        },
+        'initialTab': 'transfer',
+      },
+    ).then((_) {
+      if (mounted) setState(() => _selectedIndex = 0);
+      _endTransaction();
+      _silentBackgroundRefresh();
+    });
+    _resetIdleTimer();
+  }
+
+  void _openPayBills() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PayBillsScreen(
+          services: _otherServices,
+          recentTransactions: _recentTransactions,
+          onSelect: (route) {
+            Navigator.pop(context);
+            _navigateToService(route);
+          },
+        ),
+      ),
+    );
+    _resetIdleTimer();
+  }
+
+  String _firstName() {
+    final n = _fullName.trim();
+    if (n.isEmpty) return 'there';
+    return n.split(RegExp(r'\s+')).first;
+  }
+
+  String _activityTime(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final d = DateTime(date.year, date.month, date.day);
+    final time = DateFormat('h:mm a').format(date);
+    if (d == today) return 'Today, $time';
+    if (d == today.subtract(const Duration(days: 1))) return 'Yesterday, $time';
+    return DateFormat('d MMM, h:mm a').format(date);
   }
 
   // ==================== SHOW RECEIPT ====================
@@ -2615,108 +2390,51 @@ class _DashboardScreenState extends State<DashboardScreen>
   // ==================== BUILD METHODS ====================
 
   Widget _buildAppBar(bool isSmallScreen) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 14, 16, 6),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
+          GestureDetector(
+            onTap: () => _scaffoldKey.currentState?.openDrawer(),
+            child: const DPLogoMark(size: 30, tile: true),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    'Hello, ${_firstName()}',
+                    style: DP.title.copyWith(fontSize: 21),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                const SizedBox(width: 6),
+                const Icon(DPIcons.sun, size: 20, color: DP.ink),
               ],
             ),
-            child: IconButton(
-              icon: Icon(Icons.menu, color: const Color(0xFF102C68), size: 22),
-              onPressed: () {
-                _scaffoldKey.currentState?.openDrawer();
-              },
-              padding: EdgeInsets.zero,
-            ),
           ),
-          Image.asset('assets/dalabapay2.png', height: 40, fit: BoxFit.contain),
-          Row(
-            children: [
-              // ✅ Manual refresh button
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
+          DPIconSquare(
+            icon: DPIcons.bell,
+            size: 40,
+            background: Colors.transparent,
+            semanticLabel: 'Notifications',
+            onTap: _navigateToNotifications,
+            badge: _unreadNotificationCount > 0
+                ? Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: DP.green,
+                      shape: BoxShape.circle,
                     ),
-                  ],
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                    color: const Color(0xFF102C68),
-                    size: 22,
-                  ),
-                  onPressed: () async {
-                    debugPrint('🔄 Manual refresh triggered');
-                    await _fetchUnreadNotificationCount();
-                    await _fetchAndShowNewNotifications();
-                  },
-                  padding: EdgeInsets.zero,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Stack(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.notifications_none,
-                        color: const Color(0xFF102C68),
-                        size: 22,
-                      ),
-                      onPressed: _navigateToNotifications,
-                      padding: EdgeInsets.zero,
-                    ),
-                  ),
-                  if (_unreadNotificationCount > 0)
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF168566),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ],
+                  )
+                : null,
+          ),
+          DPTextLink(
+            label: 'Help',
+            onTap: () => Navigator.pushNamed(context, '/help'),
           ),
         ],
       ),
@@ -2725,40 +2443,11 @@ class _DashboardScreenState extends State<DashboardScreen>
 
   Widget _buildSectionHeader(String title, bool isSmallScreen) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.inter(
-              fontSize: isSmallScreen ? 14 : 16,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF102C68),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => _showAllServices(isSmallScreen),
-            child: Row(
-              children: [
-                Text(
-                  'See all',
-                  style: GoogleFonts.inter(
-                    fontSize: isSmallScreen ? 10 : 12,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF168566),
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: isSmallScreen ? 8 : 10,
-                  color: const Color(0xFF168566),
-                ),
-              ],
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: DPSectionHeader(
+        title,
+        actionLabel: 'View all',
+        onAction: _openPayBills,
       ),
     );
   }
@@ -2766,1434 +2455,320 @@ class _DashboardScreenState extends State<DashboardScreen>
   // ==================== APPROVAL STATUS BANNER ====================
 
   Widget _buildApprovalBanner(bool isSmallScreen) {
-    // Don't show banner for approved users
     if (_isApproved) return const SizedBox.shrink();
-
     final isPending = _isPending;
-    final bannerColor = isPending ? _warningColor : Colors.red;
-    final bgColor =
-        isPending
-            ? _warningColor.withValues(alpha: 0.10)
-            : Colors.red.withValues(alpha: 0.08);
-    final borderColor =
-        isPending
-            ? _warningColor.withValues(alpha: 0.30)
-            : Colors.red.withValues(alpha: 0.25);
-
-    final icon = isPending ? Icons.hourglass_top_rounded : Icons.cancel_rounded;
-
-    final title = isPending ? 'Account Under Approval' : 'Account Rejected';
-
-    final message =
-        isPending
-            ? 'You can browse and add funds, but transactions are disabled until an admin approves your account. This usually takes a few minutes.'
-            : (_rejectionReason?.isNotEmpty == true
-                ? _rejectionReason!
-                : 'Your account has been rejected. Please contact support for more details.');
-
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: isSmallScreen ? 24 : 24,
-        vertical: 12,
-      ),
-      padding: EdgeInsets.all(isSmallScreen ? 14 : 16),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: 1.2),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: bannerColor.withValues(alpha: 0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: bannerColor, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    fontSize: isSmallScreen ? 14 : 15,
-                    fontWeight: FontWeight.w700,
-                    color: bannerColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  message,
-                  style: GoogleFonts.inter(
-                    fontSize: isSmallScreen ? 12 : 13,
-                    color: const Color(0xFF14263D),
-                    height: 1.4,
-                  ),
-                ),
-                if (isPending) ...[
-                  const SizedBox(height: 8),
-                  GestureDetector(
-                    onTap: () async {
-                      debugPrint('🔄 [DASHBOARD] Checking approval status...');
-
-                      // Show quick loading toast
-                      if (mounted) {
-                        _showSuccessMessage('🔄 Checking status...');
-                      }
-
-                      // ✅ Re-fetch BOTH toggle and user status
-                      await _refreshApprovalStatus();
-
-                      if (!mounted) return;
-
-                      // Evaluate what changed
-                      if (!_approvalSystemEnabled) {
-                        _showSuccessMessage(
-                          '✅ Approval system is OFF — you can transact now.',
-                        );
-                      } else if (_isApproved) {
-                        _showSuccessMessage(
-                          '🎉 Your account has been approved!',
-                        );
-                      } else if (_isPending) {
-                        _showErrorMessage(
-                          '⏳ Still waiting for admin approval. Please check back in a few minutes.',
-                        );
-                      } else if (_isRejected) {
-                        _showErrorMessage(
-                          '❌ Your account has been rejected. Please contact support.',
-                        );
-                      }
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: bannerColor.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.refresh_rounded,
-                            color: bannerColor,
-                            size: 14,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            'Check Status',
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: bannerColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
+    final message = isPending
+        ? 'You can add money and look around. Payments unlock once your account is approved — usually within a few minutes.'
+        : (_rejectionReason?.isNotEmpty == true
+            ? _rejectionReason!
+            : 'Your account was not approved. Please contact support for details.');
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+      child: DPBanner(
+        message,
+        title: isPending ? 'Account under review' : 'Account not approved',
+        tone: isPending ? DPTone.warning : DPTone.error,
+        icon: isPending ? DPIcons.pending : DPIcons.alert,
+        action: isPending
+            ? DPTextLink(
+                label: 'Check status',
+                color: DP.amber,
+                onTap: () async {
+                  _showSuccessMessage('Checking your status…');
+                  await _refreshApprovalStatus();
+                  if (!mounted) return;
+                  if (!_approvalSystemEnabled || _isApproved) {
+                    _showSuccessMessage('You\'re approved — you can pay now.');
+                  } else if (_isPending) {
+                    _showErrorMessage(
+                      'Still under review. Please check back in a few minutes.',
+                    );
+                  } else if (_isRejected) {
+                    _showErrorMessage(
+                      'Your account was not approved. Please contact support.',
+                    );
+                  }
+                },
+              )
+            : DPTextLink(
+                label: 'Contact support',
+                color: DP.red,
+                onTap: () => Navigator.pushNamed(context, '/help'),
+              ),
       ),
     );
   }
 
-  Widget _buildBalanceCard(bool isSmallScreen) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF168566).withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Main Wallet',
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: isSmallScreen ? 10 : 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _silentBackgroundRefresh,
-                      child: Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                        size: isSmallScreen ? 16 : 18,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap:
-                          () => setState(
-                            () => _isBalanceVisible = !_isBalanceVisible,
-                          ),
-                      child: Icon(
-                        _isBalanceVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.white,
-                        size: isSmallScreen ? 16 : 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _isBalanceVisible
-                  ? '₦${_formatBalance(_walletBalance)}'
-                  : '••••••••',
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.5,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Available Balance',
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: isSmallScreen ? 10 : 12,
-              ),
-            ),
-
-            // ============================================================
-            // ✅ DEDICATED ACCOUNT SECTION - FIXED RESPONSIVE
-            // ============================================================
-            const SizedBox(height: 16),
-
-            // ── Checking State ──────────────────────────────────────────
-            if (_isCheckingAccount) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.15),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Checking dedicated account...',
-                        style: GoogleFonts.inter(
-                          color: Colors.white70,
-                          fontSize: isSmallScreen ? 11 : 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-            // ── Has Account ─────────────────────────────────────────────
-            if (_hasDedicatedAccount) ...[
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.15),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Row 1: Label + Actions
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: const Icon(
-                                Icons.account_balance,
-                                color: Colors.white,
-                                size: 14,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Dedicated Account',
-                              style: GoogleFonts.inter(
-                                color: Colors.white70,
-                                fontSize: isSmallScreen ? 9 : 10,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            // Copy button
-                            GestureDetector(
-                              onTap: () {
-                                Clipboard.setData(
-                                  ClipboardData(
-                                    text: _dedicatedAccountNumber ?? '',
-                                  ),
-                                );
-                                _showSuccessMessage('Account number copied!');
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.10),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Icon(
-                                  Icons.copy,
-                                  color: Colors.white70,
-                                  size: isSmallScreen ? 12 : 14,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            // Refresh button
-                            GestureDetector(
-                              onTap: _refreshDedicatedAccount,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.10),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Icon(
-                                  Icons.refresh,
-                                  color: Colors.white70,
-                                  size: isSmallScreen ? 12 : 14,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Row 2: Account Number (LEFT ALIGNED - NO CENTER)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          // ✅ Account Number - LEFT ALIGNED
-                          Expanded(
-                            child: SelectableText(
-                              _dedicatedAccountNumber ?? 'N/A',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: isSmallScreen ? 16 : 18,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
-                              ),
-                              textAlign: TextAlign.left, // ✅ LEFT ALIGNED
-                            ),
-                          ),
-                          // Status Badge - Right side of account number row
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withValues(alpha: 0.3),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  'Active',
-                                  style: GoogleFonts.inter(
-                                    color: Colors.white,
-                                    fontSize: isSmallScreen ? 8 : 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-
-                    // Row 3: Bank Name (Left aligned)
-                    if (_dedicatedBankName != null)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          _dedicatedBankName!,
-                          style: GoogleFonts.inter(
-                            color: Colors.white70,
-                            fontSize: isSmallScreen ? 9 : 10,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                    // Row 4: Account Name (if available)
-                    if (_dedicatedAccountName != null &&
-                        _dedicatedAccountName!.isNotEmpty) ...[
-                      const SizedBox(height: 6),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 3,
-                        ),
-                        child: Text(
-                          _dedicatedAccountName!,
-                          style: GoogleFonts.inter(
-                            color: Colors.white70,
-                            fontSize: isSmallScreen ? 10 : 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.left,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
-            ],
-            // ── No Account ──────────────────────────────────────────────
-            if (!_isCheckingAccount && !_hasDedicatedAccount) ...[
-              GestureDetector(
-                onTap: _navigateToKYC,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.20),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 16,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'Get Your Dedicated Account',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: isSmallScreen ? 11 : 13,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white70,
-                        size: isSmallScreen ? 12 : 14,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildActionButton(
-                    'Add Money',
-                    Icons.add,
-                    const Color(0xFF168566),
-                    Colors.white,
-                    _navigateToAddMoney,
-                    isSmallScreen,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildActionButton(
-                    'Commission',
-                    Icons.percent,
-                    Colors.white,
-                    Colors.white,
-                    _navigateToCommission,
-                    isSmallScreen,
-                    outlined: true,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildModernBalanceCard(bool isSmallScreen) {
     return RepaintBoundary(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF102C68), Color(0xFF102C68), Color(0xFF5BB592)],
-            stops: [0.0, 0.5, 1.0],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF102C68).withValues(alpha: 0.35),
-              blurRadius: 24,
-              offset: const Offset(0, 12),
+          color: DP.navy,
+          borderRadius: BorderRadius.circular(DP.rXl),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            // Decorative ring, as in the design
+            Positioned(
+              top: -40,
+              right: -70,
+              child: Container(
+                width: 220,
+                height: 220,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: DP.navyRaised, width: 26),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Available wallet balance',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.78),
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      InkResponse(
+                        radius: 20,
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          setState(() => _isBalanceVisible = !_isBalanceVisible);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Icon(
+                            _isBalanceVisible ? DPIcons.eye : DPIcons.eyeOff,
+                            color: Colors.white.withValues(alpha: 0.85),
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      InkResponse(
+                        radius: 20,
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          _silentBackgroundRefresh();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Icon(
+                            DPIcons.refresh,
+                            color: Colors.white.withValues(alpha: 0.7),
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: !_isBalanceReady
+                        ? _buildBalanceLoadingPlaceholder(isSmallScreen)
+                        : FittedBox(
+                            key: ValueKey(
+                              'bal_${_isBalanceVisible}_$_walletBalance',
+                            ),
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              _isBalanceVisible
+                                  ? DP.naira(_walletBalance)
+                                  : '₦ ••••••',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 36,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.5,
+                                fontFeatures: [FontFeature.tabularFigures()],
+                              ),
+                            ),
+                          ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DPButton.mint(
+                          label: 'Add money',
+                          leadingIcon: DPIcons.plus,
+                          onPressed: _navigateToAddMoney,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: DPButton(
+                          label: 'Send money',
+                          leadingIcon: DPIcons.upRight,
+                          height: 52,
+                          background: DP.navyRaised,
+                          onPressed: _navigateToSendMoney,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Stack(
-            children: [
-              // Decorative circles
-              Positioned(
-                top: -40,
-                right: -40,
-                child: Container(
-                  width: 160,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.06),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: -60,
-                left: -30,
-                child: Container(
-                  width: 180,
-                  height: 180,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.04),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Icon(
-                                Icons.account_balance_wallet,
-                                color: Colors.white,
-                                size: 16,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Main Wallet',
-                              style: GoogleFonts.inter(
-                                color: Colors.white,
-                                fontSize: isSmallScreen ? 11 : 13,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.lightImpact();
-                                _silentBackgroundRefresh();
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  Icons.refresh,
-                                  color: Colors.white,
-                                  size: isSmallScreen ? 14 : 16,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            GestureDetector(
-                              onTap: () {
-                                HapticFeedback.lightImpact();
-                                setState(
-                                  () => _isBalanceVisible = !_isBalanceVisible,
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.12),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  _isBalanceVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Colors.white,
-                                  size: isSmallScreen ? 14 : 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Balance — shows shimmer until we have a real value
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder:
-                          (child, animation) => FadeTransition(
-                            opacity: animation,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0, 0.2),
-                                end: Offset.zero,
-                              ).animate(animation),
-                              child: child,
-                            ),
-                          ),
-                      child:
-                          // ✅ While balance not yet ready → show animated shimmer pill
-                          !_isBalanceReady
-                              ? _buildBalanceLoadingPlaceholder(isSmallScreen)
-                              : Text(
-                                _isBalanceVisible
-                                    ? '₦${_formatBalance(_walletBalance)}'
-                                    : '••••••••',
-                                key: ValueKey(
-                                  'bal_${_isBalanceVisible}_$_walletBalance',
-                                ),
-                                style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontSize: isSmallScreen ? 26 : 30,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Available Balance',
-                      style: GoogleFonts.inter(
-                        color: Colors.white.withValues(alpha: 0.7),
-                        fontSize: isSmallScreen ? 10 : 12,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Dedicated Account Section
-                    _buildDedicatedAccountSection(isSmallScreen),
-
-                    const SizedBox(height: 20),
-
-                    // Action buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildModernActionButton(
-                            'Add Money',
-                            Icons.add_rounded,
-                            true,
-                            _navigateToAddMoney,
-                            isSmallScreen,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildModernActionButton(
-                            'Commission',
-                            Icons.percent_rounded,
-                            false,
-                            _navigateToCommission,
-                            isSmallScreen,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
   }
 
-  /// Small animated shimmer pill shown while balance is loading.
-  /// Matches the text height so nothing jumps when the real number arrives.
   Widget _buildBalanceLoadingPlaceholder(bool isSmallScreen) {
     return Container(
-      height: isSmallScreen ? 34 : 40,
-      width: isSmallScreen ? 160 : 190,
+      key: const ValueKey('bal_loading'),
+      height: 44,
+      width: 200,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.18),
+        color: Colors.white.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+    );
+  }
+
+  /// Commission card + (when needed) a prompt to get a funding account.
+  Widget _buildDedicatedAccountSection(bool isSmallScreen) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+      child: Column(
         children: [
-          const SizedBox(width: 12),
-          SizedBox(
-            width: isSmallScreen ? 16 : 18,
-            height: isSmallScreen ? 16 : 18,
-            child: const CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          DPCard(
+            color: DP.mint,
+            borderColor: null,
+            radius: DP.rXl,
+            padding: const EdgeInsets.fromLTRB(18, 16, 14, 16),
+            onTap: _navigateToCommission,
+            child: Row(
+              children: [
+                const Icon(DPIcons.sparkle, color: DP.green, size: 28),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Commission earned · separate from wallet',
+                        style: TextStyle(color: DP.green, fontSize: 13),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _isBalanceVisible
+                            ? DP.naira(_commissionBalance)
+                            : '₦ ••••',
+                        style: const TextStyle(
+                          color: DP.green,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(DPIcons.upRight, color: DP.green, size: 22),
+              ],
             ),
           ),
-          const SizedBox(width: 10),
-          Text(
-            'Loading...',
-            style: GoogleFonts.inter(
-              color: Colors.white.withValues(alpha: 0.9),
-              fontSize: isSmallScreen ? 12 : 14,
-              fontWeight: FontWeight.w600,
+          if (!_isCheckingAccount && !_hasDedicatedAccount) ...[
+            const SizedBox(height: 12),
+            DPCard(
+              padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+              onTap: () {
+                HapticFeedback.lightImpact();
+                _navigateToKYC();
+              },
+              child: const Row(
+                children: [
+                  DPIconBadge.blue(DPIcons.bank, size: 40, iconSize: 20),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Get your funding account', style: DP.bodyStrong),
+                        SizedBox(height: 2),
+                        Text(
+                          'Verify your details to receive bank transfers.',
+                          style: DP.caption,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(DPIcons.chevronRight, color: DP.muted),
+                ],
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
   }
 
-  Widget _buildDedicatedAccountSection(bool isSmallScreen) {
-    if (_isCheckingAccount) {
-      return Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-        ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white.withValues(alpha: 0.8),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'Checking account...',
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: isSmallScreen ? 11 : 13,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
 
-    if (_hasDedicatedAccount) {
-      return Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.15)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.account_balance,
-                        color: Colors.white,
-                        size: 13,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Dedicated Account',
-                      style: GoogleFonts.inter(
-                        color: Colors.white70,
-                        fontSize: isSmallScreen ? 9 : 10,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        Clipboard.setData(
-                          ClipboardData(text: _dedicatedAccountNumber ?? ''),
-                        );
-                        _showSuccessMessage('Account number copied!');
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.10),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.copy_rounded,
-                          color: Colors.white70,
-                          size: isSmallScreen ? 12 : 14,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    GestureDetector(
-                      onTap: () {
-                        HapticFeedback.lightImpact();
-                        _refreshDedicatedAccount();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.10),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.refresh_rounded,
-                          color: Colors.white70,
-                          size: isSmallScreen ? 12 : 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            // Account Number - LEFT ALIGNED
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SelectableText(
-                      _dedicatedAccountNumber ?? 'N/A',
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: isSmallScreen ? 16 : 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 5,
-                          height: 5,
-                          decoration: const BoxDecoration(
-                            color: Colors.greenAccent,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Active',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: isSmallScreen ? 8 : 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 6),
-            // Bank Name - LEFT ALIGNED
-            if (_dedicatedBankName != null)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                child: Text(
-                  _dedicatedBankName!,
-                  style: GoogleFonts.inter(
-                    color: Colors.white70,
-                    fontSize: isSmallScreen ? 10 : 11,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            // Account Name - LEFT ALIGNED
-            if (_dedicatedAccountName != null &&
-                _dedicatedAccountName!.isNotEmpty)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 2,
-                ),
-                child: Text(
-                  _dedicatedAccountName!,
-                  style: GoogleFonts.inter(
-                    color: Colors.white60,
-                    fontSize: isSmallScreen ? 10 : 11,
-                  ),
-                  textAlign: TextAlign.left,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-          ],
-        ),
-      );
-    }
-
-    // No account
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        _navigateToKYC();
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.20)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(Icons.add, color: Colors.white, size: 16),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Get Your Dedicated Account',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: isSmallScreen ? 11 : 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white70,
-              size: isSmallScreen ? 12 : 14,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildModernActionButton(
-    String title,
-    IconData icon,
-    bool isPrimary,
-    VoidCallback onTap,
-    bool isSmallScreen,
-  ) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        onTap();
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 11 : 13),
-        decoration: BoxDecoration(
-          color: isPrimary ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border:
-              isPrimary
-                  ? null
-                  : Border.all(color: Colors.white.withValues(alpha: 0.4)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: isPrimary ? const Color(0xFF102C68) : Colors.white,
-              size: isSmallScreen ? 15 : 17,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: isSmallScreen ? 11 : 13,
-                fontWeight: FontWeight.w600,
-                color: isPrimary ? const Color(0xFF102C68) : Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(
-    String title,
-    IconData icon,
-    Color textColor,
-    Color borderColor,
-    VoidCallback onTap,
-    bool isSmallScreen, {
-    bool outlined = false,
-  }) {
-    if (outlined) {
-      return InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 10 : 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: borderColor, width: 1),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: borderColor, size: isSmallScreen ? 14 : 16),
-              const SizedBox(width: 6),
-              Text(
-                title,
-                style: GoogleFonts.inter(
-                  fontSize: isSmallScreen ? 10 : 12,
-                  fontWeight: FontWeight.w600,
-                  color: borderColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: isSmallScreen ? 10 : 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: textColor, size: isSmallScreen ? 14 : 16),
-            const SizedBox(width: 6),
-            Text(
-              title,
-              style: GoogleFonts.inter(
-                fontSize: isSmallScreen ? 10 : 12,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildServicesGrid(
     List<Map<String, dynamic>> services,
     bool isSmallScreen,
   ) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    // Mobile-first responsive sizing
-    final double iconSize;
-    final double fontSize;
-    final int crossAxisCount;
-    final double childAspectRatio;
-    final double crossAxisSpacing;
-    final double mainAxisSpacing;
-    final double horizontalPadding;
-
-    if (screenWidth < 360) {
-      // Very small phones
-      iconSize = 26.0;
-      fontSize = 8.0;
-      crossAxisCount = 4;
-      childAspectRatio = 0.70;
-      crossAxisSpacing = 4.0;
-      mainAxisSpacing = 4.0;
-      horizontalPadding = 0.0;
-    } else if (screenWidth < 400) {
-      // Small phones
-      iconSize = 30.0;
-      fontSize = 9.0;
-      crossAxisCount = 4;
-      childAspectRatio = 0.75;
-      crossAxisSpacing = 6.0;
-      mainAxisSpacing = 6.0;
-      horizontalPadding = 0.0;
-    } else if (screenWidth < 600) {
-      // Medium phones
-      iconSize = 34.0;
-      fontSize = 10.0;
-      crossAxisCount = 4;
-      childAspectRatio = 0.80;
-      crossAxisSpacing = 8.0;
-      mainAxisSpacing = 8.0;
-      horizontalPadding = 0.0;
-    } else if (screenWidth < 900) {
-      // Tablets
-      iconSize = 40.0;
-      fontSize = 11.0;
-      crossAxisCount = 6;
-      childAspectRatio = 0.85;
-      crossAxisSpacing = 12.0;
-      mainAxisSpacing = 12.0;
-      horizontalPadding = 4.0;
-    } else {
-      // Large screens
-      iconSize = 44.0;
-      fontSize = 12.0;
-      crossAxisCount = 8;
-      childAspectRatio = 0.90;
-      crossAxisSpacing = 16.0;
-      mainAxisSpacing = 16.0;
-      horizontalPadding = 8.0;
-    }
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: childAspectRatio,
+    final tiles = <DPServiceTile>[
+      for (final s in services)
+        DPServiceTile(
+          icon: s['icon'] as IconData,
+          label: s['name'] as String,
+          onTap: () => _navigateToService((s['route'] ?? '') as String),
         ),
-        itemCount: services.length,
-        itemBuilder: (context, index) {
-          final service = services[index];
-          final isHugeIcon = service['isHugeIcon'] ?? false;
-          final iconColor = service['iconColor'] ?? const Color(0xFF102C68);
-          final isComingSoon = service['comingSoon'] ?? false;
-
-          return InkWell(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              if (isComingSoon) {
-                _showComingSoon(service['name']);
-                return;
-              }
-              if (service['route'] != null &&
-                  service['route'].toString().isNotEmpty) {
-                _navigateToService(service['route']);
-              } else {
-                _showComingSoon(service['name']);
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: isComingSoon ? Colors.grey.shade50 : Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.symmetric(
-                vertical: screenWidth < 400 ? 6 : 10,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(screenWidth < 400 ? 6 : 8),
-                    decoration: BoxDecoration(
-                      color:
-                          isComingSoon
-                              ? Colors.grey.shade200
-                              : iconColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child:
-                        isHugeIcon
-                            ? HugeIcon(
-                              icon: service['icon'],
-                              size: iconSize,
-                              color:
-                                  isComingSoon
-                                      ? Colors.grey.shade400
-                                      : iconColor,
-                            )
-                            : ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                service['iconUrl'],
-                                width: iconSize,
-                                height: iconSize,
-                                fit: BoxFit.contain,
-                                color:
-                                    isComingSoon ? Colors.grey.shade400 : null,
-                                errorBuilder:
-                                    (context, error, stackTrace) => Container(
-                                      width: iconSize,
-                                      height: iconSize,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        Icons.image_not_supported,
-                                        size: iconSize - 8,
-                                        color:
-                                            isComingSoon
-                                                ? Colors.grey.shade400
-                                                : Colors.grey[400],
-                                      ),
-                                    ),
-                              ),
-                            ),
-                  ),
-                  const SizedBox(height: 4),
-                  Flexible(
-                    child: Text(
-                      service['name'],
-                      style: GoogleFonts.inter(
-                        fontSize: fontSize,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            isComingSoon
-                                ? Colors.grey.shade500
-                                : const Color(0xFF102C68),
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+      DPServiceTile(icon: DPIcons.grid, label: 'More', onTap: _openPayBills),
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: DPServiceGrid(tiles: tiles),
     );
   }
 
   Widget _buildRecentTransactions(bool isSmallScreen) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Recent Transactions',
-                style: GoogleFonts.inter(
-                  fontSize: isSmallScreen ? 14 : 16,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF102C68),
-                ),
-              ),
-              GestureDetector(
-                onTap: _navigateToTransactions,
-                child: Row(
-                  children: [
-                    Text(
-                      'View all',
-                      style: GoogleFonts.inter(
-                        fontSize: isSmallScreen ? 10 : 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF168566),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: isSmallScreen ? 8 : 10,
-                      color: const Color(0xFF168566),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          DPSectionHeader(
+            'Recent activity',
+            actionLabel: 'See all',
+            onAction: _navigateToTransactions,
           ),
-        ),
-        const SizedBox(height: 4),
-        if (_isLoadingTransactions)
-          _buildShimmerTransactions(isSmallScreen)
-        else if (_recentTransactions.isEmpty)
-          _buildEmptyTransactions(isSmallScreen)
-        else
-          RepaintBoundary(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount:
-                  _recentTransactions.length > 5
-                      ? 5
-                      : _recentTransactions.length,
-              itemBuilder:
-                  (context, index) => _buildTransactionItem(
-                    _recentTransactions[index],
-                    isSmallScreen,
-                  ),
+          if (_isLoadingTransactions)
+            _buildShimmerTransactions(isSmallScreen)
+          else if (_recentTransactions.isEmpty)
+            _buildEmptyTransactions(isSmallScreen)
+          else
+            RepaintBoundary(
+              child: Column(
+                children: [
+                  for (final t in _recentTransactions.take(4))
+                    _buildTransactionItem(
+                      Map<String, dynamic>.from(t as Map),
+                      isSmallScreen,
+                    ),
+                ],
+              ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -4202,136 +2777,31 @@ class _DashboardScreenState extends State<DashboardScreen>
     bool isSmallScreen,
   ) {
     final isCredit = _isCreditTransaction(transaction);
-    final amount = (transaction['amount'] ?? 0.0).toDouble();
-    final status = transaction['status'] ?? 'completed';
-    final date =
-        transaction['createdAt'] != null
-            ? DateTime.parse(transaction['createdAt'].toString())
-            : DateTime.now();
-    final description = transaction['description'] ?? 'Transaction';
-    final type = transaction['type'] ?? 'Transaction';
+    final amount = ((transaction['amount'] ?? 0.0) as num).toDouble();
+    final status = transaction['status']?.toString() ?? 'completed';
+    final date = transaction['createdAt'] != null
+        ? (DateTime.tryParse(transaction['createdAt'].toString())?.toLocal() ??
+            DateTime.now())
+        : DateTime.now();
+    final description = transaction['description']?.toString() ?? 'Transaction';
+    final type = transaction['type']?.toString() ?? 'Transaction';
     final isCommission = transaction['isCommission'] == true;
-
-    // ✅ Get the HugeIcon
     final icon = _getTransactionIcon(type);
-    final iconColor = _getTransactionIconColor(type);
-    final amountColor = _getAmountColor(type, isCredit);
+    final statusLabel = isCommission ? 'Commission' : DPStatus.labelFor(status);
 
-    return GestureDetector(
+    return DPListRow(
       onTap: () => _showTransactionReceipt(transaction),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // ✅ Use HugeIcon instead of Icon
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: iconColor.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: HugeIcon(icon: icon, color: iconColor, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    description,
-                    style: GoogleFonts.inter(
-                      fontSize: isSmallScreen ? 13 : 14,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF14263D),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _formatDate(date),
-                    style: GoogleFonts.inter(
-                      fontSize: isSmallScreen ? 10 : 11,
-                      color: Colors.grey[500],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  '${isCredit ? '+' : '-'}₦${_formatBalance(amount)}',
-                  style: GoogleFonts.inter(
-                    fontSize: isSmallScreen ? 13 : 14,
-                    fontWeight: FontWeight.w700,
-                    color: amountColor,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                if (isCommission)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 1,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF168566).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'COMMISSION',
-                      style: GoogleFonts.inter(
-                        fontSize: isSmallScreen ? 7 : 8,
-                        fontWeight: FontWeight.w700,
-                        color: const Color(0xFF168566),
-                      ),
-                    ),
-                  )
-                else
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 1,
-                    ),
-                    decoration: BoxDecoration(
-                      color:
-                          status == 'completed'
-                              ? const Color(0xFF168566).withValues(alpha: 0.1)
-                              : Colors.orange.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      status == 'completed' ? 'Success' : status,
-                      style: GoogleFonts.inter(
-                        fontSize: isSmallScreen ? 7 : 8,
-                        fontWeight: FontWeight.w600,
-                        color:
-                            status == 'completed'
-                                ? const Color(0xFF168566)
-                                : Colors.orange,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ],
+      leading: isCredit
+          ? DPIconBadge(icon, size: 44, iconSize: 21)
+          : DPIconBadge.blue(icon, size: 44, iconSize: 21),
+      title: description,
+      subtitle: '${_activityTime(date)} · $statusLabel',
+      trailing: Text(
+        '${isCredit ? '+' : '−'}${DP.naira(amount, decimals: amount % 1 != 0)}',
+        style: TextStyle(
+          fontSize: 15.5,
+          fontWeight: FontWeight.w600,
+          color: isCredit ? DP.green : DP.ink,
         ),
       ),
     );
@@ -4341,18 +2811,23 @@ class _DashboardScreenState extends State<DashboardScreen>
     return Column(
       children: List.generate(
         3,
-        (index) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
-          child: Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              height: isSmallScreen ? 60 : 72,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
+        (index) => const Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              DPSkeleton(width: 44, height: 44, radius: 14),
+              SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DPSkeleton(width: 140),
+                    SizedBox(height: 8),
+                    DPSkeleton(width: 200, height: 11),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
@@ -4360,174 +2835,42 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   Widget _buildEmptyTransactions(bool isSmallScreen) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
-      padding: EdgeInsets.all(isSmallScreen ? 20 : 32),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.receipt_long,
-            size: isSmallScreen ? 36 : 48,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'No transactions yet',
-            style: GoogleFonts.inter(
-              fontSize: isSmallScreen ? 12 : 14,
-              color: Colors.grey[500],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Your transactions will appear here',
-            style: GoogleFonts.inter(
-              fontSize: isSmallScreen ? 10 : 12,
-              color: Colors.grey[400],
-            ),
-          ),
-        ],
-      ),
+    return const DPEmptyState(
+      icon: DPIcons.receipt,
+      title: 'No activity yet',
+      message: 'Your payments and top-ups will show up here.',
     );
   }
 
   Widget _buildCustomBottomNavBar(bool isSmallScreen) {
-    final List<Map<String, dynamic>> navItems = [
-      {
-        'icon': HugeIcons.strokeRoundedHome01,
-        'label': 'Home',
-        'index': 0,
-        'isHugeIcon': true,
+    return DPBottomNav(
+      index: _selectedIndex,
+      items: const [
+        DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
+        DPNavItem(DPIcons.activity, 'Activity'),
+        DPNavItem(DPIcons.earnings, 'Earnings'),
+        DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
+      ],
+      onTap: (i) {
+        HapticFeedback.lightImpact();
+        if (_selectedIndex != i) setState(() => _selectedIndex = i);
+        switch (i) {
+          case 0:
+            break;
+          case 1:
+            _navigateToTransactions();
+            break;
+          case 2:
+            _navigateToCommission();
+            // return to Home highlight once the page closes
+            setState(() => _selectedIndex = 0);
+            break;
+          case 3:
+            _navigateToSettings();
+            break;
+        }
+        _resetIdleTimer();
       },
-      {
-        'icon': HugeIcons.strokeRoundedReceiptText,
-        'label': 'Transactions',
-        'index': 1,
-        'isHugeIcon': true,
-      },
-      {
-        'icon': HugeIcons.strokeRoundedWallet01,
-        'label': 'Wallets',
-        'index': 2,
-        'isHugeIcon': true,
-      },
-      {
-        'icon': HugeIcons.strokeRoundedSettings01,
-        'label': 'Settings',
-        'index': 3,
-        'isHugeIcon': true,
-      },
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: EdgeInsets.only(
-        top: 10,
-        bottom: MediaQuery.of(context).padding.bottom + 10,
-        left: 12,
-        right: 12,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children:
-            navItems.map((item) {
-              final isSelected = _selectedIndex == item['index'];
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    // ✅ Haptic feedback
-                    HapticFeedback.lightImpact();
-
-                    // ✅ Fix double-click: update index immediately
-                    if (_selectedIndex != item['index']) {
-                      setState(() => _selectedIndex = item['index']);
-                    }
-
-                    // ✅ Navigate based on index
-                    switch (item['index']) {
-                      case 0:
-                        // Home - do nothing, already here
-                        break;
-                      case 1:
-                        _navigateToTransactions();
-                        break;
-                      case 2:
-                        _navigateToAddMoney();
-                        break;
-                      case 3:
-                        _navigateToSettings();
-                        break;
-                    }
-                    _resetIdleTimer();
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeInOutCubic,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      // ✅ Active pill background
-                      color:
-                          isSelected
-                              ? const Color(0xFF102C68).withValues(alpha: 0.08)
-                              : Colors.transparent,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AnimatedScale(
-                          scale: isSelected ? 1.15 : 1.0,
-                          duration: const Duration(milliseconds: 250),
-                          curve: Curves.easeOutBack,
-                          child: HugeIcon(
-                            icon: item['icon'],
-                            size: 22,
-                            color:
-                                isSelected
-                                    ? const Color(0xFF102C68)
-                                    : const Color(0xFF9AA0A6),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        AnimatedDefaultTextStyle(
-                          duration: const Duration(milliseconds: 250),
-                          style: TextStyle(
-                            color:
-                                isSelected
-                                    ? const Color(0xFF102C68)
-                                    : const Color(0xFF9AA0A6),
-                            fontSize: 11,
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w500,
-                            fontFamily: GoogleFonts.inter().fontFamily,
-                          ),
-                          child: Text(item['label']),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-      ),
     );
   }
 
@@ -4554,277 +2897,45 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   void _showAllServices(bool isSmallScreen) {
-    final allServices = [..._quickServices, ..._otherServices];
-    final iconSize = 36.0;
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder:
-          (context) => DraggableScrollableSheet(
-            initialChildSize: 0.8,
-            maxChildSize: 0.9,
-            minChildSize: 0.5,
-            expand: false,
-            builder: (context, scrollController) {
-              return Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'All Services',
-                      style: GoogleFonts.inter(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF102C68),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: GridView.builder(
-                        controller: scrollController,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: isSmallScreen ? 8 : 12,
-                          mainAxisSpacing: isSmallScreen ? 8 : 12,
-                          childAspectRatio: 0.85,
-                        ),
-                        itemCount: allServices.length,
-                        itemBuilder: (context, index) {
-                          final service = allServices[index];
-                          final isHugeIcon = service['isHugeIcon'] ?? false;
-                          final iconColor =
-                              service['iconColor'] ?? const Color(0xFF102C68);
-                          final isComingSoon = service['comingSoon'] ?? false;
-
-                          return InkWell(
-                            onTap: () {
-                              if (Navigator.canPop(context)) {
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                } else {
-                                  // Navigate to a fallback screen
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    '/home',
-                                  );
-                                }
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                              if (isComingSoon) {
-                                _showComingSoon(service['name']);
-                                return;
-                              }
-                              if (service['route'] != null &&
-                                  service['route'].toString().isNotEmpty) {
-                                _navigateToService(service['route']);
-                              } else {
-                                _showComingSoon(service['name']);
-                              }
-                            },
-                            child: Stack(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color:
-                                        isComingSoon
-                                            ? Colors.grey.shade50
-                                            : Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.03),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: isSmallScreen ? 10 : 12,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      isHugeIcon
-                                          ? HugeIcon(
-                                            icon: service['icon'],
-                                            size: iconSize,
-                                            color:
-                                                isComingSoon
-                                                    ? Colors.grey.shade400
-                                                    : iconColor,
-                                          )
-                                          : ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                            child: Image.network(
-                                              service['iconUrl'],
-                                              width: iconSize,
-                                              height: iconSize,
-                                              fit: BoxFit.contain,
-                                              color:
-                                                  isComingSoon
-                                                      ? Colors.grey.shade400
-                                                      : null,
-                                              errorBuilder:
-                                                  (
-                                                    context,
-                                                    error,
-                                                    stackTrace,
-                                                  ) => Container(
-                                                    width: iconSize,
-                                                    height: iconSize,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.grey[100],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                            8,
-                                                          ),
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.image_not_supported,
-                                                      size: iconSize - 8,
-                                                      color:
-                                                          isComingSoon
-                                                              ? Colors
-                                                                  .grey
-                                                                  .shade400
-                                                              : Colors
-                                                                  .grey[400],
-                                                    ),
-                                                  ),
-                                            ),
-                                          ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        service['name'],
-                                        style: GoogleFonts.inter(
-                                          fontSize: isSmallScreen ? 9 : 10,
-                                          fontWeight: FontWeight.w600,
-                                          color:
-                                              isComingSoon
-                                                  ? Colors.grey.shade500
-                                                  : const Color(0xFF102C68),
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (isComingSoon)
-                                  Positioned(
-                                    top: 4,
-                                    right: 4,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF168566),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        'Soon',
-                                        style: GoogleFonts.inter(
-                                          fontSize: 8,
-                                          fontWeight: FontWeight.w700,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-    );
+    _openPayBills();
   }
 
   // ==================== CUSTOM DRAWER METHODS ====================
 
   Widget _buildDrawerHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            const Color(0xFF102C68),
-            const Color(0xFF102C68).withValues(alpha: 0.8),
-          ],
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.fromLTRB(20, 48, 20, 20),
+      color: DP.navy,
+      child: Row(
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.white,
-                child: Text(
-                  _fullName.isNotEmpty ? _fullName[0].toUpperCase() : 'U',
+          DPAvatar(name: _fullName.isNotEmpty ? _fullName : 'User', size: 48),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _fullName.isNotEmpty ? _fullName : 'User',
                   style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF102C68),
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _fullName.isNotEmpty ? _fullName : 'User',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      _email.isNotEmpty ? _email : 'user@example.com',
-                      style: TextStyle(color: Colors.white70, fontSize: 12),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                const SizedBox(height: 2),
+                Text(
+                  _email,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.7),
+                    fontSize: 12.5,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -5062,72 +3173,58 @@ class _DashboardScreenState extends State<DashboardScreen>
       onTap: _resetIdleTimer,
       behavior: HitTestBehavior.translucent,
       child: Scaffold(
-        key: _scaffoldKey, // ✅ ADD THIS LINE
-        backgroundColor: Colors.white,
-        drawer:
-            _isLoading
-                ? Drawer(
-                  child: Column(
-                    children: [
-                      _buildDrawerHeader(),
-                      const SizedBox(height: 8),
-                      Expanded(
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                          child: ListView(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            children: [
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                              _buildSkeletonTile(),
-                            ],
-                          ),
-                        ),
+        key: _scaffoldKey,
+        backgroundColor: DP.bg,
+        drawer: _isLoading
+            ? Drawer(
+                child: Column(
+                  children: [
+                    _buildDrawerHeader(),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        children: List.generate(6, (_) => _buildSkeletonTile()),
                       ),
-                    ],
-                  ),
-                )
-                : CustomDrawer(
-                  header: _buildDrawerHeader(),
-                  items: _getUserDrawerItems(),
-                  selectedItem: _getSelectedDrawerItem(),
-                  onItemSelected: _onDrawerItemSelected,
-                  isAdmin: _isAdmin,
+                    ),
+                  ],
                 ),
+              )
+            : CustomDrawer(
+                header: _buildDrawerHeader(),
+                items: _getUserDrawerItems(),
+                selectedItem: _getSelectedDrawerItem(),
+                onItemSelected: _onDrawerItemSelected,
+                isAdmin: _isAdmin,
+              ),
         body: SafeArea(
+          bottom: false,
           child: Column(
             children: [
               _buildAppBar(isSmallScreen),
               Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ✅ NEW: Approval status banner (only shows for pending/rejected)
-                      _buildApprovalBanner(isSmallScreen),
-
-                      _buildModernBalanceCard(isSmallScreen),
-                      const SizedBox(height: 24),
-                      _buildSectionHeader('Quick Services', isSmallScreen),
-                      const SizedBox(height: 16),
-                      _buildServicesGrid(_quickServices, isSmallScreen),
-                      const SizedBox(height: 32),
-                      _buildSectionHeader('Other Services', isSmallScreen),
-                      const SizedBox(height: 16),
-                      _buildServicesGrid(_otherServices, isSmallScreen),
-                      const SizedBox(height: 32),
-                      _buildRecentTransactions(isSmallScreen),
-                      const SizedBox(height: 80),
-                    ],
+                child: RefreshIndicator(
+                  color: DP.green,
+                  onRefresh: _refreshAllData,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(top: 10, bottom: 28),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildApprovalBanner(isSmallScreen),
+                        _buildModernBalanceCard(isSmallScreen),
+                        _buildDedicatedAccountSection(isSmallScreen),
+                        const SizedBox(height: 26),
+                        _buildSectionHeader(
+                          'Your everyday essentials',
+                          isSmallScreen,
+                        ),
+                        _buildServicesGrid(_quickServices, isSmallScreen),
+                        const SizedBox(height: 26),
+                        _buildRecentTransactions(isSmallScreen),
+                      ],
+                    ),
                   ),
                 ),
               ),
