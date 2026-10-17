@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart'
     show SharedPreferences;
 import '../../../core/services/api_service.dart';
+import '../../ui/ui.dart';
 
 class ChangePinScreen extends StatefulWidget {
   final String userId;
@@ -40,153 +41,50 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Color(0xFF102C68),
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          widget.hasExistingPin ? 'Change PIN' : 'Set Transaction PIN',
-          style: TextStyle(
-            color: _primaryColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
+    final existing = widget.hasExistingPin;
+    return DPPage(
+      title: existing ? 'Change payment PIN' : 'Set payment PIN',
+      bottom: DPButton(
+        label: existing ? 'Change PIN' : 'Set PIN',
+        loading: _isLoading,
+        onPressed: _isLoading ? null : _savePin,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: _primaryColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, color: _primaryColor),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      widget.hasExistingPin
-                          ? 'Enter your current PIN to change it. New PIN must be 6 digits.'
-                          : 'Set a 6-digit PIN for secure transactions.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: _textColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            if (widget.hasExistingPin) ...[
-              _buildPinField(
-                controller: _currentPinController,
-                label: 'Current PIN',
-                hint: 'Enter current 6-digit PIN',
-                obscure: _obscureCurrent,
-                onToggle:
-                    () => setState(() => _obscureCurrent = !_obscureCurrent),
-              ),
-              const SizedBox(height: 16),
-            ],
-
-            _buildPinField(
-              controller: _newPinController,
-              label: 'New PIN',
-              hint: 'Enter new 6-digit PIN',
-              obscure: _obscureNew,
-              onToggle: () => setState(() => _obscureNew = !_obscureNew),
-            ),
-            const SizedBox(height: 16),
-
-            _buildPinField(
-              controller: _confirmPinController,
-              label: 'Confirm PIN',
-              hint: 'Confirm your new PIN',
-              obscure: _obscureConfirm,
-              onToggle:
-                  () => setState(() => _obscureConfirm = !_obscureConfirm),
-            ),
-            const SizedBox(height: 8),
-
-            if (_errorMessage != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: _errorColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: _errorColor.withOpacity(0.2)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.error_outline, color: _errorColor, size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _errorMessage!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: _errorColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            const SizedBox(height: 32),
-
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _savePin,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _primaryColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child:
-                    _isLoading
-                        ? SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.5,
-                          ),
-                        )
-                        : Text(
-                          widget.hasExistingPin ? 'Change PIN' : 'Set PIN',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-              ),
-            ),
-          ],
+      children: [
+        DPHeadline(
+          existing ? 'Keep your money safe.' : 'Protect every payment.',
+          subtitle: existing
+              ? 'Enter your current PIN, then choose a new 6-digit PIN.'
+              : 'You’ll use this 6-digit PIN to approve payments and transfers.',
         ),
-      ),
+        if (existing)
+          _buildPinField(
+            controller: _currentPinController,
+            label: 'Current PIN',
+            hint: '',
+            obscure: _obscureCurrent,
+            onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
+          ),
+        _buildPinField(
+          controller: _newPinController,
+          label: 'New PIN',
+          hint: '',
+          obscure: _obscureNew,
+          onToggle: () => setState(() => _obscureNew = !_obscureNew),
+        ),
+        _buildPinField(
+          controller: _confirmPinController,
+          label: 'Confirm new PIN',
+          hint: '',
+          obscure: _obscureConfirm,
+          onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
+        ),
+        if (_errorMessage != null) DPNotice(_errorMessage!, kind: DPNoticeKind.danger),
+        const DPNotice(
+          'Avoid easy PINs like 123456 or your birthday. Never share your PIN — Dalabapay staff will never ask for it.',
+          kind: DPNoticeKind.info,
+          margin: EdgeInsets.zero,
+        ),
+      ],
     );
   }
 
@@ -197,67 +95,28 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
     required bool obscure,
     required VoidCallback onToggle,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: _textColor,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 22),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(child: DPFieldLabel(label)),
+              DPLinkButton(label: obscure ? 'Show' : 'Hide', onPressed: onToggle),
+            ],
           ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          obscureText: obscure,
-          keyboardType: TextInputType.number,
-          inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(6),
-          ],
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(fontSize: 14, color: _hintColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade200),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: _primaryColor, width: 2),
-            ),
-            filled: true,
-            fillColor: Colors.grey.shade50,
-            suffixIcon: IconButton(
-              icon: Icon(
-                obscure ? Icons.visibility_off : Icons.visibility,
-                color: _hintColor,
-              ),
-              onPressed: onToggle,
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
+          DPCodeInput(
+            controller: controller,
+            length: 6,
+            obscure: obscure,
+            error: _errorMessage != null,
+            onChanged: (_) {
+              if (_errorMessage != null) setState(() => _errorMessage = null);
+            },
           ),
-          style: TextStyle(
-            fontSize: 16,
-            color: _textColor,
-            letterSpacing: 4,
-          ),
-          onChanged: (_) {
-            if (_errorMessage != null) {
-              setState(() => _errorMessage = null);
-            }
-          },
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -368,15 +227,8 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
   }
 
   void _showSuccess(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: const TextStyle()),
-        backgroundColor: _successColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    if (!mounted) return;
+    dpSnack(context, message, success: true);
   }
 
   @override

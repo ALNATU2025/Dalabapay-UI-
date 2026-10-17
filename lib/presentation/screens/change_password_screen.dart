@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/services/api_service.dart';
+import '../../ui/ui.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -57,208 +58,58 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Color(0xFF102C68),
-            size: 20,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Change Password',
-          style: TextStyle(
-            color: _primaryColor,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
+    return DPPage(
+      title: 'Change password',
+      bottom: DPButton(
+        label: 'Change password',
+        loading: _isLoading,
+        onPressed: _isLoading ? null : _changePassword,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: _primaryColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, color: _primaryColor),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Your new password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: _textColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            if (_errorMessage != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: _errorColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: _errorColor.withOpacity(0.2)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.error_outline, color: _errorColor, size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _errorMessage!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: _errorColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            if (_successMessage != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: _successColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: _successColor.withOpacity(0.2)),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.check_circle, color: _successColor, size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        _successMessage!,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: _successColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-            const SizedBox(height: 16),
-
-            _buildPasswordField(
-              controller: _currentPasswordController,
-              label: 'Current Password',
-              hint: 'Enter your current password',
-              obscure: _obscureCurrent,
-              onToggle:
-                  () => setState(() => _obscureCurrent = !_obscureCurrent),
-            ),
-            const SizedBox(height: 16),
-
-            _buildPasswordField(
-              controller: _newPasswordController,
-              label: 'New Password',
-              hint: 'Enter new password',
-              obscure: _obscureNew,
-              onToggle: () => setState(() => _obscureNew = !_obscureNew),
-              onChanged: _validatePassword,
-            ),
-            const SizedBox(height: 8),
-
-            // Password Requirements
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color:
-                      _isPasswordValid ? _successColor : Colors.grey.shade300,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Password must contain:',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: _textColor,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildRequirement('At least 8 characters', _hasMinLength),
-                  _buildRequirement('One uppercase letter', _hasUppercase),
-                  _buildRequirement('One lowercase letter', _hasLowercase),
-                  _buildRequirement('One number', _hasNumber),
-                  _buildRequirement('One special character', _hasSpecialChar),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            _buildPasswordField(
-              controller: _confirmPasswordController,
-              label: 'Confirm New Password',
-              hint: 'Confirm your new password',
-              obscure: _obscureConfirm,
-              onToggle:
-                  () => setState(() => _obscureConfirm = !_obscureConfirm),
-            ),
-            const SizedBox(height: 32),
-
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _changePassword,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _primaryColor,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child:
-                    _isLoading
-                        ? SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.5,
-                          ),
-                        )
-                        : Text(
-                          'Change Password',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-              ),
-            ),
-          ],
+      children: [
+        const DPHeadline(
+          'Choose a strong password.',
+          subtitle: 'You’ll use it to sign in on new devices.',
         ),
-      ),
+        if (_errorMessage != null) DPNotice(_errorMessage!, kind: DPNoticeKind.danger),
+        if (_successMessage != null) DPNotice(_successMessage!, kind: DPNoticeKind.success),
+        _buildPasswordField(
+          controller: _currentPasswordController,
+          label: 'Current password',
+          hint: 'Enter your current password',
+          obscure: _obscureCurrent,
+          onToggle: () => setState(() => _obscureCurrent = !_obscureCurrent),
+        ),
+        _buildPasswordField(
+          controller: _newPasswordController,
+          label: 'New password',
+          hint: 'At least 8 characters',
+          obscure: _obscureNew,
+          onToggle: () => setState(() => _obscureNew = !_obscureNew),
+          onChanged: _validatePassword,
+        ),
+        DPCard(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Your password needs', style: DPText.label),
+              const SizedBox(height: 8),
+              _buildRequirement('At least 8 characters', _hasMinLength),
+              _buildRequirement('An uppercase letter', _hasUppercase),
+              _buildRequirement('A lowercase letter', _hasLowercase),
+              _buildRequirement('A number', _hasNumber),
+              _buildRequirement('A symbol, like ! @ # or ?', _hasSpecialChar),
+            ],
+          ),
+        ),
+        _buildPasswordField(
+          controller: _confirmPasswordController,
+          label: 'Confirm new password',
+          hint: 'Type it again',
+          obscure: _obscureConfirm,
+          onToggle: () => setState(() => _obscureConfirm = !_obscureConfirm),
+        ),
+      ],
     );
   }
 
@@ -270,75 +121,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     required VoidCallback onToggle,
     ValueChanged<String>? onChanged,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: _textColor,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          obscureText: obscure,
-          onChanged: onChanged,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(fontSize: 14, color: _hintColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade200),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: _primaryColor, width: 2),
-            ),
-            filled: true,
-            fillColor: Colors.grey.shade50,
-            suffixIcon: IconButton(
-              icon: Icon(
-                obscure ? Icons.visibility_off : Icons.visibility,
-                color: _hintColor,
-              ),
-              onPressed: onToggle,
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-          ),
-          style: TextStyle(fontSize: 14, color: _textColor),
-        ),
-      ],
+    return DPField(
+      label: label,
+      controller: controller,
+      hint: hint,
+      obscure: obscure,
+      suffixIcon: obscure ? DPIcons.eye : DPIcons.eyeOff,
+      onSuffixTap: onToggle,
+      onChanged: (v) {
+        if (_errorMessage != null) setState(() => _errorMessage = null);
+        onChanged?.call(v);
+      },
     );
   }
 
   Widget _buildRequirement(String text, bool isMet) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Icon(
-            isMet ? Icons.check_circle : Icons.radio_button_unchecked,
-            color: isMet ? _successColor : _hintColor,
-            size: 16,
-          ),
+          DPIcon(isMet ? DPIcons.circleCheck : DPIcons.circleX,
+              size: 16, color: isMet ? DP.green : DP.faint),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: TextStyle(
-              color: isMet ? _successColor : _hintColor,
-              fontSize: 12,
-            ),
-          ),
+          Text(text, style: DPText.small.copyWith(color: isMet ? DP.green : DP.muted, fontSize: 13)),
         ],
       ),
     );

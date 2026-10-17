@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/services/biometric_service.dart';
+import '../../../ui/ui.dart';
 
 class PinLockScreen extends StatefulWidget {
   const PinLockScreen({super.key});
@@ -132,228 +133,81 @@ class _PinLockScreenState extends State<PinLockScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final first = _fullName.trim().split(' ').first;
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: const Color(0xFF102C68),
-                child: Text(
-                  _fullName.isNotEmpty ? _fullName[0].toUpperCase() : 'U',
-                  style: const TextStyle(fontSize: 30, color: Colors.white),
+        backgroundColor: DP.bg,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DP.gutter),
+            child: Column(
+              children: [
+                const SizedBox(height: 36),
+                DPAvatar(name: _fullName.isEmpty ? 'User' : _fullName, size: 64),
+                const SizedBox(height: 16),
+                Text(first.isEmpty ? 'Welcome back' : 'Welcome back, $first',
+                    style: DPText.title, textAlign: TextAlign.center),
+                const SizedBox(height: 6),
+                Text('Enter your 6-digit PIN to unlock',
+                    style: DPText.bodyMuted, textAlign: TextAlign.center),
+                const SizedBox(height: 28),
+                DPCodeBoxes(
+                  length: 6,
+                  value: _pin,
+                  obscure: true,
+                  error: _errorMessage.isNotEmpty,
+                  boxSize: 48,
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                _fullName.isNotEmpty
-                    ? 'Welcome back, $_fullName'
-                    : 'Welcome back',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF14263D),
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Enter your PIN to unlock',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: const Color(0xFF728078),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
-              // PIN Dots
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(6, (index) {
-                  final isFilled = index < _pin.length;
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color:
-                          isFilled
-                              ? const Color(0xFF102C68)
-                              : Colors.grey.shade200,
-                      border: Border.all(
-                        color:
-                            isFilled
-                                ? const Color(0xFF102C68)
-                                : Colors.grey.shade300,
-                        width: 1.5,
-                      ),
-                    ),
-                  );
-                }),
-              ),
-
-              const SizedBox(height: 8),
-
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
-                    _errorMessage,
-                    style: TextStyle(
-                      color: Colors.red.shade600,
-                      fontSize: 13,
-                    ),
+                SizedBox(
+                  height: 40,
+                  child: Center(
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: DP.green),
+                          )
+                        : Text(_errorMessage,
+                            style: DPText.small.copyWith(color: DP.danger), textAlign: TextAlign.center),
                   ),
                 ),
-
-              const SizedBox(height: 24),
-
-              // Number Pad
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: ['1', '2', '3'].map(_buildDigitButton).toList(),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: ['4', '5', '6'].map(_buildDigitButton).toList(),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: ['7', '8', '9'].map(_buildDigitButton).toList(),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildBiometricButton(),
-                      _buildDigitButton('0'),
-                      _buildBackspaceButton(),
-                    ],
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 24),
-
-              TextButton(
-                onPressed: () {
-                  SharedPreferences.getInstance().then(
-                    (prefs) => prefs.clear(),
-                  );
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
-                child: Text(
-                  'Logout',
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 13,
-                  ),
+                const Spacer(),
+                DPKeypad(
+                  onDigit: _isLoading ? (_) {} : _onDigitPressed,
+                  onBackspace: _onBackspacePressed,
+                  extraKey: _biometricAvailable ? _buildBiometricButton() : null,
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDigitButton(String digit) {
-    return GestureDetector(
-      onTap: () => _onDigitPressed(digit),
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-          border: Border.all(color: Colors.grey.shade200, width: 1),
-        ),
-        child: Center(
-          child: Text(
-            digit,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF14263D),
+                const SizedBox(height: 8),
+                DPLinkButton(
+                  label: 'Not you? Sign out',
+                  color: DP.muted,
+                  onPressed: () {
+                    SharedPreferences.getInstance().then((prefs) => prefs.clear());
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
           ),
         ),
-      ),
     );
   }
 
-  Widget _buildBackspaceButton() {
-    return GestureDetector(
-      onTap: _onBackspacePressed,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.shade100,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-        ),
-        child: const Icon(Icons.backspace, size: 24, color: Color(0xFF14263D)),
-      ),
-    );
-  }
+
 
   Widget _buildBiometricButton() {
-    if (!_biometricAvailable) {
-      return Opacity(
-        opacity: 0.3,
-        child: Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.grey.shade100,
-          ),
-          child: const Icon(Icons.fingerprint, size: 28, color: Colors.grey),
-        ),
-      );
-    }
-
     return GestureDetector(
-      onTap: _tryBiometric,
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          ),
+      onTap: _isBiometricLoading ? null : _tryBiometric,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: double.infinity,
+        height: 58,
+        child: Center(
+          child: _isBiometricLoading
+              ? const SizedBox(
+                  width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: DP.green))
+              : const DPIcon(DPIcons.fingerprint, size: 28, color: DP.green),
         ),
-        child:
-            _isBiometricLoading
-                ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: Colors.white,
-                  ),
-                )
-                : const Icon(Icons.fingerprint, size: 28, color: Colors.white),
       ),
     );
   }
