@@ -13,6 +13,7 @@ import 'package:hugeicons/hugeicons.dart';
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/receipt_widget.dart';
 import '../../../core/widgets/request_limit_increase_dialog.dart';
+import '../../../ui/ui.dart';
 
 class CableTVScreen extends StatefulWidget {
   final void Function(double newBalance) onBalanceUpdate;
@@ -347,125 +348,11 @@ class _CableTVScreenState extends State<CableTVScreen>
     }
   }
 
+  // Plans could not be loaded from the server. Made-up plans are no longer
+  // shown (their codes don't exist at VTpass); the UI offers a retry instead.
   void _loadMockCablePlans(String providerId) {
-    final mockPlans = <Map<String, dynamic>>[];
-
-    switch (providerId) {
-      case 'dstv':
-        mockPlans.addAll([
-          {
-            'name': 'DStv Padi',
-            'variation_code': 'dstv-padi',
-            'variation_amount': '1850.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'DStv Yanga',
-            'variation_code': 'dstv-yanga',
-            'variation_amount': '2565.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'DStv Confam',
-            'variation_code': 'dstv-confam',
-            'variation_amount': '4615.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'DStv Compact',
-            'variation_code': 'dstv79',
-            'variation_amount': '7900.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'DStv Premium',
-            'variation_code': 'dstv3',
-            'variation_amount': '18400.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'DStv Compact Plus',
-            'variation_code': 'dstv7',
-            'variation_amount': '12400.00',
-            'fixedPrice': true,
-          },
-        ]);
-        break;
-      case 'gotv':
-        mockPlans.addAll([
-          {
-            'name': 'GOtv Lite',
-            'variation_code': 'gotv-lite',
-            'variation_amount': '410.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'GOtv Jinja',
-            'variation_code': 'gotv-jinja',
-            'variation_amount': '1640.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'GOtv Jolli',
-            'variation_code': 'gotv-jolli',
-            'variation_amount': '2460.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'GOtv Max',
-            'variation_code': 'gotv-max',
-            'variation_amount': '3600.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'GOtv Supa Plus',
-            'variation_code': 'gotv-supa-plus',
-            'variation_amount': '15700.00',
-            'fixedPrice': true,
-          },
-        ]);
-        break;
-      case 'startimes':
-        mockPlans.addAll([
-          {
-            'name': 'Nova - 1 Month',
-            'variation_code': 'nova',
-            'variation_amount': '900.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'Basic - 1 Month',
-            'variation_code': 'basic',
-            'variation_amount': '1700.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'Smart - 1 Month',
-            'variation_code': 'smart',
-            'variation_amount': '2200.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'Classic - 1 Month',
-            'variation_code': 'classic',
-            'variation_amount': '2500.00',
-            'fixedPrice': true,
-          },
-          {
-            'name': 'Super - 1 Month',
-            'variation_code': 'super',
-            'variation_amount': '4200.00',
-            'fixedPrice': true,
-          },
-        ]);
-        break;
-    }
-
     setState(() {
-      _cablePlans[providerId] = mockPlans;
-      _selectedPlan = null;
-      _selectedPlanAmount = null;
-      _selectedPlanVariationCode = null;
+      _cablePlans[providerId] = [];
     });
   }
 
@@ -695,244 +582,21 @@ class _CableTVScreenState extends State<CableTVScreen>
     String service,
     String bouquetCode,
   ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            backgroundColor: Colors.white,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              width: MediaQuery.of(context).size.width * 0.92,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [_secondary, _secondary.withOpacity(0.7)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: _secondary.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.check_circle_outline,
-                      color: Colors.white,
-                      size: 40,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Smart Card Validated!',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      color: _primary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _secondary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      'Verification Complete',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: _secondary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Divider(color: Color(0xFFEEEEEE)),
-                  const SizedBox(height: 16),
-                  _buildDetailRow('Customer Name', customerName),
-                  const SizedBox(height: 8),
-                  _buildDetailRow('Smartcard Number', smartcardNumber),
-                  const SizedBox(height: 8),
-                  _buildDetailRow('Current Package', currentBouquet),
-                  const SizedBox(height: 8),
-                  _buildDetailRow(
-                    'Renewal Amount',
-                    '₦${double.tryParse(renewalAmount)?.toStringAsFixed(2) ?? renewalAmount}',
-                  ),
-                  const SizedBox(height: 8),
-                  _buildDetailRow('Due Date', _formatDate(dueDate)),
-                  const SizedBox(height: 8),
-                  _buildDetailRow('Service', service.toUpperCase()),
-                  if (bouquetCode != 'N/A') ...[
-                    const SizedBox(height: 8),
-                    _buildDetailRow('Package Code', bouquetCode),
-                  ],
-                  const SizedBox(height: 20),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: _primary.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: _primary.withOpacity(0.1)),
-                    ),
-                    child: Row(
-                      children: [
-                        HugeIcon(
-                          icon: HugeIcons.strokeRoundedShield01,
-                          color: _primary,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            'Smart card verified. You can now renew or change your package.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: _primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextButton(
-                          onPressed: () {
-                            if (Navigator.canPop(context)) {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                            } else {
-                              // Navigate to a fallback screen
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                            setState(() {
-                              _isValidated = false;
-                              _customerName = null;
-                              _smartcardDetails = null;
-                              _currentBouquet = null;
-                              _currentBouquetCode = null;
-                              _renewalAmount = null;
-                              _dueDate = null;
-                              _selectedAction = null;
-                              _amountController.clear();
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.grey.shade700,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(color: Colors.grey.shade300),
-                            ),
-                          ),
-                          child: Text(
-                            'Retry',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (Navigator.canPop(context)) {
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              } else {
-                                // Navigate to a fallback screen
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  '/home',
-                                );
-                              }
-                            } else {
-                              // Navigate to a fallback screen
-                              Navigator.pushReplacementNamed(context, '/home');
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _primary,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 2,
-                          ),
-                          child: Text(
-                            'Proceed',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-    );
+    dpSnack(context, 'Smartcard verified for ${customerName.toUpperCase()}', success: true);
   }
 
   Widget _buildDetailRow(String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 130,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w600,
-            ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 110, child: Text(label, style: DPText.bodyMuted.copyWith(fontSize: 13))),
+          Expanded(
+            child: Text(value, textAlign: TextAlign.right, style: DPText.value.copyWith(fontSize: 13)),
           ),
-        ),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w800,
-              color: Colors.grey.shade900,
-            ),
-            textAlign: TextAlign.right,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -949,84 +613,32 @@ class _CableTVScreenState extends State<CableTVScreen>
   // ==================== ACTION SELECTION ====================
 
   Widget _buildActionSelector() {
+    const values = ['renew', 'change'];
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'What do you want to do?',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: _primary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _selectedAction,
-              isExpanded: true,
-              hint: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Text(
-                  'Select what to do',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: _hintColor,
-                  ),
-                ),
-              ),
-              icon: Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedArrowDown01,
-                  color: Colors.grey,
-                  size: 18,
-                ),
-              ),
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey.shade800,
-              ),
-              items:
-                  _actionOptions.map((option) {
-                    return DropdownMenuItem<String>(
-                      value:
-                          option == 'Renew Current Bouquet'
-                              ? 'renew'
-                              : 'change',
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(option),
-                      ),
-                    );
-                  }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedAction = value;
-                  _selectedPlan = null;
-                  _selectedPlanAmount = null;
-                  _selectedPlanVariationCode = null;
-                  _quantity = 1;
-
-                  if (value == 'renew') {
-                    _isAmountEditable = true;
-                    _amountController.text = _renewalAmount ?? '0';
-                  } else {
-                    _isAmountEditable = false;
-                    _amountController.clear();
-                  }
-                });
-              },
-            ),
-          ),
+        const DPFieldLabel('What would you like to do?'),
+        DPChipGrid(
+          labels: const ['Renew current plan', 'Change plan'],
+          columns: 2,
+          selectedIndex: _selectedAction == null ? null : values.indexOf(_selectedAction!),
+          onSelected: (i) {
+            final value = values[i];
+            setState(() {
+              _selectedAction = value;
+              _selectedPlan = null;
+              _selectedPlanAmount = null;
+              _selectedPlanVariationCode = null;
+              _quantity = 1;
+              if (value == 'renew') {
+                _isAmountEditable = true;
+                _amountController.text = _renewalAmount ?? '0';
+              } else {
+                _isAmountEditable = false;
+                _amountController.clear();
+              }
+            });
+          },
         ),
       ],
     );
@@ -1035,284 +647,81 @@ class _CableTVScreenState extends State<CableTVScreen>
   // ==================== AMOUNT INPUT ====================
 
   Widget _buildAmountInput() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Amount',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: _primary,
-              ),
-            ),
-            if (_selectedAction == 'renew')
-              Text(
-                'Renewal Amount',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: _secondary,
-                ),
-              ),
-            if (_selectedAction == 'change')
-              Text(
-                'Fixed Price',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.orange.shade700,
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color:
-                _selectedAction == 'change'
-                    ? Colors.grey.shade100
-                    : Colors.grey.shade50,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  _selectedAction == 'change'
-                      ? Colors.orange.shade200
-                      : Colors.grey.shade200,
-            ),
-          ),
-          child: TextField(
-            controller: _amountController,
-            focusNode: _amountFocusNode,
-            enabled: _selectedAction == 'renew',
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-            ],
-            decoration: InputDecoration(
-              hintText:
-                  _selectedAction == 'renew'
-                      ? 'Enter amount to pay'
-                      : 'Amount is fixed for package change',
-              hintStyle: TextStyle(
-                color:
-                    _selectedAction == 'change'
-                        ? Colors.grey.shade500
-                        : _hintColor,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-              prefixIcon: Container(
-                padding: const EdgeInsets.all(12),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedMoney01,
-                  color:
-                      _selectedAction == 'change'
-                          ? Colors.orange.shade700
-                          : _primary,
-                  size: 22,
-                ),
-              ),
-              suffixIcon:
-                  _selectedAction == 'change'
-                      ? Container(
-                        margin: const EdgeInsets.all(8),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.shade100,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          'FIXED',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.orange.shade700,
-                          ),
-                        ),
-                      )
-                      : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-                borderSide: BorderSide.none,
-              ),
-              filled: true,
-              fillColor: Colors.transparent,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 4,
-                vertical: 14,
-              ),
-            ),
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight:
-                  _selectedAction == 'change'
-                      ? FontWeight.w800
-                      : FontWeight.w600,
-              color:
-                  _selectedAction == 'change'
-                      ? Colors.orange.shade800
-                      : Colors.grey.shade900,
-            ),
-            onChanged: (value) {
-              if (_selectedAction == 'renew') {
-                final amount = double.tryParse(value) ?? 0;
-                setState(() {
-                  _calculatedTotal = amount * _quantity;
-                });
-              }
-            },
-          ),
-        ),
-        if (_selectedAction == 'renew')
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                HugeIcon(
-                  icon: HugeIcons.strokeRoundedInformationCircle,
-                  color: Colors.blue.shade700,
-                  size: 16,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'You can adjust the amount. Total: ₦${(_calculatedTotal > 0 ? _calculatedTotal : double.tryParse(_amountController.text) ?? 0).toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue.shade800,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+    final isChange = _selectedAction == 'change';
+    return DPField(
+      label: 'Amount',
+      labelTrailing: Text(
+        isChange ? 'Fixed price' : 'Renewal amount',
+        style: DPText.small.copyWith(color: isChange ? DP.warn : DP.green),
+      ),
+      controller: _amountController,
+      focusNode: _amountFocusNode,
+      enabled: !isChange,
+      keyboardType: TextInputType.number,
+      prefixText: '₦ ',
+      hint: isChange ? 'Choose a plan above' : 'Enter amount to pay',
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
       ],
+      onChanged: (value) {
+        if (_selectedAction == 'renew') {
+          final amount = double.tryParse(value) ?? 0;
+          setState(() => _calculatedTotal = amount * _quantity);
+        }
+      },
     );
   }
 
   // ==================== QUANTITY SELECTOR ====================
 
   Widget _buildQuantitySelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Months',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: _primary,
-              ),
+    final total = (double.tryParse(_amountController.text) ?? 0) * _quantity;
+    Widget stepBtn(DPIconData icon, bool enabled, VoidCallback onTap) => Material(
+          color: DP.surface,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(DP.rMd),
+            side: const BorderSide(color: DP.border),
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(DP.rMd),
+            onTap: enabled ? onTap : null,
+            child: SizedBox(
+              width: 46,
+              height: 46,
+              child: Center(child: DPIcon(icon, size: 20, color: enabled ? DP.ink : DP.faint)),
             ),
-            Text(
-              'Total: ₦${((double.tryParse(_amountController.text) ?? 0) * _quantity).toStringAsFixed(2)}',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color: _secondary,
+          ),
+        );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const DPFieldLabel('Months'),
+          Row(
+            children: [
+              stepBtn(DPIcons.minus, _quantity > 1, () => setState(() => _quantity--)),
+              SizedBox(
+                width: 56,
+                child: Text('$_quantity',
+                    textAlign: TextAlign.center, style: DPText.title.copyWith(fontSize: 22)),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                if (_quantity > 1) {
-                  setState(() {
-                    _quantity--;
-                  });
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedMinusSign,
-                  color: _quantity > 1 ? _primary : Colors.grey.shade400,
-                  size: 20,
-                ),
+              stepBtn(DPIcons.plus, _quantity < 12, () => setState(() => _quantity++)),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('Total', style: DPText.small),
+                  Text(dpNaira(total), style: DPText.value.copyWith(color: DP.green, fontSize: 16)),
+                ],
               ),
-            ),
-            const SizedBox(width: 16),
-            Text(
-              '$_quantity',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w800,
-                color: _primary,
-              ),
-            ),
-            const SizedBox(width: 16),
-            GestureDetector(
-              onTap: () {
-                if (_quantity < 12) {
-                  setState(() {
-                    _quantity++;
-                  });
-                }
-              },
-              child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade300),
-                ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedAdd01,
-                  color: _quantity < 12 ? _primary : Colors.grey.shade400,
-                  size: 20,
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: _secondary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Max 12 months',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: _secondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text('Up to 12 months at a time', style: DPText.small),
+        ],
+      ),
     );
   }
 
@@ -1320,113 +729,39 @@ class _CableTVScreenState extends State<CableTVScreen>
 
   Widget _buildPlanSection() {
     final plans = _cablePlans[_selectedProvider] ?? [];
-
-    if (_selectedAction != 'change') {
-      return const SizedBox.shrink();
-    }
-
-    if (_isLoadingPlans) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Select New Package',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: _primary,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: const Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
+    if (_selectedAction != 'change') return const SizedBox.shrink();
+    if (_isLoadingPlans) return const DPLoader(message: 'Loading plans…');
     if (plans.isEmpty) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.grey.shade50,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade200),
-        ),
-        child: Column(
-          children: [
-            HugeIcon(
-              icon: HugeIcons.strokeRoundedAlert02,
-              color: Colors.orange.shade700,
-              size: 40,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'No plans available',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Colors.grey.shade700,
-              ),
-            ),
-            Text(
-              'Please try another provider',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ],
+      return DPCard(
+        child: DPEmptyState(
+          icon: DPIcons.circleAlert,
+          title: 'Couldn’t load plans',
+          message: 'Check your connection and try again.',
+          actionLabel: 'Retry',
+          onAction: _selectedProvider == null ? null : () => _fetchCablePlans(_selectedProvider!),
         ),
       );
     }
-
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Select New Package',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-            color: _primary,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Container(
-          constraints: const BoxConstraints(maxHeight: 280),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade200),
-          ),
+        const DPFieldLabel('Choose your new plan'),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 320),
           child: ListView.builder(
             shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
             itemCount: plans.length,
             itemBuilder: (context, index) {
               final plan = plans[index];
-              final isSelected = _selectedPlan == plan['name'];
-              final isCurrentPackage =
-                  plan['variation_code'] == _currentBouquetCode;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: _buildPlanCard(plan, isSelected, isCurrentPackage),
+              return _buildPlanCard(
+                plan,
+                _selectedPlan == plan['name'],
+                plan['variation_code'] == _currentBouquetCode,
               );
             },
           ),
         ),
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -1437,15 +772,18 @@ class _CableTVScreenState extends State<CableTVScreen>
     bool isCurrentPackage,
   ) {
     final amount = plan['variation_amount']?.toString() ?? '0.00';
-    final name = plan['name']?.toString() ?? 'Unknown Plan';
+    final name = plan['name']?.toString() ?? 'Unknown plan';
     final variationCode = plan['variation_code']?.toString() ?? '';
-
-    return GestureDetector(
+    return DPOptionRow(
+      title: name,
+      subtitle: isCurrentPackage ? 'Your current plan' : null,
+      selected: isSelected,
+      trailingText: dpNaira(double.tryParse(amount) ?? 0, decimals: false),
       onTap: () {
         if (isCurrentPackage) {
           _showErrorDialog(
-            'Same Package',
-            'You are already on this package. Please select a different package to change to.',
+            'Same plan',
+            'You’re already on this plan. Choose a different one to change to.',
           );
           return;
         }
@@ -1459,88 +797,6 @@ class _CableTVScreenState extends State<CableTVScreen>
           _calculatedTotal = double.tryParse(amount) ?? 0;
         });
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: isSelected ? _primary : Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? _primary : Colors.grey.shade200,
-            width: isSelected ? 2 : 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color:
-                  isSelected
-                      ? _primary.withOpacity(0.2)
-                      : Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  if (isCurrentPackage)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.green.shade100,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        'CURRENT',
-                        style: TextStyle(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.green.shade800,
-                        ),
-                      ),
-                    ),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: isSelected ? Colors.white : _primary,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.white : _secondary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                '₦${NumberFormat('#,##0').format(double.tryParse(amount) ?? 0)}',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: isSelected ? _primary : _secondary,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -1554,201 +810,34 @@ class _CableTVScreenState extends State<CableTVScreen>
     return showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade50,
-                    shape: BoxShape.circle,
-                  ),
-                  child: HugeIcon(
-                    icon: HugeIcons.strokeRoundedRefresh01,
-                    color: Colors.orange.shade700,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  'Package Change',
-                  style: TextStyle(
-                    color: _primary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'You are changing your subscription package:',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Current Package',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                            Text(
-                              currentPackage,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.grey.shade800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedArrowRight01,
-                        color: _primary,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'New Package',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                            Text(
-                              newPackage,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: _secondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.blue.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: Colors.blue.shade700,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'Package changes require the exact amount of ₦${totalAmount.toStringAsFixed(2)}.',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.blue.shade800,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.orange.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedAlert02,
-                        color: Colors.orange.shade700,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'This action cannot be undone. Your subscription will be changed immediately.',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.orange.shade800,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+      builder: (ctx) => Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(22, 26, 22, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const DPIconBadge(icon: DPIcons.refreshCw, bg: DP.warnSoft, fg: DP.warn, size: 56, radius: 28),
+              const SizedBox(height: 14),
+              Text('Change your plan?', style: DPText.title.copyWith(fontWeight: FontWeight.w500)),
+              const SizedBox(height: 14),
+              DPSummaryCard(rows: [
+                DPSummaryRow('Current plan', currentPackage),
+                DPSummaryRow('New plan', newPackage, valueColor: DP.green),
+                DPSummaryRow('Amount', dpNaira(totalAmount), emphasize: true),
+              ]),
+              const DPNotice(
+                'Your subscription changes immediately and this can’t be undone.',
+                kind: DPNoticeKind.warn,
+                margin: EdgeInsets.only(bottom: 18),
               ),
-              ElevatedButton(
-                onPressed: () => Navigator.pop(context, true),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  'Confirm Change',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-              ),
+              DPButton(label: 'Confirm change', onPressed: () => Navigator.pop(ctx, true)),
+              const SizedBox(height: 10),
+              DPButton.secondary(label: 'Cancel', onPressed: () => Navigator.pop(ctx, false)),
             ],
           ),
+        ),
+      ),
     );
   }
 
@@ -2173,50 +1262,10 @@ class _CableTVScreenState extends State<CableTVScreen>
     int? attemptsRemaining,
   }) {
     if (!mounted) return;
-
-    final displayMsg =
-        attemptsRemaining != null
-            ? '⚠️ $message ($attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining)'
-            : '⚠️ $message';
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: const BoxDecoration(
-                color: Colors.white24,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.lock_reset_rounded,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                displayMsg,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: const Color(0xFFDC2626),
-        behavior: SnackBarBehavior.floating,
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 24),
-        duration: const Duration(seconds: 4),
-      ),
-    );
+    final displayMsg = attemptsRemaining != null
+        ? '$message ($attemptsRemaining ${attemptsRemaining == 1 ? 'attempt' : 'attempts'} remaining)'
+        : message;
+    dpSnack(context, displayMsg, error: true);
   }
 
   void _setupAnimations() {
@@ -2287,876 +1336,75 @@ class _CableTVScreenState extends State<CableTVScreen>
   // ==================== PAYMENT SHEET OVERLAY ====================
 
   Widget _buildPaymentSheetOverlay() {
-    return GestureDetector(
-      onTap: _isProcessingPayment ? null : _closePaymentSheet,
-      child: AnimatedBuilder(
-        animation: _sheetAnimation,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _sheetAnimation.value,
-            child: Container(
-              color: Colors.black.withOpacity(0.4 * _sheetAnimation.value),
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Transform.translate(
-                      offset: Offset(
-                        0,
-                        (1 - _sheetAnimation.value) *
-                            MediaQuery.of(context).size.height *
-                            0.6,
-                      ),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                        ),
-                        child: SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 12),
-                                width: 40,
-                                height: 4,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Header
-                              Stack(
-                                children: [
-                                  Center(
-                                    child: Image.asset(
-                                      'assets/dalabapay2.png',
-                                      height: 40,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 16,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap:
-                                          _isProcessingPayment
-                                              ? null
-                                              : _closePaymentSheet,
-                                      child: Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade100,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: HugeIcon(
-                                          icon:
-                                              HugeIcons
-                                                  .strokeRoundedMultiplicationSign,
-                                          size: 18,
-                                          color: const Color(0xFF728078),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-
-                              Text(
-                                'Confirm Payment',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF14263D),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-
-                              // Transaction Details
-                              _buildPaymentSheetDetails(),
-                              const SizedBox(height: 16),
-
-                              // Balance
-                              _buildPaymentSheetBalance(),
-                              const SizedBox(height: 20),
-
-                              Divider(
-                                color: Colors.grey.shade200,
-                                thickness: 1,
-                              ),
-                              const SizedBox(height: 20),
-
-                              // Pay with PIN Option
-                              if (_transactionPinSet) ...[
-                                _buildPinOption(),
-                                const SizedBox(height: 12),
-                              ],
-
-                              // Pay with Biometric Option
-                              if (_biometricEnabled && _biometricAllowed)
-                                _buildBiometricOption(),
-
-                              if (!_transactionPinSet && !_biometricEnabled)
-                                Container(
-                                  padding: const EdgeInsets.all(16),
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 24,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange.shade50,
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: Colors.orange.shade200,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      HugeIcon(
-                                        icon: HugeIcons.strokeRoundedAlert02,
-                                        color: Colors.orange.shade700,
-                                        size: 20,
-                                      ),
-                                      const SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          'Set up a transaction PIN in Settings to make payments.',
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.orange.shade800,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  // ==================== PAYMENT SHEET DETAILS ====================
-
-  // ==================== PAYMENT SHEET DETAILS ====================
-
-  Widget _buildPaymentSheetDetails() {
     final provider = _providers.firstWhere(
       (p) => p['id'] == _selectedProvider,
-      orElse: () => _providers.first,
+      orElse: () => {'fullName': 'TV'},
     );
-    final smartCard = _smartCardController.text.trim();
-    final phone = _phoneController.text.trim();
-    final amount = double.tryParse(_amountController.text.trim()) ?? 0;
-    final isPackageChange = _selectedAction == 'change';
-    final actionName = _selectedAction == 'renew' ? 'Renew' : 'Change';
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Column(
-        children: [
-          // Action Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color:
-                          isPackageChange
-                              ? Colors.orange.shade50
-                              : _primary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon:
-                          isPackageChange
-                              ? HugeIcons.strokeRoundedRefresh01
-                              : HugeIcons.strokeRoundedCheckmarkCircle01,
-                      color:
-                          isPackageChange ? Colors.orange.shade700 : _primary,
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Action',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 3,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      isPackageChange
-                          ? Colors.orange.shade100
-                          : Colors.green.shade100,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  actionName,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color:
-                        isPackageChange
-                            ? Colors.orange.shade800
-                            : Colors.green.shade800,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Provider Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      color: provider['color'].withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: _buildProviderLogo(
-                      provider['logo'],
-                      provider['color'],
-                      size: 24,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Provider',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  provider['fullName'] ?? 'N/A',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Customer Name Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF8B5CF6).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedUser02,
-                      color: const Color(0xFF8B5CF6),
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Customer',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  _customerName ?? 'N/A',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Package Info - Current Package (only for change)
-          if (isPackageChange) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedTv01,
-                        color: Colors.grey.shade600,
-                        size: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'From',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: const Color(0xFF728078),
-                      ),
-                    ),
-                  ],
-                ),
-                Flexible(
-                  child: Text(
-                    _currentBouquet ?? 'N/A',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.grey.shade600,
-                    ),
-                    textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                  ),
-                ),
-              ],
-            ),
-            Divider(height: 14, color: Colors.grey.shade200),
-          ],
-
-          // Plan/New Package Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF59E0B).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedTv01,
-                      color: const Color(0xFFF59E0B),
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    isPackageChange ? 'New' : 'Package',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Flexible(
-                child: Text(
-                  isPackageChange
-                      ? (_selectedPlan ?? 'N/A')
-                      : (_currentBouquet ?? 'N/A'),
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14263D),
-                  ),
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Quantity Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6366F1).withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedCalendar03,
-                      color: const Color(0xFF6366F1),
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Months',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                '$_quantity',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w800,
-                  color: const Color(0xFF14263D),
-                ),
-              ),
-            ],
-          ),
-          Divider(height: 14, color: Colors.grey.shade200),
-
-          // Amount Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: _secondary.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: HugeIcon(
-                      icon: HugeIcons.strokeRoundedMoney01,
-                      color: _secondary,
-                      size: 16,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Amount',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF728078),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '₦${amount.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: _secondary,
-                    ),
-                  ),
-                  if (_quantity > 1)
-                    Text(
-                      '₦${(amount / _quantity).toStringAsFixed(2)} × $_quantity',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
+    final unit = double.tryParse(_amountController.text) ?? 0;
+    final total = unit * _quantity;
+    final isChange = _selectedAction == 'change';
+    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
+    final canBiometric = isBiometricSupported && _biometricEnabled && _biometricAllowed;
+    return DPSheetOverlay(
+      animation: _sheetAnimation,
+      onDismiss: _isProcessingPayment ? null : _closePaymentSheet,
+      child: DPPaymentReview(
+        icon: DPIcons.tv,
+        serviceLabel: '${provider['fullName']} · ${isChange ? 'Change plan' : 'Renewal'}',
+        amount: total,
+        rows: [
+          DPSummaryRow('Customer', _customerName ?? '—'),
+          DPSummaryRow('Smartcard', _smartCardController.text.trim()),
+          DPSummaryRow('Plan', isChange ? (_selectedPlan ?? '—') : (_currentBouquet ?? 'Current plan')),
+          DPSummaryRow('Months', '$_quantity'),
+          DPSummaryRow('Phone number', _phoneController.text.trim()),
+          DPSummaryRow('Total to pay', dpNaira(total), emphasize: true),
         ],
+        walletBalance: _walletBalance,
+        showPin: _transactionPinSet,
+        pinController: _pinController,
+        pinFocusNode: _pinFocusNode,
+        pinError: _pinValidationError,
+        shake: _shakeAnimation,
+        onPinChanged: (_) {
+          if (_pinValidationError != null) setState(() => _pinValidationError = null);
+        },
+        processing: _isProcessingPayment,
+        processingBiometric: _useBiometric,
+        onPayWithPin: () {
+          setState(() {
+            _useBiometric = false;
+            _pinValidationError = null;
+          });
+          _processPayment();
+        },
+        onPayWithBiometric: canBiometric
+            ? () {
+                setState(() {
+                  _useBiometric = true;
+                  _pinValidationError = null;
+                  _pinController.clear();
+                });
+                _processPayment();
+              }
+            : null,
+        onClose: _closePaymentSheet,
+        footnote: 'Your subscription updates on the smartcard above and can’t be reversed.',
       ),
     );
   }
 
-  Widget _buildPaymentSheetBalance() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: _secondary.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _secondary.withOpacity(0.15)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _secondary,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Available Balance',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF728078),
-                ),
-              ),
-            ],
-          ),
-          Text(
-            '₦${_walletBalance.toStringAsFixed(2)}',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w800,
-              color: _secondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // ==================== PAYMENT SHEET DETAILS ====================
+
+  // ==================== PAYMENT SHEET DETAILS ====================
+
+
 
   // ==================== PIN OPTION ====================
 
-  Widget _buildPinOption() {
-    final bool hasError = _pinValidationError != null;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: AnimatedBuilder(
-        animation: _shakeAnimation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: Offset(_shakeAnimation.value, 0),
-            child: child,
-          );
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                hasError
-                    ? const Color(0xFFFEF2F2)
-                    : (_useBiometric
-                        ? Colors.grey.shade50
-                        : _primary.withOpacity(0.04)),
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color:
-                  hasError
-                      ? const Color(0xFFEF4444)
-                      : (_useBiometric ? Colors.grey.shade300 : _primary),
-              width: hasError ? 2 : (_useBiometric ? 1 : 2),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: TextField(
-                  controller: _pinController,
-                  focusNode: _pinFocusNode,
-                  obscureText: true,
-                  enabled: !_useBiometric,
-                  decoration: InputDecoration(
-                    hintText: 'Enter 6-digit transaction PIN',
-                    hintStyle: TextStyle(
-                      color:
-                          hasError
-                              ? const Color(0xFFEF4444).withOpacity(0.7)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : Colors.grey.shade600),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: HugeIcon(
-                      icon: HugeIcons.strokeRoundedBiometricAccess,
-                      color:
-                          hasError
-                              ? const Color(0xFFEF4444)
-                              : (_useBiometric
-                                  ? Colors.grey.shade400
-                                  : _primary),
-                      size: 18,
-                    ),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 0,
-                      vertical: 12,
-                    ),
-                    errorText: _pinValidationError,
-                  ),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color:
-                        hasError
-                            ? const Color(0xFFDC2626)
-                            : (_useBiometric
-                                ? Colors.grey.shade400
-                                : Colors.black),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(6),
-                  ],
-                  onChanged: (_) {
-                    if (_pinValidationError != null) {
-                      setState(() => _pinValidationError = null);
-                    }
-                  },
-                ),
-              ),
-              if (hasError)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
-                  color: const Color(0xFFFEE2E2),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedAlert02,
-                        color: const Color(0xFFDC2626),
-                        size: 14,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          _pinValidationError!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFDC2626),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed:
-                      _isProcessingPayment || _useBiometric
-                          ? null
-                          : _processPayment,
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        hasError
-                            ? const Color(0xFFDC2626)
-                            : (_useBiometric ? Colors.transparent : _secondary),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          hasError
-                              ? const BorderRadius.vertical(
-                                bottom: Radius.circular(12),
-                              )
-                              : BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  child:
-                      _isProcessingPayment && !_useBiometric
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedBiometricAccess,
-                                color:
-                                    hasError
-                                        ? Colors.white
-                                        : (_useBiometric
-                                            ? Colors.grey.shade400
-                                            : Colors.white),
-                                size: 16,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                hasError
-                                    ? 'Retry'
-                                    : (_useBiometric
-                                        ? 'Switch to PIN'
-                                        : 'Pay with PIN'),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w700,
-                                  color:
-                                      hasError
-                                          ? Colors.white
-                                          : (_useBiometric
-                                              ? Colors.grey.shade400
-                                              : Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== BIOMETRIC OPTION ====================
 
-  Widget _buildBiometricOption() {
-    final bool isBiometricSupported = Platform.isAndroid || Platform.isIOS;
-
-    if (!isBiometricSupported) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GestureDetector(
-        onTap:
-            _isProcessingPayment
-                ? null
-                : () {
-                  setState(() {
-                    _useBiometric = true;
-                    _pinValidationError = null;
-                    _pinController.clear();
-                  });
-                  _processPayment();
-                },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
-          decoration: BoxDecoration(
-            color: _useBiometric ? _primary.withOpacity(0.08) : Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: _useBiometric ? _primary : Colors.grey.shade300,
-              width: _useBiometric ? 2 : 1,
-            ),
-          ),
-          child:
-              _isProcessingPayment && _useBiometric
-                  ? Center(
-                    child: SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: _primary,
-                        strokeWidth: 2.5,
-                      ),
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.fingerprint,
-                        color: _useBiometric ? _primary : Colors.grey.shade600,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          _useBiometric
-                              ? '🔐 Tap to authenticate'
-                              : 'Pay with Biometric',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color:
-                                _useBiometric ? _primary : Colors.grey.shade700,
-                          ),
-                        ),
-                      ),
-                      if (_useBiometric)
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: _secondary,
-                            shape: BoxShape.circle,
-                          ),
-                          child: HugeIcon(
-                            icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-                            color: Colors.white,
-                            size: 12,
-                          ),
-                        ),
-                    ],
-                  ),
-        ),
-      ),
-    );
-  }
 
   // ==================== SUCCESS & ERROR DIALOGS ====================
 
@@ -3210,7 +1458,7 @@ class _CableTVScreenState extends State<CableTVScreen>
                   isPackageChange
                       ? 'Package changed successfully!'
                       : 'Subscription renewed successfully!',
-              primaryColor: _primary,
+              primaryColor: DP.navy,
               showWatermark: true,
               isCommission: false,
             ),
@@ -3220,146 +1468,11 @@ class _CableTVScreenState extends State<CableTVScreen>
   }
 
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    shape: BoxShape.circle,
-                  ),
-                  child: HugeIcon(
-                    icon: HugeIcons.strokeRoundedAlert02,
-                    color: Colors.red.shade700,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: Colors.red.shade700,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: Colors.grey.shade600,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'If this issue persists, please contact support.',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  backgroundColor: _primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 10,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  'OK',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
-    );
+    showDPDialog(context, tone: DPDialogTone.error, title: title, message: message);
   }
 
   // ==================== PROVIDER LOGO WIDGET ====================
 
-  Widget _buildProviderLogo(
-    String imageUrl,
-    Color fallbackColor, {
-    double size = 28,
-  }) {
-    return ClipOval(
-      child: Container(
-        width: size,
-        height: size,
-        color: Colors.grey.shade100,
-        child: FutureBuilder<Uint8List?>(
-          future: _loadImage(imageUrl),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                snapshot.hasData &&
-                snapshot.data != null) {
-              return Image.memory(
-                snapshot.data!,
-                width: size,
-                height: size,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildFallbackLogo(fallbackColor, size);
-                },
-              );
-            } else {
-              return _buildFallbackLogo(fallbackColor, size);
-            }
-          },
-        ),
-      ),
-    );
-  }
 
   Future<Uint8List?> _loadImage(String url) async {
     try {
@@ -3373,115 +1486,34 @@ class _CableTVScreenState extends State<CableTVScreen>
     }
   }
 
-  Widget _buildFallbackLogo(Color color, double size) {
-    return Container(
-      width: size,
-      height: size,
-      color: color.withOpacity(0.2),
-      child: HugeIcon(
-        icon: HugeIcons.strokeRoundedTv01,
-        color: color,
-        size: size * 0.5,
-      ),
-    );
-  }
 
   // ==================== PROVIDER DROPDOWN ====================
 
   Widget _buildProviderDropdown() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: _selectedProvider,
-          isExpanded: true,
-          hint: Row(
-            children: [
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  shape: BoxShape.circle,
-                ),
-                child: HugeIcon(
-                  icon: HugeIcons.strokeRoundedTv01,
-                  color: Colors.grey.shade400,
-                  size: 16,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                'Select Provider',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: _hintColor,
-                ),
-              ),
-            ],
-          ),
-          icon: HugeIcon(
-            icon: HugeIcons.strokeRoundedArrowDown01,
-            color: Colors.grey,
-            size: 18,
-          ),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey.shade800,
-          ),
-          items:
-              _providers.map((provider) {
-                return DropdownMenuItem<String>(
-                  value: provider['id'],
-                  child: Row(
-                    children: [
-                      _buildProviderLogo(
-                        provider['logo'],
-                        provider['color'],
-                        size: 28,
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          provider['fullName'],
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _selectedProvider = value;
-              _selectedPlan = null;
-              _selectedPlanAmount = null;
-              _selectedPlanVariationCode = null;
-              _isValidated = false;
-              _customerName = null;
-              _currentBouquet = null;
-              _currentBouquetCode = null;
-              _renewalAmount = null;
-              _dueDate = null;
-              _selectedAction = null;
-              _quantity = 1;
-              _amountController.clear();
-            });
-            _fetchCablePlans(value!);
-          },
-        ),
-      ),
+    const values = ['dstv', 'gotv', 'startimes'];
+    return DPChipGrid(
+      labels: _providers.map((p) => p['fullName'] as String).toList(),
+      columns: 3,
+      selectedIndex: _selectedProvider == null ? null : values.indexOf(_selectedProvider!),
+      onSelected: (i) {
+        final value = _providers[i]['id'] as String;
+        setState(() {
+          _selectedProvider = value;
+          _selectedPlan = null;
+          _selectedPlanAmount = null;
+          _selectedPlanVariationCode = null;
+          _isValidated = false;
+          _customerName = null;
+          _currentBouquet = null;
+          _currentBouquetCode = null;
+          _renewalAmount = null;
+          _dueDate = null;
+          _selectedAction = null;
+          _quantity = 1;
+          _amountController.clear();
+        });
+        _fetchCablePlans(value);
+      },
     );
   }
 
@@ -3489,563 +1521,120 @@ class _CableTVScreenState extends State<CableTVScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: [
-          _buildBody(),
-          if (_showPaymentSheet) _buildPaymentSheetOverlay(),
-        ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: HugeIcon(
-          icon: HugeIcons.strokeRoundedArrowLeft01,
-          color: _primary,
-          size: 20,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'Cable TV',
-        style: TextStyle(
-          color: _primary,
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      centerTitle: true,
-      actions: [
-        Container(
-          margin: const EdgeInsets.only(right: 16),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: _primary.withOpacity(0.05),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedWallet01,
-                color: _primary,
-                size: 16,
-              ),
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap:
-                    () =>
-                        setState(() => _isBalanceVisible = !_isBalanceVisible),
-                child: Text(
-                  _isBalanceVisible
-                      ? '₦${_walletBalance.toStringAsFixed(2)}'
-                      : '••••',
-                  style: TextStyle(
-                    color: _primary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
+    return Stack(
+      children: [
+        DPPage(
+          title: 'Cable TV',
+          actionLabel: 'History',
+          onAction: () => Navigator.pushNamed(context, '/transactions'),
+          bottom: _isLoadingUserData || !_isUserActive || !_cableServiceEnabled
+              ? null
+              : DPButton(
+                  label: 'Review TV payment',
+                  icon: DPIcons.arrowRight,
+                  loading: _isLoading || _isAuthenticating,
+                  onPressed: (_isLoading || _isAuthenticating) ? null : _openPaymentSheet,
                 ),
-              ),
-            ],
-          ),
+          children: [_buildBody()],
         ),
+        if (_showPaymentSheet) _buildPaymentSheetOverlay(),
       ],
     );
   }
 
+
   Widget _buildBody() {
     if (_isLoadingUserData) {
-      return Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(_primary),
-        ),
-      );
+      return const Padding(padding: EdgeInsets.only(top: 80), child: DPLoader());
     }
-
     if (!_isUserActive || !_cableServiceEnabled) {
       return _buildServiceUnavailable();
     }
-
-    // Check if validate button should be active
     final smartCardText = _smartCardController.text.trim();
-    final bool isSmartCardValidLength =
-        smartCardText.length >= 10 && smartCardText.length <= 11;
-    final bool canValidate =
-        _selectedProvider != null && isSmartCardValidLength && !_isValidating;
+    final bool isSmartCardValidLength = smartCardText.length >= 10 && smartCardText.length <= 11;
+    final bool canValidate = _selectedProvider != null && isSmartCardValidLength && !_isValidating;
 
     return FadeTransition(
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildBanner(),
-              const SizedBox(height: 24),
-
-              // Select Provider
-              Text(
-                'Select Provider',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              _buildProviderDropdown(),
-              const SizedBox(height: 20),
-
-              // Smart Card Number
-              Text(
-                'Smart Card Number',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.grey.shade200),
-                      ),
-                      child: TextField(
-                        controller: _smartCardController,
-                        focusNode: _smartCardFocusNode,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(11),
-                        ],
-                        decoration: InputDecoration(
-                          hintText: 'Enter 10-11 digit smart card number',
-                          hintStyle: TextStyle(
-                            color: _hintColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          prefixIcon: Container(
-                            padding: const EdgeInsets.all(12),
-                            child: HugeIcon(
-                              icon: HugeIcons.strokeRoundedCreditCard,
-                              color: _primary,
-                              size: 22,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 14,
-                          ),
-                        ),
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        onChanged:
-                            (_) => setState(
-                              () {},
-                            ), // Trigger rebuild for button state
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  SizedBox(
-                    width: 90,
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: canValidate ? _validateSmartCard : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _primary,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: EdgeInsets.zero,
-                      ),
-                      child:
-                          _isValidating
-                              ? SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                              : Text(
-                                'Validate',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13,
-                                ),
-                              ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-
-              // Validation Status
-              if (_isValidated && _customerName != null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: _secondary.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _secondary.withOpacity(0.2)),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: _secondary.withOpacity(0.15),
-                          shape: BoxShape.circle,
-                        ),
-                        child: HugeIcon(
-                          icon: HugeIcons.strokeRoundedCheckmarkCircle01,
-                          color: _secondary,
-                          size: 18,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Smart Card Validated',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: _secondary,
-                              ),
-                            ),
-                            Text(
-                              _customerName!,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: _secondary,
-                              ),
-                            ),
-                            if (_currentBouquet != null &&
-                                _currentBouquet != 'N/A')
-                              Text(
-                                'Current: $_currentBouquet',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                  color: _secondary.withOpacity(0.7),
-                                ),
-                              ),
-                            if (_dueDate != null && _dueDate != 'N/A')
-                              Text(
-                                'Due: ${_formatDate(_dueDate!)}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                  color: _secondary.withOpacity(0.7),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              const SizedBox(height: 20),
-
-              // Action Selection
-              if (_isValidated) _buildActionSelector(),
-              const SizedBox(height: 20),
-
-              // Plan Selection (only for Change)
-              if (_selectedAction == 'change') _buildPlanSection(),
-              const SizedBox(height: 16),
-
-              // Amount Input
-              if (_isValidated && _selectedAction != null) _buildAmountInput(),
-              const SizedBox(height: 16),
-
-              // Quantity Selector
-              if (_isValidated && _selectedAction != null)
-                _buildQuantitySelector(),
-              const SizedBox(height: 20),
-
-              // Phone Number
-              Text(
-                'Phone Number',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: _primary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: TextField(
-                  controller: _phoneController,
-                  focusNode: _phoneFocusNode,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
-                  ],
-                  decoration: InputDecoration(
-                    hintText: 'Enter 11-digit phone number',
-                    hintStyle: TextStyle(
-                      color: _hintColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(12),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedSmartPhone01,
-                        color: _primary,
-                        size: 22,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Colors.transparent,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 14,
-                    ),
-                  ),
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Info Card
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: _primary.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 23,
-                      height: 23,
-                      decoration: BoxDecoration(
-                        color: _primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(13),
-                      ),
-                      child: HugeIcon(
-                        icon: HugeIcons.strokeRoundedInformationCircle,
-                        color: _primary,
-                        size: 16,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: Text(
-                        'Please confirm the details above before proceeding.',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: _primary,
-                          height: 1.3,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Continue Button
-              SizedBox(
-                width: double.infinity,
-                height: 54,
-                child: ElevatedButton(
-                  onPressed:
-                      (_isLoading || _isAuthenticating)
-                          ? null
-                          : _openPaymentSheet,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _secondary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    elevation: 0,
-                  ),
-                  child:
-                      _isLoading || _isAuthenticating
-                          ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                          : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              HugeIcon(
-                                icon: HugeIcons.strokeRoundedArrowUp01,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Continue',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ],
-                          ),
-                ),
-              ),
-              const SizedBox(height: 30),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBanner() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final bannerHeight = screenWidth < 400 ? 100.0 : 128.0;
-
-    return Container(
-      width: double.infinity,
-      height: bannerHeight,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        image: const DecorationImage(
-          image: AssetImage('assets/cabletv_banner.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              _primary.withOpacity(0.3),
-              _secondary.withOpacity(0.15),
-              Colors.transparent,
-            ],
-            stops: const [0.0, 0.4, 0.7],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildServiceUnavailable() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            HugeIcon(
-              icon:
-                  !_isUserActive
-                      ? HugeIcons.strokeRoundedUser02
-                      : HugeIcons.strokeRoundedTv01,
-              color:
-                  !_isUserActive ? Colors.red.shade700 : Colors.orange.shade700,
-              size: 60,
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 18),
+              child: Text('Keep the shows coming. Renew or change your plan.', style: DPText.bodyMuted),
             ),
-            const SizedBox(height: 16),
-            Text(
-              !_isUserActive ? 'Account Deactivated' : 'Service Unavailable',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color:
-                    !_isUserActive
-                        ? Colors.red.shade700
-                        : Colors.orange.shade700,
+            const DPFieldLabel('TV provider'),
+            _buildProviderDropdown(),
+            DPField(
+              label: 'Smartcard / IUC number',
+              labelTrailing: DPLinkButton(
+                label: _isValidating ? 'Verifying…' : (_isValidated ? 'Verified' : 'Verify'),
+                onPressed: canValidate ? _validateSmartCard : null,
+                color: canValidate || _isValidated ? DP.green : DP.faint,
               ),
+              controller: _smartCardController,
+              focusNode: _smartCardFocusNode,
+              keyboardType: TextInputType.number,
+              hint: '1045 xxx 7890',
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
+              onChanged: (_) => setState(() {}),
+              margin: EdgeInsets.only(bottom: _isValidated ? 10 : 18),
+              suffix: _isValidating
+                  ? const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)),
+                    )
+                  : null,
+              suffixIcon: DPIcons.scanLine,
             ),
-            const SizedBox(height: 12),
-            Text(
-              !_isUserActive
-                  ? 'Your account has been deactivated. Please contact support.'
-                  : 'Cable TV service is currently unavailable. Please try again later.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+            if (_isValidated && _customerName != null)
+              DPVerifiedName(
+                name: _customerName!,
+                detail: [
+                  if (_currentBouquet != null && _currentBouquet != 'N/A') 'Current: $_currentBouquet',
+                  if (_dueDate != null && _dueDate != 'N/A') 'Due ${_formatDate(_dueDate!)}',
+                ].join(' · '),
               ),
+            if (_isValidated) _buildActionSelector(),
+            if (_selectedAction == 'change') _buildPlanSection(),
+            if (_isValidated && _selectedAction != null) _buildAmountInput(),
+            if (_isValidated && _selectedAction != null) _buildQuantitySelector(),
+            DPField(
+              label: 'Phone number',
+              controller: _phoneController,
+              focusNode: _phoneFocusNode,
+              keyboardType: TextInputType.phone,
+              hint: '0803 456 7890',
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(11),
+              ],
+              suffixIcon: DPIcons.phone,
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _primary,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
+            DPSummaryCard(rows: [
+              DPSummaryRow('Wallet balance', _isBalanceVisible ? dpNaira(_walletBalance) : '₦ ••••'),
+              DPSummaryRow(
+                'Total to pay',
+                dpNaira((double.tryParse(_amountController.text) ?? 0) * _quantity),
+                emphasize: true,
               ),
-              child: Text(
-                'Go Back',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            ]),
+            const DPNotice('Please confirm the details above before you continue.', margin: EdgeInsets.zero),
           ],
         ),
       ),
+    );
+  }
+
+
+  Widget _buildServiceUnavailable() {
+    return const DPServiceUnavailable(
+      message: 'Cable TV payments are currently unavailable. Please try again later.',
     );
   }
 }
