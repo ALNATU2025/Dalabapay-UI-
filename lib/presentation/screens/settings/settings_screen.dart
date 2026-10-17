@@ -14,6 +14,7 @@ import '../kyc/kyc_screen.dart';
 import '../../../core/services/payment_service.dart';
 import '../../../core/services/update_service.dart';
 import '../../../core/utils/image_helper.dart';
+import '../../../ui/ui.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -708,16 +709,6 @@ class _SettingsScreenState extends State<SettingsScreen>
     await prefs.setBool(key, value);
   }
 
-  Future<void> _toggleDarkMode(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('darkModeEnabled', value);
-
-    setState(() {
-      darkModeEnabled = value;
-    });
-
-    _showSnackBar(value ? 'Dark mode enabled' : 'Light mode enabled');
-  }
 
   Future<void> _toggleNotifications(bool value) async {
     setState(() {
@@ -839,76 +830,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   // ==================== SUPPORT ACTIONS ====================
   void _showHelpCenterDialog() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: Row(
-              children: [
-                Icon(Icons.help_outline, color: _primaryColor, size: 28),
-                const SizedBox(width: 12),
-                Text(
-                  'Help Center',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: _textPrimary,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Get in touch with our support team:',
-                  style: TextStyle(fontSize: 16, color: _textPrimary),
-                ),
-                const SizedBox(height: 20),
-                _buildContactInfoRow(
-                  Icons.email,
-                  'Email:',
-                  'support@dalabapay.com',
-                ),
-                const SizedBox(height: 16),
-                _buildContactInfoRow(
-                  Icons.phone,
-                  'WhatsApp:',
-                  '+234 916 320 7050',
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'We\'re available 24/7 to assist you.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: _textSecondary,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  foregroundColor: _primaryColor,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                ),
-                child: Text(
-                  'Close',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
-    );
+    Navigator.pushNamed(context, '/support');
   }
 
   Widget _buildContactInfoRow(IconData icon, String label, String value) {
@@ -961,71 +883,6 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  void _showLanguageDialog() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: Row(
-              children: [
-                Icon(Icons.language, color: _primaryColor, size: 28),
-                const SizedBox(width: 12),
-                Text(
-                  'Language Settings',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: _textPrimary,
-                  ),
-                ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'App Language: English',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: _textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Currently, English is the only supported language. '
-                  'We are working to add more languages in future updates.',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: _textSecondary,
-                    height: 1.5,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(
-                  foregroundColor: _primaryColor,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                ),
-                child: Text(
-                  'OK',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
-    );
-  }
 
   void _showPrivacyPolicyDialog() {
     showDialog(
@@ -1245,28 +1102,14 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
   // In settings_screen.dart - Fix _logout method
  Future<void> _logout() async {
   if (mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Logging out...', style: const TextStyle()),
-        duration: const Duration(seconds: 1),
-      ),
-    );
+    dpSnack(context, 'Logging out...');
   }
 
   try {
     await ApiService.logoutUser();
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Logged out successfully',
-            style: const TextStyle(),
-          ),
-          backgroundColor: _successColor,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      dpSnack(context, 'Logged out successfully', success: true);
       // ✅ Clear entire stack and go to login
       Navigator.of(context).pushNamedAndRemoveUntil(
         '/login',
@@ -1278,12 +1121,7 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
     await ApiService.reportError(e, stackTrace);
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logged out', style: const TextStyle()),
-          backgroundColor: _warningColor,
-        ),
-      );
+      dpSnack(context, 'Logged out', error: true);
       Navigator.of(context).pushNamedAndRemoveUntil(
         '/login',
         (route) => false,
@@ -1293,346 +1131,233 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
 }
 
   void _showLogoutConfirmation() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            title: Row(
-              children: [
-                Icon(Icons.logout, color: _errorColor),
-                const SizedBox(width: 12),
-                Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              'Are you sure you want to logout from your account?',
-              style: TextStyle(fontSize: 16, color: _textPrimary),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                style: TextButton.styleFrom(foregroundColor: _textSecondary),
-                child: Text('Cancel', style: const TextStyle()),
-              ),
-                           TextButton(
-                onPressed: () {
-                  if (Navigator.canPop(context)) {
-                    if (Navigator.canPop(context)) {
-                      Navigator.pop(context);
-                    } else {
-                      // Navigate to a fallback screen
-                      Navigator.pushReplacementNamed(context, '/home');
-                    }
-                  } else {
-                    // Navigate to a fallback screen
-                    Navigator.pushReplacementNamed(context, '/home');
-                  }
-                  _logout();
-                },
-                style: TextButton.styleFrom(foregroundColor: _errorColor),
-                child: Text('Logout', style: const TextStyle()),
-              ),
-            ],
-          ),
+    showDPDialog(
+      context,
+      title: 'Log out of Dalabapay?',
+      message: 'You’ll need your password or PIN to sign back in.',
+      tone: DPDialogTone.warn,
+      icon: DPIcons.logOut,
+      primaryLabel: 'Log out',
+      onPrimary: () {
+        Navigator.of(context).pop();
+        _logout();
+      },
+      secondaryLabel: 'Stay signed in',
     );
   }
 
   // ==================== UI HELPERS ====================
   void _showSnackBar(String message, {Color? color}) {
     if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: const TextStyle()),
-        backgroundColor: color ?? _primaryColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 3),
-      ),
+    dpSnack(
+      context,
+      message,
+      error: color == _errorColor ||
+          color == _warningColor ||
+          RegExp(r'error|fail|unable|invalid|too large|empty', caseSensitive: false).hasMatch(message),
+      success: color == _successColor,
     );
   }
 
   // ==================== BUILD METHODS ====================
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _backgroundLight,
-      appBar: _buildAppBar(),
-      body: _buildBody(),
+    return DPPage(
+      title: 'Your profile',
+      onRefresh: _initializeSettings,
+      children: [_buildBody()],
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: _primaryColor, size: 20),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
+
+  Widget _buildBody() {
+    if (isLoading) {
+      return const Padding(
+        padding: EdgeInsets.only(top: 80),
+        child: DPLoader(message: 'Loading your profile…'),
+      );
+    }
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            'Dalaba',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: _primaryColor,
-              letterSpacing: 0.09,
-            ),
-          ),
-          Text(
-            'pay',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: _secondaryColor,
-              letterSpacing: 0.09,
-            ),
-          ),
+          _buildProfileSection(),
+          _buildSectionHeader('Account'),
+          _buildAccountCard(),
+          _buildSectionHeader('Preferences & security'),
+          _buildSecuritySettingsCard(),
+          _buildPreferencesCard(),
+          _buildSupportCard(),
+          const SizedBox(height: 18),
+          _buildLogoutButton(),
+          const SizedBox(height: 14),
+          _buildAppVersion(),
         ],
       ),
-      centerTitle: true,
-      actions: [
-        IconButton(
-          icon: Icon(Icons.refresh, color: _primaryColor, size: 22),
-          onPressed: _initializeSettings,
+    );
+  }
+
+  Widget _buildAccountCard() {
+    return Column(
+      children: [
+        DPMenuRow(
+          icon: DPIcons.user,
+          title: 'Personal information',
+          subtitle: 'Name, email and phone number',
+          onTap: _showPersonalInfo,
         ),
-        const SizedBox(width: 8),
+        DPMenuRow(
+          icon: DPIcons.shieldCheck,
+          title: 'Identity & limits',
+          subtitle: _isCheckingAccount
+              ? 'Checking account status…'
+              : _hasDedicatedAccount
+                  ? 'Verified · ${_dedicatedBankName ?? ''} ${_dedicatedAccountNumber ?? ''}'.trim()
+                  : 'Verify your identity to get your funding account',
+          trailing: _isCheckingAccount
+              ? null
+              : DPStatusPill(_hasDedicatedAccount ? 'Verified' : 'Pending'),
+          onTap: _navigateToKYC,
+        ),
+        DPMenuRow(
+          icon: DPIcons.gift,
+          title: 'Referrals',
+          subtitle: 'Invite friends and earn bonuses',
+          onTap: () => Navigator.pushNamed(context, '/referral',
+              arguments: {'userId': userData['_id']?.toString() ?? ''}),
+        ),
       ],
     );
   }
 
-  Widget _buildBody() {
-    if (isLoading) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 48,
-              height: 48,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                strokeWidth: 3,
-              ),
+  void _showPersonalInfo() {
+    showDPSheet(
+      context,
+      title: 'Personal information',
+      builder: (ctx) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          DPSummaryCard(rows: [
+            DPSummaryRow('Full name', fullName.isNotEmpty ? fullName : '—'),
+            DPSummaryRow('Email', email.isNotEmpty ? email : '—'),
+            DPSummaryRow('Phone', phone.isNotEmpty ? phone : 'Not set'),
+            DPSummaryRow('Account status', isActive ? 'Active' : 'Inactive'),
+          ]),
+          if (profileImageUrl != null && profileImageUrl!.isNotEmpty)
+            DPButton.secondary(
+              label: 'View profile photo',
+              onPressed: () {
+                Navigator.pop(ctx);
+                _viewProfileImage();
+              },
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Loading settings...',
-              style: TextStyle(color: _textSecondary, fontSize: 14),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return RefreshIndicator(
-      onRefresh: _initializeSettings,
-      color: _primaryColor,
-      backgroundColor: Colors.white,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-          child: Column(
-            children: [
-              _buildProfileSection(),
-              const SizedBox(height: 24),
-              _buildSectionHeader('Security'),
-              const SizedBox(height: 12),
-              _buildSecuritySettingsCard(),
-              const SizedBox(height: 24),
-              _buildSectionHeader('Preferences'),
-              const SizedBox(height: 12),
-              _buildPreferencesCard(),
-              const SizedBox(height: 24),
-              _buildSectionHeader('Support'),
-              const SizedBox(height: 12),
-              _buildSupportCard(),
-              const SizedBox(height: 24),
-              _buildLogoutButton(),
-              const SizedBox(height: 8),
-              _buildAppVersion(),
-            ],
+          const SizedBox(height: 10),
+          DPButton(
+            label: profileImageUrl != null && profileImageUrl!.isNotEmpty
+                ? 'Change profile photo'
+                : 'Add profile photo',
+            leadingIcon: DPIcons.camera,
+            onPressed: () {
+              Navigator.pop(ctx);
+              _pickProfileImage();
+            },
           ),
-        ),
+          const SizedBox(height: 12),
+          Text(
+            'To change your name, email or phone number, contact support so we can verify it’s you.',
+            style: DPText.small,
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildProfileImageContent() {
-    // Check multiple sources for profile image
     String? imageUrl;
-
     if (profileImageUrl != null && profileImageUrl!.isNotEmpty) {
       imageUrl = profileImageUrl;
     } else if (userData['profileImage'] != null &&
         userData['profileImage'].toString().isNotEmpty) {
       imageUrl = userData['profileImage'].toString();
     }
+    if (imageUrl == null || imageUrl.isEmpty) return _buildDefaultAvatar();
 
-    if (imageUrl == null || imageUrl.isEmpty) {
-      return Icon(Icons.person, size: 36, color: Colors.white);
-    }
-
-    // ✅ Build full URL using ImageHelper
-    // ✅ Cache buster: use updatedAt if present, else generate from URL hash
-    // This GUARANTEES a unique cache key per distinct image.
-    // ✅ Build full URL using ImageHelper
-    // ✅ Use the STABLE cache-buster stored in state.
-    //    It only changes when the image is replaced.
-    final fullImageUrl = ImageHelper.buildImageUrl(
-      imageUrl,
-      cacheBuster: _profileImageCacheBuster,
-    );
+    final fullImageUrl = ImageHelper.buildImageUrl(imageUrl, cacheBuster: _profileImageCacheBuster);
     final fallbackUrl = ImageHelper.buildFallbackUrl(imageUrl);
-
-    ImageHelper.logImageLoad(imageUrl, fullImageUrl);
-
-    if (fullImageUrl == null) {
-      return Icon(Icons.person, size: 36, color: Colors.white);
-    }
+    if (fullImageUrl == null) return _buildDefaultAvatar();
 
     return Image.network(
       fullImageUrl,
       fit: BoxFit.cover,
       headers: const {'Cache-Control': 'max-age=86400'},
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Center(
-          child: SizedBox(
-            width: 24,
-            height: 24,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Colors.white,
-              value:
-                  loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
+      loadingBuilder: (context, child, progress) => progress == null
+          ? child
+          : const Center(
+              child: SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(strokeWidth: 2, color: DP.green),
+              ),
             ),
-          ),
-        );
-      },
       errorBuilder: (context, error, stackTrace) {
-        debugPrint('❌ Primary image failed: $error');
-
         if (fallbackUrl != null && fallbackUrl != fullImageUrl) {
-          debugPrint('📸 Trying fallback: $fallbackUrl');
           return Image.network(
             fallbackUrl,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              debugPrint('❌ Fallback also failed: $error');
-              return _buildDefaultAvatar();
-            },
+            errorBuilder: (context, error, stackTrace) => _buildDefaultAvatar(),
           );
         }
-
         return _buildDefaultAvatar();
       },
     );
   }
 
   Widget _buildDefaultAvatar() {
-    return Container(
-      color: _primaryColor,
-      child: Icon(Icons.person, size: 36, color: Colors.white),
-    );
+    return DPAvatar(name: fullName.isNotEmpty ? fullName : 'User', size: 72);
   }
 
   // ==================== PROFILE SECTION ====================
   Widget _buildProfileSection() {
-    // Debug: Log the profile image URL
-    debugPrint('📸 Profile Image URL: $profileImageUrl');
-    debugPrint('📸 UserData profileImage: ${userData['profileImage']}');
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            _primaryColor.withValues(alpha: 0.05),
-            _secondaryColor.withValues(alpha: 0.05),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _primaryColor.withValues(alpha: 0.1)),
-      ),
+    final isAdmin = userData['isAdmin'] == true;
+    return DPCard(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(18),
       child: Row(
         children: [
-          // Profile image with tap to view
           GestureDetector(
-            onTap:
-                profileImageUrl != null && profileImageUrl!.isNotEmpty
+            onTap: isUpdating
+                ? null
+                : (profileImageUrl != null && profileImageUrl!.isNotEmpty
                     ? _viewProfileImage
-                    : null,
+                    : _pickProfileImage),
             child: Stack(
+              clipBehavior: Clip.none,
               children: [
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: _primaryColor.withValues(alpha: 0.2),
-                      width: 3,
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [_primaryColor, _secondaryColor],
-                    ),
-                  ),
-                  // ✅ Unique key forces rebuild when URL changes
-                  child: ClipOval(
-                    key: ValueKey(profileImageUrl ?? 'no-image'),
-                    child: _buildProfileImageContent(),
-                  ),
+                ClipRRect(
+                  key: ValueKey(profileImageUrl ?? 'no-image'),
+                  borderRadius: BorderRadius.circular(DP.rLg),
+                  child: SizedBox(width: 72, height: 72, child: _buildProfileImageContent()),
                 ),
-                // Camera button for re-upload
                 Positioned(
-                  bottom: 0,
-                  right: 0,
+                  right: -4,
+                  bottom: -4,
                   child: GestureDetector(
                     onTap: isUpdating ? null : _pickProfileImage,
                     child: Container(
-                      padding: const EdgeInsets.all(4),
+                      width: 26,
+                      height: 26,
                       decoration: BoxDecoration(
-                        color: _primaryColor,
+                        color: DP.green,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
+                        border: Border.all(color: DP.surface, width: 2),
                       ),
-                      child:
-                          isUpdating
-                              ? SizedBox(
-                                width: 14,
-                                height: 14,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 1.5,
-                                  color: Colors.white,
-                                ),
-                              )
-                              : Icon(
-                                Icons.camera_alt,
-                                size: 14,
-                                color: Colors.white,
-                              ),
+                      child: isUpdating
+                          ? const Padding(
+                              padding: EdgeInsets.all(5),
+                              child: CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white),
+                            )
+                          : const Center(child: DPIcon(DPIcons.camera, size: 13, color: Colors.white)),
                     ),
                   ),
                 ),
@@ -1645,159 +1370,25 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  fullName.isNotEmpty ? fullName : 'User Name',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: _textPrimary,
-                  ),
+                  fullName.isNotEmpty ? fullName : 'Your name',
+                  style: DPText.title.copyWith(fontSize: 20),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
                 Text(
-                  email.isNotEmpty ? email : 'user@example.com',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: _textSecondary,
-                  ),
+                  phone.isNotEmpty ? phone : email,
+                  style: DPText.bodyMuted,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
                 Text(
-                  'Phone: ${phone.isNotEmpty ? phone : 'Not set'}',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: _textSecondary,
+                  !isActive ? 'Account inactive' : (isAdmin ? 'Admin account' : 'Personal account'),
+                  style: DPText.small.copyWith(
+                    color: isActive ? DP.green : DP.danger,
+                    fontWeight: FontWeight.w500,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    _buildStatusChip(
-                      isActive ? 'Active' : 'Inactive',
-                      isActive ? _successColor : _errorColor,
-                    ),
-                    if (userData['isAdmin'] == true) ...[
-                      const SizedBox(width: 8),
-                      _buildStatusChip('Admin', _warningColor),
-                    ],
-                  ],
-                ),
-                // ✅ Add Re-upload button
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    if (profileImageUrl != null &&
-                        profileImageUrl!.isNotEmpty) ...[
-                      GestureDetector(
-                        onTap: _viewProfileImage,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _primaryColor.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: _primaryColor.withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.visibility,
-                                size: 12,
-                                color: _primaryColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'View',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: _primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      GestureDetector(
-                        onTap: _pickProfileImage,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _secondaryColor.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: _secondaryColor.withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.refresh,
-                                size: 12,
-                                color: _secondaryColor,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Change',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: _secondaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ] else ...[
-                      GestureDetector(
-                        onTap: _pickProfileImage,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _primaryColor.withValues(alpha: 0.08),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: _primaryColor.withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.add, size: 12, color: _primaryColor),
-                              const SizedBox(width: 4),
-                              Text(
-                                'Add Photo',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: _primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
                 ),
               ],
             ),
@@ -1807,435 +1398,161 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
     );
   }
 
-  Widget _buildStatusChip(String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: color,
-        ),
-      ),
-    );
-  }
 
   // ==================== SECTION HEADER ====================
-  Widget _buildSectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: _textPrimary,
-        ),
-      ),
-    );
-  }
+  Widget _buildSectionHeader(String title) => DPSectionHeader(title);
 
   // ==================== SECURITY CARD ====================
   Widget _buildSecuritySettingsCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildSettingsTile(
-            icon: Icons.lock_outline,
-            title: 'Transaction PIN',
-            subtitle:
-                transactionPinSet
-                    ? 'PIN is set - Tap to change'
-                    : 'Set up transaction PIN',
-            status: transactionPinSet ? 'Set' : 'Not Set',
-            statusColor: transactionPinSet ? _successColor : _warningColor,
-            onTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => ChangePinScreen(
-                        userId: userData['_id'] ?? '',
-                        hasExistingPin: transactionPinSet,
-                        userEmail: email,
-                      ),
+    return Column(
+      children: [
+        DPMenuRow(
+          icon: DPIcons.lock,
+          title: 'Payment PIN',
+          subtitle: transactionPinSet ? 'PIN is set · tap to change' : 'Set up your payment PIN',
+          trailing: transactionPinSet
+              ? null
+              : const DPStatusPill('Not set'),
+          onTap: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChangePinScreen(
+                  userId: userData['_id'] ?? '',
+                  hasExistingPin: transactionPinSet,
+                  userEmail: email,
                 ),
-              );
-              if (result != null && mounted) {
-                await _loadUserData();
-                if (result['success'] == true) {
-                  _showSnackBar(
-                    transactionPinSet
-                        ? 'PIN changed!'
-                        : 'PIN set successfully!',
-                    color: _successColor,
-                  );
-                }
+              ),
+            );
+            if (result != null && mounted) {
+              await _loadUserData();
+              if (result['success'] == true) {
+                _showSnackBar(transactionPinSet ? 'PIN changed' : 'PIN set successfully',
+                    color: _successColor);
               }
-            },
+            }
+          },
+        ),
+        DPMenuRow(
+          icon: DPIcons.keyRound,
+          title: 'Password',
+          subtitle: 'Keep your account protected',
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ChangePasswordScreen()),
           ),
-          _buildDivider(),
-          _buildBiometricTile(),
-          _buildDivider(),
-          _buildSettingsTile(
-            icon: Icons.password_outlined,
-            title: 'Change Password',
-            subtitle: 'Update your account password',
-            onTap:
-                () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChangePasswordScreen(),
-                  ),
-                ),
-          ),
-          _buildDivider(),
-          _buildSettingsTile(
-            icon: Icons.verified_user,
-            title: 'KYC Verification',
-            subtitle:
-                _isCheckingAccount
-                    ? 'Checking account status...'
-                    : _hasDedicatedAccount
-                    ? 'Account verified - ${_dedicatedAccountNumber ?? ""}'
-                    : 'Complete KYC to get your dedicated account',
-            status:
-                _isCheckingAccount
-                    ? 'Checking...'
-                    : _hasDedicatedAccount
-                    ? 'Verified'
-                    : 'Pending',
-            statusColor:
-                _isCheckingAccount
-                    ? Colors.blue
-                    : _hasDedicatedAccount
-                    ? _successColor
-                    : _warningColor,
-            onTap: _navigateToKYC,
-            showRefresh: true,
-            refreshCallback: _checkDedicatedAccount,
-          ),
-        ],
-      ),
+        ),
+        _buildBiometricTile(),
+      ],
     );
   }
 
   Widget _buildBiometricTile() {
-    if (_isCheckingBiometric || _isTogglingBiometric) {
-      return ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: _primaryColor.withValues(alpha: 0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(Icons.fingerprint, size: 22, color: _primaryColor),
-        ),
-        title: Text(
-          'Biometric Authentication',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: _textPrimary,
-          ),
-        ),
-        subtitle: Text(
-          _isTogglingBiometric ? 'Processing...' : 'Checking...',
-          style: TextStyle(fontSize: 14, color: _textSecondary),
-        ),
-        trailing: const SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
-      );
-    }
-
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: _primaryColor.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(Icons.fingerprint, size: 22, color: _primaryColor),
-      ),
-      title: Text(
-        'Biometric Authentication',
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: _textPrimary,
-        ),
-      ),
-      subtitle: Text(
-        biometricEnabled
-            ? 'Use fingerprint or face for login & payments'
-            : biometricAvailable
-            ? 'Enable fingerprint or face recognition'
-            : 'Tap for setup instructions',
-        style: TextStyle(fontSize: 14, color: _textSecondary),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (!biometricAvailable)
-            IconButton(
-              icon: Icon(Icons.help_outline, color: _textSecondary, size: 20),
-              onPressed: _showSetupLockScreenDialog,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
+    final busy = _isCheckingBiometric || _isTogglingBiometric;
+    return DPMenuRow(
+      icon: DPIcons.fingerprint,
+      title: 'Biometric login',
+      subtitle: busy
+          ? (_isTogglingBiometric ? 'Updating…' : 'Checking…')
+          : biometricEnabled
+              ? 'Enabled for login and payments'
+              : biometricAvailable
+                  ? 'Use your fingerprint or face'
+                  : 'Set up a screen lock on your phone first',
+      onTap: busy
+          ? null
+          : (biometricAvailable
+              ? () => _handleBiometricToggle(!biometricEnabled)
+              : _showSetupLockScreenDialog),
+      trailing: busy
+          ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+          : Switch(
+              value: biometricEnabled,
+              onChanged: biometricAvailable ? _handleBiometricToggle : null,
             ),
-          Switch(
-            value: biometricEnabled,
-            onChanged: biometricAvailable ? _handleBiometricToggle : null,
-            activeThumbColor: _secondaryColor,
-            activeTrackColor: _secondaryColor.withValues(alpha: 0.3),
-          ),
-        ],
-      ),
     );
   }
 
   // ==================== PREFERENCES CARD ====================
   Widget _buildPreferencesCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildSwitchTile(
-            icon: Icons.notifications_none,
-            title: 'Push Notifications',
-            subtitle: 'Receive mobile notifications',
+    return Column(
+      children: [
+        DPMenuRow(
+          icon: DPIcons.bell,
+          title: 'Notifications',
+          subtitle: 'Payments, reminders and updates',
+          onTap: () => Navigator.pushNamed(context, '/notifications'),
+          trailing: Switch(
             value: notificationsEnabled,
             onChanged: _toggleNotifications,
           ),
-          _buildDivider(),
-          _buildSwitchTile(
-            icon: Icons.dark_mode_outlined,
-            title: 'Dark Mode',
-            subtitle: 'Switch between light and dark theme',
-            value: darkModeEnabled,
-            onChanged: _toggleDarkMode,
-          ),
-          _buildDivider(),
-          _buildSettingsTile(
-            icon: Icons.language,
-            title: 'Language',
-            subtitle: 'App language settings',
-            onTap: _showLanguageDialog,
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   // ==================== SUPPORT CARD ====================
   Widget _buildSupportCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildSettingsTile(
-            icon: Icons.help_outline,
-            title: 'Help Center',
-            subtitle: 'Get support and assistance',
-            onTap: _showHelpCenterDialog,
-          ),
-          _buildDivider(),
-          _buildSettingsTile(
-            icon: Icons.privacy_tip_outlined,
-            title: 'Privacy Policy',
-            subtitle: 'How we protect your data',
-            onTap: _showPrivacyPolicyDialog,
-          ),
-          _buildDivider(),
-          _buildSettingsTile(
-            icon: Icons.description_outlined,
-            title: 'Terms & Conditions',
-            subtitle: 'App usage terms',
-            onTap: _showTermsDialog,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        DPMenuRow(
+          icon: DPIcons.help,
+          title: 'Help & support',
+          subtitle: 'We’re here when you need us',
+          onTap: _showHelpCenterDialog,
+        ),
+        DPMenuRow(
+          icon: DPIcons.shield,
+          title: 'Privacy policy',
+          subtitle: 'How we protect your data',
+          onTap: _showPrivacyPolicyDialog,
+        ),
+        DPMenuRow(
+          icon: DPIcons.fileText,
+          title: 'Terms & conditions',
+          subtitle: 'App usage terms',
+          onTap: _showTermsDialog,
+        ),
+      ],
     );
   }
 
   // ==================== LOGOUT BUTTON ====================
   Widget _buildLogoutButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: isUpdating ? null : _showLogoutConfirmation,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _errorColor.withValues(alpha: 0.05),
-          foregroundColor: _errorColor,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: BorderSide(color: _errorColor.withValues(alpha: 0.2)),
-          ),
-          elevation: 0,
-        ),
-        child:
-            isUpdating
-                ? SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(_errorColor),
-                  ),
-                )
-                : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.logout, size: 20, color: _errorColor),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Logout',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: _errorColor,
-                      ),
-                    ),
-                  ],
-                ),
-      ),
+    return DPButton.secondary(
+      label: 'Log out',
+      loading: isUpdating,
+      onPressed: isUpdating ? null : _showLogoutConfirmation,
     );
   }
 
   // ==================== APP VERSION ====================
   // ==================== APP VERSION ====================
   Widget _buildAppVersion() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: FutureBuilder<Map<String, dynamic>?>(
-          future: _checkForUpdate(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text(
-                'Loading version...',
-                style: TextStyle(fontSize: 12, color: _textSecondary),
-              );
-            }
-
-            final hasUpdate = snapshot.data?['needsUpdate'] ?? false;
-            final latestVersion = snapshot.data?['latestVersion'] ?? '';
-            final currentVersion = snapshot.data?['currentVersion'] ?? '1.0.0';
-
-            return Column(
-              children: [
-                Text(
-                  'Version $currentVersion',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: _textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                // Check for updates button
-                GestureDetector(
-                  onTap: _checkForUpdateManually,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _primaryColor.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.system_update_alt,
-                          size: 12,
-                          color: _primaryColor,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          hasUpdate ? 'Update available!' : 'Check for updates',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: hasUpdate ? _warningColor : _primaryColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                if (hasUpdate) ...[
-                  const SizedBox(height: 4),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _warningColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      'v$latestVersion available',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: _warningColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ],
-            );
-          },
-        ),
-      ),
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: _checkForUpdate(),
+      builder: (context, snapshot) {
+        final hasUpdate = snapshot.data?['needsUpdate'] ?? false;
+        final latestVersion = snapshot.data?['latestVersion'] ?? '';
+        final currentVersion = snapshot.data?['currentVersion'] ?? '1.0.0';
+        return Column(
+          children: [
+            Text(
+              snapshot.connectionState == ConnectionState.waiting
+                  ? 'Dalabapay'
+                  : 'Dalabapay · Version $currentVersion',
+              style: DPText.small,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            DPLinkButton(
+              label: hasUpdate ? 'Update to v$latestVersion' : 'Check for updates',
+              color: hasUpdate ? DP.warn : DP.green,
+              onPressed: _checkForUpdateManually,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -2492,122 +1809,6 @@ By using DalabaPay, you agree to our terms governing financial transactions, bil
   }
 
   // ==================== TILE BUILDERS ====================
-  Widget _buildSettingsTile({
-    required IconData icon,
-    required String title,
-    String? subtitle,
-    String? status,
-    Color? statusColor,
-    VoidCallback? onTap,
-    bool showRefresh = false,
-    VoidCallback? refreshCallback,
-  }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: _primaryColor.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, size: 22, color: _primaryColor),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: _textPrimary,
-        ),
-      ),
-      subtitle:
-          subtitle != null
-              ? Text(
-                subtitle,
-                style: TextStyle(fontSize: 14, color: _textSecondary),
-              )
-              : null,
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (showRefresh && refreshCallback != null)
-            IconButton(
-              icon: Icon(Icons.refresh, color: _primaryColor, size: 18),
-              onPressed: refreshCallback,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-            ),
-          if (status != null)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: (statusColor ?? _primaryColor).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: (statusColor ?? _primaryColor).withValues(alpha: 0.2),
-                ),
-              ),
-              child: Text(
-                status,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: statusColor ?? _primaryColor,
-                ),
-              ),
-            )
-          else
-            Icon(Icons.chevron_right, color: _textSecondary, size: 20),
-        ],
-      ),
-      onTap: onTap,
-    );
-  }
 
-  Widget _buildSwitchTile({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required bool value,
-    ValueChanged<bool>? onChanged,
-  }) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      leading: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: _primaryColor.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, size: 22, color: _primaryColor),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: _textPrimary,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(fontSize: 14, color: _textSecondary),
-      ),
-      trailing: Switch(
-        value: value,
-        onChanged: onChanged,
-        activeThumbColor: _secondaryColor,
-        activeTrackColor: _secondaryColor.withValues(alpha: 0.3),
-      ),
-    );
-  }
 
-  Widget _buildDivider() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Divider(height: 1, thickness: 0.5, color: Colors.grey.shade200),
-    );
-  }
 }
