@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/services/payment_service.dart';
+import '../../../ui/ui.dart';
 
 class KYCScreen extends StatefulWidget {
   const KYCScreen({super.key});
@@ -292,611 +293,66 @@ class _KYCScreenState extends State<KYCScreen>
   // 🎯 PROFESSIONAL DIALOGS
   // ============================================================
 
-  /// Show loading dialog while submitting
   void _showLoadingDialog() {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder:
-          (context) => Dialog(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            child: Container(
-              padding: const EdgeInsets.all(32),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: 56,
-                    height: 56,
-                    child: CircularProgressIndicator(
-                      color: _primaryColor,
-                      strokeWidth: 4,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Creating Your Account...',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: _textPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Please wait while we set up your dedicated account',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: _textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  LinearProgressIndicator(
-                    backgroundColor: Colors.grey.shade200,
-                    valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                  ),
-                ],
-              ),
-            ),
-          ),
+      builder: (context) => const Dialog(
+        insetPadding: EdgeInsets.symmetric(horizontal: 60),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+          child: DPLoader(message: 'Setting up your account…'),
+        ),
+      ),
     );
   }
 
-  /// Show Sweet Alert-style Success Dialog
   void _showSweetSuccessDialog(Map<String, dynamic> result) {
-    showDialog(
-      context: context,
+    final accountNumber = (result['accountNumber'] ?? 'N/A').toString();
+    showDPDialog(
+      context,
+      title: 'Your account is ready',
+      message: 'Send money to this account number to add money to your Dalabapay wallet.',
+      tone: DPDialogTone.success,
       barrierDismissible: false,
-      builder:
-          (context) => Dialog(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            child: TweenAnimationBuilder(
-              duration: const Duration(milliseconds: 600),
-              tween: Tween<double>(begin: 0.0, end: 1.0),
-              builder: (context, value, child) {
-                return Transform.scale(
-                  scale: value,
-                  child: Opacity(
-                    opacity: value,
-                    child: Container(
-                      padding: const EdgeInsets.all(28),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.15),
-                            blurRadius: 30,
-                            offset: const Offset(0, 15),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Animated Success Icon
-                          Container(
-                            width: 90,
-                            height: 90,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  _secondaryColor,
-                                  _secondaryColor.withValues(alpha: 0.7),
-                                ],
-                              ),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.check_rounded,
-                              color: Colors.white,
-                              size: 50,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            '🎉 Account Created!',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: _textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Your dedicated account has been set up successfully',
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: _textSecondary,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
-                          // Account Details Card
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  _primaryColor.withValues(alpha: 0.05),
-                                  _secondaryColor.withValues(alpha: 0.05),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: _primaryColor.withValues(alpha: 0.1),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                _buildAccountDetailRow(
-                                  'Account Number',
-                                  result['accountNumber'] ?? 'N/A',
-                                  Icons.account_balance_wallet,
-                                ),
-                                const Divider(height: 16),
-                                _buildAccountDetailRow(
-                                  'Account Name',
-                                  result['accountName'] ?? _fullName,
-                                  Icons.person,
-                                ),
-                                const Divider(height: 16),
-                                _buildAccountDetailRow(
-                                  'Bank',
-                                  result['bankName'] ?? 'Moniepoint MFB',
-                                  Icons.business,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.green.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.green.withValues(alpha: 0.15),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline_rounded,
-                                  color: _secondaryColor,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(
-                                    'Your account tier has been upgraded. You can now receive payments!',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: _secondaryColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          // 🔥 FIX: Go to Dashboard with refresh flag
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                // Close the dialog
-                                if (Navigator.canPop(context)) {
-                                  if (Navigator.canPop(context)) {
-                                    Navigator.pop(context);
-                                  } else {
-                                    // Navigate to a fallback screen
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      '/home',
-                                    );
-                                  }
-                                } else {
-                                  // Navigate to a fallback screen
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    '/home',
-                                  );
-                                }
-                                // Close KYC screen with refresh flag
-                                Navigator.pop(context, true);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _primaryColor,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.home_rounded,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    'Go to Dashboard',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+      body: Column(
+        children: [
+          DPSummaryCard(rows: [
+            DPSummaryRow('Account number', accountNumber, emphasize: true),
+            DPSummaryRow('Account name', (result['accountName'] ?? _fullName).toString()),
+            DPSummaryRow('Bank', (result['bankName'] ?? 'Moniepoint MFB').toString()),
+          ]),
+          DPLinkButton(
+            label: 'Copy account number',
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: accountNumber));
+              dpSnack(context, 'Account number copied', success: true);
+            },
           ),
+        ],
+      ),
+      primaryLabel: 'Go to home',
+      onPrimary: () {
+        Navigator.of(context).pop(); // close dialog
+        Navigator.pop(context, true); // close KYC with refresh flag
+      },
     );
   }
 
-  /// Show Sweet Alert-style Error Dialog
   void _showSweetErrorDialog(String message) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder:
-          (context) => Dialog(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            child: TweenAnimationBuilder(
-              duration: const Duration(milliseconds: 400),
-              tween: Tween<double>(begin: 0.0, end: 1.0),
-              builder: (context, value, child) {
-                return Transform.scale(
-                  scale: value,
-                  child: Opacity(
-                    opacity: value,
-                    child: Container(
-                      padding: const EdgeInsets.all(28),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.12),
-                            blurRadius: 25,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: _errorColor.withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.error_outline_rounded,
-                              color: _errorColor,
-                              size: 45,
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          Text(
-                            'Something Went Wrong',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: _textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            message,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _textSecondary,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    if (Navigator.canPop(context)) {
-                                      if (Navigator.canPop(context)) {
-                                        Navigator.pop(context);
-                                      } else {
-                                        // Navigate to a fallback screen
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          '/home',
-                                        );
-                                      }
-                                    } else {
-                                      // Navigate to a fallback screen
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        '/home',
-                                      );
-                                    }
-                                    setState(() => _isSubmitting = false);
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    side: BorderSide(
-                                      color: Colors.grey.shade300,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Try Again',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: _textPrimary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (Navigator.canPop(context)) {
-                                      if (Navigator.canPop(context)) {
-                                        Navigator.pop(context);
-                                      } else {
-                                        // Navigate to a fallback screen
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          '/home',
-                                        );
-                                      }
-                                    } else {
-                                      // Navigate to a fallback screen
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        '/home',
-                                      );
-                                    }
-                                    if (Navigator.canPop(context)) {
-                                      if (Navigator.canPop(context)) {
-                                        Navigator.pop(context);
-                                      } else {
-                                        // Navigate to a fallback screen
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          '/home',
-                                        );
-                                      }
-                                    } else {
-                                      // Navigate to a fallback screen
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        '/home',
-                                      );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: _primaryColor,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Go Back',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+    showDPDialog(
+      context,
+      title: 'We couldn’t verify you',
+      message: message,
+      tone: DPDialogTone.error,
+      primaryLabel: 'Try again',
     );
   }
 
-  /// Show Sweet Alert-style Info Dialog
   void _showSweetInfoDialog(String title, String message) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder:
-          (context) => Dialog(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            child: TweenAnimationBuilder(
-              duration: const Duration(milliseconds: 400),
-              tween: Tween<double>(begin: 0.0, end: 1.0),
-              builder: (context, value, child) {
-                return Transform.scale(
-                  scale: value,
-                  child: Opacity(
-                    opacity: value,
-                    child: Container(
-                      padding: const EdgeInsets.all(28),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(28),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.12),
-                            blurRadius: 25,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.blue.withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.info_outline_rounded,
-                              color: Colors.blue.shade600,
-                              size: 45,
-                            ),
-                          ),
-                          const SizedBox(height: 18),
-                          Text(
-                            title,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: _textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            message,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _textSecondary,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _primaryColor,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                'Got It',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-    );
+    showDPDialog(context, title: title, message: message, tone: DPDialogTone.info);
   }
 
-  Widget _buildAccountDetailRow(String label, String value, IconData icon) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: _primaryColor.withValues(alpha: 0.08),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, size: 16, color: _primaryColor),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: _textSecondary,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: _textPrimary,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: value));
-                      _showSweetInfoDialog(
-                        'Copied!',
-                        'Account details copied to clipboard',
-                      );
-                    },
-                    icon: Icon(Icons.copy, size: 16, color: _primaryColor),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
   // ==================== SUBMIT ====================
   Future<void> _submitKYC() async {
@@ -975,302 +431,140 @@ class _KYCScreenState extends State<KYCScreen>
   // ==================== UI HELPERS ====================
   void _showSnackBar(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: const TextStyle()),
-        backgroundColor: _primaryColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 3),
-      ),
-    );
+    dpSnack(context, message);
   }
 
   // ==================== BUILD ====================
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 48,
-                height: 48,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(_primaryColor),
-                  strokeWidth: 3,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Loading your information...',
-                style: TextStyle(color: _textSecondary, fontSize: 14),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: _buildForm(),
+    final isValid = _isFormValid();
+    return DPPage(
+      title: 'Identity & limits',
+      bottom: _isLoading
+          ? null
+          : DPButton(
+              label: isValid ? 'Create my account' : 'Fill the required fields',
+              loading: _isSubmitting,
+              onPressed: _isSubmitting || !isValid ? null : _submitKYC,
+            ),
+      children: [
+        if (_isLoading)
+          const Padding(
+            padding: EdgeInsets.only(top: 80),
+            child: DPLoader(message: 'Loading your information…'),
+          )
+        else
+          _buildForm(),
+      ],
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: _primaryColor, size: 20),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Dalaba',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: _primaryColor,
-              letterSpacing: 0.09,
-            ),
-          ),
-          Text(
-            'pay',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: _secondaryColor,
-              letterSpacing: 0.09,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-    );
-  }
 
   Widget _buildForm() {
     final formError = _getFormError();
-    final bool isValid = _isFormValid();
-
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.all(20),
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Text(
-                'Complete Your KYC',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: _textPrimary,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Provide your identification details to create your dedicated account',
-                style: TextStyle(fontSize: 14, color: _textSecondary),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.amber.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.amber.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: Colors.amber.shade700,
-                      size: 16,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'You only need to provide either BVN or NIN, not both.',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.amber.shade800,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Auto-populated User Info
-              _buildReadOnlySection(),
-              const SizedBox(height: 20),
-
-              // BVN FIELD
-              _buildTextField(
-                controller: _bvnController,
-                label: 'Bank Verification Number (BVN)',
-                hint: 'Enter 11-digit BVN (optional if providing NIN)',
-                icon: Icons.credit_card,
-                errorText: _bvnError,
-                onChanged: _validateBVN,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(11),
-                ],
-                isOptional: true,
-                isValid: _bvnValid,
-                isUsing: _isUsingBVN,
-              ),
-
-              const SizedBox(height: 8),
-
-              // "OR" Divider
-              Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Text(
-                      'OR',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: _textSecondary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  Expanded(child: Divider(color: Colors.grey.shade300)),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // NIN FIELD
-              _buildTextField(
-                controller: _ninController,
-                label: 'National Identification Number (NIN)',
-                hint: 'Enter 11-digit NIN (optional if providing BVN)',
-                icon: Icons.credit_card_outlined,
-                errorText: _ninError,
-                onChanged: _validateNIN,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(11),
-                ],
-                isOptional: true,
-                isValid: _ninValid,
-                isUsing: _isUsingNIN,
-              ),
-
-              // Validation status
-              if (!_hasValidIdentification() &&
-                  (_bvnController.text.isNotEmpty ||
-                      _ninController.text.isNotEmpty))
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const DPHeadline(
+            'Verify it’s you.',
+            subtitle: 'We’ll create your personal funding account so you can add money by bank transfer.',
+          ),
+          const DPNotice(
+            'You only need one: your BVN or your NIN.',
+            kind: DPNoticeKind.info,
+          ),
+          _buildReadOnlySection(),
+          _buildTextField(
+            controller: _bvnController,
+            label: 'BVN',
+            hint: '11-digit Bank Verification Number',
+            icon: Icons.credit_card,
+            errorText: _bvnError,
+            onChanged: _validateBVN,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(11),
+            ],
+            isOptional: true,
+            isValid: _bvnValid,
+            isUsing: _isUsingBVN,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: Row(
+              children: [
+                const Expanded(child: Divider(color: DP.border)),
                 Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Text(
-                    'Please enter a valid BVN (11 digits) or NIN (11+ digits)',
-                    style: TextStyle(fontSize: 12, color: _errorColor),
-                  ),
-                )
-              else if (_hasValidIdentification())
-                Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: _secondaryColor,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        _isUsingBVN ? '✓ BVN verified' : '✓ NIN verified',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: _secondaryColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text('OR', style: DPText.overline),
                 ),
-
-              const SizedBox(height: 16),
-
-              // DATE OF BIRTH
-              _buildTextField(
-                controller: _dateOfBirthController,
-                label: 'Date of Birth',
-                hint: 'DD/MM/YYYY',
-                icon: Icons.calendar_today,
-                errorText: _dateOfBirthError,
-                onChanged: _validateDateOfBirth,
-                readOnly: true,
-                onTap: () => _selectDate(),
-                isRequired: true,
-                isValid: _dateOfBirthValid,
-                isUsing: _dateOfBirthController.text.isNotEmpty,
-              ),
-
-              const SizedBox(height: 16),
-
-              // GENDER
-              _buildTextField(
-                controller: _genderController,
-                label: 'Gender',
-                hint: 'Select your gender',
-                icon: Icons.person_outline,
-                errorText: _genderError,
-                onChanged: _validateGender,
-                readOnly: true,
-                onTap: () => _selectGender(),
-                isRequired: true,
-                isValid: _genderValid,
-                isUsing: _genderController.text.isNotEmpty,
-              ),
-
-              const SizedBox(height: 16),
-
-              // ADDRESS
-              _buildTextField(
-                controller: _addressController,
-                label: 'Residential Address',
-                hint: 'Enter your residential address',
-                icon: Icons.home_outlined,
-                errorText: _addressError,
-                onChanged: _validateAddress,
-                maxLines: 2,
-                isRequired: true,
-                isValid: _addressValid,
-                isUsing: _addressController.text.trim().isNotEmpty,
-              ),
-
-              const SizedBox(height: 24),
-
-              // Terms and Conditions
-              Row(
+                const Expanded(child: Divider(color: DP.border)),
+              ],
+            ),
+          ),
+          _buildTextField(
+            controller: _ninController,
+            label: 'NIN',
+            hint: '11-digit National Identification Number',
+            icon: Icons.credit_card_outlined,
+            errorText: _ninError,
+            onChanged: _validateNIN,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(11),
+            ],
+            isOptional: true,
+            isValid: _ninValid,
+            isUsing: _isUsingNIN,
+          ),
+          _buildTextField(
+            controller: _dateOfBirthController,
+            label: 'Date of birth',
+            hint: 'DD/MM/YYYY',
+            icon: Icons.calendar_today,
+            errorText: _dateOfBirthError,
+            onChanged: _validateDateOfBirth,
+            readOnly: true,
+            onTap: () => _selectDate(),
+            isRequired: true,
+            isValid: _dateOfBirthValid,
+            isUsing: _dateOfBirthController.text.isNotEmpty,
+          ),
+          _buildTextField(
+            controller: _genderController,
+            label: 'Gender',
+            hint: 'Select your gender',
+            icon: Icons.person_outline,
+            errorText: _genderError,
+            onChanged: _validateGender,
+            readOnly: true,
+            onTap: () => _selectGender(),
+            isRequired: true,
+            isValid: _genderValid,
+            isUsing: _genderController.text.isNotEmpty,
+          ),
+          _buildTextField(
+            controller: _addressController,
+            label: 'Residential address',
+            hint: 'House number, street, city',
+            icon: Icons.home_outlined,
+            errorText: _addressError,
+            onChanged: _validateAddress,
+            maxLines: 2,
+            isRequired: true,
+            isValid: _addressValid,
+            isUsing: _addressController.text.trim().isNotEmpty,
+          ),
+          GestureDetector(
+            onTap: () => setState(() => _termsAccepted = !_termsAccepted),
+            behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
@@ -1278,195 +572,45 @@ class _KYCScreenState extends State<KYCScreen>
                     height: 24,
                     child: Checkbox(
                       value: _termsAccepted,
-                      onChanged: (value) {
-                        setState(() => _termsAccepted = value ?? false);
-                      },
-                      activeColor: _primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
+                      onChanged: (value) => setState(() => _termsAccepted = value ?? false),
+                      activeColor: DP.green,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'I agree to the ',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _textSecondary,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'Terms of Service',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: _primaryColor,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                                ' and confirm that the information provided is accurate.',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: _textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: Text(
+                      'I agree to the Terms of Service and confirm the information I’ve given is accurate.',
+                      style: DPText.bodyMuted.copyWith(fontSize: 14),
                     ),
                   ),
                 ],
               ),
-
-              const SizedBox(height: 24),
-
-              // Error Message
-              if (formError != null)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: _errorColor.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: _errorColor.withValues(alpha: 0.2),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.error_outline, color: _errorColor, size: 18),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          formError,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: _errorColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-              const SizedBox(height: 16),
-
-              // Submit Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isSubmitting || !isValid ? null : _submitKYC,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    disabledBackgroundColor: _primaryColor.withValues(
-                      alpha: 0.4,
-                    ),
-                  ),
-                  child:
-                      _isSubmitting
-                          ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
-                              ),
-                            ),
-                          )
-                          : Text(
-                            isValid
-                                ? 'Create Dedicated Account'
-                                : 'Fill Required Fields',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                            ),
-                          ),
-                ),
-              ),
-
-              const SizedBox(height: 12),
-              Center(
-                child: Text(
-                  'Your information is secure and encrypted',
-                  style: TextStyle(fontSize: 12, color: _textSecondary),
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildReadOnlySection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _backgroundLight,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF102C68).withValues(alpha: 0.08),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Your Information',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: _textSecondary,
-              letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 12),
-          _buildReadOnlyRow('Full Name', _fullName),
-          const Divider(height: 16),
-          _buildReadOnlyRow('Email', _email),
-          const Divider(height: 16),
-          _buildReadOnlyRow('Phone', _phone),
+          if (formError != null && (_bvnController.text.isNotEmpty || _ninController.text.isNotEmpty))
+            DPNotice(formError, kind: DPNoticeKind.warn),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const DPIcon(DPIcons.lock, size: 14, color: DP.muted),
+              const SizedBox(width: 6),
+              Text('Your details are encrypted and only used to verify you.', style: DPText.small),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildReadOnlyRow(String label, String value) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 13, color: _textSecondary),
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Text(
-            value.isNotEmpty ? value : 'Not set',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: _textPrimary,
-            ),
-            textAlign: TextAlign.right,
-          ),
-        ),
-      ],
-    );
+  Widget _buildReadOnlySection() {
+    return DPSummaryCard(rows: [
+      DPSummaryRow('Full name', _fullName.isNotEmpty ? _fullName : 'Not set'),
+      DPSummaryRow('Email', _email.isNotEmpty ? _email : 'Not set'),
+      DPSummaryRow('Phone', _phone.isNotEmpty ? _phone : 'Not set'),
+    ]);
   }
+
 
   Widget _buildTextField({
     required TextEditingController controller,
@@ -1485,103 +629,22 @@ class _KYCScreenState extends State<KYCScreen>
     bool isValid = false,
     bool isUsing = false,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: _textPrimary,
-              ),
-            ),
-            if (isRequired) ...[
-              const SizedBox(width: 4),
-              Text(
-                '*',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: _errorColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-            if (isOptional) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  'Optional',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: _textSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-            if (isValid && isUsing) ...[
-              const Spacer(),
-              Icon(Icons.check_circle, color: _secondaryColor, size: 16),
-            ],
-          ],
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          onChanged: onChanged,
-          onTap: onTap,
-          readOnly: readOnly,
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatters,
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              fontSize: 14,
-              color: const Color(0xFFA9B2AC),
-            ),
-            prefixIcon: Icon(icon, color: _primaryColor, size: 20),
-            prefixIconConstraints: const BoxConstraints(minWidth: 48),
-            errorText: errorText,
-            errorStyle: TextStyle(fontSize: 12, color: _errorColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: _primaryColor, width: 2),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: _errorColor, width: 1.5),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: _errorColor, width: 2),
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-          ),
-          style: TextStyle(fontSize: 14, color: _textPrimary),
-        ),
-      ],
+    return DPField(
+      label: label,
+      labelTrailing: isValid && isUsing
+          ? const DPIcon(DPIcons.circleCheck, size: 16, color: DP.green)
+          : (isOptional ? Text('Optional', style: DPText.small) : null),
+      controller: controller,
+      hint: hint,
+      errorText: errorText,
+      onChanged: onChanged,
+      onTap: onTap,
+      readOnly: readOnly,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLines: maxLines,
+      suffixIcon: readOnly ? DPIcons.chevronDown : null,
+      onSuffixTap: readOnly ? onTap : null,
     );
   }
 
@@ -1613,22 +676,19 @@ class _KYCScreenState extends State<KYCScreen>
   }
 
   Future<void> _selectGender() async {
-    final String? gender = await showDialog<String>(
-      context: context,
-      builder:
-          (context) => SimpleDialog(
-            title: Text(
-              'Select Gender',
-              style: TextStyle(fontWeight: FontWeight.bold),
+    final String? gender = await showDPSheet<String>(
+      context,
+      title: 'Gender',
+      builder: (ctx) => Column(
+        children: [
+          for (final g in const ['Male', 'Female', 'Other'])
+            DPOptionRow(
+              title: g,
+              selected: _genderController.text == g,
+              onTap: () => Navigator.pop(ctx, g),
             ),
-            children:
-                ['Male', 'Female', 'Other'].map((g) {
-                  return SimpleDialogOption(
-                    onPressed: () => Navigator.pop(context, g),
-                    child: Text(g, style: const TextStyle()),
-                  );
-                }).toList(),
-          ),
+        ],
+      ),
     );
     if (gender != null) {
       setState(() {
