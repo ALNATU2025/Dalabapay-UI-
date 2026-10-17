@@ -17,6 +17,8 @@ import '../../../core/services/api_service.dart';
 import '../../../core/services/payment_service.dart';
 import '../transactions/transactions_screen.dart';
 import '../kyc/kyc_screen.dart';
+import '../../../ui/ui.dart';
+import 'send_money_screen.dart';
 
 // ==================== CONSTANTS ====================
 const String CASHWYRE_BASE_URL = 'https://businessapi.cashwyre.com/api/v1.0';
@@ -385,85 +387,17 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
 
   // ==================== UI HELPERS ====================
   void _showErrorDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: _white,
-            title: Row(
-              children: [
-                Icon(Icons.error_outline, color: _errorColor, size: 28),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    color: _errorColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              message,
-              style: GoogleFonts.inter(fontSize: 14, color: _textColor),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                style: TextButton.styleFrom(foregroundColor: _primaryColor),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
+    dpDialog(
+      context,
+      title: title,
+      message: message,
+      confirmLabel: 'OK',
+      tone: DPTone.error,
     );
   }
 
   void _showSuccessDialog(String title, String message) {
-    showDialog(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            backgroundColor: _white,
-            title: Row(
-              children: [
-                Icon(Icons.check_circle, color: _successColor, size: 28),
-                const SizedBox(width: 12),
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    color: _successColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            content: Text(
-              message,
-              style: GoogleFonts.inter(fontSize: 14, color: _textColor),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx),
-                style: TextButton.styleFrom(foregroundColor: _primaryColor),
-                child: Text(
-                  'OK',
-                  style: GoogleFonts.inter(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
-    );
+    dpDialog(context, title: title, message: message, confirmLabel: 'Done');
   }
 
   String _formatBalance(double balance) {
@@ -2128,105 +2062,115 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
   // ==================== BUILD METHODS ====================
   @override
   Widget build(BuildContext context) {
+    // Send money (wallet → wallet) shares this route via initialTab.
+    if (widget.initialTab == 'transfer') {
+      return SendMoneyView(
+        userId: widget.userId,
+        onBalanceUpdate: widget.onBalanceUpdate,
+      );
+    }
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
-      appBar: _buildAppBar(isMobile),
-      body: _buildBody(isMobile),
+      backgroundColor: DP.bg,
+      body: SafeArea(
+        child: Column(
+          children: [
+            DPTopBar(
+              title: 'Add money',
+              actionLabel: 'History',
+              onAction: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => TransactionsScreen(userId: widget.userId),
+                ),
+              ),
+            ),
+            Expanded(child: _buildBody(isMobile)),
+          ],
+        ),
+      ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(bool isMobile) {
-    return AppBar(
-      backgroundColor: _white,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: Color(0xFF102C68),
-          size: 18,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Dalaba',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: _primaryColor,
-              letterSpacing: 0.09,
-            ),
-          ),
-          Text(
-            'pay',
-            style: GoogleFonts.inter(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: _secondaryColor,
-              letterSpacing: 0.09,
-            ),
-          ),
-        ],
-      ),
-      centerTitle: true,
-      bottom: TabBar(
-        controller: _tabController,
-        labelColor: _primaryColor,
-        unselectedLabelColor: _hintColor,
-        indicatorColor: _secondaryColor,
-        indicatorWeight: 3,
-        labelStyle: GoogleFonts.inter(
-          fontWeight: FontWeight.w600,
-          fontSize: isMobile ? 13 : 14,
-        ),
-        tabs: const [
-          Tab(
-            text: 'Add Money',
-            icon: Icon(Icons.add_circle_outline, size: 20),
-          ),
-          Tab(text: 'Transfer', icon: Icon(Icons.send_outlined, size: 20)),
-        ],
-      ),
-    );
-  }
 
   Widget _buildBody(bool isMobile) {
     return FadeTransition(
       opacity: _fadeAnimation,
-      child: TabBarView(
-        controller: _tabController,
-        children: [_buildAddMoneyTab(isMobile), _buildTransferTab(isMobile)],
-      ),
+      child: _buildAddMoneyTab(isMobile),
     );
   }
 
+  static const Map<String, String> _methodLabels = {
+    'dedicated_account': 'Bank transfer',
+    'virtual_account': 'One-time account',
+    'manual': 'Assisted',
+  };
+
   // ==================== ADD MONEY TAB ====================
   Widget _buildAddMoneyTab(bool isMobile) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Column(
-        children: [
-          _buildBalanceCard(isMobile),
-          const SizedBox(height: 16),
-          _buildDedicatedAccountStatus(isMobile),
-          const SizedBox(height: 16),
-          _buildAmountInput(isMobile),
-          const SizedBox(height: 16),
-          _buildPaymentMethodsSection(isMobile),
-          const SizedBox(height: 16),
-          _buildAuthenticationSection(isMobile),
-          const SizedBox(height: 20),
-          _buildProceedButton(isMobile),
-          const SizedBox(height: 12),
-          if (_statusMessage.isNotEmpty) _buildStatusMessage(),
-          const SizedBox(height: 30),
-        ],
+    final method = _selectedPaymentMethod ?? 'dedicated_account';
+    final showForm = method != 'dedicated_account';
+    return RefreshIndicator(
+      color: DP.green,
+      onRefresh: () async {
+        await Future.wait([_loadBalances(), _checkDedicatedAccount()]);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const DPHeadline(
+              'Ready for your everyday.',
+              subtitle: 'Fund your wallet with a bank transfer.',
+              bottom: 18,
+            ),
+            _buildPaymentMethodsSection(isMobile),
+            const SizedBox(height: 18),
+            if (!showForm) ...[
+              _buildDedicatedAccountStatus(isMobile),
+              const SizedBox(height: 14),
+              _buildBalanceCard(isMobile),
+              const SizedBox(height: 14),
+              const DPBanner(
+                'Send money from any Nigerian bank app to the account above. Your bank may charge a transfer fee.',
+              ),
+            ] else ...[
+              Text(
+                method == 'virtual_account'
+                    ? 'Get a one-time account for an exact amount. Pay it within the time shown and your wallet is credited automatically.'
+                    : 'Our team will help you fund your wallet manually. Enter the amount you want to add.',
+                style: DP.body.copyWith(color: DP.muted, fontSize: 14),
+              ),
+              const SizedBox(height: 18),
+              _buildAmountInput(isMobile),
+              const SizedBox(height: 18),
+              _buildAuthenticationSection(isMobile),
+              const SizedBox(height: 18),
+              _buildBalanceCard(isMobile),
+              const SizedBox(height: 18),
+              _buildProceedButton(isMobile),
+              if (_statusMessage.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                _buildStatusMessage(),
+              ],
+            ],
+            const SizedBox(height: 18),
+            DPCard(
+              padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
+              child: DPListRow(
+                leading: const DPIconBadge.blue(DPIcons.help, size: 40, iconSize: 20),
+                title: 'Transfer hasn\'t arrived?',
+                subtitle: 'Find a transfer with its bank reference',
+                trailing: const Icon(DPIcons.chevronRight, color: DP.muted),
+                onTap: () => Navigator.pushNamed(context, '/transaction-validation'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -2235,1135 +2179,282 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
   Widget _buildDedicatedAccountStatus(bool isMobile) {
     if (_isCheckingAccount) {
       return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
+        height: 168,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(10),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          color: DP.navy,
+          borderRadius: BorderRadius.circular(DP.rXl),
         ),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: _primaryColor,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'Checking dedicated account...',
-              style: GoogleFonts.inter(
-                fontSize: isMobile ? 12 : 13,
-                color: _textColor,
-              ),
-            ),
-          ],
-        ),
+        child: const CircularProgressIndicator(color: Colors.white),
       );
     }
 
-    // ✅ Show dedicated account - SAME FORMAT AS DASHBOARD
     if (_hasDedicatedAccount &&
         _dedicatedAccountNumber != null &&
         _dedicatedAccountNumber != 'N/A') {
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-            stops: [0.06, 0.41],
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF168566).withAlpha(76),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+      final accountName = _dedicatedAccountName != null &&
+              _dedicatedAccountName!.isNotEmpty &&
+              _dedicatedAccountName != 'User'
+          ? _dedicatedAccountName!
+          : 'Dalabapay';
+      return Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            decoration: BoxDecoration(
+              color: DP.navy,
+              borderRadius: BorderRadius.circular(DP.rXl),
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Row 1: Label + Actions
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(30),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: const Icon(
-                        Icons.account_balance,
-                        color: Colors.white,
-                        size: 14,
-                      ),
+                    Icon(
+                      DPIcons.bank,
+                      color: Colors.white.withValues(alpha: 0.85),
+                      size: 18,
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      'Dedicated Account',
-                      style: GoogleFonts.inter(
-                        color: Colors.white70,
-                        fontSize: isMobile ? 10 : 11,
-                        fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: Text(
+                        'YOUR WALLET FUNDING ACCOUNT',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.85),
+                          fontSize: 12,
+                          letterSpacing: 0.6,
+                        ),
+                      ),
+                    ),
+                    InkResponse(
+                      onTap: _checkDedicatedAccount,
+                      radius: 18,
+                      child: Icon(
+                        DPIcons.refresh,
+                        color: Colors.white.withValues(alpha: 0.7),
+                        size: 18,
                       ),
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    // Copy button
-                    GestureDetector(
-                      onTap: () {
-                        Clipboard.setData(
-                          ClipboardData(text: _dedicatedAccountNumber ?? ''),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Account number copied!'),
-                            duration: Duration(seconds: 1),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(25),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.copy,
-                          color: Colors.white70,
-                          size: isMobile ? 12 : 14,
-                        ),
-                      ),
+                const SizedBox(height: 14),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: SelectableText(
+                    _dedicatedAccountNumber!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5,
                     ),
-                    const SizedBox(width: 6),
-                    // Refresh button
-                    GestureDetector(
-                      onTap: _checkDedicatedAccount,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(25),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Icon(
-                          Icons.refresh,
-                          color: Colors.white70,
-                          size: isMobile ? 12 : 14,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  accountName,
+                  style: const TextStyle(color: Colors.white, fontSize: 15),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  _dedicatedBankName ?? '',
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.75),
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-
-            // Row 2: Account Number (LEFT ALIGNED)
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              decoration: BoxDecoration(
-                color: Colors.white.withAlpha(20),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SelectableText(
-                      _dedicatedAccountNumber!,
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: isMobile ? 16 : 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                  ),
-                  // Status Badge
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withAlpha(77),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 6,
-                          height: 6,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'Active',
-                          style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: isMobile ? 8 : 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 6),
-
-            // Row 3: Bank Name
-            if (_dedicatedBankName != null)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: Colors.white.withAlpha(20),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  _dedicatedBankName!,
-                  style: GoogleFonts.inter(
-                    color: Colors.white70,
-                    fontSize: isMobile ? 9 : 10,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-
-            // Row 4: Account Name (if available and not just "User")
-            if (_dedicatedAccountName != null &&
-                _dedicatedAccountName!.isNotEmpty &&
-                _dedicatedAccountName != 'User') ...[
-              const SizedBox(height: 4),
-              Text(
-                _dedicatedAccountName!,
-                style: GoogleFonts.inter(
-                  color: Colors.white60,
-                  fontSize: isMobile ? 10 : 11,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ],
-        ),
+          ),
+          const SizedBox(height: 14),
+          DPButton(
+            label: 'Copy account number',
+            icon: DPIcons.copy,
+            onPressed: () {
+              Clipboard.setData(
+                ClipboardData(text: _dedicatedAccountNumber ?? ''),
+              );
+              HapticFeedback.lightImpact();
+              dpSnack(context, 'Account number copied', success: true);
+            },
+          ),
+        ],
       );
     }
 
     // No dedicated account - show KYC prompt
-    return GestureDetector(
+    return DPCard(
+      padding: const EdgeInsets.fromLTRB(18, 18, 14, 18),
       onTap: _navigateToKYC,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(10),
-              blurRadius: 16,
-              offset: const Offset(0, 4),
+      child: Row(
+        children: [
+          const DPIconBadge(DPIcons.badge, size: 48),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Get your funding account', style: DP.bodyStrong),
+                const SizedBox(height: 4),
+                Text(
+                  'Verify your details to get a personal account number for bank transfers.',
+                  style: DP.caption.copyWith(fontSize: 12.5),
+                ),
+              ],
             ),
-          ],
-          border: Border.all(color: _warningColor.withAlpha(50)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: _warningColor.withAlpha(20),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(Icons.add, color: _warningColor, size: 24),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Get Your Dedicated Account',
-                    style: GoogleFonts.inter(
-                      fontSize: isMobile ? 13 : 14,
-                      fontWeight: FontWeight.w600,
-                      color: _textColor,
-                    ),
-                  ),
-                  Text(
-                    'Complete KYC to get your personal static account (1.5% fee per transaction)',
-                    style: GoogleFonts.inter(
-                      fontSize: isMobile ? 10 : 11,
-                      color: _hintColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.arrow_forward_ios, color: _primaryColor, size: 16),
-          ],
-        ),
+          ),
+          const Icon(DPIcons.chevronRight, color: DP.muted),
+        ],
       ),
     );
   }
 
   Widget _buildAmountInput(bool isMobile) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: _white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+    const quick = [1000.0, 2000.0, 5000.0, 10000.0, 20000.0, 50000.0];
+    final labels = quick.map((a) => DP.naira(a, decimals: false)).toList();
+    final current = double.tryParse(_amountController.text.trim());
+    final sel = current == null || !quick.contains(current)
+        ? null
+        : DP.naira(current, decimals: false);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const DPLabel('Amount'),
+        DPField(
+          controller: _amountController,
+          hint: '0.00',
+          prefixText: '₦',
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          onChanged: (_) => setState(() {}),
+          style: const TextStyle(fontSize: 17, color: DP.ink),
+        ),
+        const DPHelper('Minimum ₦100 · Maximum ₦1,000,000'),
+        const SizedBox(height: 12),
+        DPChipGrid(
+          options: labels,
+          selected: sel,
+          onSelect: (l) => setState(
+            () => _amountController.text =
+                quick[labels.indexOf(l)].toStringAsFixed(0),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Enter Amount',
-            style: GoogleFonts.inter(
-              fontSize: isMobile ? 16 : 18,
-              fontWeight: FontWeight.w600,
-              color: _textColor,
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-            ],
-            decoration: InputDecoration(
-              hintText: '₦0.00',
-              hintStyle: GoogleFonts.inter(
-                fontSize: isMobile ? 20 : 24,
-                color: _hintColor,
-                fontWeight: FontWeight.w300,
-              ),
-              prefixText: '₦',
-              prefixStyle: GoogleFonts.inter(
-                fontSize: isMobile ? 20 : 24,
-                fontWeight: FontWeight.w600,
-                color: _textColor,
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(vertical: 8),
-            ),
-            style: GoogleFonts.inter(
-              fontSize: isMobile ? 24 : 28,
-              fontWeight: FontWeight.w600,
-              color: _textColor,
-            ),
-            onChanged: (value) {
-              setState(() {
-                _statusMessage = '';
-              });
-            },
-          ),
-          const Divider(height: 4),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _buildQuickAmount(isMobile, 100),
-              const SizedBox(width: 8),
-              _buildQuickAmount(isMobile, 500),
-              const SizedBox(width: 8),
-              _buildQuickAmount(isMobile, 1000),
-              const SizedBox(width: 8),
-              _buildQuickAmount(isMobile, 5000),
-              const SizedBox(width: 8),
-              _buildQuickAmount(isMobile, 10000),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildQuickAmount(bool isMobile, double amount) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            _amountController.text = amount.toString();
-            _statusMessage = '';
-          });
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            color: _primaryColor.withAlpha(12),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: _primaryColor.withAlpha(25)),
-          ),
-          child: Center(
-            child: Text(
-              '₦${_formatBalance(amount)}',
-              style: GoogleFonts.inter(
-                fontSize: isMobile ? 10 : 12,
-                fontWeight: FontWeight.w600,
-                color: _primaryColor,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   // ==================== PAYMENT METHODS SECTION ====================
   Widget _buildPaymentMethodsSection(bool isMobile) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                'Funding Options',
-                style: GoogleFonts.inter(
-                  fontSize: isMobile ? 15 : 17,
-                  fontWeight: FontWeight.w600,
-                  color: _textColor,
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: _successColor.withAlpha(20),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  'Secure',
-                  style: GoogleFonts.inter(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    color: _successColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Choose how you want to fund your wallet',
-            style: GoogleFonts.inter(
-              fontSize: isMobile ? 11 : 12,
-              color: _hintColor,
-            ),
-          ),
-          const SizedBox(height: 16),
-          ..._paymentMethods.map(
-            (method) => _buildPaymentMethodTile(method, isMobile),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentMethodTile(PaymentMethod method, bool isMobile) {
-    final isSelected = _selectedPaymentMethod == method.id;
-    final isDedicated = method.id == 'dedicated_account';
-    final isDisabled = isDedicated && !_hasDedicatedAccount;
-
-    Color iconColor;
-    if (isDisabled) {
-      iconColor = Colors.grey.shade400;
-    } else if (isSelected) {
-      iconColor = method.color;
-    } else {
-      iconColor = _hintColor;
-    }
-
-    return GestureDetector(
-      onTap: () {
-        if (isDisabled) {
-          _showKYCModal();
-          return;
-        }
+    final method = _selectedPaymentMethod ?? 'dedicated_account';
+    return DPChipRow(
+      options: _methodLabels.values.toList(),
+      selected: _methodLabels[method],
+      height: 44,
+      spacing: 8,
+      onSelect: (label) {
+        final id = _methodLabels.entries.firstWhere((e) => e.value == label).key;
         setState(() {
-          _selectedPaymentMethod = method.id;
+          _selectedPaymentMethod = id;
           _statusMessage = '';
         });
       },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color:
-              isSelected
-                  ? method.color.withAlpha(12)
-                  : (isDisabled ? Colors.grey.shade50 : Colors.transparent),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color:
-                isDisabled
-                    ? Colors.grey.shade300
-                    : (isSelected ? method.color : Colors.grey.shade200),
-            width: isSelected ? 2 : 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color:
-                    isDisabled
-                        ? Colors.grey.shade200
-                        : (isSelected
-                            ? method.color.withAlpha(25)
-                            : Colors.grey.shade100),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: HugeIcon(
-                icon: method.icon,
-                size: isMobile ? 22 : 26,
-                color: iconColor,
-              ),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        method.name,
-                        style: GoogleFonts.inter(
-                          fontSize: isMobile ? 14 : 15,
-                          fontWeight: FontWeight.w600,
-                          color:
-                              isDisabled
-                                  ? Colors.grey.shade400
-                                  : (isSelected ? method.color : _textColor),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      if (method.popular) ...[
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _secondaryColor.withAlpha(25),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            'Popular',
-                            style: GoogleFonts.inter(
-                              fontSize: 8,
-                              fontWeight: FontWeight.w600,
-                              color: _secondaryColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                      if (method.badge != null && !isDisabled) ...[
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color:
-                                method.badge == '1.5% Fee'
-                                    ? _accentColor.withAlpha(25)
-                                    : _warningColor.withAlpha(25),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            method.badge!,
-                            style: GoogleFonts.inter(
-                              fontSize: 8,
-                              fontWeight: FontWeight.w600,
-                              color:
-                                  method.badge == '1.5% Fee'
-                                      ? _accentColor
-                                      : _warningColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                      if (isDisabled) ...[
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 2,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _warningColor.withAlpha(25),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            'KYC Required',
-                            style: GoogleFonts.inter(
-                              fontSize: 7,
-                              fontWeight: FontWeight.w600,
-                              color: _warningColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    isDisabled ? 'Complete KYC to unlock' : method.description,
-                    style: GoogleFonts.inter(
-                      fontSize: isMobile ? 10 : 11,
-                      color: isDisabled ? Colors.grey.shade400 : _hintColor,
-                    ),
-                  ),
-                  if (method.id == 'virtual_account' && !isDisabled) ...[
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _accentColor.withAlpha(20),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            color: _accentColor,
-                            size: 10,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '1.5% service fee applies',
-                            style: GoogleFonts.inter(
-                              fontSize: 8,
-                              color: _accentColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                  if (method.id == 'dedicated_account' &&
-                      _hasDedicatedAccount &&
-                      !isDisabled) ...[
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _accentColor.withAlpha(20),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            color: _accentColor,
-                            size: 10,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '1.5% service fee applies',
-                            style: GoogleFonts.inter(
-                              fontSize: 8,
-                              color: _accentColor,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            if (method.instant && !isDisabled)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: _successColor.withAlpha(25),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.flash_on, color: _successColor, size: 12),
-                    Text(
-                      'Instant',
-                      style: GoogleFonts.inter(
-                        fontSize: 9,
-                        fontWeight: FontWeight.w600,
-                        color: _successColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            if (isSelected && !isDisabled)
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: method.color,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.check, color: Colors.white, size: 14),
-              ),
-          ],
-        ),
-      ),
     );
   }
+
 
   // ==================== AUTHENTICATION SECTION - MATCHES AIRTIME PAGE ====================
   Widget _buildAuthenticationSection(bool isMobile) {
     if (!_pinRequired) {
       return const SizedBox.shrink();
     }
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Authentication',
-            style: GoogleFonts.inter(
-              fontSize: isMobile ? 15 : 17,
-              fontWeight: FontWeight.w600,
-              color: _textColor,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Biometric toggle
-          if (_biometricEnabled)
-            Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: _successColor.withAlpha(12),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _successColor.withAlpha(25)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.fingerprint, color: _successColor, size: 24),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Use Biometric',
-                          style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w600,
-                            fontSize: isMobile ? 13 : 14,
-                            color: _textColor,
-                          ),
-                        ),
-                        Text(
-                          'Fingerprint or Face ID',
-                          style: GoogleFonts.inter(
-                            fontSize: isMobile ? 10 : 11,
-                            color: _hintColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Switch(
-                    value: _useBiometric,
-                    onChanged: (value) {
-                      setState(() {
-                        _useBiometric = value;
-                        if (value) {
-                          _pinController.clear();
-                        }
-                      });
-                    },
-                    activeThumbColor: _secondaryColor,
-                  ),
-                ],
-              ),
-            ),
-
-          // PIN input - exactly like airtime page
-          if (!_useBiometric)
-            TextFormField(
-              controller: _pinController,
-              obscureText: true,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(6),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (_biometricEnabled)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Row(
+              children: [
+                const Icon(DPIcons.fingerprint, color: DP.green),
+                const SizedBox(width: 10),
+                const Expanded(
+                  child: Text('Confirm with biometrics', style: DP.body),
+                ),
+                Switch(
+                  value: _useBiometric,
+                  onChanged: (value) {
+                    setState(() {
+                      _useBiometric = value;
+                      if (value) _pinController.clear();
+                    });
+                  },
+                ),
               ],
-              decoration: InputDecoration(
-                hintText: 'Enter 6-digit PIN',
-                hintStyle: GoogleFonts.inter(
-                  fontSize: isMobile ? 13 : 14,
-                  color: _hintColor,
-                ),
-                prefixIcon: Icon(
-                  Icons.lock_outline,
-                  color: _primaryColor,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade200),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: _primaryColor, width: 2),
-                ),
-                filled: true,
-                fillColor: Colors.grey.shade50,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-              ),
-              style: GoogleFonts.inter(
-                fontSize: isMobile ? 16 : 18,
-                color: _textColor,
-                letterSpacing: 4,
-              ),
             ),
+          ),
+        if (!_useBiometric) ...[
+          const Text('Enter your payment PIN', style: DP.section),
+          const SizedBox(height: 12),
+          DPCodeInput(controller: _pinController, length: 6),
         ],
-      ),
+      ],
     );
   }
 
   Widget _buildProceedButton(bool isMobile) {
-    final isDedicatedSelected = _selectedPaymentMethod == 'dedicated_account';
-    final isDisabled = isDedicatedSelected && !_hasDedicatedAccount;
     final isLoading = _isLoading || _isAuthenticating;
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: SizedBox(
-        width: double.infinity,
-        height: isMobile ? 52 : 56,
-        child: ElevatedButton(
-          onPressed: (isLoading || isDisabled) ? null : _processPayment,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _primaryColor,
-            foregroundColor: _white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ),
-            elevation: 0,
-            disabledBackgroundColor: Colors.grey.shade300,
-          ),
-          child:
-              isLoading
-                  ? SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: _white,
-                      strokeWidth: 2.5,
-                    ),
-                  )
-                  : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        isDisabled ? 'Complete KYC to Fund' : 'Fund Wallet',
-                        style: GoogleFonts.inter(
-                          fontSize: isMobile ? 16 : 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      if (!isDisabled) ...[
-                        const SizedBox(width: 8),
-                        Icon(
-                          Icons.arrow_forward_rounded,
-                          size: isMobile ? 20 : 22,
-                        ),
-                      ],
-                    ],
-                  ),
-        ),
-      ),
+    final label = _selectedPaymentMethod == 'manual'
+        ? 'Request assisted funding'
+        : 'Get account details';
+    return DPButton(
+      label: label,
+      icon: DPIcons.forward,
+      loading: isLoading,
+      onPressed: isLoading ? null : _processPayment,
     );
   }
 
   Widget _buildStatusMessage() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: _statusColor.withAlpha(12),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _statusColor.withAlpha(25)),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            _statusColor == _successColor
-                ? Icons.check_circle_outline
-                : Icons.info_outline,
-            color: _statusColor,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              _statusMessage,
-              style: GoogleFonts.inter(fontSize: 13, color: _statusColor),
-            ),
-          ),
-        ],
-      ),
+    final isError = _statusColor == _errorColor;
+    final isOk = _statusColor == _successColor;
+    return DPBanner(
+      _statusMessage,
+      tone: isError ? DPTone.error : (isOk ? DPTone.success : DPTone.info),
     );
   }
 
   Widget _buildBalanceCard(bool isMobile) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF168566).withAlpha(76),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+    final isDedicated =
+        (_selectedPaymentMethod ?? 'dedicated_account') == 'dedicated_account';
+    return DPCard(
+      padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
+      child: Column(
+        children: [
+          if (isDedicated)
+            const DPSummaryRow('Transfer processing', 'Usually within minutes'),
+          if (_selectedPaymentMethod != 'manual')
+            const DPSummaryRow('Dalabapay funding fee', '1.5% per transfer'),
+          DPSummaryRow(
+            'Wallet balance',
+            _isBalanceLoading
+                ? '…'
+                : (_isBalanceVisible
+                    ? DP.naira(_currentBalance)
+                    : '₦ ••••'),
           ),
         ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Main Wallet',
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: isMobile ? 12 : 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: _loadBalances,
-                      child: Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                        size: isMobile ? 18 : 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    GestureDetector(
-                      onTap:
-                          () => setState(
-                            () => _isBalanceVisible = !_isBalanceVisible,
-                          ),
-                      child: Icon(
-                        _isBalanceVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.white,
-                        size: isMobile ? 18 : 20,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (_isBalanceLoading)
-              SizedBox(
-                width: 150,
-                height: 30,
-                child: LinearProgressIndicator(
-                  backgroundColor: Colors.white24,
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            else
-              Text(
-                _isBalanceVisible
-                    ? '₦${_formatBalance(_currentBalance)}'
-                    : '••••••••',
-                style: GoogleFonts.inter(
-                  color: Colors.white,
-                  fontSize: isMobile ? 28 : 32,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            const SizedBox(height: 4),
-            Text(
-              'Available Balance',
-              style: GoogleFonts.inter(
-                color: Colors.white70,
-                fontSize: isMobile ? 11 : 12,
-              ),
-            ),
-            if (_commissionBalance > 0) ...[
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(
-                    Icons.percent,
-                    color: Colors.white70,
-                    size: isMobile ? 14 : 16,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    'Commission: ₦${_formatBalance(_commissionBalance)}',
-                    style: GoogleFonts.inter(
-                      color: Colors.white70,
-                      fontSize: isMobile ? 11 : 12,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }
 
   // ==================== TRANSFER TAB ====================
   Widget _buildTransferTab(bool isMobile) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.send_outlined, size: 64, color: Colors.grey.shade300),
-            const SizedBox(height: 16),
-            Text(
-              'Wallet Transfer',
-              style: GoogleFonts.inter(
-                fontSize: isMobile ? 18 : 22,
-                fontWeight: FontWeight.w600,
-                color: _textColor,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Send money to other DalabaPay users',
-              style: GoogleFonts.inter(
-                fontSize: isMobile ? 13 : 15,
-                color: _hintColor,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: _warningColor.withAlpha(12),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: _warningColor.withAlpha(25)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, color: _warningColor, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Coming soon! You will be able to send money to other users.',
-                      style: GoogleFonts.inter(
-                        fontSize: isMobile ? 12 : 13,
-                        color: _warningColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    return SendMoneyView(
+      userId: widget.userId,
+      onBalanceUpdate: widget.onBalanceUpdate,
     );
   }
 }
