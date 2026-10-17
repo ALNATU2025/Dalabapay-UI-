@@ -58,4 +58,9 @@ Future<void> shoot(
     await tester.pump(const Duration(milliseconds: 100));
   }
   await expectLater(find.byType(MaterialApp), matchesGoldenFile('goldens/$name.png'));
+  // Tear down and flush delayed timers (splash delays, retry back-offs).
+  await tester.pumpWidget(const SizedBox());
+  for (var i = 0; i < 12; i++) {
+    await tester.pump(const Duration(seconds: 10));
+  }
 }

@@ -748,7 +748,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           margin: const EdgeInsets.only(bottom: 14),
         ),
         DPChipGrid(
-          labels: _filters,
+          labels: _filters.map((f) => f == 'Successful' ? 'Success' : f).toList(),
           columns: 4,
           height: 40,
           spacing: 8,

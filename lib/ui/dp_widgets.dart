@@ -654,9 +654,18 @@ class DPField extends StatelessWidget {
               hintText: hint,
               errorText: errorText,
               counterText: '',
-              prefixText: prefixText,
-              prefixStyle: DPText.body.copyWith(fontSize: 16, color: DP.ink),
-              prefixIcon: prefix,
+              // Always visible (Material's prefixText hides until focus).
+              prefixIcon: prefix ??
+                  (prefixText == null
+                      ? null
+                      : Padding(
+                          padding: const EdgeInsets.only(left: 18, right: 2),
+                          child: Text(prefixText!.trimRight(),
+                              style: DPText.body.copyWith(fontSize: 16, color: DP.ink)),
+                        )),
+              prefixIconConstraints: prefix == null && prefixText != null
+                  ? const BoxConstraints(minWidth: 0, minHeight: 0)
+                  : null,
               suffixIcon: suffixWidget,
               errorMaxLines: 3,
             ),
