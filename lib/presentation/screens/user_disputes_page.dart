@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/custom_drawer.dart';
 import '../../../core/widgets/drawer_item.dart';
+import '../../ui/ui.dart';
 import 'package:dalabapay/presentation/screens/dashboard/dashboard_screen.dart'
     show DashboardScreen;
 
@@ -275,33 +276,8 @@ class _UserDisputesPageState extends State<UserDisputesPage>
   // ==================== UI HELPERS ====================
 
   void _showSnackBar(String message, bool isError) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              isError
-                  ? Icons.error_outline_rounded
-                  : Icons.check_circle_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                message,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: isError ? errorColor : secondaryColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
+    if (!mounted) return;
+    dpSnack(context, message, error: isError, success: !isError);
   }
 
   String _getFullImageUrl(String path) {
@@ -1708,210 +1684,38 @@ class _UserDisputesPageState extends State<UserDisputesPage>
   // ==================== UI BUILDERS ====================
 
   Widget _buildHeader() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16 : 24,
-        vertical: isMobile ? 16 : 20,
-      ),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: secondaryColor.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 8, DP.gutter, 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                    size: isMobile ? 20 : 24,
-                  ),
-                ),
-              ),
-              SizedBox(width: isMobile ? 12 : 16),
-              Expanded(
-                child: Text(
-                  'My Disputes',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: isMobile ? 12 : 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              // Removed the pending count badge from header
-            ],
+          DPHeader(
+            title: 'My tickets',
+            actionLabel: 'Refresh',
+            onAction: _loadData,
           ),
-          SizedBox(height: isMobile ? 16 : 20),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: isMobile ? 56 : 64,
-                height: isMobile ? 56 : 64,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.gavel,
-                  color: primaryColor,
-                  size: isMobile ? 28 : 34,
-                ),
-              ),
-              SizedBox(width: isMobile ? 14 : 18),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Manage Disputes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: isMobile ? 20 : 28,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: isMobile ? 4 : 6),
-                    Text(
-                      'Track and manage your dispute cases',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: isMobile ? 12 : 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: _loadData,
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.refresh_rounded,
-                    color: Colors.white,
-                    size: isMobile ? 22 : 26,
-                  ),
-                ),
-                tooltip: 'Refresh',
-              ),
-            ],
-          ),
+          const SizedBox(height: 4),
+          Text('Report a problem with a payment and follow its progress.', style: DPText.bodyMuted),
         ],
       ),
     );
   }
 
   Widget _buildStatsSection() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-    final screenWidth = MediaQuery.of(context).size.width;
-
     final total = _disputes.length;
     final resolved = _disputes.where((d) => d['status'] == 'resolved').length;
-    final pending =
-        _disputes
-            .where(
-              (d) => d['status'] == 'pending' || d['status'] == 'under_review',
-            )
-            .length;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 8),
+    final pending = _disputes
+        .where((d) => d['status'] == 'pending' || d['status'] == 'under_review')
+        .length;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 14, DP.gutter, 4),
       child: Row(
         children: [
-          Expanded(
-            child: Wrap(
-              spacing: isMobile ? 6 : 12,
-              runSpacing: isMobile ? 6 : 12,
-              children: [
-                _buildStatCard(
-                  title: 'Total',
-                  value: total.toString(),
-                  icon: Icons.receipt_long,
-                  color: primaryColor,
-                  isMobile: isMobile,
-                  screenWidth: screenWidth,
-                ),
-                _buildStatCard(
-                  title: 'Pending',
-                  value: pending.toString(),
-                  icon: Icons.hourglass_top,
-                  color: warningColor,
-                  isMobile: isMobile,
-                  screenWidth: screenWidth,
-                ),
-                _buildStatCard(
-                  title: 'Resolved',
-                  value: resolved.toString(),
-                  icon: Icons.check_circle,
-                  color: successColor,
-                  isMobile: isMobile,
-                  screenWidth: screenWidth,
-                ),
-              ],
-            ),
-          ),
-          Container(
-            width: isMobile ? 40 : 48,
-            height: isMobile ? 40 : 48,
-            margin: const EdgeInsets.only(left: 8),
-            child: IconButton(
-              onPressed: () {
-                _loadData();
-                _showSnackBar('Refreshing disputes...', false);
-              },
-              icon: Icon(
-                Icons.refresh_rounded,
-                color: primaryColor,
-                size: isMobile ? 20 : 24,
-              ),
-              tooltip: 'Refresh stats',
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: Colors.grey.shade200),
-                ),
-              ),
-            ),
-          ),
+          Expanded(child: _buildStatCard(title: 'Total', value: '$total', icon: Icons.receipt_long, color: DP.ink, isMobile: true, screenWidth: 0)),
+          const SizedBox(width: 10),
+          Expanded(child: _buildStatCard(title: 'Open', value: '$pending', icon: Icons.hourglass_top, color: DP.warn, isMobile: true, screenWidth: 0)),
+          const SizedBox(width: 10),
+          Expanded(child: _buildStatCard(title: 'Resolved', value: '$resolved', icon: Icons.check_circle, color: DP.green, isMobile: true, screenWidth: 0)),
         ],
       ),
     );
@@ -1925,398 +1729,169 @@ class _UserDisputesPageState extends State<UserDisputesPage>
     required bool isMobile,
     required double screenWidth,
   }) {
-    double cardWidth;
-    if (screenWidth < 360) {
-      cardWidth = (screenWidth - 50) / 3;
-    } else if (screenWidth < 400) {
-      cardWidth = (screenWidth - 55) / 3;
-    } else if (screenWidth < 600) {
-      cardWidth = (screenWidth - 60) / 3;
-    } else if (screenWidth < 900) {
-      cardWidth = 120;
-    } else {
-      cardWidth = 150;
-    }
-    if (cardWidth < 80) cardWidth = 80;
-
-    return SizedBox(
-      width: cardWidth,
-      child: Container(
-        padding: EdgeInsets.all(isMobile ? 8 : 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(isMobile ? 10 : 12),
-          border: Border.all(color: color.withOpacity(0.15)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(isMobile ? 4 : 6),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: color, size: isMobile ? 14 : 16),
-            ),
-            SizedBox(width: isMobile ? 6 : 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: isMobile ? 14 : 18,
-                      fontWeight: FontWeight.w700,
-                      color: textPrimary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: isMobile ? 8 : 10,
-                      color: textSecondary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    return DPCard(
+      margin: EdgeInsets.zero,
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: DPText.small),
+          const SizedBox(height: 4),
+          Text(value, style: DPText.title.copyWith(color: color)),
+        ],
       ),
     );
   }
 
   Widget _buildTabBar() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.fromLTRB(DP.gutter, 14, DP.gutter, 6),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: DP.surface,
+        borderRadius: BorderRadius.circular(DP.rMd),
+        border: Border.all(color: DP.border),
       ),
       child: TabBar(
         controller: _tabController,
-        labelColor: primaryColor,
-        unselectedLabelColor: textSecondary,
-        indicatorColor: primaryColor,
-        indicatorWeight: 3,
+        dividerColor: Colors.transparent,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: isMobile ? 12 : 14,
+        indicator: BoxDecoration(
+          color: DP.greenSoft,
+          borderRadius: BorderRadius.circular(DP.rSm),
+          border: Border.all(color: DP.green),
         ),
-        unselectedLabelStyle: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: isMobile ? 12 : 14,
-        ),
+        labelColor: DP.green,
+        unselectedLabelColor: DP.muted,
+        labelStyle: DPText.label,
         tabs: [
-          Tab(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.gavel, size: isMobile ? 16 : 18),
-                const SizedBox(width: 8),
-                Text('My Disputes (${_disputes.length})'),
-              ],
-            ),
-          ),
-          Tab(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.add_circle, size: isMobile ? 16 : 18),
-                const SizedBox(width: 8),
-                Text('New Dispute'),
-              ],
-            ),
-          ),
+          Tab(height: 40, text: 'My tickets (${_disputes.length})'),
+          const Tab(height: 40, text: 'Report a payment'),
         ],
       ),
     );
   }
 
   Widget _buildDisputesList() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
     if (_disputes.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.gavel, color: Colors.grey.shade300, size: 64),
-            const SizedBox(height: 16),
-            Text(
-              'No disputes filed',
-              style: TextStyle(fontSize: 16, color: textSecondary),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Go to "New Dispute" tab to raise an issue',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ],
-        ),
+      return ListView(
+        padding: const EdgeInsets.all(DP.gutter),
+        children: [
+          DPEmptyState(
+            icon: DPIcons.ticket,
+            title: 'No tickets yet',
+            message: 'If a payment failed or is stuck, report it and we’ll look into it.',
+            actionLabel: 'Report a payment',
+            onAction: () => _tabController.animateTo(1),
+          ),
+        ],
       );
     }
-
     return RefreshIndicator(
       onRefresh: _loadData,
+      color: DP.green,
       child: ListView.builder(
-        padding: EdgeInsets.all(isMobile ? 12 : 16),
+        padding: const EdgeInsets.fromLTRB(DP.gutter, 10, DP.gutter, 24),
         itemCount: _disputes.length,
-        itemBuilder: (context, index) {
-          final dispute = _disputes[index];
-          return _buildDisputeCard(dispute);
-        },
+        itemBuilder: (context, index) => _buildDisputeCard(_disputes[index]),
       ),
     );
   }
 
   Widget _buildDisputeCard(Map<String, dynamic> dispute) {
     final status = dispute['status']?.toString() ?? 'pending';
-    final transaction = dispute['transactionId'] as Map<String, dynamic>?;
-    final date =
-        dispute['createdAt'] != null
-            ? DateTime.parse(dispute['createdAt'].toString())
-            : null;
+    final transaction = dispute['transactionId'] is Map ? dispute['transactionId'] as Map<String, dynamic> : null;
+    final date = DateTime.tryParse(dispute['createdAt']?.toString() ?? '');
     final evidence = dispute['evidence'] as List<dynamic>?;
     final hasEvidence = evidence != null && evidence.isNotEmpty;
-    final statusColor = _getStatusColor(status);
     final statusLabel = _getStatusLabel(status);
-
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Card(
+    final type = dispute['type']?.toString().replaceAll('_', ' ') ?? 'Dispute';
+    return DPCard(
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => _showDisputeDetails(dispute),
-        child: Padding(
-          padding: EdgeInsets.all(isMobile ? 14 : 16),
-          child: Column(
+      onTap: () => _showDisputeDetails(dispute),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.gavel, color: statusColor, size: 20),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          dispute['type']
-                                  ?.toString()
-                                  .replaceAll('_', ' ')
-                                  .toUpperCase() ??
-                              'Dispute',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                            color: textPrimary,
-                          ),
-                        ),
-                        if (transaction != null)
-                          Text(
-                            transaction['reference']?.toString() ?? 'N/A',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: textSecondary,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: statusColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          statusLabel,
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: statusColor,
-                          ),
-                        ),
-                      ),
-                      if (date != null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6),
-                          child: Text(
-                            DateFormat('MMM dd, yyyy').format(date),
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(
-                dispute['reason']?.toString() ?? 'No reason provided',
-                style: TextStyle(fontSize: 13, color: textSecondary),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              if (hasEvidence) ...[
-                const SizedBox(height: 8),
-                Row(
+              const DPIconBadge(icon: DPIcons.ticket, size: 40, radius: 12),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.attach_file, size: 14, color: infoColor),
-                    const SizedBox(width: 6),
-                    Text(
-                      '${evidence.length} attachment${evidence.length > 1 ? 's' : ''}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: infoColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        color: infoColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        'VIEW',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: infoColor,
-                        ),
-                      ),
-                    ),
+                    Text(type[0].toUpperCase() + type.substring(1), style: DPText.body.copyWith(fontWeight: FontWeight.w500)),
+                    if (transaction != null)
+                      Text(transaction['reference']?.toString() ?? '', style: DPText.small, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    if (date != null) Text(DateFormat('d MMM yyyy').format(date.toLocal()), style: DPText.small),
                   ],
                 ),
-                // Evidence Thumbnails
-                SizedBox(
-                  height: 80,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: evidence.length > 3 ? 3 : evidence.length,
-                    itemBuilder: (context, index) {
-                      final path = evidence[index].toString();
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: GestureDetector(
-                          onTap:
-                              () =>
-                                  _showFullScreenImage(_getFullImageUrl(path)),
-                          child: _buildEvidenceItem(
-                            path,
-                            height: 80,
-                            width: 80,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                if (evidence.length > 3)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      '+${evidence.length - 3} more',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: infoColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-              ],
+              ),
+              DPStatusPill(statusLabel.replaceAll(' ✓', '').replaceAll(' ✗', '')),
             ],
           ),
-        ),
+          const SizedBox(height: 10),
+          Text(dispute['reason']?.toString() ?? 'No reason provided',
+              style: DPText.bodyMuted.copyWith(fontSize: 13.5), maxLines: 2, overflow: TextOverflow.ellipsis),
+          if (hasEvidence) ...[
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 64,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: evidence.length > 4 ? 4 : evidence.length,
+                itemBuilder: (context, index) {
+                  final path = evidence[index].toString();
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: GestureDetector(
+                      onTap: () => _showFullScreenImage(_getFullImageUrl(path)),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: _buildEvidenceItem(path, height: 64, width: 64),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            if (evidence.length > 4)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text('+${evidence.length - 4} more', style: DPText.small),
+              ),
+          ],
+        ],
       ),
     );
   }
 
   Widget _buildNewDisputeTab() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
     if (_userTransactions.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.receipt_long, color: Colors.grey.shade300, size: 64),
-            const SizedBox(height: 16),
-            Text(
-              'No transactions available',
-              style: TextStyle(fontSize: 16, color: textSecondary),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Complete a transaction to file a dispute',
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ],
-        ),
+      return ListView(
+        padding: const EdgeInsets.all(DP.gutter),
+        children: const [
+          DPEmptyState(
+            icon: DPIcons.receipt,
+            title: 'No transactions yet',
+            message: 'Payments you can report will appear here.',
+          ),
+        ],
       );
     }
-
     return RefreshIndicator(
       onRefresh: _loadData,
-      child: ListView.builder(
-        padding: EdgeInsets.all(isMobile ? 12 : 16),
-        itemCount: _userTransactions.length,
-        itemBuilder: (context, index) {
-          final tx = _userTransactions[index];
-          return _buildTransactionCard(tx);
-        },
+      color: DP.green,
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(DP.gutter, 10, DP.gutter, 24),
+        children: [
+          const DPNotice(
+            'You can report failed or pending payments. Successful payments don’t need a ticket.',
+            kind: DPNoticeKind.info,
+          ),
+          for (final tx in _userTransactions) _buildTransactionCard(tx),
+        ],
       ),
     );
   }
@@ -2324,177 +1899,72 @@ class _UserDisputesPageState extends State<UserDisputesPage>
   Widget _buildTransactionCard(Map<String, dynamic> tx) {
     final amount = (tx['amount'] as num?)?.toDouble() ?? 0;
     final status = tx['status']?.toString().toLowerCase() ?? '';
-    final date =
-        tx['createdAt'] != null
-            ? DateTime.parse(tx['createdAt'].toString())
-            : null;
-
-    final isSuccessful =
-        status.contains('success') || status.contains('completed');
-    final isPendingOrFailed =
-        status.contains('pending') || status.contains('failed');
-    final canFileDispute = isPendingOrFailed;
-
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    Color getStatusColor() {
-      if (isSuccessful) return successColor;
-      if (status.contains('pending')) return warningColor;
-      if (status.contains('failed')) return errorColor;
-      return Colors.grey;
-    }
-
-    return Card(
+    final date = DateTime.tryParse(tx['createdAt']?.toString() ?? '');
+    final isSuccessful = status.contains('success') || status.contains('completed');
+    final canFileDispute = status.contains('pending') || status.contains('failed');
+    return DPCard(
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: EdgeInsets.all(isMobile ? 14 : 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    tx['type']?.toString() ?? 'Transaction',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      color: textPrimary,
-                    ),
-                  ),
-                ),
-                Text(
-                  '₦${amount.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: isSuccessful ? successColor : errorColor,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Ref: ${tx['reference']?.toString() ?? 'N/A'}',
-              style: TextStyle(fontSize: 12, color: textSecondary),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: getStatusColor().withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    tx['status']?.toString().toUpperCase() ?? 'UNKNOWN',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: getStatusColor(),
-                    ),
-                  ),
-                ),
-                if (date != null)
-                  Text(
-                    DateFormat('MMM dd, yyyy').format(date),
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            if (canFileDispute)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => _showCreateDisputeDialog(tx),
-                  icon: Icon(Icons.gavel, size: 18),
-                  label: Text(
-                    'File Dispute',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: warningColor,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              ),
-            if (isSuccessful)
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                decoration: BoxDecoration(
-                  color: successColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.check_circle, color: successColor, size: 16),
-                    const SizedBox(width: 8),
+                    Text(tx['type']?.toString() ?? 'Transaction', style: DPText.body.copyWith(fontWeight: FontWeight.w500)),
                     Text(
-                      'Transaction completed successfully. No dispute needed.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: successColor,
-                      ),
+                      [
+                        if (date != null) DateFormat('d MMM yyyy').format(date.toLocal()),
+                        tx['reference']?.toString() ?? '',
+                      ].where((e) => e.isNotEmpty).join(' · '),
+                      style: DPText.small,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(dpNaira(amount), style: DPText.value),
+                  const SizedBox(height: 4),
+                  DPStatusPill(tx['status']?.toString() ?? 'Unknown'),
+                ],
+              ),
+            ],
+          ),
+          if (canFileDispute) ...[
+            const SizedBox(height: 14),
+            DPButton(
+              label: 'Report this payment',
+              kind: DPButtonKind.soft,
+              height: 46,
+              onPressed: () => _showCreateDisputeDialog(tx),
+            ),
+          ] else if (isSuccessful) ...[
+            const SizedBox(height: 10),
+            Text('Completed — nothing to report.', style: DPText.small.copyWith(color: DP.green)),
           ],
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, color: errorColor, size: 48),
-          const SizedBox(height: 16),
-          Text(
-            _errorMessage ?? 'Something went wrong',
-            style: TextStyle(fontSize: 14, color: textSecondary),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: _loadData,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-            child: Text(
-              'Retry',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
+    return ListView(
+      padding: const EdgeInsets.all(DP.gutter),
+      children: [
+        DPEmptyState(
+          icon: DPIcons.circleAlert,
+          title: 'Couldn’t load your tickets',
+          message: _errorMessage ?? 'Something went wrong',
+          actionLabel: 'Try again',
+          onAction: _loadData,
+        ),
+      ],
     );
   }
 
@@ -2502,37 +1972,15 @@ class _UserDisputesPageState extends State<UserDisputesPage>
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
     if (_isLoading) {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                width: 40,
-                height: 40,
-                child: CircularProgressIndicator(
-                  strokeWidth: 3,
-                  valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Loading your disputes...',
-                style: TextStyle(fontSize: 14, color: textSecondary),
-              ),
-            ],
-          ),
-        ),
+      return const Scaffold(
+        backgroundColor: DP.bg,
+        body: Center(child: DPLoader(message: 'Loading your tickets…')),
       );
     }
-
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: DP.bg,
       drawer: CustomDrawer(
         header: _buildDrawerHeader(),
         items: _drawerItems,
@@ -2552,58 +2000,16 @@ class _UserDisputesPageState extends State<UserDisputesPage>
                 _buildStatsSection(),
                 _buildTabBar(),
                 Expanded(
-                  child:
-                      _errorMessage != null
-                          ? _buildErrorState()
-                          : TabBarView(
-                            controller: _tabController,
-                            children: [
-                              _buildDisputesList(),
-                              _buildNewDisputeTab(),
-                            ],
-                          ),
+                  child: _errorMessage != null
+                      ? _buildErrorState()
+                      : TabBarView(
+                          controller: _tabController,
+                          children: [_buildDisputesList(), _buildNewDisputeTab()],
+                        ),
                 ),
               ],
             ),
-            if (_isCreating)
-              Container(
-                color: Colors.black.withOpacity(0.3),
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator(strokeWidth: 3),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Submitting dispute...',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: textPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            if (_isCreating) const DPBusyOverlay(message: 'Sending your ticket…'),
           ],
         ),
       ),

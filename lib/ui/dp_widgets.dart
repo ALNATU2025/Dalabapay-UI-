@@ -1383,13 +1383,13 @@ class DPStatusPill extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = status.toLowerCase();
     Color bg = DP.blueSoft, fg = DP.blue;
-    if (s.contains('success') || s.contains('complete') || s.contains('deliver') || s.contains('verified')) {
+    if (s.contains('success') || s.contains('complete') || s.contains('deliver') || s.contains('verified') || s.contains('resolv')) {
       bg = DP.greenSoft;
       fg = DP.green;
     } else if (s.contains('fail') || s.contains('reject') || s.contains('cancel')) {
       bg = DP.dangerSoft;
       fg = DP.danger;
-    } else if (s.contains('pend') || s.contains('process') || s.contains('not set')) {
+    } else if (s.contains('pend') || s.contains('process') || s.contains('not set') || s.contains('review') || s.contains('investig') || s.contains('escalat')) {
       bg = DP.warnSoft;
       fg = DP.warn;
     }

@@ -6,7 +6,6 @@ import 'package:dalabapay/presentation/screens/dashboard/dashboard_screen.dart'
     show DashboardScreen;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
@@ -16,6 +15,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import '../../../core/services/api_service.dart';
 import '../../../core/widgets/custom_drawer.dart';
 import '../../../core/widgets/drawer_item.dart';
+import '../../ui/ui.dart';
 
 class TransactionValidationPage extends StatefulWidget {
   final String? userId;
@@ -899,33 +899,8 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
   // ==================== UI HELPERS ====================
 
   void _showSnackBar(String message, bool isError) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              isError
-                  ? Icons.error_outline_rounded
-                  : Icons.check_circle_rounded,
-              color: Colors.white,
-              size: 20,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                message,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: isError ? errorColor : secondaryColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-      ),
-    );
+    if (!mounted) return;
+    dpSnack(context, message, error: isError, success: !isError);
   }
 
   String? _validateReference(String? value) {
@@ -1178,516 +1153,84 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
   // ==================== UI BUILDERS ====================
 
   Widget _buildHeader() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 16 : 24,
-        vertical: isMobile ? 16 : 20,
-      ),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
-          stops: [0.06, 0.41],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: secondaryColor.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 8, DP.gutter, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                    size: isMobile ? 20 : 24,
-                  ),
-                ),
-              ),
-              SizedBox(width: isMobile ? 12 : 16),
-              Expanded(
-                child: Text(
-                  'Transaction Validation',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: isMobile ? 12 : 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-              if (_isAdmin || _isSuperAdmin)
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: isMobile ? 10 : 14,
-                    vertical: isMobile ? 4 : 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: successColor,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'ADMIN',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: isMobile ? 8 : 10,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-            ],
+          DPHeader(
+            title: 'Check a payment',
+            actionLabel: 'Refresh',
+            onAction: _loadRecentTransactions,
           ),
-          SizedBox(height: isMobile ? 16 : 20),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: isMobile ? 56 : 64,
-                height: isMobile ? 56 : 64,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.verified_rounded,
-                  color: primaryColor,
-                  size: isMobile ? 28 : 34,
-                ),
-              ),
-              SizedBox(width: isMobile ? 14 : 18),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Verify Payment',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: isMobile ? 20 : 28,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    SizedBox(height: isMobile ? 4 : 6),
-                    Text(
-                      'Check your transaction status instantly',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: isMobile ? 12 : 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          const SizedBox(height: 4),
+          Text('Made a transfer that hasn’t shown up? Enter its reference and we’ll check it.',
+              style: DPText.bodyMuted),
         ],
       ),
     );
   }
 
   Widget _buildStatsSection() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Stats cards - flexible width
-          Expanded(
-            child: Wrap(
-              spacing: isMobile ? 6 : 12,
-              runSpacing: isMobile ? 6 : 12,
+    Widget stat(String t, int v, Color c) => Expanded(
+          child: DPCard(
+            margin: EdgeInsets.zero,
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildStatCard(
-                  title: 'Verified',
-                  value: '$_totalVerified',
-                  icon: HugeIcons.strokeRoundedCheckmarkCircle02,
-                  color: successColor,
-                  isMobile: isMobile,
-                  screenWidth: screenWidth, // ✅ ADD THIS
-                ),
-                _buildStatCard(
-                  title: 'Pending',
-                  value: '$_totalPending',
-                  icon: HugeIcons.strokeRoundedClock01,
-                  color: warningColor,
-                  isMobile: isMobile,
-                  screenWidth: screenWidth, // ✅ ADD THIS
-                ),
-                _buildStatCard(
-                  title: 'Total',
-                  value: '${_totalVerified + _totalPending + _totalFailed}',
-                  icon: HugeIcons.strokeRoundedTransaction,
-                  color: primaryColor,
-                  isMobile: isMobile,
-                  screenWidth: screenWidth, // ✅ ADD THIS
-                ),
+                Text(t, style: DPText.small),
+                const SizedBox(height: 4),
+                Text('$v', style: DPText.title.copyWith(color: c)),
               ],
             ),
           ),
-          // Refresh button - fixed width
-          Container(
-            width: isMobile ? 40 : 48,
-            height: isMobile ? 40 : 48,
-            margin: const EdgeInsets.only(left: 8),
-            child: IconButton(
-              onPressed: () {
-                _loadRecentTransactions();
-                _showSnackBar('Refreshing transactions...', false);
-              },
-              icon: Icon(
-                Icons.refresh_rounded,
-                color: primaryColor,
-                size: isMobile ? 20 : 24,
-              ),
-              tooltip: 'Refresh stats',
-              style: IconButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: Colors.grey.shade200),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 16, DP.gutter, 0),
+      child: Row(children: [
+        stat('Verified', _totalVerified, DP.green),
+        const SizedBox(width: 10),
+        stat('Pending', _totalPending, DP.warn),
+        const SizedBox(width: 10),
+        stat('Total', _totalVerified + _totalPending + _totalFailed, DP.ink),
+      ]),
     );
   }
 
-  Widget _buildStatCard({
-    required String title,
-    required String value,
-    required dynamic icon,
-    required Color color,
-    required bool isMobile,
-    required double screenWidth, // ← Required parameter
-  }) {
-    // Calculate card width based on screen size
-    double cardWidth;
-    if (screenWidth < 360) {
-      cardWidth = (screenWidth - 50) / 3;
-    } else if (screenWidth < 400) {
-      cardWidth = (screenWidth - 55) / 3;
-    } else if (screenWidth < 600) {
-      cardWidth = (screenWidth - 60) / 3;
-    } else if (screenWidth < 900) {
-      cardWidth = 120;
-    } else {
-      cardWidth = 150;
-    }
-
-    if (cardWidth < 80) cardWidth = 80;
-
-    return SizedBox(
-      width: cardWidth,
-      child: Container(
-        padding: EdgeInsets.all(isMobile ? 8 : 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(isMobile ? 10 : 12),
-          border: Border.all(color: color.withOpacity(0.15)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: EdgeInsets.all(isMobile ? 4 : 6),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: HugeIcon(
-                icon: icon,
-                color: color,
-                size: isMobile ? 14 : 16,
-              ),
-            ),
-            SizedBox(width: isMobile ? 6 : 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontSize: isMobile ? 14 : 18,
-                      fontWeight: FontWeight.w700,
-                      color: textPrimary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: isMobile ? 8 : 10,
-                      color: textSecondary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildInputSection() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 8),
-      padding: EdgeInsets.all(isMobile ? 16 : 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(color: Colors.grey.shade100),
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 18, DP.gutter, 0),
       child: Form(
         key: _formKey,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              children: [
-                HugeIcon(
-                  icon: HugeIcons.strokeRoundedReceiptText,
-                  color: primaryColor,
-                  size: isMobile ? 18 : 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Transaction Reference',
-                  style: TextStyle(
-                    fontSize: isMobile ? 14 : 16,
-                    fontWeight: FontWeight.w600,
-                    color: textPrimary,
-                  ),
-                ),
-                const Spacer(),
-                if (_referenceController.text.isNotEmpty)
-                  GestureDetector(
-                    onTap: _copyReference,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isMobile ? 8 : 12,
-                        vertical: isMobile ? 4 : 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color:
-                            _isCopied
-                                ? successColor.withOpacity(0.1)
-                                : primaryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            _isCopied
-                                ? Icons.check_rounded
-                                : Icons.copy_rounded,
-                            size: isMobile ? 14 : 16,
-                            color: _isCopied ? successColor : primaryColor,
-                          ),
-                          if (!isMobile) ...[
-                            const SizedBox(width: 4),
-                            Text(
-                              _isCopied ? 'Copied!' : 'Copy',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: _isCopied ? successColor : primaryColor,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
+            DPFieldLabel('Payment reference'),
             TextFormField(
               controller: _referenceController,
               validator: _validateReference,
+              style: DPText.body.copyWith(fontSize: 16),
               decoration: InputDecoration(
-                hintText: 'Enter transaction reference',
-                hintStyle: TextStyle(
-                  fontSize: isMobile ? 13 : 14,
-                  color: Colors.grey.shade400,
-                ),
-                prefixIcon: Icon(
-                  Icons.receipt_long_rounded,
-                  color: primaryColor,
-                  size: isMobile ? 20 : 22,
-                ),
-                suffixIcon:
-                    _referenceController.text.isNotEmpty
-                        ? IconButton(
-                          icon: Icon(
-                            Icons.clear_rounded,
-                            size: isMobile ? 18 : 20,
-                            color: Colors.grey.shade400,
-                          ),
-                          onPressed: () => _referenceController.clear(),
-                        )
-                        : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: primaryColor, width: 1.5),
-                ),
-                filled: true,
-                fillColor: backgroundLight,
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: isMobile ? 12 : 16,
-                  vertical: isMobile ? 12 : 14,
-                ),
+                hintText: 'e.g. MNFY|82|20260807224750|016416',
+                suffixIcon: _referenceController.text.isNotEmpty
+                    ? IconButton(
+                        icon: DPIcon(_isCopied ? DPIcons.check : DPIcons.copy, size: 18, color: DP.green),
+                        onPressed: _copyReference,
+                      )
+                    : null,
               ),
-              style: TextStyle(
-                fontSize: isMobile ? 14 : 15,
-                color: textPrimary,
-              ),
+              onChanged: (_) => setState(() {}),
             ),
-            const SizedBox(height: 12),
-            Container(
-              padding: EdgeInsets.all(isMobile ? 10 : 12),
-              decoration: BoxDecoration(
-                color: infoColor.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: infoColor.withOpacity(0.15)),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: infoColor,
-                    size: isMobile ? 16 : 18,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Enter your transaction reference code',
-                          style: TextStyle(
-                            fontSize: isMobile ? 11 : 12,
-                            color: textSecondary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Examples: 17764011904836a721458 or MNFY|82|20260807224750|016416',
-                          style: TextStyle(
-                            fontSize: isMobile ? 10 : 11,
-                            color: Colors.grey.shade500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: 8),
+            Text('You’ll find it on your bank’s transfer receipt or SMS.', style: DPText.small),
             const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: isMobile ? 48 : 54,
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _validateTransaction,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  foregroundColor: Colors.white,
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child:
-                    _isLoading
-                        ? SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                          ),
-                        )
-                        : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.verified_rounded,
-                              size: isMobile ? 18 : 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Verify Transaction',
-                              style: TextStyle(
-                                fontSize: isMobile ? 14 : 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-              ),
+            DPButton(
+              label: 'Check payment',
+              leadingIcon: DPIcons.search,
+              loading: _isLoading,
+              onPressed: _isLoading ? null : _validateTransaction,
             ),
           ],
         ),
@@ -1696,348 +1239,122 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
   }
 
   Widget _buildVerificationStatus() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 8),
-      padding: EdgeInsets.all(isMobile ? 16 : 20),
-      decoration: BoxDecoration(
-        color: infoColor.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
-        border: Border.all(color: infoColor.withOpacity(0.15)),
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            width: isMobile ? 40 : 48,
-            height: isMobile ? 40 : 48,
-            child: const CircularProgressIndicator(
-              strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(infoColor),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 16, DP.gutter, 0),
+      child: DPCard(
+        margin: EdgeInsets.zero,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: DP.green),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text(_currentStatus, style: DPText.body.copyWith(fontWeight: FontWeight.w500))),
+              ],
             ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            _currentStatus,
-            style: TextStyle(
-              fontSize: isMobile ? 14 : 16,
-              fontWeight: FontWeight.w600,
-              color: infoColor,
+            const SizedBox(height: 12),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: LinearProgressIndicator(
+                value: (_verificationAttempts / 20).clamp(0.0, 1.0),
+                backgroundColor: DP.border,
+                color: DP.green,
+                minHeight: 4,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Checking database for transaction...',
-            style: TextStyle(
-              fontSize: isMobile ? 11 : 12,
-              color: textSecondary,
-            ),
-          ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: (_verificationAttempts / 20).clamp(0.0, 1.0),
-              backgroundColor: Colors.grey.shade200,
-              color: infoColor,
-              minHeight: 4,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${_verificationAttempts * 3}s elapsed',
-            style: TextStyle(
-              fontSize: isMobile ? 10 : 11,
-              color: Colors.grey.shade500,
-            ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text('${_verificationAttempts * 3}s · checking with the bank', style: DPText.small),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildRecentTransactions() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 8),
-      padding: EdgeInsets.all(isMobile ? 12 : 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(color: Colors.grey.shade100),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: DP.gutter),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedTransaction,
-                color: primaryColor,
-                size: isMobile ? 18 : 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Recent Transactions',
-                style: TextStyle(
-                  fontSize: isMobile ? 14 : 16,
-                  fontWeight: FontWeight.w600,
-                  color: textPrimary,
-                ),
-              ),
-              const Spacer(),
-              if (_recentTransactions.isNotEmpty)
-                TextButton(
-                  onPressed: () {
-                    // Refresh transactions before navigating
+          DPSectionHeader(
+            'Recent top-ups',
+            actionLabel: _recentTransactions.isNotEmpty ? 'View all' : null,
+            onAction: _recentTransactions.isNotEmpty
+                ? () {
                     _loadRecentTransactions();
                     Navigator.pushNamed(context, '/transactions');
-                  },
-                  child: Text(
-                    'View All',
-                    style: TextStyle(
-                      fontSize: isMobile ? 11 : 12,
-                      fontWeight: FontWeight.w600,
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
-            ],
+                  }
+                : null,
           ),
-          const SizedBox(height: 12),
           if (_isLoadingHistory)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: CircularProgressIndicator(),
-              ),
-            )
+            const DPLoader()
           else if (_recentTransactions.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Column(
-                  children: [
-                    HugeIcon(
-                      icon: HugeIcons.strokeRoundedTransaction,
-                      color: Colors.grey.shade300,
-                      size: 40,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'No recent transactions',
-                      style: TextStyle(
-                        color: textSecondary,
-                        fontSize: isMobile ? 13 : 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+            const DPEmptyState(icon: DPIcons.receipt, title: 'No recent top-ups')
           else
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _recentTransactions.length,
-              separatorBuilder: (context, index) => const Divider(height: 1),
-              itemBuilder: (context, index) {
-                final tx = _recentTransactions[index];
-                final isSuccess = tx['status'] == 'Successful';
-                final statusColor = isSuccess ? successColor : warningColor;
-                final statusIcon =
-                    isSuccess
-                        ? Icons.check_circle_rounded
-                        : Icons.pending_rounded;
-
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: isMobile ? 8 : 10),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: isMobile ? 36 : 40,
-                        height: isMobile ? 36 : 40,
-                        decoration: BoxDecoration(
-                          color: statusColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Icon(
-                          statusIcon,
-                          color: statusColor,
-                          size: isMobile ? 18 : 20,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              tx['type'] ?? 'Transaction',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: isMobile ? 13 : 14,
-                                color: textPrimary,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              tx['reference'] ?? 'N/A',
-                              style: TextStyle(
-                                fontSize: isMobile ? 10 : 11,
-                                color: textSecondary,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: statusColor.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    tx['status'] ?? 'Unknown',
-                                    style: TextStyle(
-                                      fontSize: isMobile ? 8 : 9,
-                                      fontWeight: FontWeight.w600,
-                                      color: statusColor,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  DateFormat(
-                                    'MMM dd, HH:mm',
-                                  ).format(DateTime.parse(tx['createdAt'])),
-                                  style: TextStyle(
-                                    fontSize: isMobile ? 8 : 9,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        '₦${(tx['amount'] ?? 0).toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: isMobile ? 13 : 14,
-                          color: isSuccess ? successColor : textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
+            for (final tx in _recentTransactions)
+              Builder(builder: (_) {
+                final ok = tx['status'] == 'Successful';
+                final amount = ((tx['amount'] ?? 0) as num).toDouble();
+                final d = DateTime.tryParse(tx['createdAt']?.toString() ?? '');
+                return DPTransactionTile(
+                  icon: ok ? DPIcons.arrowDownLeft : DPIcons.hourglass,
+                  title: (tx['type'] ?? 'Transaction').toString(),
+                  subtitle: [
+                    if (d != null) DateFormat('d MMM, h:mm a').format(d.toLocal()),
+                    (tx['status'] ?? 'Unknown').toString(),
+                  ].join(' · '),
+                  amount: dpNaira(amount),
+                  credit: ok,
                 );
-              },
-            ),
+              }),
         ],
       ),
     );
   }
 
   Widget _buildHelpSection() {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 24, vertical: 8),
-      padding: EdgeInsets.all(isMobile ? 12 : 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(isMobile ? 12 : 16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(color: Colors.grey.shade100),
-      ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(DP.gutter, 8, DP.gutter, 0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              HugeIcon(
-                icon: HugeIcons.strokeRoundedHelpCircle,
-                color: primaryColor,
-                size: isMobile ? 18 : 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Need Help?',
-                style: TextStyle(
-                  fontSize: isMobile ? 14 : 16,
-                  fontWeight: FontWeight.w600,
-                  color: textPrimary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '• Your reference can be found in your transaction receipt\n'
-            '• Format: Alphanumeric (e.g., 17764011904836a721485)\n'
-            '• Each transaction can only be verified once\n'
-            '• For pending transactions, wait a few minutes or contact support',
-            style: TextStyle(
-              fontSize: isMobile ? 11 : 12,
-              color: textSecondary,
-              height: 1.6,
-            ),
-          ),
-          const SizedBox(height: 12),
-          InkWell(
-            onTap: () => _contactSupport(_referenceController.text.trim()),
-            child: Container(
-              padding: EdgeInsets.all(isMobile ? 10 : 12),
-              decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: primaryColor.withOpacity(0.15)),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.support_agent_rounded,
-                    color: primaryColor,
-                    size: isMobile ? 18 : 20,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    'Contact Support',
-                    style: TextStyle(
-                      fontSize: isMobile ? 12 : 13,
-                      fontWeight: FontWeight.w600,
-                      color: primaryColor,
+          const DPSectionHeader('Good to know'),
+          DPCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (final t in const [
+                  'Your reference is on the transfer receipt from your bank.',
+                  'Each payment can only be checked and credited once.',
+                  'If it’s still pending, give it a few minutes before contacting us.',
+                ])
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: DPIcon(DPIcons.check, size: 15, color: DP.green),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text(t, style: DPText.bodyMuted.copyWith(fontSize: 13.5))),
+                      ],
                     ),
                   ),
-                  const Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: primaryColor,
-                    size: isMobile ? 14 : 16,
-                  ),
-                ],
-              ),
+              ],
             ),
+          ),
+          DPMenuRow(
+            icon: DPIcons.headset,
+            title: 'Contact support',
+            subtitle: 'We’ll check it for you',
+            onTap: () => _contactSupport(_referenceController.text.trim()),
           ),
         ],
       ),
@@ -2048,11 +1365,9 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < 600;
-
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: DP.bg,
       drawer: CustomDrawer(
         header: _buildDrawerHeader(),
         items: _drawerItems,
@@ -2069,6 +1384,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _buildHeader(),
                   _buildStatsSection(),
@@ -2080,45 +1396,7 @@ class _TransactionValidationPageState extends State<TransactionValidationPage>
                 ],
               ),
             ),
-            if (_isLoading && !_isVerifying)
-              Container(
-                color: Colors.black.withOpacity(0.3),
-                child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: CircularProgressIndicator(strokeWidth: 3),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'Processing...',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: textPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            if (_isLoading && !_isVerifying) const DPBusyOverlay(message: 'Checking…'),
           ],
         ),
       ),
