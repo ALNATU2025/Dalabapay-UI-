@@ -115,7 +115,7 @@ class _AuthGuardState extends State<AuthGuard> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF102C68),
+                  backgroundColor: const Color(0xFF15368A),
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('Login'),
@@ -132,7 +132,7 @@ class _AuthGuardState extends State<AuthGuard> {
           const Scaffold(
             body: Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF15368A)),
               ),
             ),
           );

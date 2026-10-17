@@ -1,16 +1,15 @@
 // lib/presentation/screens/bills/pay_bills_screen.dart
-// "Pay bills" hub from the redesign. UI only: it lists the services the
-// dashboard already supports and hands the chosen route back via [onSelect].
+// "All Services" (design screen 8) and "Pay Bills" (design screen 11).
+// UI only: the chosen route is handed back via [onSelect]; the dashboard
+// opens it with the same logic as before.
 import 'package:flutter/material.dart';
 
 import '../../../ui/ui.dart';
 
-class PayBillsScreen extends StatefulWidget {
-  /// Each entry: {'icon': IconData, 'name': String, 'route': String}
+/// Pushed "All Services" screen (keeps the old PayBillsScreen API).
+class PayBillsScreen extends StatelessWidget {
+  /// Kept for compatibility; the catalogue above is used for the grid.
   final List<Map<String, dynamic>> services;
-
-  /// Recent transactions (same shape as the dashboard list) used for
-  /// "Pay again" shortcuts.
   final List<dynamic> recentTransactions;
   final ValueChanged<String> onSelect;
 
@@ -22,10 +21,38 @@ class PayBillsScreen extends StatefulWidget {
   });
 
   @override
-  State<PayBillsScreen> createState() => _PayBillsScreenState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: DP.bg,
+      body: SafeArea(
+        child: ServicesView(
+          recentTransactions: recentTransactions,
+          onSelect: onSelect,
+          showBack: true,
+        ),
+      ),
+    );
+  }
 }
 
-class _PayBillsScreenState extends State<PayBillsScreen> {
+/// "All Services" content — used as the Services tab and as a pushed page.
+class ServicesView extends StatefulWidget {
+  final List<dynamic> recentTransactions;
+  final ValueChanged<String> onSelect;
+  final bool showBack;
+
+  const ServicesView({
+    super.key,
+    required this.recentTransactions,
+    required this.onSelect,
+    this.showBack = false,
+  });
+
+  @override
+  State<ServicesView> createState() => _ServicesViewState();
+}
+
+class _ServicesViewState extends State<ServicesView> {
   String _query = '';
 
   String? _routeForType(String text) {
@@ -46,8 +73,8 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
   }
 
   IconData _iconForRoute(String route) {
-    for (final s in widget.services) {
-      if (s['route'] == route) return s['icon'] as IconData;
+    for (final s in kDalabapayServices) {
+      if (s.route == route) return s.icon;
     }
     return DPIcons.receipt;
   }
@@ -95,124 +122,137 @@ class _PayBillsScreenState extends State<PayBillsScreen> {
   Widget build(BuildContext context) {
     final q = _query.trim().toLowerCase();
     final services = q.isEmpty
-        ? widget.services
-        : widget.services
-            .where((s) => (s['name'] as String).toLowerCase().contains(q))
+        ? kDalabapayServices
+        : kDalabapayServices
+            .where((s) => s.name.toLowerCase().contains(q))
             .toList();
     final again = _payAgain();
 
+    return Column(
+      children: [
+        DPTopBar(title: 'All Services', showBack: widget.showBack),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 6, 20, 28),
+            children: [
+              TextField(
+                onChanged: (v) => setState(() => _query = v),
+                textInputAction: TextInputAction.search,
+                style: const TextStyle(fontSize: 15, color: DP.ink),
+                decoration: DPField.decoration(
+                  hint: 'Search for a service...',
+                  prefix: const Icon(DPIcons.search, size: 20),
+                ),
+              ),
+              const SizedBox(height: 18),
+              if (services.isEmpty)
+                const DPEmptyState(
+                  icon: DPIcons.search,
+                  title: 'No matching service',
+                  message: 'Try another word, like "data" or "TV".',
+                )
+              else
+                DPServiceGrid(
+                  columns: 3,
+                  tiles: [
+                    for (final s in services)
+                      DPServiceTile(
+                        icon: s.icon,
+                        label: s.name,
+                        image: s.image,
+                        color: s.color,
+                        onTap: () => widget.onSelect(s.route),
+                      ),
+                  ],
+                ),
+              if (again.isNotEmpty && q.isEmpty) ...[
+                const SizedBox(height: 24),
+                const DPSectionHeader('Pay again'),
+                DPCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  child: Column(
+                    children: [
+                      for (var i = 0; i < again.length; i++) ...[
+                        if (i > 0)
+                          const Divider(height: 1, color: DP.borderSoft),
+                        DPListRow(
+                          onTap: () =>
+                              widget.onSelect(again[i]['route'] as String),
+                          leading: DPIconBadge.blue(
+                            _iconForRoute(again[i]['route'] as String),
+                            size: 40,
+                            iconSize: 20,
+                          ),
+                          title: again[i]['title'] as String,
+                          subtitle: _mask(again[i]['subtitle'] as String),
+                          trailing: const Icon(
+                            DPIcons.chevronRight,
+                            color: DP.muted,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// "Pay Bills" (design screen 11): provider tiles + promo banner.
+class BillsScreen extends StatelessWidget {
+  final ValueChanged<String> onSelect;
+  const BillsScreen({super.key, required this.onSelect});
+
+  @override
+  Widget build(BuildContext context) {
+    const tiles = <DPService>[
+      DPService('Electricity', DPIcons.bolt, '/electricity', DPAssets.svcElectricity, DP.green),
+      DPService('DSTV', DPIcons.tv, '/cable', DPAssets.dstv, DP.navyIcon),
+      DPService('GOtv', DPIcons.tv, '/cable', DPAssets.gotv, DP.green),
+      DPService('StarTimes', DPIcons.tv, '/cable', DPAssets.startimes, DP.amber),
+      DPService('WAEC PIN', DPIcons.badge, '/education', DPAssets.waec, DP.amber),
+      DPService('Education', DPIcons.school, '/education', DPAssets.svcEducation, DP.navyIcon),
+      DPService('Insurance', DPIcons.shield, '/insurance', DPAssets.svcInsurance, DP.green),
+      DPService('Data', DPIcons.wifi, '/data', DPAssets.svcData, DP.navyIcon),
+      DPService('More', DPIcons.grid, '/services', DPAssets.svcMore, DP.navyIcon),
+    ];
     return Scaffold(
       backgroundColor: DP.bg,
       body: SafeArea(
         child: Column(
           children: [
-            const DPTopBar(title: 'Pay bills'),
+            const DPTopBar(title: 'Pay Bills'),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+                padding: const EdgeInsets.fromLTRB(20, 6, 20, 28),
                 children: [
-                  const DPHeadline(
-                    'Life admin, sorted.',
-                    subtitle: 'One place for your everyday payments.',
-                    bottom: 20,
-                  ),
-                  const DPLabel('What would you like to pay?'),
-                  TextField(
-                    onChanged: (v) => setState(() => _query = v),
-                    textInputAction: TextInputAction.search,
-                    decoration: DPField.decoration(
-                      hint: 'Search bills and services',
-                      suffix: const Icon(DPIcons.search),
-                    ),
+                  DPServiceGrid(
+                    columns: 3,
+                    tiles: [
+                      for (final s in tiles)
+                        DPServiceTile(
+                          icon: s.icon,
+                          label: s.name,
+                          image: s.image,
+                          color: s.color,
+                          onTap: () => onSelect(s.route),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 22),
-                  const DPSectionHeader('Everyday payments'),
-                  if (services.isEmpty)
-                    const DPEmptyState(
-                      icon: DPIcons.search,
-                      title: 'No matching service',
-                      message: 'Try another word, like "data" or "TV".',
-                    )
-                  else
-                    DPServiceGrid(
-                      tiles: [
-                        for (final s in services)
-                          DPServiceTile(
-                            icon: s['icon'] as IconData,
-                            label: s['name'] as String,
-                            onTap: () => widget.onSelect(s['route'] as String),
-                          ),
-                      ],
-                    ),
-                  const SizedBox(height: 22),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 18, 18, 18),
-                    decoration: BoxDecoration(
-                      color: DP.navy,
-                      borderRadius: BorderRadius.circular(DP.rXl),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Your bills can give back.',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'See the commission on eligible payments before you pay.',
-                                style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.78),
-                                  fontSize: 13,
-                                  height: 1.4,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Icon(
-                          DPIcons.gift,
-                          color: Colors.white.withValues(alpha: 0.9),
-                          size: 30,
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (again.isNotEmpty) ...[
-                    const SizedBox(height: 24),
-                    const DPSectionHeader('Pay again'),
-                    for (final a in again)
-                      DPListRow(
-                        onTap: () => widget.onSelect(a['route'] as String),
-                        leading: DPIconBadge.blue(
-                          _iconForRoute(a['route'] as String),
-                          size: 40,
-                          iconSize: 20,
-                        ),
-                        title: a['title'] as String,
-                        subtitle: _mask(a['subtitle'] as String),
-                        trailing: const Icon(
-                          DPIcons.chevronRight,
-                          color: DP.muted,
-                        ),
-                      ),
-                  ],
-                  const SizedBox(height: 24),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pushNamed(context, '/help'),
-                      child: const Text(
-                        'Can\'t find a service? Let us know in Help.',
-                        style: DP.caption,
-                      ),
+                  const DPAppear(
+                    delay: Duration(milliseconds: 250),
+                    child: DPPromoBanner(
+                      title: 'Quick & Easy\nBill Payments',
+                      subtitle:
+                          'Keep your services active and never miss a payment.',
+                      image: DPAssets.bannerBills,
+                      icon: DPIcons.bolt,
                     ),
                   ),
                 ],

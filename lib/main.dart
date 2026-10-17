@@ -335,7 +335,7 @@ class _DalabaPayAppState extends State<DalabaPayApp>
                       style: GoogleFonts.inter(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFF14263D),
+                        color: const Color(0xFF10255A),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -789,7 +789,7 @@ class NotFoundScreen extends StatelessWidget {
                   style: GoogleFonts.inter(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
-                    color: const Color(0xFF14263D),
+                    color: const Color(0xFF10255A),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -807,7 +807,7 @@ class NotFoundScreen extends StatelessWidget {
                     Navigator.pushReplacementNamed(context, '/');
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF168566),
+                    backgroundColor: const Color(0xFF079A68),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32,
                       vertical: 12,

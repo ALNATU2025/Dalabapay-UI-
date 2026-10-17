@@ -447,7 +447,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       case 'success':
       case 'successful':
       case 'resolved':
-        return const Color(0xFF168566);
+        return const Color(0xFF079A68);
       case 'pending':
       case 'processing':
         return Colors.orange;
@@ -455,7 +455,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
       case 'cancelled':
         return Colors.red;
       case 'refunded':
-        return const Color(0xFF173D88);
+        return const Color(0xFF2563EB);
     }
 
     // ✅ PRIORITY 2: Fall back to flags only if status was unknown
@@ -666,7 +666,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
               isCommission: isCommission,
               commissionSource:
                   isCommission ? _getCommissionSource(description) : null,
-              primaryColor: const Color(0xFF102C68),
+              primaryColor: const Color(0xFF15368A),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -692,7 +692,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         child: Column(
           children: [
             DPTopBar(
-              title: 'Your activity',
+              title: 'My Wallet',
               actionLabel: 'Export',
               onAction: _exportCsv,
             ),
@@ -704,26 +704,18 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         index: 1,
         items: const [
           DPNavItem(DPIcons.home, 'Home', activeIcon: DPIcons.homeFilled),
-          DPNavItem(DPIcons.activity, 'Activity'),
-          DPNavItem(DPIcons.earnings, 'Earnings'),
+          DPNavItem(Icons.receipt_long_outlined, 'Transactions',
+              activeIcon: Icons.receipt_long_rounded),
+          DPNavItem(Icons.grid_view_outlined, 'Services',
+              activeIcon: Icons.grid_view_rounded),
           DPNavItem(DPIcons.user, 'Profile', activeIcon: DPIcons.userFilled),
         ],
+        // Home owns the tabs: tell it which one to show when we close.
         onTap: (i) {
-          switch (i) {
-            case 0:
-              Navigator.of(context).maybePop();
-              break;
-            case 2:
-              Navigator.pushReplacementNamed(
-                context,
-                '/commission',
-                arguments: {'userId': widget.userId},
-              );
-              break;
-            case 3:
-              Navigator.pushReplacementNamed(context, '/settings');
-              break;
-          }
+          if (i == 1) return;
+          Navigator.of(context).maybePop(
+            const ['home', 'transactions', 'services', 'profile'][i],
+          );
         },
       ),
     );
@@ -769,19 +761,6 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     }
   }
 
-  String _dayLabel(DateTime d) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final day = DateTime(d.year, d.month, d.day);
-    final pretty = DateFormat('d MMMM').format(d);
-    if (day == today) return 'Today, $pretty';
-    if (day == today.subtract(const Duration(days: 1))) {
-      return 'Yesterday, $pretty';
-    }
-    return DateFormat('EEEE, d MMMM').format(d);
-  }
-
-
   Widget _buildBody() {
     if (_isLoading && _allTransactions.isEmpty) {
       return const Center(child: CircularProgressIndicator());
@@ -799,13 +778,14 @@ class _TransactionsScreenState extends State<TransactionsScreen>
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 0),
+            padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildBalanceCard(),
+                  DPAppear(scaleFrom: 0.97, child: _buildBalanceCard()),
                   const SizedBox(height: 22),
+                  const DPSectionHeader('Recent Transactions'),
                   _buildSearchAndFilters(),
                 ],
               ),
@@ -827,68 +807,117 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     );
   }
 
-  /// "This month" money in / money out summary.
+  bool _balanceHidden = false;
+
+  void _openWallet(String tab) {
+    Navigator.pushNamed(
+      context,
+      '/wallet',
+      arguments: {
+        'userId': widget.userId,
+        'initialTab': tab,
+        'onBalanceUpdate': (double v) {
+          if (mounted) setState(() => _currentBalance = v);
+        },
+      },
+    ).then((_) => _refreshData());
+  }
+
+  /// Green wallet card from the design (balance + Add / Send money).
   Widget _buildBalanceCard() {
-    final now = DateTime.now();
-    double moneyIn = 0, moneyOut = 0;
-    for (final raw in _allTransactions) {
-      if (raw is! Map) continue;
-      final tx = Map<String, dynamic>.from(raw);
-      final d = _parseDateTime(tx['createdAt']).toLocal();
-      if (d.year != now.year || d.month != now.month) continue;
-      if (_getStatusText(tx) != 'Successful') continue;
-      final amount = (tx['amount'] as num?)?.toDouble() ?? 0;
-      if (_isCreditTransaction(tx)) {
-        moneyIn += amount;
-      } else {
-        moneyOut += amount;
-      }
-    }
-    Widget col(String label, double v, Color c) => Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    const balanceStyle = TextStyle(
+      color: Colors.white,
+      fontSize: 28,
+      fontWeight: FontWeight.w800,
+      letterSpacing: -0.4,
+      fontFeatures: [FontFeature.tabularFigures()],
+    );
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
+      decoration: BoxDecoration(
+        gradient: DP.greenGradient,
+        borderRadius: BorderRadius.circular(DP.rXl),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x33079A68),
+            blurRadius: 18,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Text(label, style: DP.caption),
-              const SizedBox(height: 6),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  DP.naira(v, decimals: v % 1 != 0),
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                    color: c,
+              Text(
+                'Wallet Balance',
+                style: TextStyle(
+                  color: Colors.white.withValues(alpha: 0.88),
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              InkResponse(
+                radius: 20,
+                onTap: () => setState(() => _balanceHidden = !_balanceHidden),
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Icon(
+                    _balanceHidden ? DPIcons.eyeOff : DPIcons.eye,
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
               ),
             ],
           ),
-        );
-    return DPCard(
-      padding: const EdgeInsets.fromLTRB(18, 16, 18, 18),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'THIS MONTH · ${DateFormat('MMMM yyyy').format(now).toUpperCase()}',
-            style: DP.tiny,
+          const SizedBox(height: 6),
+          SizedBox(
+            height: 38,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: _currentBalance == null
+                    ? const Text('₦ —', style: balanceStyle)
+                    : _balanceHidden
+                        ? const Text('₦ ••••••', style: balanceStyle)
+                        : DPCountUp(
+                            value: _currentBalance!,
+                            format: (v) => DP.naira(v),
+                            style: balanceStyle,
+                          ),
+              ),
+            ),
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Row(
             children: [
-              col('Money in', moneyIn, DP.green),
+              Expanded(
+                child: DPButton(
+                  label: 'Add Money',
+                  leadingIcon: DPIcons.plus,
+                  height: 46,
+                  background: Colors.white,
+                  foreground: DP.green,
+                  onPressed: () => _openWallet('add_money'),
+                ),
+              ),
               const SizedBox(width: 12),
-              col('Money out', moneyOut, DP.ink),
+              Expanded(
+                child: DPButton(
+                  label: 'Send Money',
+                  leadingIcon: DPIcons.plus,
+                  height: 46,
+                  background: DP.blue,
+                  onPressed: () => _openWallet('transfer'),
+                ),
+              ),
             ],
           ),
-          if (_currentBalance != null) ...[
-            const SizedBox(height: 12),
-            Text(
-              'Wallet balance ${DP.naira(_currentBalance)}',
-              style: DP.caption,
-            ),
-          ],
         ],
       ),
     );
@@ -899,15 +928,15 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const DPLabel('Find a transaction'),
         TextField(
           controller: _searchController,
           onChanged: (_) => _applyFilter(),
           textInputAction: TextInputAction.search,
           decoration: DPField.decoration(
             hint: 'Search name or reference',
+            prefix: const Icon(DPIcons.search, size: 20),
             suffix: _searchController.text.isEmpty
-                ? const Icon(DPIcons.search)
+                ? null
                 : IconButton(
                     icon: const Icon(DPIcons.close),
                     onPressed: () {
@@ -999,30 +1028,23 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     if (_filteredTransactions.isEmpty) {
       return SliverToBoxAdapter(child: _buildEmptyState());
     }
-    // Group by calendar day
-    final groups = <String, List<Map<String, dynamic>>>{};
-    for (final raw in _filteredTransactions) {
-      final tx = Map<String, dynamic>.from(raw as Map);
-      final d = _parseDateTime(
-        tx['updatedAt'] ?? tx['completedAt'] ?? tx['createdAt'],
-      ).toLocal();
-      groups.putIfAbsent(_dayLabel(d), () => []).add(tx);
-    }
-    final children = <Widget>[];
-    groups.forEach((label, items) {
-      children.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 18, bottom: 6),
-          child: Text(label, style: DP.section),
-        ),
-      );
-      for (final tx in items) {
-        children.add(_buildTransactionItem(tx));
-      }
-    });
+    final items = [
+      for (final raw in _filteredTransactions)
+        Map<String, dynamic>.from(raw as Map),
+    ];
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      sliver: SliverList(delegate: SliverChildListDelegate(children)),
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, i) => Column(
+            children: [
+              if (i > 0) const Divider(height: 1, color: DP.borderSoft),
+              _buildTransactionItem(items[i]),
+            ],
+          ),
+          childCount: items.length,
+        ),
+      ),
     );
   }
 
@@ -1039,6 +1061,7 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     final highlighted = widget.highlightReference != null &&
         widget.highlightReference == tx['reference']?.toString();
     final statusColor = DPStatus.colorFor(status);
+    final amountColor = failed ? DP.muted : (isCredit ? DP.green : DP.red);
     return Container(
       decoration: highlighted
           ? BoxDecoration(
@@ -1048,28 +1071,35 @@ class _TransactionsScreenState extends State<TransactionsScreen>
           : null,
       child: DPListRow(
         onTap: () => _showTransactionDetails(tx),
-        leading: isCredit
-            ? DPIconBadge(_getTransactionIcon(type), size: 44, iconSize: 21)
-            : DPIconBadge.blue(_getTransactionIcon(type), size: 44, iconSize: 21),
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        subtitleMaxLines: 2,
+        leading: DPIconBadge(
+          _getTransactionIcon(type),
+          size: 46,
+          iconSize: 21,
+          color: failed ? DP.muted : (isCredit ? DP.green : DP.red),
+          background: failed ? DP.borderSoft : (isCredit ? DP.mint : DP.redBg),
+        ),
         title: description,
         subtitle:
-            '${DateFormat('h:mm a').format(date)} · $status${failed ? ' · No debit' : ''}',
+            '$type${status != 'Successful' ? ' · $status' : ''}\n${DateFormat('MMM d, yyyy  •  hh:mm a').format(date)}',
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '${failed ? '' : (isCredit ? '+' : '−')}${DP.naira(amount, decimals: amount % 1 != 0)}',
+              '${failed ? '' : (isCredit ? '+ ' : '- ')}${DP.naira(amount)}',
               style: TextStyle(
-                fontSize: 15.5,
-                fontWeight: FontWeight.w600,
-                color: failed ? DP.muted : (isCredit ? DP.green : DP.ink),
+                fontSize: 14.5,
+                fontWeight: FontWeight.w700,
+                color: amountColor,
                 decoration: failed ? TextDecoration.lineThrough : null,
+                fontFeatures: const [FontFeature.tabularFigures()],
               ),
             ),
             if (status != 'Successful')
               Text(
-                status,
+                failed ? 'No debit' : status,
                 style: TextStyle(fontSize: 11.5, color: statusColor),
               ),
           ],

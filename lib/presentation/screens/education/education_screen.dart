@@ -88,8 +88,8 @@ class _EducationScreenState extends State<EducationScreen>
   bool _isProcessingPayment = false;
 
   // Color Palette
-  static const Color _primary = Color(0xFF102C68);
-  static const Color _secondary = Color(0xFF168566);
+  static const Color _primary = Color(0xFF15368A);
+  static const Color _secondary = Color(0xFF079A68);
   static const Color _hintColor = Color(0xFFB6B6B6);
 
   // Service list with logos
@@ -111,7 +111,7 @@ class _EducationScreenState extends State<EducationScreen>
       'fullName': 'WAEC Result Checker',
       'logo':
           'https://pbs.twimg.com/profile_images/1583839523301195776/0UZ6cUcI_400x400.jpg',
-      'color': const Color(0xFFA76B1D),
+      'color': const Color(0xFFB7791F),
       'requiresPhone': true,
       'requiresProfileId': false,
       'showQuantity': true,
@@ -122,7 +122,7 @@ class _EducationScreenState extends State<EducationScreen>
       'fullName': 'JAMB PIN',
       'logo':
           'https://upload.wikimedia.org/wikipedia/en/2/2e/Official_JAMB_logo.png',
-      'color': const Color(0xFF173D88),
+      'color': const Color(0xFF2563EB),
       'requiresPhone': true,
       'requiresProfileId': true,
       'showQuantity': false,
@@ -369,7 +369,7 @@ class _EducationScreenState extends State<EducationScreen>
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFC0392B),
+        backgroundColor: const Color(0xFFE5484D),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -1297,7 +1297,7 @@ class _EducationScreenState extends State<EducationScreen>
             ),
             child: const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF15368A)),
               ),
             ),
           ),

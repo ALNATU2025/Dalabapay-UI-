@@ -78,11 +78,11 @@ class _AirtimeScreenState extends State<AirtimeScreen>
   late Animation<double> _shakeAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryNavy = Color(0xFF102C68);
-  static const Color _secondaryTeal = Color(0xFF168566);
-  static const Color _textDark = Color(0xFF14263D);
-  static const Color _textMuted = Color(0xFF728078);
-  static const Color _bgCanvas = Color(0xFFF8F9F5);
+  static const Color _primaryNavy = Color(0xFF15368A);
+  static const Color _secondaryTeal = Color(0xFF079A68);
+  static const Color _textDark = Color(0xFF10255A);
+  static const Color _textMuted = Color(0xFF7B87A1);
+  static const Color _bgCanvas = Color(0xFFF7F9FC);
 
   // ==================== DATA COLLECTIONS ====================
   final List<Map<String, dynamic>> _networks = [
@@ -104,7 +104,7 @@ class _AirtimeScreenState extends State<AirtimeScreen>
     {
       'name': '9mobile',
       'apiName': 'etisalat',
-      'color': const Color(0xFFA76B1D),
+      'color': const Color(0xFFB7791F),
     },
   ];
 
@@ -644,7 +644,7 @@ class _AirtimeScreenState extends State<AirtimeScreen>
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFC0392B),
+        backgroundColor: const Color(0xFFE5484D),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -1212,6 +1212,7 @@ class _AirtimeScreenState extends State<AirtimeScreen>
       options: _networks.map((n) => n['name'] as String).toList(),
       selected: _selectedNetwork,
       height: 46,
+      logos: true,
       onSelect: (name) {
         HapticFeedback.selectionClick();
         setState(() => _selectedNetwork = name);

@@ -245,8 +245,8 @@ class DPSuccessPanel extends StatelessWidget {
 
   const DPSuccessPanel({
     super.key,
-    this.title = 'Payment successful',
-    this.subtitle = 'That\'s one less thing on your list.',
+    this.title = 'Payment Successful!',
+    this.subtitle = 'Your transaction has been completed successfully.',
     required this.serviceLabel,
     required this.amount,
     required this.rows,
@@ -281,9 +281,10 @@ class DPSuccessPanel extends StatelessWidget {
                     child: Text(
                       title,
                       textAlign: TextAlign.center,
-                      style: DP.title.copyWith(
+                      style: const TextStyle(
                         fontSize: 23,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w800,
+                        color: DP.ink,
                       ),
                     ),
                   ),
@@ -319,22 +320,22 @@ class DPSuccessPanel extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  DPButton(label: 'Done', onPressed: onDone),
                   if (onShare != null) ...[
-                    DPButton(
-                      label: 'Share receipt',
+                    const SizedBox(height: 10),
+                    DPOutlineButton(
+                      label: 'Share Receipt',
                       icon: DPIcons.share,
                       onPressed: onShare,
                     ),
-                    const SizedBox(height: 10),
                   ] else if (onViewReceipt != null) ...[
-                    DPButton(
-                      label: 'View full receipt',
+                    const SizedBox(height: 10),
+                    DPOutlineButton(
+                      label: 'View Full Receipt',
                       icon: DPIcons.receipt,
                       onPressed: onViewReceipt,
                     ),
-                    const SizedBox(height: 10),
                   ],
-                  DPOutlineButton(label: 'Back to home', onPressed: onDone),
                 ],
               ),
             ),
@@ -366,70 +367,38 @@ class _ReceiptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = pending ? DP.amber : DP.green;
+    final all = [
+      DPReviewRow('Amount', DP.naira(amount), strong: true),
+      DPReviewRow('Service', serviceLabel),
+      if (pending) const DPReviewRow('Status', 'Processing'),
+      ...rows,
+    ];
     return Container(
       decoration: BoxDecoration(
         color: DP.surface,
-        borderRadius: BorderRadius.circular(DP.rXl),
+        borderRadius: BorderRadius.circular(DP.rLg),
         border: Border.all(color: DP.border),
-        boxShadow: DP.softShadow,
       ),
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Column(
         children: [
-          Text(
-            serviceLabel.toUpperCase(),
-            style: DP.tiny,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 6),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: DPCountUp(
-              value: amount,
-              format: (v) => DP.naira(v),
-              style: const TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.w600,
-                color: DP.ink,
-                letterSpacing: -0.6,
-                fontFeatures: [FontFeature.tabularFigures()],
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: pending ? DP.amberBg : DP.mint,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              pending ? 'Processing' : 'Successful',
-              style: TextStyle(
-                color: statusColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          const DPDashedDivider(),
-          const SizedBox(height: 6),
-          for (var i = 0; i < rows.length; i++)
+          for (var i = 0; i < all.length; i++) ...[
+            if (i > 0) const Divider(height: 1, color: DP.borderSoft),
             DPAppear(
               delay: rowDelay + DPMotion.stagger(i, stepMs: 50),
               offsetY: 8,
               child: DPSummaryRow(
-                rows[i].label,
-                rows[i].value,
-                strong: rows[i].strong,
+                all[i].label,
+                all[i].value,
+                strong: all[i].strong,
+                valueColor: i == 0 ? DP.ink : null,
               ),
             ),
+          ],
           if (commission != null && commission! > 0) ...[
             const SizedBox(height: 8),
             DPAppear(
-              delay: rowDelay + DPMotion.stagger(rows.length, stepMs: 50),
+              delay: rowDelay + DPMotion.stagger(all.length, stepMs: 50),
               scaleFrom: 0.95,
               child: Container(
                 width: double.infinity,
@@ -455,18 +424,8 @@ class _ReceiptCard extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 8),
           ],
-          const SizedBox(height: 14),
-          const DPDashedDivider(),
-          const SizedBox(height: 12),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(DPIcons.shieldCheck, size: 15, color: DP.muted),
-              SizedBox(width: 6),
-              Text('Secured by Dalabapay', style: DP.caption),
-            ],
-          ),
         ],
       ),
     );

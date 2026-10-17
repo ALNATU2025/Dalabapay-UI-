@@ -24,14 +24,14 @@ class AdminRefundSystemPage extends StatefulWidget {
 class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color secondaryColor = Color(0xFF168566);
-  static const Color successColor = Color(0xFF168566);
-  static const Color warningColor = Color(0xFFA76B1D);
-  static const Color errorColor = Color(0xFFC0392B);
-  static const Color textPrimary = Color(0xFF14263D);
-  static const Color textSecondary = Color(0xFF728078);
-  static const Color backgroundLight = Color(0xFFF8F9F5);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color secondaryColor = Color(0xFF079A68);
+  static const Color successColor = Color(0xFF079A68);
+  static const Color warningColor = Color(0xFFB7791F);
+  static const Color errorColor = Color(0xFFE5484D);
+  static const Color textPrimary = Color(0xFF10255A);
+  static const Color textSecondary = Color(0xFF7B87A1);
+  static const Color backgroundLight = Color(0xFFF7F9FC);
 
   // ==================== STATE ====================
   List<dynamic> _transactions = [];
@@ -380,7 +380,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
       return warningColor;
     }
     if (lowerStatus == 'failed') return errorColor;
-    if (lowerStatus == 'refunded') return const Color(0xFF173D88);
+    if (lowerStatus == 'refunded') return const Color(0xFF2563EB);
     if (lowerStatus == 'resolved') return successColor;
     if (lowerStatus == 'rejected') return errorColor;
     if (lowerStatus == 'under_review') return Colors.orange;
@@ -694,7 +694,7 @@ class _AdminRefundSystemPageState extends State<AdminRefundSystemPage>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [const Color(0xFF5BB592), const Color(0xFF102C68)],
+          colors: [const Color(0xFF35C08E), const Color(0xFF15368A)],
           stops: const [0.06, 0.41],
         ),
         borderRadius: const BorderRadius.only(

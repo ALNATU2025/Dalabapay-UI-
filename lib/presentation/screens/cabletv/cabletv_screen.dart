@@ -109,8 +109,8 @@ class _CableTVScreenState extends State<CableTVScreen>
   bool _isProcessingPayment = false;
 
   // Color Palette
-  static const Color _primary = Color(0xFF102C68);
-  static const Color _secondary = Color(0xFF168566);
+  static const Color _primary = Color(0xFF15368A);
+  static const Color _secondary = Color(0xFF079A68);
   static const Color _hintColor = Color(0xFFB6B6B6);
 
   // Provider list with logos
@@ -137,7 +137,7 @@ class _CableTVScreenState extends State<CableTVScreen>
       'fullName': 'StarTimes',
       'logo':
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSb9fjfle26ReF55p8P0f14IjZkg3Y-xToun3qIUxna-A&s=10',
-      'color': const Color(0xFFA76B1D),
+      'color': const Color(0xFFB7791F),
     },
   ];
 
@@ -1351,7 +1351,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             ),
             child: const Center(
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF102C68)),
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF15368A)),
               ),
             ),
           ),
@@ -2213,7 +2213,7 @@ class _CableTVScreenState extends State<CableTVScreen>
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFC0392B),
+        backgroundColor: const Color(0xFFE5484D),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -2510,6 +2510,19 @@ class _CableTVScreenState extends State<CableTVScreen>
 
   // ==================== PROVIDER DROPDOWN ====================
 
+  /// DSTV / GOtv / StarTimes logo when the image file exists.
+  Widget _providerLogo(Map<String, dynamic>? p) {
+    const icon = Icon(DPIcons.tv, color: DP.navyIcon, size: 20);
+    final logo = p == null
+        ? null
+        : DPAssets.providerFor('${p['id'] ?? ''} ${p['name'] ?? ''}');
+    if (logo == null) return icon;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(6),
+      child: DPImage(logo, width: 24, height: 24, fallback: icon),
+    );
+  }
+
   Widget _buildProviderDropdown() {
     Map<String, dynamic>? current;
     for (final p in _providers) {
@@ -2518,7 +2531,7 @@ class _CableTVScreenState extends State<CableTVScreen>
     return DPSelectField(
       value: current?['fullName']?.toString(),
       hint: 'Choose your provider',
-      leading: const Icon(DPIcons.tv, color: DP.green, size: 20),
+      leading: _providerLogo(current),
       onTap: () async {
         final picked = await dpPickFromList<Map<String, dynamic>>(
           context,
@@ -2526,6 +2539,7 @@ class _CableTVScreenState extends State<CableTVScreen>
           items: _providers,
           selected: current,
           labelOf: (x) => (x['fullName'] ?? x['name'] ?? '').toString(),
+          leadingOf: _providerLogo,
         );
         if (picked == null || !mounted) return;
         final value = picked['id'] as String;

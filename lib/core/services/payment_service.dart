@@ -6052,6 +6052,8 @@ class PaymentService {
     String? transactionPin,
     bool? useBiometric,
     String? description,
+    // Send by phone number instead: pass receiverEmail: '' and this.
+    String? receiverPhone,
   }) async {
     const operation = 'transfer_to_user';
 
@@ -6076,7 +6078,9 @@ class PaymentService {
 
         final requestBody = {
           'senderId': userId, // Send sender ID explicitly
-          'receiverEmail': receiverEmail,
+          if (receiverEmail.isNotEmpty) 'receiverEmail': receiverEmail,
+          if (receiverEmail.isEmpty && receiverPhone != null)
+            'receiverPhone': receiverPhone,
           'amount': amount,
           'description': description ?? 'Peer-to-peer transfer',
         };

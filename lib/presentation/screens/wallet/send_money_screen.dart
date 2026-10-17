@@ -1,6 +1,6 @@
 // lib/presentation/screens/wallet/send_money_screen.dart
-// "Send money" from the redesign — Dalabapay wallet to Dalabapay wallet.
-// Uses the existing PaymentService.transferToUser (POST /api/transfer) and the
+// "Send Money" — Dalabapay wallet to Dalabapay wallet, by phone number or
+// email. Uses PaymentService.transferToUser (POST /api/transfer) and the
 // recipient name check POST /api/transfer/lookup.
 import 'dart:io' show Platform;
 
@@ -42,6 +42,11 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   String? _lookupError;
   String _lookedUpEmail = '';
 
+  /// 0 = phone number, 1 = email
+  int _mode = 0;
+  final _phoneController = TextEditingController();
+  String _lookedUpPhone = '';
+
   bool _reviewing = false;
   bool _sending = false;
   String? _pinError;
@@ -58,6 +63,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   @override
   void dispose() {
     _emailController.dispose();
+    _phoneController.dispose();
     _amountController.dispose();
     _noteController.dispose();
     _pinController.dispose();
@@ -83,16 +89,59 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   double get _amount => double.tryParse(_amountController.text.trim()) ?? 0;
   String get _email => _emailController.text.trim().toLowerCase();
 
-  bool get _canReview =>
+  String get _phone => _phoneController.text.replaceAll(RegExp(r'\D'), '');
+  static final _phoneRe = RegExp(r'^(0|234)[789][01]\d{8}$');
+
+  /// The recipient identifier currently typed.
+  String get _identifier => _mode == 0 ? _phone : _email;
+
+  /// The identifier that was successfully looked up (for this mode).
+  String get _verifiedIdentifier => _mode == 0 ? _lookedUpPhone : _lookedUpEmail;
+
+  bool get _recipientVerified =>
       _recipientName != null &&
-      _lookedUpEmail == _email &&
-      _amount > 0 &&
-      _amount <= _balance;
+      _identifier.isNotEmpty &&
+      _verifiedIdentifier == _identifier;
+
+  bool get _identifierValid =>
+      _mode == 0 ? _phoneRe.hasMatch(_phone) : _emailRe.hasMatch(_email);
+
+  bool get _canContinue =>
+      _identifierValid && _amount > 0 && _amount <= _balance && !_lookingUp;
+
+  bool get _canReview => _recipientVerified && _amount > 0 && _amount <= _balance;
+
+  String get _recipientLabel => _mode == 0 ? _lookedUpPhone : _lookedUpEmail;
+
+  void _setMode(int m) {
+    setState(() {
+      _mode = m;
+      _recipientName = null;
+      _lookupError = null;
+      _lookedUpEmail = '';
+      _lookedUpPhone = '';
+    });
+  }
+
+  /// Continue: check the recipient first if needed, then open the review.
+  Future<void> _continue() async {
+    FocusScope.of(context).unfocus();
+    if (!_recipientVerified) {
+      await _lookup();
+      if (!mounted || !_recipientVerified) return;
+    }
+    _openReview();
+  }
 
   Future<void> _lookup() async {
-    final email = _email;
-    if (!_emailRe.hasMatch(email)) {
-      setState(() => _lookupError = 'Enter the recipient\'s Dalabapay email');
+    final byPhone = _mode == 0;
+    final id = _identifier;
+    if (!_identifierValid) {
+      setState(
+        () => _lookupError = byPhone
+            ? 'Enter the recipient\'s 11-digit phone number'
+            : 'Enter the recipient\'s Dalabapay email',
+      );
       return;
     }
     setState(() {
@@ -103,28 +152,36 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     try {
       final res = await ApiService.authenticatedPost(
         '/api/transfer/lookup',
-        {'email': email},
+        byPhone ? {'phone': id} : {'email': id},
       );
       if (!mounted) return;
       if (res['success'] == true && res['recipient'] is Map) {
         setState(() {
-          _recipientName = (res['recipient']['fullName'] ?? email).toString();
-          _lookedUpEmail = email;
+          _recipientName = (res['recipient']['fullName'] ?? id).toString();
+          if (byPhone) {
+            _lookedUpPhone = id;
+          } else {
+            _lookedUpEmail = id;
+          }
         });
       } else {
         setState(
-          () => _lookupError =
-              (res['message'] ?? 'We couldn\'t find a Dalabapay account with that email.')
-                  .toString(),
+          () => _lookupError = (res['message'] ??
+                  'We couldn\'t find a Dalabapay account with that ${byPhone ? 'phone number' : 'email'}.')
+              .toString(),
         );
       }
     } catch (e) {
       if (!mounted) return;
       final msg = e.toString().replaceAll('Exception: ', '');
+      final lower = msg.toLowerCase();
       setState(
-        () => _lookupError = msg.toLowerCase().contains('not found')
-            ? 'We couldn\'t find a Dalabapay account with that email.'
-            : 'Couldn\'t check this recipient. Please try again.',
+        () => _lookupError = lower.contains('not found') ||
+                lower.contains('couldn')
+            ? 'We couldn\'t find a Dalabapay account with that ${byPhone ? 'phone number' : 'email'}.'
+            : (lower.contains('more than one')
+                ? msg
+                : 'Couldn\'t check this recipient. Please try again.'),
       );
     } finally {
       if (mounted) setState(() => _lookingUp = false);
@@ -165,7 +222,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     try {
       final note = _noteController.text.trim();
       final res = await PaymentService.transferToUser(
-        receiverEmail: _lookedUpEmail,
+        receiverEmail: _mode == 0 ? '' : _lookedUpEmail,
+        receiverPhone: _mode == 0 ? _lookedUpPhone : null,
         amount: _amount,
         transactionPin: biometric ? null : pin,
         useBiometric: biometric,
@@ -205,8 +263,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         serviceLabel: 'Wallet transfer',
         amount: _amount,
         rows: [
-          DPReviewRow('Recipient', _recipientName ?? _lookedUpEmail),
-          DPReviewRow('Email', _lookedUpEmail),
+          DPReviewRow('Recipient', _recipientName ?? _recipientLabel),
+          DPReviewRow(_mode == 0 ? 'Phone number' : 'Email', _recipientLabel),
           const DPReviewRow('Transfer fee', '₦0.00'),
           DPReviewRow('Date & time', DateTime.now().toString().substring(0, 16)),
           if (_result!['transactionId'] != null)
@@ -233,7 +291,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             SafeArea(
               child: Column(
                 children: [
-                  const DPTopBar(title: 'Send money'),
+                  const DPTopBar(title: 'Send Money'),
                   Expanded(child: _form()),
                 ],
               ),
@@ -242,11 +300,14 @@ class _SendMoneyViewState extends State<SendMoneyView> {
               Positioned.fill(
                 child: DPReviewPanel(
                   icon: DPIcons.upRight,
-                  title: 'To ${_recipientName ?? _lookedUpEmail}',
+                  title: 'To ${_recipientName ?? _recipientLabel}',
                   amount: _amount,
                   rows: [
                     DPReviewRow('Recipient', _recipientName ?? ''),
-                    DPReviewRow('Email', _lookedUpEmail),
+                    DPReviewRow(
+                      _mode == 0 ? 'Phone number' : 'Email',
+                      _recipientLabel,
+                    ),
                     if (_noteController.text.trim().isNotEmpty)
                       DPReviewRow('Note', _noteController.text.trim()),
                     const DPReviewRow('Transfer fee', '₦0.00'),
@@ -271,10 +332,21 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         bottomNavigationBar: _reviewing
             ? null
             : DPBottomAction(
+                footnote: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(DPIcons.shieldCheck, size: 16, color: DP.navyIcon),
+                    SizedBox(width: 6),
+                    Text(
+                      'Your money is safe and secure with Dalabapay',
+                      style: DP.caption,
+                    ),
+                  ],
+                ),
                 child: DPButton(
-                  label: 'Review transfer',
-                  icon: DPIcons.forward,
-                  onPressed: _canReview ? _openReview : null,
+                  label: 'Continue',
+                  loading: _lookingUp,
+                  onPressed: _canContinue ? _continue : null,
                 ),
               ),
       ),
@@ -284,122 +356,143 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   Widget _form() {
     final amount = _amount;
     final over = amount > _balance && !_balanceLoading;
+    final byPhone = _mode == 0;
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+      padding: const EdgeInsets.fromLTRB(20, 6, 20, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'For the people and things that matter.',
-            style: DP.body.copyWith(color: DP.muted),
-          ),
-          const SizedBox(height: 18),
-          const DPChipRow(
-            options: ['Dalabapay wallet'],
-            selected: 'Dalabapay wallet',
-            onSelect: _noop,
+          DPSegmented(
+            options: const ['Phone Number', 'Email'],
+            index: _mode,
+            onChanged: _setMode,
           ),
           const SizedBox(height: 20),
-          const DPLabel('Recipient\'s email'),
-          DPField(
-            controller: _emailController,
-            hint: 'name@email.com',
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.done,
-            onChanged: (_) => setState(() {
-              if (_lookedUpEmail != _email) {
-                _recipientName = null;
-                _lookupError = null;
-              }
-            }),
-            onSubmitted: (_) => _lookup(),
-            errorText: _lookupError,
-            suffix: _lookingUp
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : IconButton(
-                    tooltip: 'Find recipient',
-                    icon: const Icon(DPIcons.search),
-                    onPressed: _lookup,
-                  ),
-          ),
-          if (_recipientName == null && _lookupError == null && !_lookingUp)
-            Align(
-              alignment: Alignment.centerRight,
-              child: DPTextLink(label: 'Find recipient', onTap: _lookup),
+          DPLabel(byPhone ? 'Recipient Phone Number' : 'Recipient Email'),
+          if (byPhone)
+            DPField(
+              key: const ValueKey('phone'),
+              controller: _phoneController,
+              hint: 'e.g. 08012345678',
+              keyboardType: TextInputType.phone,
+              textInputAction: TextInputAction.next,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(13),
+              ],
+              prefix: const Icon(DPIcons.user, size: 20),
+              onChanged: (_) {
+                setState(() => _lookupError = null);
+                // Look the name up as soon as a full number is typed
+                if (_identifierValid && !_recipientVerified && !_lookingUp) {
+                  _lookup();
+                }
+              },
+              errorText: _lookupError,
+              suffix: _lookingUp
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : null,
+            )
+          else
+            DPField(
+              key: const ValueKey('email'),
+              controller: _emailController,
+              hint: 'name@email.com',
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.done,
+              prefix: const Icon(DPIcons.mail, size: 20),
+              onChanged: (_) => setState(() => _lookupError = null),
+              onSubmitted: (_) => _lookup(),
+              errorText: _lookupError,
+              suffix: _lookingUp
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : IconButton(
+                      tooltip: 'Find recipient',
+                      icon: const Icon(DPIcons.search),
+                      onPressed: _lookup,
+                    ),
             ),
-          if (_recipientName != null && _lookedUpEmail == _email) ...[
-            const SizedBox(height: 12),
-            DPCard(
-              color: DP.mint,
-              borderColor: null,
-              radius: DP.rLg,
-              padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-              child: Row(
-                children: [
-                  const Icon(DPIcons.checkCircle, color: DP.green),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _recipientName!.toUpperCase(),
-                      style: const TextStyle(
-                        color: DP.green,
-                        fontWeight: FontWeight.w700,
+          AnimatedSize(
+            duration: DPMotion.base,
+            curve: DPMotion.curve,
+            child: _recipientVerified
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: DPAppear(
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                        decoration: BoxDecoration(
+                          color: DP.mint,
+                          borderRadius: BorderRadius.circular(DP.rMd),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              DPIcons.checkCircle,
+                              color: DP.green,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                _recipientName!.toUpperCase(),
+                                style: const TextStyle(
+                                  color: DP.green,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-          const SizedBox(height: 20),
+                  )
+                : const SizedBox(width: double.infinity),
+          ),
+          const SizedBox(height: 18),
           const DPLabel('Amount'),
           DPField(
             controller: _amountController,
             hint: '0.00',
-            prefixText: '₦',
+            prefixText: '₦  ',
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
             ],
             onChanged: (_) => setState(() {}),
             errorText: over ? 'This is more than your wallet balance' : null,
-            style: const TextStyle(fontSize: 17, color: DP.ink),
-          ),
-          const SizedBox(height: 20),
-          const DPLabel('Note (optional)'),
-          DPField(
-            controller: _noteController,
-            hint: 'For the weekend',
-            maxLength: 60,
-            suffix: const Icon(DPIcons.edit, color: DP.muted),
-          ),
-          const SizedBox(height: 20),
-          DPCard(
-            padding: const EdgeInsets.fromLTRB(18, 10, 18, 10),
-            child: Column(
-              children: [
-                DPSummaryRow(
-                  'Wallet balance',
-                  _balanceLoading ? '…' : DP.naira(_balance),
-                ),
-                const DPSummaryRow('Transfer fee', '₦0.00'),
-                DPSummaryRow('Total to pay', DP.naira(amount), strong: true),
-              ],
+            style: const TextStyle(
+              fontSize: 16,
+              color: DP.ink,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 14),
-          const DPBanner(
-            'Check the recipient\'s name. Transfers to the wrong account may not be recoverable.',
-            tone: DPTone.warning,
+          DPHelper(
+            _balanceLoading
+                ? 'Checking your balance…'
+                : 'Wallet balance: ${DP.naira(_balance)}  ·  No transfer fee',
+          ),
+          const SizedBox(height: 18),
+          const DPLabel('Add Note (Optional)'),
+          DPField(
+            controller: _noteController,
+            hint: 'Enter a note...',
+            maxLength: 60,
+            maxLines: 3,
           ),
         ],
       ),
     );
   }
 
-  static void _noop(String _) {}
 }

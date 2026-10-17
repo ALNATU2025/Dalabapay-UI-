@@ -230,7 +230,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFC0392B),
+        backgroundColor: const Color(0xFFE5484D),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -1651,7 +1651,7 @@ class _IntlAirtimeScreenState extends State<IntlAirtimeScreen>
             gateway: 'Dalabapay App',
             recipientName: 'International Airtime',
             mobileOperator: data['operatorName'] ?? 'N/A',
-            primaryColor: const Color(0xFF102C68),
+            primaryColor: const Color(0xFF15368A),
             customMessage:
                 exchangeRate > 0
                     ? '$currency ${foreignAmount.toStringAsFixed(2)} @ ₦${exchangeRate.toStringAsFixed(2)}/$currency = ₦${nairaAmount.toStringAsFixed(2)}'

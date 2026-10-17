@@ -61,7 +61,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF102C68),
+        backgroundColor: const Color(0xFF15368A),
         foregroundColor: Colors.white,
         elevation: 0,
         title: Column(
@@ -110,7 +110,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                     ElevatedButton(
                       onPressed: _loadTransactions,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF102C68),
+                        backgroundColor: const Color(0xFF15368A),
                       ),
                       child: const Text('Retry'),
                     ),
@@ -180,10 +180,10 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                             color:
                                 (t['isCommission'] == true)
                                     ? const Color(
-                                      0xFF168566,
+                                      0xFF079A68,
                                     ).withValues(alpha: 0.1)
                                     : const Color(
-                                      0xFF102C68,
+                                      0xFF15368A,
                                     ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -196,8 +196,8 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 : Icons.receipt_rounded,
                             color:
                                 (t['isCommission'] == true)
-                                    ? const Color(0xFF168566)
-                                    : const Color(0xFF102C68),
+                                    ? const Color(0xFF079A68)
+                                    : const Color(0xFF15368A),
                             size: 20,
                           ),
                         ),
@@ -210,7 +210,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 type,
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF102C68),
+                                  color: const Color(0xFF15368A),
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -237,7 +237,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                     (t['isCommission'] == true ||
                                             type.contains('Fund') ||
                                             type.contains('Wallet'))
-                                        ? const Color(0xFF168566)
+                                        ? const Color(0xFF079A68)
                                         : Colors.red.shade700,
                               ),
                             ),
@@ -250,7 +250,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                 color:
                                     status == 'completed'
                                         ? const Color(
-                                          0xFF168566,
+                                          0xFF079A68,
                                         ).withValues(alpha: 0.1)
                                         : Colors.orange.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
@@ -262,7 +262,7 @@ class _AdminUserTransactionPageState extends State<AdminUserTransactionPage> {
                                   fontWeight: FontWeight.w600,
                                   color:
                                       status == 'completed'
-                                          ? const Color(0xFF168566)
+                                          ? const Color(0xFF079A68)
                                           : Colors.orange,
                                 ),
                               ),

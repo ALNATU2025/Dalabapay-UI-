@@ -80,7 +80,7 @@ class ReceiptWidget extends StatefulWidget {
     this.isCommission = false,
     this.commissionSource,
     this.isService = false,
-    this.primaryColor = const Color(0xFF102C68),
+    this.primaryColor = const Color(0xFF15368A),
     this.customMessage,
     this.vtpassResponse,
     this.showWatermark = true,
@@ -117,9 +117,9 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
   bool _isViewerAdminLoaded = false;
 
   // Brand Colors
-  static const Color _brandPrimary = Color(0xFF102C68);
-  static const Color _brandSecondary = Color(0xFF168566);
-  static const Color _brandLight = Color(0xFF5BB592);
+  static const Color _brandPrimary = Color(0xFF15368A);
+  static const Color _brandSecondary = Color(0xFF079A68);
+  static const Color _brandLight = Color(0xFF35C08E);
   static const Color _brandWhite = Color(0xFFFFFFFF);
 
   @override
@@ -237,8 +237,8 @@ class _ReceiptWidgetState extends State<ReceiptWidget> {
             .replaceAll('¥', '')
             .replaceAll('#', '')
             .trim();
-    double amount = double.tryParse(cleanAmount) ?? 0;
-    return '₦${amount.toStringAsFixed(2)}';
+    double amount = double.tryParse(cleanAmount.replaceAll(',', '')) ?? 0;
+    return DP.naira(amount);
   }
 
   Color get _statusColor {
@@ -569,8 +569,8 @@ Powered by Dalabapay''';
     }
     if (s.contains('fail') || s.contains('cancel')) return 'Payment failed';
     if (s.contains('refund')) return 'Payment refunded';
-    if (widget.isCommission) return 'Earnings credited';
-    return 'Payment successful';
+    if (widget.isCommission) return 'Earnings Credited!';
+    return 'Payment Successful!';
   }
 
   String get _subline {
@@ -581,7 +581,7 @@ Powered by Dalabapay''';
     if (s.contains('fail') || s.contains('cancel')) {
       return 'No money left your wallet for this payment.';
     }
-    return 'That\'s one less thing on your list.';
+    return 'Your transaction has been completed successfully.';
   }
 
   Widget _buildDetailRow(
@@ -701,7 +701,7 @@ Powered by Dalabapay''';
                 child: const Icon(
                   Icons.admin_panel_settings_rounded,
                   size: 14,
-                  color: Color(0xFFA76B1D),
+                  color: Color(0xFFB7791F),
                 ),
               ),
               const SizedBox(width: 8),
@@ -710,7 +710,7 @@ Powered by Dalabapay''';
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
-                  color: const Color(0xFFA76B1D),
+                  color: const Color(0xFFB7791F),
                   letterSpacing: 0.8,
                 ),
               ),
@@ -776,7 +776,7 @@ Powered by Dalabapay''';
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 2),
-          child: Icon(icon, size: 14, color: const Color(0xFFA76B1D)),
+          child: Icon(icon, size: 14, color: const Color(0xFFB7791F)),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -788,7 +788,7 @@ Powered by Dalabapay''';
                 style: GoogleFonts.inter(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
-                  color: const Color(0xFFA76B1D),
+                  color: const Color(0xFFB7791F),
                   letterSpacing: 0.3,
                 ),
               ),
@@ -814,7 +814,7 @@ Powered by Dalabapay''';
                         child: Icon(
                           Icons.content_copy_rounded,
                           size: 13,
-                          color: Color(0xFFA76B1D),
+                          color: Color(0xFFB7791F),
                         ),
                       ),
                     ),
@@ -857,55 +857,16 @@ Powered by Dalabapay''';
     final receiptCard = Container(
       decoration: BoxDecoration(
         color: DP.surface,
-        borderRadius: BorderRadius.circular(DP.rXl),
+        borderRadius: BorderRadius.circular(DP.rLg),
         border: Border.all(color: DP.border),
-        boxShadow: DP.softShadow,
       ),
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
       child: Column(
         children: [
-          Text(
-            widget.transactionType.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: DP.tiny,
-          ),
-          const SizedBox(height: 6),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: DPCountUp(
-              value: double.tryParse(
-                    _formattedAmount.replaceAll(RegExp(r'[₦,\s]'), ''),
-                  ) ??
-                  0,
-              format: (v) => DP.naira(v),
-              style: const TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.w600,
-                color: DP.ink,
-                letterSpacing: -0.6,
-                fontFeatures: [FontFeature.tabularFigures()],
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: DPStatus.colorFor(widget.status).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              DPStatus.labelFor(widget.status),
-              style: TextStyle(
-                color: DPStatus.colorFor(widget.status),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          const DPDashedDivider(),
-          const SizedBox(height: 6),
+          _buildDetailRow('Amount', _formattedAmount, isAmount: true),
+          _buildDetailRow('Service', widget.transactionType),
+          _buildDetailRow('Status', DPStatus.labelFor(widget.status)),
+
           if (widget.phoneNumber != null && widget.phoneNumber!.isNotEmpty)
             _buildDetailRow('Recipient', widget.phoneNumber!, showCopyIcon: true),
           if (operator != null) _buildDetailRow('Network', operator),
@@ -948,11 +909,6 @@ Powered by Dalabapay''';
           ),
           if (before != null && (isFunding || after != null))
             _buildDetailRow('Previous balance', before),
-          _buildDetailRow(
-            widget.isCommission || isFunding ? 'Amount' : 'Total paid',
-            _formattedAmount,
-            isAmount: true,
-          ),
           if (after != null) _buildDetailRow('New balance', after),
           _buildDetailRow(
             'Date & time',
@@ -1127,9 +1083,10 @@ Powered by Dalabapay''';
                           delay: const Duration(milliseconds: 380),
                           child: Text(
                             _headline,
-                            style: DP.title.copyWith(
+                            style: const TextStyle(
                               fontSize: 22,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w800,
+                              color: DP.ink,
                             ),
                           ),
                         ),
@@ -1175,15 +1132,14 @@ Powered by Dalabapay''';
                     const SizedBox(height: 10),
                   ],
                   DPButton(
-                    label: 'Share receipt',
-                    icon: DPIcons.share,
-                    loading: _isSharing,
-                    onPressed: _isSharing ? null : _shareReceipt,
+                    label: 'Done',
+                    onPressed: () => Navigator.pop(context),
                   ),
                   const SizedBox(height: 10),
                   DPOutlineButton(
-                    label: 'Done',
-                    onPressed: () => Navigator.pop(context),
+                    label: _isSharing ? 'Preparing…' : 'Share Receipt',
+                    icon: DPIcons.share,
+                    onPressed: _isSharing ? null : _shareReceipt,
                   ),
                   const SizedBox(height: 10),
                   const Text(

@@ -26,24 +26,24 @@ class AdminServiceCommissionPage extends StatefulWidget {
 class _AdminServiceCommissionPageState extends State<AdminServiceCommissionPage>
     with SingleTickerProviderStateMixin {
   // ==================== BRAND COLORS ====================
-  static const Color primaryColor = Color(0xFF102C68);
-  static const Color secondaryColor = Color(0xFF168566);
-  static const Color successColor = Color(0xFF168566);
-  static const Color errorColor = Color(0xFFC0392B);
-  static const Color textPrimary = Color(0xFF14263D);
-  static const Color textSecondary = Color(0xFF728078);
+  static const Color primaryColor = Color(0xFF15368A);
+  static const Color secondaryColor = Color(0xFF079A68);
+  static const Color successColor = Color(0xFF079A68);
+  static const Color errorColor = Color(0xFFE5484D);
+  static const Color textPrimary = Color(0xFF10255A);
+  static const Color textSecondary = Color(0xFF7B87A1);
   static const Color cardShadow = Color(0x1A000000);
   static const String _superAdminId = "690088325ca99bed6ab8d4a5";
 
   // ==================== SERVICE COLORS & ICONS ====================
   static const Map<String, Color> serviceColors = {
-    'airtime': Color(0xFF173D88),
-    'international_airtime': Color(0xFF173D88),
-    'cable': Color(0xFF168566),
-    'data': Color(0xFF168566),
-    'electricity': Color(0xFFA76B1D),
-    'education': Color(0xFFC0392B),
-    'ticket': Color(0xFF173D88),
+    'airtime': Color(0xFF2563EB),
+    'international_airtime': Color(0xFF2563EB),
+    'cable': Color(0xFF079A68),
+    'data': Color(0xFF079A68),
+    'electricity': Color(0xFFB7791F),
+    'education': Color(0xFFE5484D),
+    'ticket': Color(0xFF2563EB),
   };
 
   static const Map<String, String> serviceIcons = {

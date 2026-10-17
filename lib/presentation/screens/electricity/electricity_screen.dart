@@ -89,11 +89,11 @@ class _ElectricityScreenState extends State<ElectricityScreen>
   late Animation<double> _shakeAnimation;
 
   // ==================== BRAND COLORS ====================
-  static const Color _primaryNavy = Color(0xFF102C68);
-  static const Color _secondaryTeal = Color(0xFF168566);
-  static const Color _textDark = Color(0xFF14263D);
-  static const Color _textMuted = Color(0xFF728078);
-  static const Color _bgCanvas = Color(0xFFF8F9F5);
+  static const Color _primaryNavy = Color(0xFF15368A);
+  static const Color _secondaryTeal = Color(0xFF079A68);
+  static const Color _textDark = Color(0xFF10255A);
+  static const Color _textMuted = Color(0xFF7B87A1);
+  static const Color _bgCanvas = Color(0xFFF7F9FC);
 
   // Amount quick buttons
   final List<int> _quickAmounts = [2000, 3000, 5000, 10000, 20000];
@@ -108,7 +108,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
       'logo':
           'https://pbs.twimg.com/profile_images/661968066729738240/mKmGmNm0_400x400.jpg',
       'color': const Color(0xFFFFCB05),
-      'textColor': const Color(0xFF14263D),
+      'textColor': const Color(0xFF10255A),
     },
     {
       'id': 'eko-electric',
@@ -141,7 +141,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
       'fullName': 'Jos Electric',
       'logo':
           'https://pbs.twimg.com/profile_images/898118928404295681/qqSdt2Ir_400x400.jpg',
-      'color': const Color(0xFF173D88),
+      'color': const Color(0xFF2563EB),
       'textColor': Colors.white,
     },
     {
@@ -150,7 +150,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
       'fullName': 'Ibadan Electric',
       'logo':
           'https://play-lh.googleusercontent.com/7JrrLm9wlgZkMCBeQCvaCPeyOemK6ZUkHfc54S3o4LiTRIQmXZTYF9onD9NNuL7UnLav0am4SiPWDASoMjntcN8',
-      'color': const Color(0xFFA76B1D),
+      'color': const Color(0xFFB7791F),
       'textColor': Colors.white,
     },
     {
@@ -186,7 +186,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
       'fullName': 'Abia Power',
       'logo':
           'https://play-lh.googleusercontent.com/X2bt3xvD-GCE8TUggJVzyn-N7bgpsaFbJNGUd9szfYiOn8EPzSsLlyxNogkl1KtCmYU=w600-h300-pc0xffffff-pd',
-      'color': const Color(0xFF173D88),
+      'color': const Color(0xFF2563EB),
       'textColor': Colors.white,
     },
     {
@@ -509,7 +509,7 @@ class _ElectricityScreenState extends State<ElectricityScreen>
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFC0392B),
+        backgroundColor: const Color(0xFFE5484D),
         behavior: SnackBarBehavior.floating,
         elevation: 6,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),

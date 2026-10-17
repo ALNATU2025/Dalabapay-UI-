@@ -9,3 +9,4 @@ export 'dp_widgets.dart';
 export 'dp_logo.dart';
 export 'dp_review.dart';
 export 'dp_motion.dart';
+export 'dp_catalog.dart';

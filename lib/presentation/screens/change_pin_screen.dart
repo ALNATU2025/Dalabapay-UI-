@@ -32,12 +32,12 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
   bool _obscureConfirm = true;
   String? _errorMessage;
 
-  final Color _primaryColor = const Color(0xFF102C68);
-  final Color _secondaryColor = const Color(0xFF168566);
-  final Color _textColor = const Color(0xFF14263D);
+  final Color _primaryColor = const Color(0xFF15368A);
+  final Color _secondaryColor = const Color(0xFF079A68);
+  final Color _textColor = const Color(0xFF10255A);
   final Color _hintColor = const Color(0xFFA9B2AC);
-  final Color _successColor = const Color(0xFF168566);
-  final Color _errorColor = const Color(0xFFC0392B);
+  final Color _successColor = const Color(0xFF079A68);
+  final Color _errorColor = const Color(0xFFE5484D);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: Color(0xFF102C68),
+            color: Color(0xFF15368A),
             size: 20,
           ),
           onPressed: () => Navigator.pop(context),

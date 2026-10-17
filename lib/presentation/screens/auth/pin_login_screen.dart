@@ -33,12 +33,12 @@ class _PinLoginScreenState extends State<PinLoginScreen> {
   bool _isAutoLogout = false;
   bool _biometricAvailable = false;
 
-  final Color _primaryColor = const Color(0xFF102C68);
-  final Color _secondaryColor = const Color(0xFF168566);
+  final Color _primaryColor = const Color(0xFF15368A);
+  final Color _secondaryColor = const Color(0xFF079A68);
   final Color _backgroundColor = Colors.white;
-  final Color _digitColor = const Color(0xFF14263D);
-  final Color _pinDotColor = const Color(0xFF102C68);
-  final Color _errorColor = const Color(0xFFC0392B);
+  final Color _digitColor = const Color(0xFF10255A);
+  final Color _pinDotColor = const Color(0xFF15368A);
+  final Color _errorColor = const Color(0xFFE5484D);
 
   @override
   void initState() {

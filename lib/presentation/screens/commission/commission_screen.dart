@@ -411,7 +411,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               title: Text(
                 'Withdraw Amount',
                 style: GoogleFonts.inter(
-                  color: const Color(0xFF102C68),
+                  color: const Color(0xFF15368A),
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -442,14 +442,14 @@ class _CommissionScreenState extends State<CommissionScreen>
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF102C68),
+                      color: const Color(0xFF15368A),
                     ),
                     decoration: InputDecoration(
                       prefixText: '₦ ',
                       prefixStyle: GoogleFonts.inter(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF102C68),
+                        color: const Color(0xFF15368A),
                       ),
                       hintText: '500',
                       hintStyle: GoogleFonts.inter(
@@ -473,7 +473,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: const BorderSide(
-                          color: Color(0xFF102C68),
+                          color: Color(0xFF15368A),
                           width: 1.5,
                         ),
                       ),
@@ -514,7 +514,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                           style: GoogleFonts.inter(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF168566),
+                            color: const Color(0xFF079A68),
                           ),
                         ),
                       ),
@@ -566,7 +566,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                     Navigator.pop(context, value);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF168566),
+                    backgroundColor: const Color(0xFF079A68),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -604,7 +604,7 @@ class _CommissionScreenState extends State<CommissionScreen>
             title: Text(
               'Withdraw Commission',
               style: GoogleFonts.inter(
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               ),
@@ -619,14 +619,14 @@ class _CommissionScreenState extends State<CommissionScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0x05102C68),
+                    color: const Color(0x0515368A),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
                       const Icon(
                         Icons.info_outline,
-                        color: Color(0xFF102C68),
+                        color: Color(0xFF15368A),
                         size: 20,
                       ),
                       const SizedBox(width: 8),
@@ -635,7 +635,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                           'All commission will be transferred to your main wallet.',
                           style: GoogleFonts.inter(
                             fontSize: 12,
-                            color: const Color(0xFF102C68),
+                            color: const Color(0xFF15368A),
                           ),
                         ),
                       ),
@@ -655,7 +655,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               ElevatedButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF168566),
+                  backgroundColor: const Color(0xFF079A68),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -692,7 +692,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               style: GoogleFonts.inter(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
               ),
             ),
           ),
@@ -734,7 +734,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               description: 'Commission transferred to main wallet',
               customMessage:
                   '✓ Withdrawal successful! Commission transferred to wallet.',
-              primaryColor: const Color(0xFF102C68),
+              primaryColor: const Color(0xFF15368A),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,
@@ -846,7 +846,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                         style: GoogleFonts.inter(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFF102C68),
+                          color: const Color(0xFF15368A),
                         ),
                       ),
                     ),
@@ -930,7 +930,7 @@ class _CommissionScreenState extends State<CommissionScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: const Color(0xFF102C68), size: 28),
+              Icon(icon, color: const Color(0xFF15368A), size: 28),
               const SizedBox(height: 8),
               Text(
                 title,
@@ -960,7 +960,7 @@ class _CommissionScreenState extends State<CommissionScreen>
               'Coming Soon',
               style: GoogleFonts.inter(
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF102C68),
+                color: const Color(0xFF15368A),
               ),
             ),
             content: Text(
@@ -974,7 +974,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   'OK',
                   style: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF168566),
+                    color: const Color(0xFF079A68),
                   ),
                 ),
               ),
@@ -1445,7 +1445,7 @@ class _CommissionScreenState extends State<CommissionScreen>
                   isCredit
                       ? '✓ Commission credited to your account'
                       : '✓ Commission used for service',
-              primaryColor: const Color(0xFF102C68),
+              primaryColor: const Color(0xFF15368A),
               showWatermark: true,
               isAdminTransaction: false,
               isUserAdmin: false,

@@ -99,15 +99,15 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
   bool _dedicatedAccountLoaded = false;
 
   // ==================== COLORS ====================
-  final Color _primaryColor = const Color(0xFF102C68);
-  final Color _secondaryColor = const Color(0xFF168566);
+  final Color _primaryColor = const Color(0xFF15368A);
+  final Color _secondaryColor = const Color(0xFF079A68);
   final Color _white = Colors.white;
-  final Color _textColor = const Color(0xFF14263D);
+  final Color _textColor = const Color(0xFF10255A);
   final Color _hintColor = const Color(0xFFA9B2AC);
-  final Color _successColor = const Color(0xFF168566);
-  final Color _errorColor = const Color(0xFFC0392B);
-  final Color _warningColor = const Color(0xFFA76B1D);
-  final Color _accentColor = const Color(0xFF173D88);
+  final Color _successColor = const Color(0xFF079A68);
+  final Color _errorColor = const Color(0xFFE5484D);
+  final Color _warningColor = const Color(0xFFB7791F);
+  final Color _accentColor = const Color(0xFF2563EB);
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -353,7 +353,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         name: 'Virtual Account',
         description: 'Generate a one-time account with 1.5% fee',
         icon: HugeIcons.strokeRoundedAtm02,
-        color: Color(0xFF173D88),
+        color: Color(0xFF2563EB),
         instant: true,
         popular: false,
         badge: '1.5% Fee',
@@ -367,7 +367,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         name: 'Manual Funding',
         description: 'Contact admin for assistance',
         icon: HugeIcons.strokeRoundedCustomerService,
-        color: Color(0xFFA76B1D),
+        color: Color(0xFFB7791F),
         instant: false,
         badge: 'Admin',
       ),
@@ -433,7 +433,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                         gradient: const LinearGradient(
                           begin: Alignment.topRight,
                           end: Alignment.bottomLeft,
-                          colors: [Color(0xFF5BB592), Color(0xFF102C68)],
+                          colors: [Color(0xFF35C08E), Color(0xFF15368A)],
                         ),
                         shape: BoxShape.circle,
                       ),
@@ -449,7 +449,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       style: GoogleFonts.inter(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF102C68),
+                        color: const Color(0xFF15368A),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -459,7 +459,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       'Complete your KYC to get your personal static account for seamless transactions.',
                       style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: const Color(0xFF728078),
+                        color: const Color(0xFF7B87A1),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -467,17 +467,17 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF102C68).withValues(alpha: 0.05),
+                        color: const Color(0xFF15368A).withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: const Color(0xFF102C68).withValues(alpha: 0.1),
+                          color: const Color(0xFF15368A).withValues(alpha: 0.1),
                         ),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.security,
-                            color: const Color(0xFF168566),
+                            color: const Color(0xFF079A68),
                             size: 20,
                           ),
                           const SizedBox(width: 12),
@@ -486,7 +486,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               'Your account details are secure and private.',
                               style: GoogleFonts.inter(
                                 fontSize: 12,
-                                color: const Color(0xFF168566),
+                                color: const Color(0xFF079A68),
                               ),
                             ),
                           ),
@@ -519,7 +519,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               _navigateToKYC();
                             },
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xFF102C68)),
+                              side: const BorderSide(color: Color(0xFF15368A)),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -529,7 +529,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               'Complete KYC',
                               style: GoogleFonts.inter(
                                 fontWeight: FontWeight.w600,
-                                color: const Color(0xFF102C68),
+                                color: const Color(0xFF15368A),
                               ),
                             ),
                           ),
@@ -558,7 +558,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                               _navigateToKYC();
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF102C68),
+                              backgroundColor: const Color(0xFF15368A),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -581,7 +581,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                       child: Text(
                         'Remind Me Later',
                         style: GoogleFonts.inter(
-                          color: const Color(0xFF728078),
+                          color: const Color(0xFF7B87A1),
                           fontSize: 13,
                         ),
                       ),
@@ -2078,7 +2078,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         child: Column(
           children: [
             DPTopBar(
-              title: 'Add money',
+              title: 'Add Money',
               actionLabel: 'History',
               onAction: () => Navigator.push(
                 context,
@@ -2103,8 +2103,8 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
   }
 
   static const Map<String, String> _methodLabels = {
-    'dedicated_account': 'Bank transfer',
-    'virtual_account': 'One-time account',
+    'dedicated_account': 'Bank Transfer',
+    'virtual_account': 'One-time',
     'manual': 'Assisted',
   };
 
@@ -2119,17 +2119,12 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
+        padding: const EdgeInsets.fromLTRB(20, 6, 20, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const DPHeadline(
-              'Ready for your everyday.',
-              subtitle: 'Fund your wallet with a bank transfer.',
-              bottom: 18,
-            ),
             _buildPaymentMethodsSection(isMobile),
-            const SizedBox(height: 18),
+            const SizedBox(height: 20),
             if (!showForm) ...[
               _buildDedicatedAccountStatus(isMobile),
               const SizedBox(height: 14),
@@ -2151,8 +2146,18 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
               _buildAuthenticationSection(isMobile),
               const SizedBox(height: 18),
               _buildBalanceCard(isMobile),
-              const SizedBox(height: 18),
+              const SizedBox(height: 22),
               _buildProceedButton(isMobile),
+              const SizedBox(height: 14),
+              Center(
+                child: Text(
+                  method == 'virtual_account'
+                      ? 'Your account will be credited instantly\nafter successful payment.'
+                      : 'We\'ll credit your wallet once your payment is confirmed.',
+                  textAlign: TextAlign.center,
+                  style: DP.caption.copyWith(height: 1.5),
+                ),
+              ),
               if (_statusMessage.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 _buildStatusMessage(),
@@ -2182,7 +2187,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         height: 168,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: DP.navy,
+          gradient: DP.greenGradient,
           borderRadius: BorderRadius.circular(DP.rXl),
         ),
         child: const CircularProgressIndicator(color: Colors.white),
@@ -2203,8 +2208,15 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             decoration: BoxDecoration(
-              color: DP.navy,
+              gradient: DP.greenGradient,
               borderRadius: BorderRadius.circular(DP.rXl),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x33079A68),
+                  blurRadius: 18,
+                  offset: Offset(0, 8),
+                ),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -2219,11 +2231,11 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'YOUR WALLET FUNDING ACCOUNT',
+                        'Transfer to your Dalabapay account',
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.85),
-                          fontSize: 12,
-                          letterSpacing: 0.6,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -2246,8 +2258,8 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
                     _dedicatedAccountNumber!,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
                       letterSpacing: 1.5,
                     ),
                   ),
@@ -2312,7 +2324,7 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
   }
 
   Widget _buildAmountInput(bool isMobile) {
-    const quick = [1000.0, 2000.0, 5000.0, 10000.0, 20000.0, 50000.0];
+    const quick = [1000.0, 2000.0, 5000.0, 10000.0];
     final labels = quick.map((a) => DP.naira(a, decimals: false)).toList();
     final current = double.tryParse(_amountController.text.trim());
     final sel = current == null || !quick.contains(current)
@@ -2325,21 +2337,35 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
         DPField(
           controller: _amountController,
           hint: '0.00',
-          prefixText: '₦',
+          prefixText: '₦  ',
           keyboardType: TextInputType.number,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           onChanged: (_) => setState(() {}),
-          style: const TextStyle(fontSize: 17, color: DP.ink),
+          style: const TextStyle(
+            fontSize: 16,
+            color: DP.ink,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const DPHelper('Minimum ₦100 · Maximum ₦1,000,000'),
         const SizedBox(height: 12),
-        DPChipGrid(
-          options: labels,
-          selected: sel,
-          onSelect: (l) => setState(
-            () => _amountController.text =
-                quick[labels.indexOf(l)].toStringAsFixed(0),
-          ),
+        Row(
+          children: [
+            for (var i = 0; i < labels.length; i++) ...[
+              if (i > 0) const SizedBox(width: 8),
+              Expanded(
+                child: DPChip(
+                  label: labels[i],
+                  selected: sel == labels[i],
+                  height: 40,
+                  onTap: () => setState(
+                    () => _amountController.text =
+                        quick[i].toStringAsFixed(0),
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
       ],
     );
@@ -2349,18 +2375,14 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
   // ==================== PAYMENT METHODS SECTION ====================
   Widget _buildPaymentMethodsSection(bool isMobile) {
     final method = _selectedPaymentMethod ?? 'dedicated_account';
-    return DPChipRow(
+    final ids = _methodLabels.keys.toList();
+    return DPSegmented(
       options: _methodLabels.values.toList(),
-      selected: _methodLabels[method],
-      height: 44,
-      spacing: 8,
-      onSelect: (label) {
-        final id = _methodLabels.entries.firstWhere((e) => e.value == label).key;
-        setState(() {
-          _selectedPaymentMethod = id;
-          _statusMessage = '';
-        });
-      },
+      index: ids.indexOf(method).clamp(0, ids.length - 1),
+      onChanged: (i) => setState(() {
+        _selectedPaymentMethod = ids[i];
+        _statusMessage = '';
+      }),
     );
   }
 
@@ -2408,10 +2430,9 @@ class _WalletTopUpScreenState extends State<WalletTopUpScreen>
     final isLoading = _isLoading || _isAuthenticating;
     final label = _selectedPaymentMethod == 'manual'
         ? 'Request assisted funding'
-        : 'Get account details';
+        : 'Proceed';
     return DPButton(
       label: label,
-      icon: DPIcons.forward,
       loading: isLoading,
       onPressed: isLoading ? null : _processPayment,
     );
@@ -2500,7 +2521,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
   int _timeRemaining = 0;
   Timer? _countdownTimer;
   bool _showVerification = false;
-  final Color _secondaryColor = const Color(0xFF168566);
+  final Color _secondaryColor = const Color(0xFF079A68);
 
   @override
   void initState() {
@@ -2603,7 +2624,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF173D88).withAlpha(25),
+                            color: const Color(0xFF2563EB).withAlpha(25),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -2611,7 +2632,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                             style: GoogleFonts.inter(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
-                              color: const Color(0xFF173D88),
+                              color: const Color(0xFF2563EB),
                             ),
                           ),
                         ),
@@ -2693,17 +2714,17 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF173D88).withAlpha(12),
+                          color: const Color(0xFF2563EB).withAlpha(12),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF173D88).withAlpha(25),
+                            color: const Color(0xFF2563EB).withAlpha(25),
                           ),
                         ),
                         child: Row(
                           children: [
                             const Icon(
                               Icons.info_outline,
-                              color: Color(0xFF173D88),
+                              color: Color(0xFF2563EB),
                               size: 18,
                             ),
                             const SizedBox(width: 8),
@@ -2713,7 +2734,7 @@ class _VirtualAccountDialogState extends State<_VirtualAccountDialog>
                                 style: GoogleFonts.inter(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF173D88),
+                                  color: const Color(0xFF2563EB),
                                 ),
                               ),
                             ),
@@ -3283,13 +3304,13 @@ class _VerificationDialogState extends State<_VerificationDialog>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF168566).withAlpha(25),
+                  color: const Color(0xFF079A68).withAlpha(25),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.check_circle,
                   size: 48,
-                  color: Color(0xFF168566),
+                  color: Color(0xFF079A68),
                 ),
               ),
             if (_isTimeout)
@@ -3313,7 +3334,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                 fontWeight: FontWeight.w600,
                 color:
                     _isSuccess
-                        ? const Color(0xFF168566)
+                        ? const Color(0xFF079A68)
                         : (_isTimeout
                             ? Colors.orange.shade700
                             : widget.primaryColor),
@@ -3365,10 +3386,10 @@ class _VerificationDialogState extends State<_VerificationDialog>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF168566).withAlpha(12),
+                  color: const Color(0xFF079A68).withAlpha(12),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF168566).withAlpha(25),
+                    color: const Color(0xFF079A68).withAlpha(25),
                   ),
                 ),
                 child: Column(
@@ -3377,7 +3398,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                       'Amount Credited',
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: const Color(0xFF168566),
+                        color: const Color(0xFF079A68),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -3386,7 +3407,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                       style: GoogleFonts.inter(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF168566),
+                        color: const Color(0xFF079A68),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -3420,7 +3441,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                             style: GoogleFonts.inter(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF168566),
+                              color: const Color(0xFF079A68),
                             ),
                           ),
                         ),
@@ -3429,7 +3450,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                           style: GoogleFonts.inter(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF168566),
+                            color: const Color(0xFF079A68),
                           ),
                         ),
                       ],
@@ -3457,7 +3478,7 @@ class _VerificationDialogState extends State<_VerificationDialog>
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       _isSuccess
-                          ? const Color(0xFF168566)
+                          ? const Color(0xFF079A68)
                           : widget.primaryColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
