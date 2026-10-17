@@ -47,3 +47,17 @@
 - Login with phone number
 - "Estimated commission" (`GET /api/commission/rates`) — hidden if missing
 - Send money name check (`POST /api/transfer/lookup`)
+
+## Premium update (home, receipts, motion)
+- **Home**: greeting header with avatar, notification count; gradient balance
+  card with counting balance and four quick actions (Add money, Send, Pay
+  bills, Activity); funding account number with copy; colourful Pay bills
+  grid; "Earn while you pay" (earnings + invite code); recent activity card
+  with status dots.
+- **Receipts**: Dalabapay logo centred in the top bar; animated status mark
+  (tick draws itself, ripples, sparks), counting amount, rows that cascade in,
+  ticket-style dashed dividers.
+- **Motion everywhere** (`lib/ui/dp_motion.dart`): page transitions for every
+  screen, cards/banners/lists fade in, buttons and tiles press down, animated
+  bottom-nav pill. All motion turns off when the phone's "Remove animations"
+  setting is on.

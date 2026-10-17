@@ -543,7 +543,7 @@ Powered by Dalabapay''';
     if (mounted) dpSnack(context, message, error: true);
   }
 
-  /// Large status mark at the top of the receipt.
+  /// Animated status mark at the top of the receipt.
   Widget _buildStatusBadge() {
     final s = widget.status.toLowerCase();
     final ok = s.contains('success') ||
@@ -551,25 +551,16 @@ Powered by Dalabapay''';
         s.contains('delivered') ||
         s.contains('resolved');
     final pending = s.contains('pending') || s.contains('processing');
-    final Color c = ok ? DP.green : (pending ? DP.amber : DP.red);
-    final Color bg = ok ? DP.mint : (pending ? DP.amberBg : DP.redBg);
-    return Container(
-      width: 84,
-      height: 84,
-      decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-      alignment: Alignment.center,
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(color: c, shape: BoxShape.circle),
-        child: Icon(
-          ok ? DPIcons.check : (pending ? DPIcons.pending : DPIcons.close),
-          color: Colors.white,
-          size: 30,
-        ),
-      ),
+    return DPStatusHero(
+      kind: ok
+          ? DPStatusKind.success
+          : (pending ? DPStatusKind.pending : DPStatusKind.failed),
+      size: 84,
     );
   }
+
+  // Detail rows cascade in one after another.
+  int _rowIndex = 0;
 
   String get _headline {
     final s = widget.status.toLowerCase();
@@ -604,7 +595,11 @@ Powered by Dalabapay''';
         value.isNotEmpty &&
         value != 'N/A' &&
         value != 'Check SMS';
-    return Padding(
+    final delay = DPMotion.stagger(_rowIndex++, stepMs: 45, startMs: 620);
+    return DPAppear(
+      delay: delay,
+      offsetY: 8,
+      child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 7),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -650,6 +645,7 @@ Powered by Dalabapay''';
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -834,6 +830,7 @@ Powered by Dalabapay''';
 
   @override
   Widget build(BuildContext context) {
+    _rowIndex = 0;
     final size = MediaQuery.of(context).size;
     final operator = _detectedOperator;
     final isElectricity =
@@ -862,6 +859,7 @@ Powered by Dalabapay''';
         color: DP.surface,
         borderRadius: BorderRadius.circular(DP.rXl),
         border: Border.all(color: DP.border),
+        boxShadow: DP.softShadow,
       ),
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
       child: Column(
@@ -874,18 +872,40 @@ Powered by Dalabapay''';
           const SizedBox(height: 6),
           FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(
-              _formattedAmount,
+            child: DPCountUp(
+              value: double.tryParse(
+                    _formattedAmount.replaceAll(RegExp(r'[₦,\s]'), ''),
+                  ) ??
+                  0,
+              format: (v) => DP.naira(v),
               style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w500,
+                fontSize: 34,
+                fontWeight: FontWeight.w600,
                 color: DP.ink,
+                letterSpacing: -0.6,
+                fontFeatures: [FontFeature.tabularFigures()],
               ),
             ),
           ),
-          const SizedBox(height: 10),
-          const Divider(),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: DPStatus.colorFor(widget.status).withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              DPStatus.labelFor(widget.status),
+              style: TextStyle(
+                color: DPStatus.colorFor(widget.status),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          const DPDashedDivider(),
+          const SizedBox(height: 6),
           if (widget.phoneNumber != null && widget.phoneNumber!.isNotEmpty)
             _buildDetailRow('Recipient', widget.phoneNumber!, showCopyIcon: true),
           if (operator != null) _buildDetailRow('Network', operator),
@@ -1059,13 +1079,21 @@ Powered by Dalabapay''';
               _buildAdminActionSection(),
             ],
           ],
+          const SizedBox(height: 14),
+          const DPDashedDivider(),
           const SizedBox(height: 12),
-          const DPWordmark(height: 20),
+          const DPWordmark(height: 22),
+          const SizedBox(height: 4),
+          const Text('Secured by Dalabapay', style: DP.caption),
         ],
       ),
     );
 
-    return Dialog(
+    return DPAppear(
+      scaleFrom: 0.92,
+      offsetY: 30,
+      duration: const Duration(milliseconds: 460),
+      child: Dialog(
       backgroundColor: DP.bg,
       insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(DP.rXl)),
@@ -1074,32 +1102,15 @@ Powered by Dalabapay''';
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-              child: Row(
-                children: [
-                  IconButton(
-                    tooltip: 'Close',
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(DPIcons.close, color: DP.ink),
-                  ),
-                  const Expanded(
-                    child: Text(
-                      'Payment receipt',
-                      textAlign: TextAlign.center,
-                      style: DP.bodyStrong,
-                    ),
-                  ),
-                  DPTextLink(
-                    label: 'Help',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/help');
-                    },
-                  ),
-                  const SizedBox(width: 6),
-                ],
-              ),
+            DPLogoBar(
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+              leadingIcon: DPIcons.close,
+              onLeading: () => Navigator.pop(context),
+              actionLabel: 'Help',
+              onAction: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/help');
+              },
             ),
             Flexible(
               child: SingleChildScrollView(
@@ -1112,16 +1123,34 @@ Powered by Dalabapay''';
                     child: Column(
                       children: [
                         _buildStatusBadge(),
-                        const SizedBox(height: 12),
-                        Text(_headline, style: DP.title.copyWith(fontSize: 21)),
+                        DPAppear(
+                          delay: const Duration(milliseconds: 380),
+                          child: Text(
+                            _headline,
+                            style: DP.title.copyWith(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        Text(
-                          _subline,
-                          textAlign: TextAlign.center,
-                          style: DP.body.copyWith(color: DP.muted, fontSize: 14),
+                        DPAppear(
+                          delay: const Duration(milliseconds: 450),
+                          child: Text(
+                            _subline,
+                            textAlign: TextAlign.center,
+                            style: DP.body.copyWith(
+                              color: DP.muted,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 16),
-                        receiptCard,
+                        DPAppear(
+                          delay: const Duration(milliseconds: 520),
+                          offsetY: 24,
+                          child: receiptCard,
+                        ),
                       ],
                     ),
                   ),
@@ -1167,6 +1196,7 @@ Powered by Dalabapay''';
           ],
         ),
       ),
+    ),
     );
   }
 }

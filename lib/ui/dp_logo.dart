@@ -1,7 +1,9 @@
 // lib/ui/dp_logo.dart
 import 'package:flutter/material.dart';
 
+import 'dp_motion.dart';
 import 'dp_tokens.dart';
+import 'dp_widgets.dart';
 
 /// Brand assets supplied with the app:
 ///   assets/images/dabalogo.png    – the chevron mark
@@ -81,6 +83,59 @@ class DPWordmark extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Top bar with the Dalabapay logo in the centre — used on receipts.
+/// [leadingIcon] defaults to back; pass [DPIcons.close] for dialogs.
+class DPLogoBar extends StatelessWidget {
+  final VoidCallback? onLeading;
+  final IconData leadingIcon;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+  final EdgeInsetsGeometry padding;
+
+  const DPLogoBar({
+    super.key,
+    this.onLeading,
+    this.leadingIcon = DPIcons.back,
+    this.actionLabel,
+    this.onAction,
+    this.padding = const EdgeInsets.fromLTRB(20, 12, 20, 8),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: SizedBox(
+        height: 44,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: DPIconSquare(
+                icon: leadingIcon,
+                semanticLabel:
+                    leadingIcon == DPIcons.close ? 'Close' : 'Back',
+                onTap: onLeading ?? () => Navigator.of(context).maybePop(),
+              ),
+            ),
+            const DPAppear(
+              scaleFrom: 0.85,
+              offsetY: 0,
+              child: DPWordmark(height: 28),
+            ),
+            if (actionLabel != null)
+              Align(
+                alignment: Alignment.centerRight,
+                child: DPTextLink(label: actionLabel!, onTap: onAction),
+              ),
+          ],
+        ),
       ),
     );
   }

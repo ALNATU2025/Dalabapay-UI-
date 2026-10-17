@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'dp_motion.dart';
 import 'dp_tokens.dart';
 
 // ════════════════════════════════════════════════════════════
@@ -155,10 +156,13 @@ class DPHeadline extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: DP.display),
+          DPAppear(child: Text(title, style: DP.display)),
           if (subtitle != null) ...[
             const SizedBox(height: 8),
-            Text(subtitle!, style: DP.body.copyWith(color: DP.muted)),
+            DPAppear(
+              delay: const Duration(milliseconds: 80),
+              child: Text(subtitle!, style: DP.body.copyWith(color: DP.muted)),
+            ),
           ],
         ],
       ),
@@ -285,10 +289,26 @@ class DPButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null && !loading;
-    return SizedBox(
+    return DPPressable(
+      enabled: enabled,
+      child: SizedBox(
       width: double.infinity,
       height: height,
-      child: Material(
+      child: AnimatedContainer(
+        duration: DPMotion.fast,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(DP.rLg),
+          boxShadow: enabled && background == DP.green
+              ? const [
+                  BoxShadow(
+                    color: Color(0x33168566),
+                    blurRadius: 16,
+                    offset: Offset(0, 6),
+                  ),
+                ]
+              : const [],
+        ),
+        child: Material(
         color: enabled ? background : background.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(DP.rLg),
         child: InkWell(
@@ -331,6 +351,8 @@ class DPButton extends StatelessWidget {
                   ),
           ),
         ),
+        ),
+      ),
       ),
     );
   }
@@ -354,7 +376,9 @@ class DPOutlineButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return DPPressable(
+      enabled: onPressed != null,
+      child: SizedBox(
       width: double.infinity,
       height: height,
       child: Material(
@@ -385,6 +409,7 @@ class DPOutlineButton extends StatelessWidget {
           ),
         ),
       ),
+      ),
     );
   }
 }
@@ -405,12 +430,16 @@ class DPBottomAction extends StatelessWidget {
         24,
         12 + MediaQuery.of(context).padding.bottom,
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          child,
-          if (footnote != null) ...[const SizedBox(height: 12), footnote!],
-        ],
+      child: DPAppear(
+        delay: const Duration(milliseconds: 120),
+        offsetY: 24,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            child,
+            if (footnote != null) ...[const SizedBox(height: 12), footnote!],
+          ],
+        ),
       ),
     );
   }
@@ -1043,7 +1072,14 @@ class DPCard extends StatelessWidget {
               child: Padding(padding: padding, child: child),
             ),
     );
-    return margin == null ? body : Padding(padding: margin!, child: body);
+    final animated = DPAppear(
+      child: onTap == null
+          ? body
+          : DPPressable(pressedScale: 0.985, child: body),
+    );
+    return margin == null
+        ? animated
+        : Padding(padding: margin!, child: animated);
   }
 }
 
@@ -1150,7 +1186,8 @@ class DPBanner extends StatelessWidget {
         ic = DPIcons.info;
         break;
     }
-    return Container(
+    return DPAppear(
+      child: Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
       decoration: BoxDecoration(
@@ -1190,6 +1227,7 @@ class DPBanner extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -1259,7 +1297,10 @@ class DPListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return DPAppear(
+      offsetY: 8,
+      duration: const Duration(milliseconds: 340),
+      child: InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(DP.rMd),
       child: Padding(
@@ -1295,6 +1336,7 @@ class DPListRow extends StatelessWidget {
             if (trailing != null) ...[const SizedBox(width: 12), trailing!],
           ],
         ),
+      ),
       ),
     );
   }
@@ -1359,7 +1401,10 @@ class DPServiceTile extends StatelessWidget {
     return Semantics(
       button: true,
       label: label,
-      child: InkWell(
+      child: DPPressable(
+        enabled: onTap != null && !disabled,
+        pressedScale: 0.92,
+        child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(DP.rLg),
         child: Padding(
@@ -1424,6 +1469,7 @@ class DPServiceTile extends StatelessWidget {
           ),
         ),
       ),
+      ),
     );
   }
 }
@@ -1442,7 +1488,16 @@ class DPServiceGrid extends StatelessWidget {
       for (var c = 0; c < columns; c++) {
         final i = r + c;
         cells.add(
-          Expanded(child: i < tiles.length ? tiles[i] : const SizedBox()),
+          Expanded(
+            child: i < tiles.length
+                ? DPAppear(
+                    delay: DPMotion.stagger(i, stepMs: 40),
+                    offsetY: 12,
+                    scaleFrom: 0.9,
+                    child: tiles[i],
+                  )
+                : const SizedBox(),
+          ),
         );
       }
       if (rows.isNotEmpty) rows.add(const SizedBox(height: 14));
@@ -1506,7 +1561,9 @@ class DPEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return DPAppear(
+      scaleFrom: 0.96,
+      child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
       child: Column(
         children: [
@@ -1522,6 +1579,7 @@ class DPEmptyState extends StatelessWidget {
             DPTextLink(label: actionLabel!, onTap: onAction),
           ],
         ],
+      ),
       ),
     );
   }
@@ -1899,19 +1957,38 @@ class DPBottomNav extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      active ? (it.activeIcon ?? it.icon) : it.icon,
-                      color: c,
-                      size: 25,
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 260),
+                      curve: Curves.easeOutCubic,
+                      width: active ? 58 : 40,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: active ? DP.mint : Colors.transparent,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: AnimatedScale(
+                        scale: active ? 1.08 : 1,
+                        duration: const Duration(milliseconds: 260),
+                        curve: Curves.easeOutBack,
+                        child: Icon(
+                          active ? (it.activeIcon ?? it.icon) : it.icon,
+                          color: c,
+                          size: 24,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      it.label,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: c,
-                        fontWeight: active ? FontWeight.w600 : FontWeight.w400,
+                    AnimatedDefaultTextStyle(
+                      duration: const Duration(milliseconds: 200),
+                      style: DefaultTextStyle.of(context).style.merge(
+                        TextStyle(
+                          fontSize: 12,
+                          color: c,
+                          fontWeight:
+                              active ? FontWeight.w600 : FontWeight.w400,
+                        ),
                       ),
+                      child: Text(it.label),
                     ),
                   ],
                 ),

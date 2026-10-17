@@ -4,6 +4,8 @@
 // state and the handlers that already verify the PIN and run the payment.
 import 'package:flutter/material.dart';
 
+import 'dp_logo.dart';
+import 'dp_motion.dart';
 import 'dp_tokens.dart';
 import 'dp_widgets.dart';
 
@@ -84,7 +86,13 @@ class DPReviewPanel extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
                 children: [
-                  Center(child: DPIconBadge(icon, size: 64, iconSize: 30)),
+                  Center(
+                    child: DPAppear(
+                      scaleFrom: 0.7,
+                      offsetY: 0,
+                      child: DPIconBadge(icon, size: 64, iconSize: 30),
+                    ),
+                  ),
                   const SizedBox(height: 14),
                   Text(
                     title,
@@ -251,112 +259,54 @@ class DPSuccessPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = pending ? DP.amber : DP.green;
-    final bg = pending ? DP.amberBg : DP.mint;
+    final kind = pending ? DPStatusKind.pending : DPStatusKind.success;
+    Duration d(int ms) => Duration(milliseconds: ms);
     return Material(
       color: DP.bg,
       child: SafeArea(
         child: Column(
           children: [
-            DPTopBar(
-              title: 'Payment receipt',
-              onBack: onDone,
+            DPLogoBar(
+              onLeading: onDone,
               actionLabel: 'Help',
               onAction: () => Navigator.pushNamed(context, '/help'),
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                padding: const EdgeInsets.fromLTRB(24, 4, 24, 24),
                 children: [
-                  Center(
-                    child: Container(
-                      width: 84,
-                      height: 84,
-                      decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-                      alignment: Alignment.center,
-                      child: Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(color: c, shape: BoxShape.circle),
-                        child: Icon(
-                          pending ? DPIcons.pending : DPIcons.check,
-                          color: Colors.white,
-                          size: 30,
-                        ),
+                  Center(child: DPStatusHero(kind: kind, size: 92)),
+                  DPAppear(
+                    delay: d(380),
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: DP.title.copyWith(
+                        fontSize: 23,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: DP.title.copyWith(fontSize: 22),
-                  ),
                   const SizedBox(height: 6),
-                  Text(
-                    subtitle,
-                    textAlign: TextAlign.center,
-                    style: DP.body.copyWith(color: DP.muted),
+                  DPAppear(
+                    delay: d(460),
+                    child: Text(
+                      subtitle,
+                      textAlign: TextAlign.center,
+                      style: DP.body.copyWith(color: DP.muted),
+                    ),
                   ),
                   const SizedBox(height: 22),
-                  DPCard(
-                    padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
-                    child: Column(
-                      children: [
-                        Text(
-                          serviceLabel.toUpperCase(),
-                          style: DP.tiny,
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 6),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            DP.naira(amount),
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w500,
-                              color: DP.ink,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Divider(),
-                        const SizedBox(height: 4),
-                        for (final r in rows)
-                          DPSummaryRow(r.label, r.value, strong: r.strong),
-                        if (commission != null && commission! > 0) ...[
-                          const SizedBox(height: 8),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: DP.mint,
-                              borderRadius: BorderRadius.circular(DP.rSm),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  DPIcons.sparkle,
-                                  color: DP.green,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '${DP.naira(commission)} added to your earnings',
-                                  style: const TextStyle(
-                                    color: DP.green,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ],
+                  DPAppear(
+                    delay: d(540),
+                    offsetY: 24,
+                    child: _ReceiptCard(
+                      serviceLabel: serviceLabel,
+                      amount: amount,
+                      pending: pending,
+                      rows: rows,
+                      commission: commission,
+                      rowDelay: d(640),
                     ),
                   ),
                 ],
@@ -391,6 +341,161 @@ class DPSuccessPanel extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// White receipt card: service label, counting amount, status pill, rows
+/// that cascade in, and the perforated "ticket" edge.
+class _ReceiptCard extends StatelessWidget {
+  final String serviceLabel;
+  final double amount;
+  final bool pending;
+  final List<DPReviewRow> rows;
+  final double? commission;
+  final Duration rowDelay;
+
+  const _ReceiptCard({
+    required this.serviceLabel,
+    required this.amount,
+    required this.pending,
+    required this.rows,
+    required this.commission,
+    required this.rowDelay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final statusColor = pending ? DP.amber : DP.green;
+    return Container(
+      decoration: BoxDecoration(
+        color: DP.surface,
+        borderRadius: BorderRadius.circular(DP.rXl),
+        border: Border.all(color: DP.border),
+        boxShadow: DP.softShadow,
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+      child: Column(
+        children: [
+          Text(
+            serviceLabel.toUpperCase(),
+            style: DP.tiny,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 6),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: DPCountUp(
+              value: amount,
+              format: (v) => DP.naira(v),
+              style: const TextStyle(
+                fontSize: 34,
+                fontWeight: FontWeight.w600,
+                color: DP.ink,
+                letterSpacing: -0.6,
+                fontFeatures: [FontFeature.tabularFigures()],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: pending ? DP.amberBg : DP.mint,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              pending ? 'Processing' : 'Successful',
+              style: TextStyle(
+                color: statusColor,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          const DPDashedDivider(),
+          const SizedBox(height: 6),
+          for (var i = 0; i < rows.length; i++)
+            DPAppear(
+              delay: rowDelay + DPMotion.stagger(i, stepMs: 50),
+              offsetY: 8,
+              child: DPSummaryRow(
+                rows[i].label,
+                rows[i].value,
+                strong: rows[i].strong,
+              ),
+            ),
+          if (commission != null && commission! > 0) ...[
+            const SizedBox(height: 8),
+            DPAppear(
+              delay: rowDelay + DPMotion.stagger(rows.length, stepMs: 50),
+              scaleFrom: 0.95,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: DP.mint,
+                  borderRadius: BorderRadius.circular(DP.rSm),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(DPIcons.sparkle, color: DP.green, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '${DP.naira(commission)} added to your earnings',
+                        style: const TextStyle(color: DP.green, fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+          const SizedBox(height: 14),
+          const DPDashedDivider(),
+          const SizedBox(height: 12),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(DPIcons.shieldCheck, size: 15, color: DP.muted),
+              SizedBox(width: 6),
+              Text('Secured by Dalabapay', style: DP.caption),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Dashed hairline, like the tear line on a paper receipt.
+class DPDashedDivider extends StatelessWidget {
+  final Color color;
+  const DPDashedDivider({super.key, this.color = DP.border});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, c) {
+        const dash = 6.0, gap = 4.0;
+        final n = (c.maxWidth / (dash + gap)).floor();
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(
+            n,
+            (_) => SizedBox(
+              width: dash,
+              height: 1.2,
+              child: DecoratedBox(decoration: BoxDecoration(color: color)),
+            ),
+          ),
+        );
+      },
     );
   }
 }
